@@ -1,0 +1,611 @@
+{
+ "fecha": "2026-11-26T03:10:39.798Z",
+ "seco": false,
+ "cacheTTL": "1h",
+ "espera": 330,
+ "total": {
+  "dolares": 0.154472,
+  "sinCache": 0.285346,
+  "llamadas": 14,
+  "errores": 0
+ },
+ "filas": [
+  {
+   "clave": "directo|128|Tajon Buchanan|gol1",
+   "tipo": "directo",
+   "redactado": true,
+   "texto": "⚽ En el 5' Buchanan marca y el Villarreal se adelanta en el Barça-Villarreal: 0-1 en el marcador.\n\nSe lleva 8 puntos de momento, más del doble de su media.",
+   "llamadas": 2,
+   "redactar": 2,
+   "revisar": 0,
+   "entrada": 2761,
+   "leido": 7463,
+   "escrito": 7463,
+   "salida": 184,
+   "dolares": 0.03796,
+   "sinCache": 0.037214,
+   "pasadaA": {
+    "dolares": 0.0185,
+    "llamadas": {
+     "redactar": 1,
+     "revisar": 0,
+     "pulir": 0
+    }
+   },
+   "log": [
+    "  (redactar) directo|128|Tajon Buchanan|gol1, intento 1: palabras con mayúscula que no están en los hechos: Camp, Nou\n     «⚽ Los amarillos no han tardado: Buchanan marca en el 5' y el Villarreal se pone 0-1 en el Camp Nou ante el Barça. / El centrocampista lleva 8 puntos de momento, más del doble de su media.»",
+    "  (redactar) 1 de 1 tweets de directo redactados"
+   ]
+  },
+  {
+   "clave": "directo|128|Pau Navarro|roja",
+   "tipo": "directo",
+   "redactado": true,
+   "texto": "🟥 Roja para Pau Navarro en el 90+3' y el Villarreal acaba con diez en el Barça-Villarreal, que va 3-2.\n\nEl defensa se queda en -3 puntos.",
+   "llamadas": 1,
+   "redactar": 1,
+   "revisar": 0,
+   "entrada": 1280,
+   "leido": 7463,
+   "escrito": 0,
+   "salida": 90,
+   "dolares": 0.004206,
+   "sinCache": 0.018386,
+   "pasadaA": {
+    "dolares": 0.03733,
+    "llamadas": {
+     "redactar": 2,
+     "revisar": 0,
+     "pulir": 0
+    }
+   },
+   "log": [
+    "  (redactar) 1 de 1 tweets de directo redactados"
+   ]
+  },
+  {
+   "clave": "directo|124|Yassir Zabiri|gol2",
+   "tipo": "directo",
+   "redactado": true,
+   "texto": "⚽ Minuto 8 en El Sardinero y Yassir Zabiri hace su segundo: el Racing se pone 2-0 ante la Real Sociedad.\n\nLleva 16 puntos de momento, más del doble de su media.",
+   "llamadas": 1,
+   "redactar": 1,
+   "revisar": 0,
+   "entrada": 1353,
+   "leido": 7463,
+   "escrito": 0,
+   "salida": 91,
+   "dolares": 0.004362,
+   "sinCache": 0.018542,
+   "pasadaA": {
+    "dolares": 0.03763,
+    "llamadas": {
+     "redactar": 2,
+     "revisar": 0,
+     "pulir": 0
+    }
+   },
+   "log": [
+    "  (redactar) 1 de 1 tweets de directo redactados"
+   ]
+  },
+  {
+   "clave": "final|128",
+   "tipo": "final",
+   "redactado": true,
+   "texto": "🏁 El Barça le da la vuelta al Villarreal: 3-2 tras ir 0-2 a los siete minutos, con goles de Gerard Martín en el 57', Fermín en el 61' y un autogol de Pau Navarro en el 67'.\n\nPedri es el que más puntos saca de los dos equipos, 11, y Gerard Martín llega a 10 con el gol del 1-2. Lamine Yamal se queda en 9 tras fallar un penalti en el 23'.\n\nPau Navarro cierra con -3, lo peor del partido, y además ve la roja en el 90+3'. Buchanan, que abrió el marcador en el 5', suma 8 para los amarillos aunque el Villarreal sale derrotado.\n\nFantasy Manager, enlace en la bio",
+   "llamadas": 5,
+   "redactar": 4,
+   "revisar": 1,
+   "entrada": 14097,
+   "leido": 27295,
+   "escrito": 4596,
+   "salida": 1006,
+   "dolares": 0.059368,
+   "sinCache": 0.102036,
+   "pasadaA": {
+    "dolares": 0.09236,
+    "llamadas": {
+     "redactar": 3,
+     "revisar": 2,
+     "pulir": 0
+    }
+   },
+   "log": [
+    "  (redactar) final|128, intento 1: palabras con mayúscula que no están en los hechos: Camp, Nou\n     «🏁 El Barça remonta al Villarreal en el Camp Nou y gana 3-2 tras ir 0-2 a los siete minutos. Gerard Martín, Fermín y un gol en propia de Pau Navarro dan la vuelta en diez minutos. / Pedri es el que más puntos saca de los dos equipos, 11, y Gerard Martín pone 10. Lamine Yamal firma 9 pese a fallar un penalti en el 23'. / Buchanan, que abrió el marcador, se queda en 8. A Pau Navarro le cuesta el par»",
+    "  (redactar) final|128, intento 2: los puntos frente a su media («más del doble», «el triple de lo que suele») ya sale en los últimos tuits o en el del mismo partido: dilo de otra forma o quítalo\n     «🏁 El Barça gana 3-2 al Villarreal tras ir 0-2 a los siete minutos. Buchanan y Oluwaseyi marcaron en el 5' y el 7', y los azulgranas le dieron la vuelta entre el 57' y el 67' con goles de Gerard Martín, Fermín y un autogol de Pau Navarro. / Pedri es el que más puntos saca de los dos equipos, 11, y Gerard Martín suma 10, casi el doble de su media. Lamine Yamal se queda en 9 después de fallar un pen»",
+    "  (redactar) final|128, intento 3: palabras con mayúscula que no están en los hechos: Camp, Nou\n     «🏁 Remontada del Barça en el Camp Nou: del 0-2 a los siete minutos al 3-2 con tres goles en diez minutos, de Gerard Martín, Fermín y un autogol de Pau Navarro. / Pedri es el que más puntos saca de los dos equipos, 11, y Gerard Martín añade 10 con el gol del 1-2. Lamine Yamal firma 9 tras fallar un penalti en el 23'. / Pau Navarro cierra con -3, lo peor del partido, y con la roja en el 90+3'. Bucha»",
+    "  (redactar) 1 de 1 tweets de final redactados"
+   ]
+  },
+  {
+   "clave": "final|122",
+   "tipo": "final",
+   "redactado": true,
+   "texto": "🏁 Remontada del Real Madrid en el Santiago Bernabéu: 2-1 al Celta, que se había puesto por delante en el minuto 6.\n\nBellingham empató en el 66' y Carlos Espí marcó el 2-1 en el 85'. Antes, en el 39', Mbappé había fallado un penalti.\n\nBellingol suma 13 puntos, el que más de los dos equipos, y encadena tres jornadas seguidas con 8 o más: sigue en racha. Mbappé se queda en 9, por debajo de su media. En el Celta, Pablo Durán, autor del 0-1, saca 10, y Javi Rodríguez es lo peor del partido, con -1.\n\nFantasy Manager: la app, enlace en la bio",
+   "llamadas": 5,
+   "redactar": 4,
+   "revisar": 1,
+   "entrada": 17743,
+   "leido": 31891,
+   "escrito": 0,
+   "salida": 990,
+   "dolares": 0.048576,
+   "sinCache": 0.109168,
+   "pasadaA": {
+    "dolares": 0.03053,
+    "llamadas": {
+     "redactar": 1,
+     "revisar": 1,
+     "pulir": 0
+    }
+   },
+   "log": [
+    "  (redactar) final|122, intento 1: los dos últimos tuits de este tipo ya empiezan por el nombre de un jugador: empieza por otra cosa (el equipo, el minuto, lo que supone)\n     «🏁 El Madrid remonta al Celta en el Santiago Bernabéu: 2-1, con gol de Bellingham en el 66' y de Carlos Espí en el 85'. Pablo Durán había adelantado a los celestes en el 6'. / Mbappé falló un penalti en el 39', y aun así el partido se les dio la vuelta a los blancos. Bellingham acaba con 13 puntos y es el que más suma de los dos equipos: ya lleva tres jornadas seguidas con 8 o más. / En el Celta, »",
+    "  (redactar) final|122, intento 2: los dos últimos tuits de este tipo ya empiezan por el nombre de un jugador: empieza por otra cosa (el equipo, el minuto, lo que supone)\n     «🏁 Con el Celta por delante desde el minuto 6, al Madrid le llegó la remontada en la segunda parte: 2-1 en el Santiago Bernabéu, con goles de Bellingham en el 66' y de Carlos Espí en el 85'. / Mbappé había fallado un penalti en el 39', y Pablo Durán, autor del 0-1, se lleva 10 puntos desde el lado celeste. / Bellingham termina con 13, lo máximo de los dos equipos, y encadena tres jornadas seguidas»",
+    "  (redactar) final|122, intento 3: los dos últimos tuits de este tipo ya empiezan por el nombre de un jugador: empieza por otra cosa (el equipo, el minuto, lo que supone)\n     «🏁 El Celta se adelantó en el minuto 6 y el Madrid lo dio vuelta en el Santiago Bernabéu: 2-1, con goles de Bellingham en el 66' y Carlos Espí en el 85'. / Los blancos se dejaron un penalti antes del descanso: Mbappé lo falló en el 39'. Aun así acaba con 9 puntos. / Bellingol es el que más puntos saca de los dos equipos, 13, y ya son tres jornadas seguidas con 8 o más. Pablo Durán, el autor del 0-»",
+    "  (redactar) 1 de 1 tweets de final redactados"
+   ]
+  }
+ ],
+ "llamadas": [
+  {
+   "tuit": "directo|128|Tajon Buchanan|gol1",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3952
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 1305,
+    "cache_creation_input_tokens": 7463,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 7463
+    },
+    "output_tokens": 98,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.033442,
+   "sinCache": 0.018516,
+   "t": "2026-11-26T03:04:38.114Z"
+  },
+  {
+   "tuit": "directo|128|Tajon Buchanan|gol1",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3952
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 1456,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7463,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 86,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.004518,
+   "sinCache": 0.018698,
+   "t": "2026-11-26T03:04:39.433Z"
+  },
+  {
+   "tuit": "directo|128|Pau Navarro|roja",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3952
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 1280,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7463,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 90,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.004206,
+   "sinCache": 0.018386,
+   "t": "2026-11-26T03:10:11.516Z"
+  },
+  {
+   "tuit": "directo|124|Yassir Zabiri|gol2",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3952
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 1353,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7463,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 91,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.004362,
+   "sinCache": 0.018542,
+   "t": "2026-11-26T03:10:13.522Z"
+  },
+  {
+   "tuit": "final|128",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 2687,
+    "cache_creation_input_tokens": 1693,
+    "cache_read_input_tokens": 5554,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1693
+    },
+    "output_tokens": 229,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.014991,
+   "sinCache": 0.022158,
+   "t": "2026-11-26T03:10:16.394Z"
+  },
+  {
+   "tuit": "final|128",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 2968,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 263,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.009291,
+   "sinCache": 0.02306,
+   "t": "2026-11-26T03:10:19.339Z"
+  },
+  {
+   "tuit": "final|128",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3039,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 234,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.009143,
+   "sinCache": 0.022912,
+   "t": "2026-11-26T03:10:22.099Z"
+  },
+  {
+   "tuit": "final|128",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 2974,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 263,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.009303,
+   "sinCache": 0.023072,
+   "t": "2026-11-26T03:10:24.689Z"
+  },
+  {
+   "tuit": "final|128",
+   "uso": "revisar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    6075
+   ],
+   "marcas": [
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 2429,
+    "cache_creation_input_tokens": 2903,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2903
+    },
+    "output_tokens": 17,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.01664,
+   "sinCache": 0.010834,
+   "t": "2026-11-26T03:10:26.582Z"
+  },
+  {
+   "tuit": "final|122",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3426,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 235,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.009927,
+   "sinCache": 0.023696,
+   "t": "2026-11-26T03:10:29.606Z"
+  },
+  {
+   "tuit": "final|122",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3743,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 227,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.010481,
+   "sinCache": 0.02425,
+   "t": "2026-11-26T03:10:32.195Z"
+  },
+  {
+   "tuit": "final|122",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3737,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 253,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.010729,
+   "sinCache": 0.024498,
+   "t": "2026-11-26T03:10:35.252Z"
+  },
+  {
+   "tuit": "final|122",
+   "uso": "redactar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    11898,
+    3520
+   ],
+   "marcas": [
+    "1h",
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3754,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 7247,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 258,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.010813,
+   "sinCache": 0.024582,
+   "t": "2026-11-26T03:10:38.261Z"
+  },
+  {
+   "tuit": "final|122",
+   "uso": "revisar",
+   "modelo": "claude-sonnet-5-5",
+   "status": 200,
+   "bloques": [
+    6075
+   ],
+   "marcas": [
+    "1h"
+   ],
+   "usage": {
+    "input_tokens": 3083,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 2903,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 17,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+   },
+   "dolares": 0.006626,
+   "sinCache": 0.012142,
+   "t": "2026-11-26T03:10:39.798Z"
+  }
+ ]
+}
