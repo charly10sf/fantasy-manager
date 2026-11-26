@@ -3185,10 +3185,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000,
@@ -9789,13 +9786,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6599,
+   "ok": 6600,
    "fallos": 0,
-   "ejecuciones": 5378,
+   "ejecuciones": 5379,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:41:27.320Z"
+   "ultima": "2026-11-26T10:46:12.021Z"
   }
  },
  "ptsDirecto": {},
@@ -9812,15 +9809,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:41:39.577Z"
+   "ultimaBien": "2026-11-26T10:46:19.718Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:41:39.577Z"
+   "ultimaBien": "2026-11-26T10:46:19.718Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:41:39.577Z"
+   "ultimaBien": "2026-11-26T10:46:19.718Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9828,11 +9825,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:41:39.577Z"
+   "ultimaBien": "2026-11-26T10:46:19.718Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:41:39.577Z"
+   "ultimaBien": "2026-11-26T10:46:19.718Z"
   }
  },
  "avisos": [
