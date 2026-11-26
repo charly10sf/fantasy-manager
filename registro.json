@@ -4561,7 +4561,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136740501": 1795422406000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000,
@@ -4607,29 +4606,6 @@
    "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136740501",
-    "medio": "SPORT",
-    "t": 1795422406000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 16,
-    "jTxt": true,
-    "clubes": [
-     "12",
-     "4"
-    ],
-    "luto": false,
-    "oficial": true,
-    "contexto": "LaLiga ha confirmado los horarios de la jornada 16",
-    "detalle": "El partido se jugará el sábado 12 en La Rosaleda, con fecha y hora ya fijadas por LaLiga",
-    "nums": [
-     16,
-     2026,
-     12
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html",
     "medio": "Mundo Deportivo",
@@ -9759,13 +9735,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6572,
+   "ok": 6573,
    "fallos": 0,
-   "ejecuciones": 5351,
+   "ejecuciones": 5352,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T08:26:14.987Z"
+   "ultima": "2026-11-26T08:31:12.216Z"
   }
  },
  "ptsDirecto": {},
@@ -9782,15 +9758,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:26:27.730Z"
+   "ultimaBien": "2026-11-26T08:31:19.542Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:26:27.730Z"
+   "ultimaBien": "2026-11-26T08:31:19.542Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:26:27.730Z"
+   "ultimaBien": "2026-11-26T08:31:19.542Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9798,11 +9774,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:26:27.730Z"
+   "ultimaBien": "2026-11-26T08:31:19.542Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:26:27.730Z"
+   "ultimaBien": "2026-11-26T08:31:19.542Z"
   }
  },
  "avisos": [
