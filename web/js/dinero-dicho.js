@@ -119,11 +119,10 @@ export function ventanaDineroHTML(S, st) {
   return `<span class="dd-eti-r"><i></i>Apuntar dinero</span>
     <h2 id="dd-v-t">¿Quién te lo dijo y cuánto?</h2>
     <p class="dd-v-p">Elige al rival y pon la cifra que te dijo, en millones.</p>
-    <label class="dd-eti" for="ddRival">Quién</label>
-    <div class="dd-sel-c"><select id="ddRival" class="dd-sel" required>
-      <option value=""${st.sel ? '' : ' selected'} disabled>Elige al rival</option>
-      ${[...ri].sort((a, b) => String(a.manager || a.nombre).localeCompare(String(b.manager || b.nombre), 'es')).map((e) => `<option value="${esc(e.teamId)}"${String(st.sel) === String(e.teamId) ? ' selected' : ''}>${esc(e.manager || e.nombre)}${e.manager && e.nombre && e.manager !== e.nombre ? ` · ${esc(e.nombre)}` : ''}</option>`).join('')}
-    </select><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="dd-eti" id="ddRivalEti">Quién</div>
+    <div class="dd-sel-c">${botonRival(ri.find((e) => String(e.teamId) === String(st.sel)))}
+      <div class="dd-lista" id="ddLista" role="listbox" aria-labelledby="ddRivalEti" hidden>${[...ri].sort((a, b) => String(a.manager || a.nombre).localeCompare(String(b.manager || b.nombre), 'es')).map((e) => opcionRival(e, String(st.sel) === String(e.teamId))).join('')}</div>
+    </div>
     <div class="dd-eti">Cuánto</div>
     ${formCifra({ v: st.v, aprox: st.aprox, atajos: false, modos: ['Me dijo esa cifra', 'Más o menos'], id: 'ddCantV', grande: false })}
     ${st.err ? `<p class="dd-err" role="alert">${esc(st.err)}</p>` : ''}
@@ -131,6 +130,14 @@ export function ventanaDineroHTML(S, st) {
     <button type="button" class="dd-v-no" data-accion="ddCerrar">Nadie me ha dicho nada</button>
     <p class="dd-v-pie">Cuando quieras, también en Rivales y en la ficha de cada uno.</p>`;
 }
+
+/* (Carlos, 26 nov, 01:34 y 01:41: «debería de ser un desplegable para seleccionar rival» y «que salga la foto si tiene»)
+   el rival de la ventana, en un desplegable hecho a mano (uno del navegador no lleva fotos): el botón con la cara del
+   elegido y la lista con la de cada uno (caraManager: su foto si la tiene y, si no, sus iniciales) */
+const FLECHA = '<svg class="ic dd-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const nomRival = (e) => `<span class="dd-op-t"><b>${esc(e.manager || e.nombre)}</b>${e.manager && e.nombre && e.manager !== e.nombre ? `<small>${esc(e.nombre)}</small>` : ''}</span>`;
+export const botonRival = (e) => `<button type="button" class="dd-sel${e ? '' : ' vacio'}" id="ddRival" data-accion="ddAbrirLista" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="ddRivalEti ddRival">${e ? `${caraManager(e)}${nomRival(e)}` : '<span class="dd-op-t">Elige al rival</span>'}${FLECHA}</button>`;
+const opcionRival = (e, sel) => `<button type="button" class="dd-op" role="option" aria-selected="${sel}" data-accion="ddElegir" data-tid="${esc(e.teamId)}">${caraManager(e)}${nomRival(e)}</button>`;
 
 /** la novedad (diseño «Novedad»): una vez por cuenta, a todos */
 export const novedadDineroHTML = () => `<div class="nvt-velo" data-accion="novDineroNo"></div>

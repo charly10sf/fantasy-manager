@@ -2107,12 +2107,10 @@ function notaDicho(f) {
   f.querySelectorAll('[data-accion="ddAtajo"]').forEach((b) => b.setAttribute('aria-pressed', String(v === Number(b.dataset.v) * 1e6)));
   const er = f.querySelector('.dd-err'); if (er) er.remove();
 }
-// (0.8.4o; Carlos, 26 nov, 01:34: «debería de ser un desplegable para seleccionar rival») el rival de la ventana
-document.addEventListener('change', (ev) => {
-  if (!ev.target || ev.target.id !== 'ddRival' || !S.ddV) return;
-  S.ddV.sel = ev.target.value;
-  const er = document.querySelector('#dd-ventana .dd-err'); if (er) er.remove();
-});
+// el desplegable del rival se cierra al tocar fuera o con Escape
+function cerrarListaRival(foco) { const l = $('#ddLista'); if (!l || l.hidden) return false; l.hidden = true; const b = $('#ddRival'); if (b) { b.setAttribute('aria-expanded', 'false'); if (foco) b.focus({ preventScroll: true }); } return true; }
+document.addEventListener('click', (ev) => { if (!ev.target.closest || !ev.target.closest('.dd-sel-c')) cerrarListaRival(false); }, true);
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && cerrarListaRival(true)) ev.stopPropagation(); }, true);
 document.addEventListener('input', (ev) => {
   const t = ev.target;
   if (!t || !t.classList || !t.classList.contains('dd-in')) return;
@@ -4366,10 +4364,22 @@ document.addEventListener('click', async (ev) => {
     case 'ddApuntar': {
       const v = $('#dd-ventana'); if (!v || !S.ddV) break;
       const cant = DD.leerCifra((v.querySelector('.dd-in') || {}).value), aprox = modoAprox(v);
-      S.ddV.sel = (v.querySelector('#ddRival') || {}).value || '';
       S.ddV = { ...S.ddV, v: cant, aprox, err: !S.ddV.sel ? 'Elige quién te lo dijo.' : cant == null ? 'Pon cuánto te dijo, en millones.' : '' };
       if (!S.ddV.err) { apuntarDichoDe(S.ddV.sel, cant, aprox); S.ddV.fase = 'hecho'; pintar(); }
       ventanaDinero(S.ddV);
+      break;
+    }
+    // (26 nov) el desplegable del rival, con las caras (dinero-dicho.js, botonRival)
+    case 'ddAbrirLista': { const l = $('#ddLista'); if (!l) break; l.hidden = !l.hidden; el.setAttribute('aria-expanded', String(!l.hidden)); if (!l.hidden) { const o = l.querySelector('[aria-selected="true"]') || l.querySelector('.dd-op'); if (o) { o.scrollIntoView({ block: 'nearest' }); o.focus({ preventScroll: true }); } } break; }
+    case 'ddElegir': {
+      const v = $('#dd-ventana'); if (!v || !S.ddV) break;
+      S.ddV.sel = d.tid;
+      const e = (S.D.clasif || []).find((x) => String(x.teamId) === String(d.tid));
+      const b = v.querySelector('#ddRival'); if (b) b.outerHTML = DD.botonRival(e);
+      v.querySelectorAll('.dd-op').forEach((o) => o.setAttribute('aria-selected', String(o.dataset.tid === d.tid)));
+      const l = v.querySelector('#ddLista'); if (l) l.hidden = true;
+      const er = v.querySelector('.dd-err'); if (er) er.remove();
+      const nb = v.querySelector('#ddRival'); if (nb) nb.focus({ preventScroll: true });
       break;
     }
     case 'ddOtro': ventanaDinero(); break;
