@@ -1,6 +1,6 @@
 /* Quién puede estar detrás de cada puja de un libre del mercado, y cuánto (0.8.2, 24 nov). LaLiga solo dice cuántas pujas
    lleva un jugador: ni quién ni cuánto (comprobado en crudo, claude/pendiente-pujas-rivales.md del proyecto). Esto es una
-   ESTIMACIÓN, y así se enseña: se descarta a quien no puede pujar (25 jugadores, o no le llega ni con la deuda) y al resto
+   ESTIMACIÓN, y así se enseña: se descarta a quien no puede pujar (la plantilla llena, o no le llega ni con la deuda) y al resto
    se le da más o menos peso por lo que se sabe de cada uno:
      - cuánto ficha en el mercado y de qué precio (sus compras a LaLiga, las recientes pesan más);
      - si le hace falta alguien de ese puesto (su plantilla de ahora) y si ficha mucho de ese puesto;
@@ -44,6 +44,8 @@ const r10 = (x) => Math.ceil(x / 1e4) * 1e4;
  */
 export function crearQuienPuja(ctx) {
   const W = { ...PESOS, ...(ctx.pesos || {}) };
+  // el tope de la plantilla (24 en LaLiga Fantasy; lo pasa el motor, `M.TOPE`)
+  const TOPE = num(ctx.tope) || 24;
   const ahora = ctx.ahora, J = ctx.J;
   const peso = (t) => Math.pow(0.5, Math.max(0, ahora - t) / (W.vida * DIA));
   const compras = (ctx.compras || []).filter((x) => x && x.tid && x.t && x.t <= ahora && x.v > 0).map((x) => ({ ...x, w: peso(x.t), pos: num(J(x.pid).pos) }));
@@ -88,7 +90,9 @@ export function crearQuienPuja(ctx) {
   function base(tid, m, j) {
     const por = [];
     const P = plantillaDe(tid);
-    if (P.n >= 25) return { fuera: 'llena' };
+    // (lo que cuenta para el tope lo dice el motor, `ctx.cuenta`: en una liga normal el entrenador también ocupa sitio)
+    const nTope = ctx.cuenta ? num(ctx.cuenta(tid)) : P.n;
+    if (nTope >= TOPE) return { fuera: 'llena' };
     const cap = ctx.capacidad(tid);
     const deuda = Math.max(0, num(ctx.valorEquipo(tid)) * num(ctx.deudaPct));
     const precio = num(m.precio) || num(j.valor);
@@ -121,13 +125,14 @@ export function crearQuienPuja(ctx) {
     if (PUESTO[j.pos]) {
       const tiene = P.sanos[j.pos];
       const nec = clamp(1 + W.nec * (mediaPos[j.pos] - tiene), 0.55, 1.8);
-      const minimo = num((ctx.minimoPos || {})[j.pos]) || 1;
+      const mp = (ctx.minimoPos || {})[j.pos];
+      const minimo = mp != null ? num(mp) : 1;
       if (tiene < minimo) f(nec * W.sinOnce, `no le llegan los ${PUESTO[j.pos][1]} para alinear`);
       else f(nec, nec >= 1.2 ? `va corto de ${PUESTO[j.pos][1]} (${tiene})` : null);
       if (num(j.valor) > 0 && P.mejor[j.pos] > 0 && num(j.valor) >= P.mejor[j.pos]) f(W.mejor, `sería su mejor ${PUESTO[j.pos][0]}`);
     }
     if (P.n > 0 && P.n < 15) f(W.corta, `tiene la plantilla corta (${P.n})`);
-    else if (P.n >= 24) f(W.llena);
+    else if (nTope >= TOPE - 1) f(W.llena);
     // el dinero
     const ref = num(m.pujaGana) || num(m.puja) || precio;
     let tope = null;

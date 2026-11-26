@@ -210,7 +210,7 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
  */
 // (en la ficha de un partido: tag es la etiqueta de arriba a la izquierda, { txt, cls }, en vez del rival; marca, lo
 // de arriba a la derecha; datoFijo, lo de debajo del nombre, { txt, cls })
-export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false, tag = null, marca: marcaFija = null, datoFijo = null } = {}) {
+export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false, tag = null, marca: marcaFija = null, datoFijo = null, cap = false } = {}) {
   if (!j) return `<button class="cromo vacio-c" data-ir="mercado"><span class="cr-hueco">+</span><span class="cr-nom">Falta</span></button>`;
   const f = M && M.forma ? M.forma(j.id) : null;
   let dato;
@@ -260,7 +260,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   const ape = String(j.nombre || '').split(' ');
   const nom = ape.length > 1 && j.nombre.length > 11 ? ape.slice(1).join(' ') : j.nombre;
   return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">
-    <span class="cr-foto">${ava(j, 'cr')}${rv}${tit}${marca}</span>
+    <span class="cr-foto">${ava(j, 'cr')}${rv}${tit}${marca}${cap ? '<span class="cr-cap" title="Capitán que propone la app" role="img" aria-label="Capitán que propone la app">C</span>' : ''}</span>
     <span class="cr-nom">${ent ? '<i>ENT</i>' : ''}${esc(nom)}</span>
     <span class="cr-dato${datoCls}">${dato}</span></button>`;
 }
@@ -274,7 +274,7 @@ export function campoVivo(M, ids) {
   if (!js.length) return '';
   const lineas = [1, 2, 3, 4].map((p) => js.filter((j) => j.pos === p));
   const ent = js.find((j) => j.pos === 5);
-  const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map((j) => cromo(M, j, { vivo: true })).join('')}</div>`);
+  const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 6 ? ' seis' : lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map((j) => cromo(M, j, { vivo: true })).join('')}</div>`);
   const forma = lineas.slice(1).map((l) => l.length).join('-');
   return `<div class="cancha cancha-vivo"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     <span class="cv-forma">${esc(forma)}</span>${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, vivo: true })}</div>` : ''}</div>`;

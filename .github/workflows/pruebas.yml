@@ -82,6 +82,9 @@ jobs:
       # (0.8.4) los avisos de fallo según quién mira: el dueño, quien ayuda con los fallos (sin contestar) y los demás
       - name: Los avisos de fallo
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-avisos.mjs
+      # (25 nov) las noticias de la web: el RSS de Google y el de Bing, y Bing cuando Google dice 503 por el Worker
+      - name: Las noticias de la web (Google y Bing)
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-noticias.mjs
 
   ia:
     runs-on: ubuntu-latest
@@ -164,12 +167,14 @@ jobs:
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-contradicciones.mjs 8 1
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dicho.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dinero.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dinero-dicho.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-sinc.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-irreal.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-homonimos.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-trato.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-invitar.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-invitado.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-premium.mjs
 
   sin-red:
     runs-on: ubuntu-latest

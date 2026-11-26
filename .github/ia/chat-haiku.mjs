@@ -37,6 +37,8 @@ for (const escena of ESCENAS) {
       let hist = [];
       for (const caso of casos) {
         if (gastado > TOPE) { out.push('\n(Tope de gasto: paro aquí.)\n'); break; }
+        // (26 nov) `en`: la pregunta solo vale en las escenas que casan (las de liga premium)
+        if (caso.en && !new RegExp(caso.en).test(escena)) continue;
         if (!caso.sigue) hist = [];
         const prep = await P.page.evaluate(prepararEnPagina, { q: caso.q, hist, prep: caso.prep || null });
         const armado = W.armarChat(prep.cuerpo, { cacheLiga: process.env.CACHE_LIGA || 'siempre' });

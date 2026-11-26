@@ -70,7 +70,7 @@ export function campoJornada(S, js, forma, n, est, puntosDe) {
     const xs = lineas[i].slice(0, Math.max(k, lineas[i].length));
     const celdas = xs.map(crom);
     while (celdas.length < k) celdas.push(hueco);
-    return celdas.length ? `<div class="linea-c${celdas.length >= 5 ? ' cinco' : ''}">${celdas.join('')}</div>` : '';
+    return celdas.length ? `<div class="linea-c${celdas.length >= 6 ? ' seis' : celdas.length >= 5 ? ' cinco' : ''}">${celdas.join('')}</div>` : '';
   });
   const ent = js.find((j) => j.pos === 5);
   return `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>

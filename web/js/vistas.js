@@ -1,5 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
+import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
@@ -7,7 +8,7 @@ import { esClausulable } from './motor.js';
 import { ventaVista, comoVa } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat, enAppIos, permisoIA } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -732,7 +733,8 @@ function planHTML(S) {
   const rehacer = conIA && !E.cargando && P ? `<button class="plan-rehacer" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Rehacer el plan' : 'Hacerlo con la IA'}</button>` : '';
   const ajB = P && (conIA || !E.cargando) ? `<button class="b-ico plan-aj-b" data-accion="planAjustes" aria-label="Ajustes del plan" title="Ajustes del plan">${icono('ajustes')}</button>` : '';
   const pt = conIA ? proximoTurno(M) : null;
-  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada: a su hora con la app abierta y, si no, al abrirla
+  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}${enApp && !nativo.hayFondo() ? ', o al abrir la app' : ''}` : '';
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2" id="plan-notif">${notifPlanHTML()}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
@@ -890,13 +892,22 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   const cambios = mio && rec ? cambiosOnce(M, lineas, form, rec) : null;
   const saleIds = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
+  // (26 nov, parte B) en una liga premium, el capitán y el banquillo que propone la app para el once que recomienda (el
+  // suyo, el de la IA o el tuyo con sus cambios): una sola cuenta, la del motor. Con la jornada en juego ya no se cambian
+  const pm = V || M.enJuego ? null : premiumOnce(M, rec ? rec.lineas : lineas, mio ? (LS.get(K('mi-once'), null) || {}).pr : null);
+  const capId = mio ? (pm && pm.capTuyo ? String(pm.capTuyo.id) : null) : pm && pm.cap ? String(pm.cap.j.id) : null;
   const filas = [3, 2, 1, 0].map((i) => {
     const n = i === 0 ? 1 : f[i - 1] || 0;
+    // (una línea vacía, como la delantera de un 4-6-0, no se pinta)
+    if (!n && !(lineas[i] || []).length) return '';
     const js = (lineas[i] || []).slice(0, n);
     while (js.length < n) js.push(null);
-    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
+    return `<div class="linea-c${n >= 6 ? ' seis' : n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V, cap: !!(j && capId === String(j.id)) }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
   });
-  const ent = M.once && M.once.entrenador;
+  // (26 nov) el entrenador del campo (solo sale en una liga premium que los tiene): si el campo es el que tienes puesto en
+  // LaLiga o el de la jornada en juego, el que TÚ alineaste (o ninguno); el que elige la app, solo en el once de la app
+  const entDe = (ids) => { if (!(M.premium && M.premium.entrenador)) return null; const mias = new Set(M.mias.map((x) => String(x.pid))); return (ids || []).map((pid) => M.J(pid)).find((j) => j && j.pos === 5 && mias.has(String(j.id))) || null; };
+  const ent = real ? entDe(V && V.once) : mio ? entDe((LS.get(K('mi-once'), null) || {}).ids) : deIA ? null : M.once && M.once.entrenador;
   h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true, directo: !!V })}</div>` : ''}</div>`;
   // (19 nov, Carlos: «no veo el sentido a cómo pone banquillo y lo del once de la app») fuera del directo, debajo del campo
@@ -904,10 +915,15 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // no hay nada flojo). Sin banquillo ni tira de «fuera» (Carlos, 08:20: «¿de qué sirve?»); siguen en la lista de la plantilla
   const hayCambios = !!(cambios && cambios.pares.length);
   if (hayCambios) h += cambiosOnceHTML(M, cambios);
+  if (pm) h += premiumOnceHTML(pm);
   if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios, S.plan), sinCambios: !hayCambios, conLinea: mio });
   h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
+  // (26 nov, parte B) la formación que tienes puesta en LaLiga ya no vale en tu liga (una de las de premium con esa función
+  // apagada por el administrador): con ella no se puntúa (ayuda de LaLiga, «Ligas premium»)
+  const fPuesta = real ? V.forma : mio ? (LS.get(K('mi-once'), null) || {}).forma : null;
+  if (Array.isArray(fPuesta) && M.formacionApagada(fPuesta)) notas.push(`<b class="rojo">Tu ${esc(fPuesta.join('-'))} no vale ahora en tu liga y con él no puntúas${real ? '' : ': pon otra formación en LaLiga Fantasy'}.</b>`);
   if ((real || mio) && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
@@ -923,6 +939,39 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;
 }
+
+/** (26 nov, parte B) el capitán y el banquillo de una liga premium para ese once: lo que propone el motor (`M.capitanDe`,
+    `M.banquilloDe`) y, si la app ha reconocido lo que tienes puesto en LaLiga (`pr`, de `alineacionDe`), si ya coincide */
+export function premiumOnce(M, lineas, pr = null) {
+  if (!M.premium || !(M.premium.capitan || M.premium.banquillo || M.premium.entrenador) || !Array.isArray(lineas)) return null;
+  // la propuesta del motor (sin los que la app te manda vender), la misma de la ficha y la IA; del banquillo no sale
+  // quien sigue en el campo que se ve
+  const pp = M.premiumPropuesta ? M.premiumPropuesta() : null;
+  const enEste = new Set(lineas.flat().filter(Boolean).map((j) => String(j.id)));
+  const cap = pp ? pp.capitan : null, ban = pp ? pp.banquillo.filter((b) => !enEste.has(String(b.j.id))) : [];
+  // el entrenador: con dos, el que alinea `mejorOnce`; sin ninguno, el que conviene fichar
+  const mios = M.premium.entrenador ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league').map((x) => x.j) : [];
+  const elegido = mios.length >= 2 && M.once && M.once.entrenador ? M.once.entrenador : null;
+  const otro = elegido ? mios.find((j) => j.id !== elegido.id) || null : null;
+  const ent = elegido ? { j: elegido, otro: otro && M.mejorPartidoEnt(elegido, otro) ? otro : null } : null;
+  const fichar = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  if (!cap && !ban.length && !ent && !fichar) return null;
+  const tuyo = (id, pos) => { const j = id != null && M.mias.some((x) => String(x.pid) === String(id)) ? M.J(id) : null; return j && (pos == null ? j.pos < 5 : j.pos === pos) ? j : null; };
+  return { cap, ban, ent, fichar, capTuyo: pr && pr.cap ? tuyo(pr.cap) : null, banTuyo: (p) => (pr && pr.banq && pr.banq[p] ? tuyo(pr.banq[p], p) : null), entTuyo: pr && pr.ent ? tuyo(pr.ent, 5) : null, partido: (j) => { const p = M.proximoPartido(j.equipoId); return p ? `${p.casa ? 'en casa contra' : 'fuera, contra'} ${p.rival}` : ''; } };
+}
+function premiumOnceHTML(pm) {
+  const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  const fila = (j, sub, tuyo) => `<div class="co-f pm-f"><button class="co-j" data-j="${esc(j.id)}">${ava(j, 'm')}<span><b>${esc(j.nombre)}</b><i>${sub}</i></span></button>${tuyo ? (String(tuyo.id) === String(j.id) ? `<span class="pm-ya">${icono('ok')} puesto</span>` : `<span class="pm-ya no">ahora, ${esc(tuyo.nombre)}</span>`) : ''}</div>`;
+  let h = '';
+  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados`, pm.capTuyo);
+  for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
+  if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el que más lleva por jornada')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
+  if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · libre en el mercado, vale ${eur(pm.fichar.precio)} · ${d1(pm.fichar.media)} pts por jornada`, null);
+  const partes = [pm.cap && 'capitán', pm.ban.length && 'banquillo', (pm.ent || pm.fichar) && 'entrenador'].filter(Boolean);
+  const titulo = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}` : partes[0] || '';
+  return `<div class="cambio-once pm-once"><div class="co-t">${titulo.charAt(0).toUpperCase()}${titulo.slice(1)}</div>${h}</div>`;
+}
+const POS_CORTA = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
 /** (19 nov) lo flojo de tu once: los que tienen menos de la mitad de ser titular (o están de baja) y no tienes a nadie
     mejor fuera (como mucho 3); para los 2 primeros, lo mejor de su puesto en el mercado que te llega y juega */
@@ -1037,7 +1086,7 @@ function saludoHTML(S) {
     notificaciones») debajo de «Preparando tu plan», en la app: si sale de la app, se sigue haciendo; con las notificaciones
     apagadas, se le dice que así no le puede avisar y se le ofrece activarlas (app.js lo cambia al volver del permiso) */
 export function notifPlanHTML() {
-  const t = nativo.canal() === 'play' ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
+  const t = ['play', 'ios'].includes(nativo.canal()) ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
   if (nativo.avisosPermitidos()) return `${t}. Puedes salir de la app: se sigue haciendo y te aviso cuando esté.`;
   return `${t}. Si sales de la app se sigue haciendo, pero con las notificaciones apagadas no te puedo avisar cuando esté. <button class="btn chico sec" data-accion="permisoPlan">${icono('campana')}Activar notificaciones</button>`;
 }
@@ -1234,13 +1283,13 @@ function eqPlantillaHTML(S, op) {
     ],
     maxPills: 2, conMini: true, op: op(x.pid),
   });
-  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
+  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.premium && M.premium.entrenador && M.mias.some((x) => x.j.pos === 5) ? `${M.mias.filter((x) => x.j.pos !== 5).length} jugadores y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : `${M.mias.length} jugadores`}</span></div>
     <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
       if (!xs.length) continue;
-      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 && !(M.premium && M.premium.entrenador) ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
   } else if (orden === 'titular') {
@@ -1354,14 +1403,16 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>${caraManager(e)}
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} en&nbsp;7&nbsp;días</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${bloqueada('dineroRivales', r.e.teamId) ? (r.dinero && r.dinero.exacto ? '' : pillRival(r.e.teamId)) : r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">${ptsJornadaTxt(M, e) || 'pts'}</div>`}</div></button>`;
     }).join('');
     // el dinero de cada uno cerrado: un solo candado arriba (antes, uno en cada fila)
     const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
+    // (0.8.4o) con el dinero de alguno cerrado, en su fila «Apuntar» (o «Te dijo 48 M»): un aviso arriba hasta que se quita
+    const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
-    h += ancho() ? cols(candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : candDinero + tabla;
+    h += ancho() ? cols(avisoD + candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
   } else {
     const f = S.filtro.cl || 'llegan';
     h += `<div class="filtros">${[['llegan', 'Te llegan'], ['pronto', 'Se abren pronto'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
@@ -1507,6 +1558,17 @@ export function mercado(S) {
     // (con lo de los rivales cerrado, su candado va con el del radar en una tarjeta, debajo de la lista)
     if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div>`;
     else if (man.length) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;
+    // (26 nov, parte B) en una liga premium con entrenador, los del mercado, aparte de los jugadores y sin veredictos
+    const ents = M.entrenadoresMercado || [];
+    if (ents.length) {
+      const d1e = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+      const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+      ml += `<div class="grupo"><span>Entrenadores</span><span>${ents.length}</span></div>${ents.map((m) => filaJugador(m, {
+        sub: `${esc(m.j.equipo)}${M.proximoPartido(m.j.equipoId) ? ` · ${rivalSub(M, m.j)}` : ''}`,
+        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? '<span class="pill bien">No tienes entrenador</span>' : '', estadoPill(m.j)],
+        derecha: `<div class="v">${eur(m.precio)}</div><div class="d apag">${d1e(m.media)} pts por jornada</div>`,
+      })).join('')}`;
+    }
     h += lista2(ml);
     // el radar de subidas, debajo de la lista (antes iba arriba y la tapaba); cerrado, junto a los otros candados
     h += bloqueada('inercia') ? '' : radarHTML(S);
@@ -1651,12 +1713,22 @@ export function adjuntosHTML(S) {
 // (la miniatura guardada está en IndexedDB: si aún no está en memoria, la pone app.js al pintar, por data-mini)
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
+/* (iOS 3) en la app de iOS no hay clave de Google: sin la IA de la app (en la liga de ejemplo, o si no está disponible),
+   se dice qué pasa en vez de la guía para sacar la clave */
+function iaSinClaveIos(S) {
+  const demo = !!(S.D && S.D.demo);
+  return `<div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1>${demo
+    ? `<p class="entradilla">En la liga de ejemplo no se le puede preguntar a la IA. Entra con tu cuenta de LaLiga y pregúntale lo que quieras de tu liga, también con capturas.</p><button class="btn ancho" data-accion="salirDemo">Entrar con mi cuenta</button>`
+    : '<p class="entradilla">Ahora mismo no se le puede preguntar a la IA. Vuelve a probar en un rato: mientras, en Hoy tienes el plan de la app.</p>'}`;
+}
 export function ia(S) {
-  if (!puedeChat(!!(S.D && S.D.demo))) return guiaClave(planesApp(!!(S.D && S.D.demo)));
+  if (!puedeChat(!!(S.D && S.D.demo))) return enAppIos() ? iaSinClaveIos(S) : guiaClave(planesApp(!!(S.D && S.D.demo)));
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>
     <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
+  // (iOS 3) dijo que no a mandar su liga a la IA: no se manda nada hasta que diga que sí
+  if (enAppIos() && permisoIA() === 'no') h += `<div class="banda">${icono('candado')}<span>La IA está apagada en este iPhone: no se le manda nada.</span><button data-accion="permisoIA">Activar</button></div>`;
   const ns = notasVigentes();
   if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;
   if (!msgs.length && !S.charlando) {
@@ -1667,7 +1739,7 @@ export function ia(S) {
   const hora = (ts) => (ts ? cuando(ts) : '');
   h += msgs.map((m, i) => (m.r === 'yo'
     ? `<div class="msg yo${m.fotos && m.fotos.length ? ' con-fotos' : ''}">${fotosMsg(m.fotos, i)}${m.t ? `<div>${esc(m.t)}</div>` : ''}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
-    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${m.dr ? tarjetaChatHTML(m.dr, i, S.D) : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   // para seguir la conversación sin escribir
   if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat

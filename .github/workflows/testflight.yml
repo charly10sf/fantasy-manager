@@ -1,0 +1,273 @@
+# La app de iOS a TestFlight (sesión iOS 4). Se lanza al subir a la rama `testflight` (git push origin ios:testflight) o a
+# mano. Compila la app para el iPhone con la firma en la nube de Apple (la clave de la API de App Store Connect, secretos
+# ASC_*: ni certificados ni perfiles en el repo), la sube a App Store Connect y deja TestFlight listo con
+# .github/ios/testflight.mjs: la información de la beta, el grupo externo «Probadores» con enlace público, los probadores
+# y el envío a la revisión de la beta. No toca la App Store: enviar la app a revisión de la tienda es otra cosa (iOS 6).
+# Con «[sin-subir]» en el mensaje del commit no compila: solo configura TestFlight con la última compilación.
+# (iOS 6) Con «[ficha]»: no compila; rellena la ficha de la App Store (.github/ios/ficha.mjs: textos, categoría, precio,
+# países, edad, datos para la revisión y las capturas del último «App Store» de ios.yml) y dice qué falta para enviar.
+# Con «[app-store]»: compila con los anuncios de verdad, NO la mete en TestFlight y la deja elegida en la ficha de la App
+# Store. Ninguno de los dos envía nada a revisión.
+name: TestFlight
+
+on:
+  push:
+    branches: [testflight]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+env:
+  TEAM: 23Q6T569UK
+  # Los anuncios de las compilaciones de TestFlight: «prueba» (los bloques de prueba de Google; a los de la liga no les
+  # cuenta nada tocarlos, y AdMob cierra cuentas por clics de gente cercana) o «reales» (los de project.yml, para la
+  # compilación que se envíe a la App Store en iOS 6)
+  ANUNCIOS: ${{ contains(github.event.head_commit.message, '[app-store]') && 'reales' || 'prueba' }}
+
+jobs:
+  # la clave pública con la que se cifra .github/ios/contacto.enc (el teléfono y los correos: el repo es público)
+  clave:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: La clave pública
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          node .github/ios/testflight.mjs clave
+          if [ -f .github/ios/contacto.enc ]; then node .github/ios/testflight.mjs comprobar; fi
+
+  # Con «[certificado]» en el mensaje del commit: crea el certificado Apple Distribution propio (clave nueva, solo en este
+  # trabajo) y lo sube a la rama cifrado con la clave pública de ASC_KEY_P8 (.github/ios/distribucion.enc): solo la Action,
+  # con ese secreto, lo puede abrir. La firma en la nube de Apple no vale para este equipo (estropea las tildes del nombre).
+  # Una vez al año (caduca a los 12 meses; la Action avisa 30 días antes). Revoca antes los ids de .github/ios/revocar.txt
+  certificado:
+    if: ${{ contains(github.event.head_commit.message, '[certificado]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: El certificado de distribución
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: node .github/ios/testflight.mjs certificado
+      - name: Guardarlo cifrado en la rama
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/ios/distribucion.enc
+          git rm -q --ignore-unmatch .github/ios/revocar.txt
+          git commit -q -m "TestFlight: el certificado de distribución, cifrado [sin-subir]"
+          git push -q origin HEAD:${GITHUB_REF_NAME}
+
+  subir:
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') }}
+    runs-on: macos-26
+    timeout-minutes: 60
+    outputs:
+      build: ${{ steps.numero.outputs.build }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Con qué se compila
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+      - name: El número de compilación
+        id: numero
+        # como en Android: el número de la ejecución × 10 + el intento (sube siempre; Apple no deja repetir)
+        run: echo "build=$(( GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT ))" >> "$GITHUB_OUTPUT"
+      - name: La clave de la API
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          if [ -z "$ASC_KEY_P8" ] || [ -z "$ASC_KEY_ID" ]; then echo "::error::Faltan los secretos ASC_KEY_P8 y ASC_KEY_ID"; exit 1; fi
+          D="$RUNNER_TEMP/claves"; mkdir -p "$D"; chmod 700 "$D"
+          node .github/ios/testflight.mjs p8 "$D/AuthKey_$ASC_KEY_ID.p8"
+          echo "CLAVE_P8=$D/AuthKey_$ASC_KEY_ID.p8" >> "$GITHUB_ENV"
+      - name: La web y el proyecto de Xcode
+        run: |
+          python3 .github/paquete.py >> "$GITHUB_ENV"
+          python3 ios/preparar.py >> "$GITHUB_ENV"
+          command -v xcodegen > /dev/null || brew install xcodegen
+          cd ios && xcodegen generate
+      # El certificado Apple Distribution propio (.github/ios/distribucion.enc, lo crea el trabajo «certificado»), en un
+      # llavero solo de esta pasada, con los intermedios de Apple para que la firma sea válida
+      - name: El certificado y el perfil
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          K="$RUNNER_TEMP/llavero"; mkdir -p "$K"; chmod 700 "$K"
+          node .github/ios/testflight.mjs p12 "$K/c.p12"
+          KC="$K/fm.keychain-db"; PASE=$(openssl rand -hex 16)
+          security create-keychain -p "$PASE" "$KC"
+          security set-keychain-settings -lut 3600 "$KC"
+          security unlock-keychain -p "$PASE" "$KC"
+          for c in AppleWWDRCAG3 AppleWWDRCAG4; do curl -fsSL -o "$K/$c.cer" "https://www.apple.com/certificateauthority/$c.cer" && security import "$K/$c.cer" -k "$KC" -T /usr/bin/codesign >/dev/null || true; done
+          security import "$K/c.p12" -k "$KC" -P "$(cat "$K/c.p12.clave")" -T /usr/bin/codesign -T /usr/bin/security
+          SERIE=$(cat "$K/c.p12.serie")
+          rm -f "$K/c.p12" "$K/c.p12.clave" "$K/c.p12.serie"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$PASE" "$KC" > /dev/null
+          security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
+          security find-identity -v -p codesigning "$KC"
+          HUELLA=$(security find-identity -v -p codesigning "$KC" | grep -m1 "Apple Distribution" | awk '{print $2}')
+          [ -n "$HUELLA" ] || { echo "::error::El certificado no sale como identidad válida para firmar"; exit 1; }
+          node .github/ios/testflight.mjs perfil "$K/perfil.mobileprovision" "$SERIE"
+          { echo "KC=$KC"; echo "HUELLA=$HUELLA"; echo "PERFIL=$K/perfil.mobileprovision"; } >> "$GITHUB_ENV"
+      # Se archiva sin firmar (la firma automática pide un iPhone registrado) y se firma después, a mano, con el certificado
+      # propio y el perfil App Store: lo mismo que haría Xcode, sin la firma en la nube
+      - name: Archivar
+        env:
+          BUILD: ${{ steps.numero.outputs.build }}
+        run: |
+          set -o pipefail
+          EXTRA=()
+          if [ "$ANUNCIOS" = "prueba" ]; then
+            EXTRA+=(FM_ADMOB_APP="ca-app-pub-3940256099942544~1458002511" FM_BONIFICADO="ca-app-pub-3940256099942544/1712485313"
+                    FM_INTERSTICIAL="ca-app-pub-3940256099942544/4411468910" FM_APERTURA="ca-app-pub-3940256099942544/5575463023")
+          fi
+          xcodebuild archive -project ios/FantasyManager.xcodeproj -scheme FantasyManager -configuration Release \
+            -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/app.xcarchive" \
+            DEVELOPMENT_TEAM="$TEAM" MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="$BUILD" \
+            FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" "${EXTRA[@]}" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
+            2>&1 | tee "$RUNNER_TEMP/archivar.log" | grep -E "error:|\*\* " || true
+          grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar.log"
+          echo "== en el archivo:"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" -c "Print :CFBundleVersion" -c "Print :GADApplicationIdentifier" "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app/Info.plist"
+      - name: Firmar y empaquetar
+        run: |
+          set -e
+          D="$RUNNER_TEMP/ipa"; rm -rf "$D"; mkdir -p "$D/Payload"
+          cp -R "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app" "$D/Payload/"
+          APP="$D/Payload/FantasyManager.app"
+          cp "$PERFIL" "$APP/embedded.mobileprovision"
+          # los permisos: los de la app (ios/App/FantasyManager.entitlements) con los del perfil que hacen falta
+          security cms -D -i "$PERFIL" > "$RUNNER_TEMP/perfil.plist"
+          E="$RUNNER_TEMP/permisos-app.plist"
+          cp ios/App/FantasyManager.entitlements "$E"
+          AMB=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" "$RUNNER_TEMP/perfil.plist")
+          /usr/libexec/PlistBuddy -c "Set :aps-environment $AMB" \
+            -c "Add :application-identifier string $TEAM.es.fantasymanager.app" \
+            -c "Add :com.apple.developer.team-identifier string $TEAM" \
+            -c "Add :beta-reports-active bool true" -c "Add :get-task-allow bool false" "$E"
+          plutil -p "$E"
+          find "$APP" -name '_CodeSignature' -prune -o -name '*.mobileprovision' -print | grep -v embedded.mobileprovision || true
+          for fw in "$APP"/Frameworks/*.framework "$APP"/Frameworks/*.dylib; do
+            [ -e "$fw" ] || continue
+            codesign -f -s "$HUELLA" --keychain "$KC" --generate-entitlement-der "$fw"
+          done
+          codesign -f -s "$HUELLA" --keychain "$KC" --entitlements "$E" --generate-entitlement-der "$APP"
+          # lo que se sube: firmado por el certificado propio, sin «adhoc», con el requisito bien escrito y con los permisos
+          for f in "$APP" "$APP"/Frameworks/*; do
+            echo "== $(basename "$f")"
+            codesign -dvv "$f" 2>&1 | grep -E "^Authority=Apple Distribution|flags=" || true
+            codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }
+            codesign -dvv "$f" 2>&1 | grep -q "adhoc" && { echo "::error::$(basename "$f") lleva la marca adhoc"; exit 1; }
+            codesign -d -r- "$f" 2>&1 | grep -qi "cc81\|cc87\|cca7" && { echo "::error::El requisito de $(basename "$f") va en NFD"; exit 1; }
+          done
+          codesign --verify --deep --strict "$APP"
+          codesign -d --entitlements - --xml "$APP" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APP" > "$RUNNER_TEMP/permisos.plist"
+          plutil -p "$RUNNER_TEMP/permisos.plist"
+          # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
+          /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production &&
+          /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" | grep -qx true ||
+            { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
+          (cd "$D" && zip -qry FantasyManager.ipa Payload)
+          ls -la "$D/FantasyManager.ipa"
+          echo "IPA=$D/FantasyManager.ipa" >> "$GITHUB_ENV"
+          echo "firma y permisos, bien"
+      # altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
+      - name: Subir a App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ steps.numero.outputs.build }}
+        run: |
+          export API_PRIVATE_KEYS_DIR="$RUNNER_TEMP/claves"
+          set +e
+          xcrun altool --upload-package "$IPA" --type ios --apple-id 6839220127 --bundle-id es.fantasymanager.app \
+            --bundle-version "$BUILD" --bundle-short-version-string "$FM_MARKETING" \
+            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" > "$RUNNER_TEMP/subir.log" 2>&1
+          CODIGO=$?
+          set -e
+          grep -E "ERROR|UPLOAD|No errors|path “" "$RUNNER_TEMP/subir.log" | cut -c1-300 | head -20
+          if [ $CODIGO -ne 0 ] || grep -qiE "UPLOAD FAILED|Failed to upload|ERROR:" "$RUNNER_TEMP/subir.log"; then echo "::error::La subida a App Store Connect ha fallado"; exit 1; fi
+          grep -qiE "UPLOAD SUCCEEDED|No errors uploading" "$RUNNER_TEMP/subir.log" || { echo "::error::altool no dice que la subida haya ido bien"; exit 1; }
+      - name: Los registros
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/salida"
+          for f in archivar.log archivar2.log subir.log; do [ -f "$RUNNER_TEMP/$f" ] && tail -c 300000 "$RUNNER_TEMP/$f" > "$RUNNER_TEMP/salida/$f"; done
+          cp "$RUNNER_TEMP/permisos.plist" "$RUNNER_TEMP/salida/" 2>/dev/null || true
+          rm -rf "$RUNNER_TEMP/claves" "$RUNNER_TEMP/llavero"
+          [ -n "$KC" ] && security delete-keychain "$KC" 2>/dev/null || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: testflight-registros
+          path: ${{ runner.temp }}/salida
+          retention-days: 14
+
+  configurar:
+    needs: [clave, subir]
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: TestFlight
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ needs.subir.outputs.build }}
+          APP_STORE: ${{ contains(github.event.head_commit.message, '[app-store]') && 'si' || '' }}
+        # la de la App Store (anuncios de verdad) no va a TestFlight: nadie de la liga puede tocar anuncios de verdad
+        run: |
+          if [ -n "$APP_STORE" ]; then node .github/ios/ficha.mjs version "$BUILD"; else node .github/ios/testflight.mjs configurar; fi
+
+  # (iOS 6) la ficha de la App Store, con «[ficha]» en el mensaje del commit. Las capturas salen del artefacto
+  # «ios-tienda» de la última «App iOS» que salió bien en la rama `ios`
+  ficha:
+    if: ${{ contains(github.event.head_commit.message, '[ficha]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Las capturas del simulador
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 10 --json databaseId -q '.[].databaseId' | while read -r r; do
+            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda; then echo "$r"; break; fi; done)
+          if [ -n "$ID" ]; then
+            gh run download "$ID" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas"
+            echo "CAPTURAS=$RUNNER_TEMP/capturas" >> "$GITHUB_ENV"
+            echo "capturas de la ejecución $ID:"; find "$RUNNER_TEMP/capturas" -name '*.png' | sort
+          else
+            echo "::warning::No hay capturas para la tienda (artefacto ios-tienda): la ficha se rellena sin ellas"
+          fi
+      - name: La ficha
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          REVISOR_USUARIO: ${{ secrets.REVISOR_USUARIO }}
+          REVISOR_CLAVE: ${{ secrets.REVISOR_CLAVE }}
+        run: node .github/ios/ficha.mjs ficha

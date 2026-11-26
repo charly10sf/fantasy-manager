@@ -9,7 +9,7 @@
       paga de más al fichar) y con a quién saca o mete en el once.
    2. La combinación: se prueban todas las combinaciones de los candidatos (son pocos) y se queda la que más vale,
       sumando los euros y los puntos del once (con `valorPunto`, la equivalencia entre los dos), entre las que cumplen
-      las reglas de LaLiga: una cláusula solo con saldo, la suma de pujas dentro del tope de deuda, 25 jugadores,
+      las reglas de LaLiga: una cláusula solo con saldo, la suma de pujas dentro del tope de deuda, 24 jugadores,
       formaciones gratis, dos blindajes, los cambios de mercado que quedan para revender y empezar la jornada en
       positivo aunque los valores bajen (lo de revender cuenta al 92 % y lo puesto en venta al 90 %).
    3. El orden: primero lo que mete dinero, luego las cláusulas, las pujas, proteger y alinear.
@@ -18,7 +18,7 @@
 
    Una venta siempre tiene un motivo (está de baja, ha girado, le pagan de más, es de revender y toca, o hace falta para
    empezar la jornada en positivo): nunca «por hacer caja». Si este motor falla, sale el plan de antes (planAuto). */
-import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia } from './util.js';
+import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia, TOPE_PLANTILLA } from './util.js';
 
 const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
 import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, noRevenderCorto, prisaNegativo, malPartidoTxt } from './motor.js';
@@ -57,6 +57,8 @@ const ajustes = (c) => ({ ...AJUSTES, ...((c && c.plan) || {}) });
  * punto (AJUSTES.eurPunto; cfg().plan.eurPunto lo cambia). Con eurPunto a 0 sale de la liga: lo que vale un jugador con
  * dueño por cada punto que se espera de él (la mediana), repartido en 10 jornadas.
  */
+/** (26 nov) un entrenador en una liga premium que los tiene no ocupa sitio en el tope de 24: venderlo no libera ninguno */
+const noOcupa = (M, o) => !!(M.premium && M.premium.entrenador && o && o.j && o.j.pos === 5);
 export function valorPunto(D, M, c) {
   const A = ajustes(c);
   if (+A.eurPunto > 0) return { v: +A.eurPunto, de: c && c.plan && +c.plan.eurPunto > 0 ? 'ajuste' : 'lo que paga LaLiga por punto' };
@@ -99,7 +101,7 @@ function contextoDe(D, M, c, ahora) {
     punto: vp.v * A.jornadas * (paron ? A.paron : 1),
     mias: M.mias.map((x) => x.j),
     yo: D.yo && D.yo.teamId,
-    // las pujas que ya tienes puestas ocupan sitio: si las ganas todas no puedes pasar de 25 (qué hace LaLiga si te pasas no
+    // las pujas que ya tienes puestas ocupan sitio: si las ganas todas no puedes pasar de 24 (qué hace LaLiga si te pasas no
     // está comprobado: Carlos, 14 nov). Y lo que ya tienes para revender (cuenta para los «2 a la vez»)
     nPujas: M.mercado.filter((m) => m.miPuja).length,
     revVivos: (M.paraRevender || []).length,
@@ -214,9 +216,19 @@ function candidatos(X, vetados) {
     const op = (extra) => ({ accion: 'vender', ref: `V-${x.pid}`, pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy', confianza: 'media', ...extra });
     const llega = ' La oferta de LaLiga llega en el siguiente cambio de mercado.';
     // el entrenador no puntúa en la versión gratuita: dinero parado
+    // (26 nov) en una liga premium con entrenador puntúa: no se vende por eso (decide.js, regla 2). El destituido no
+    // puntúa en ningún sitio: ese sí
+    if (x.j.pos === 5 && M.premium && M.premium.entrenador) {
+      if (x.j.estado === 'out_of_league') {
+        nuevo({ ...base, k: `V-${x.pid}`, fijo: true, motivo: 'entrenador', euros: 0,
+          op: () => op({ objetivo: 'caja', confianza: 'alta', motivo: `Ya no entrena en LaLiga y no puntúa: son ${eur(x.j.valor)} parados que puedes usar en otro entrenador o en jugadores.${llega}`,
+            datos: { porque: 'ya no entrena en LaLiga: no puntúa', cuanto: eur(x.j.valor), cuando: 'hoy', siNo: 'ese dinero sigue parado' } }) });
+      }
+      continue;
+    }
     if (x.j.pos === 5) {
       nuevo({ ...base, k: `V-${x.pid}`, fijo: true, motivo: 'entrenador', euros: 0,
-        op: () => op({ objetivo: 'caja', confianza: 'alta', motivo: `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.${llega}`,
+        op: () => op({ objetivo: 'caja', confianza: 'alta', motivo: `Es entrenador y ${M.premium.liga ? 'en tu liga' : 'en la versión gratuita'} no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.${llega}`,
           datos: { porque: 'es entrenador: no puntúa en la versión gratuita', cuanto: eur(x.j.valor), cuando: 'hoy', siNo: 'ese dinero sigue parado' } }) });
       continue;
     }
@@ -417,9 +429,9 @@ const revFuera = (X, lista) => { const r = new Set((X.M.paraRevender || []).map(
 /** las cuentas de una combinación, con las reglas de LaLiga. Devuelve null si no se puede hacer */
 function cuentas(X, lista) {
   const { D, M, A, ciclos } = X;
-  let caja = num(D.dinero), margen = num(D.dinero) + M.deuda - num(M.misPujas), n = M.mias.length + (X.nPujas || 0);
+  let caja = num(D.dinero), margen = num(D.dinero) + M.deuda - num(M.misPujas), n = M.nPlantilla + (X.nPujas || 0);
   let vuelve = 0, ventas = 0, hayRev = false, nC = 0, nP = 0, nE = 0;
-  for (const o of lista) if (o.clase === 'aceptar') { caja += o.importe; margen += o.importe; n--; } else if (o.clase === 'retirar') { margen += o.importe; n--; }
+  for (const o of lista) if (o.clase === 'aceptar') { caja += o.importe; margen += o.importe; if (!noOcupa(M, o)) n--; } else if (o.clase === 'retirar') { margen += o.importe; n--; }
   // las cláusulas, por orden de lo que valen: cada una tiene que caber en lo que hay en caja en ese momento
   for (const o of lista) {
     if (o.clase !== 'clausular') continue;
@@ -437,11 +449,11 @@ function cuentas(X, lista) {
     if (o.rev) { hayRev = true; vuelve += o.importe * A.margenRev; nE++; } else if (o.aguantar) nE++; else nP++;
   }
   for (const o of lista) if (o.clase === 'vender' && (ciclos >= 1)) ventas += o.futura * A.margenVenta;
-  // (con las pujas ya puestas puedes pasar de 25 sobre el papel: eso no impide vender, solo fichar a nadie más)
+  // (con las pujas ya puestas puedes pasar de 24 sobre el papel: eso no impide vender, solo fichar a nadie más)
   // (15 nov) el tope de «2 a la vez» (3 en el parón) es para lo que se COMPRA hoy para revender. Antes, con más de eso ya
   // en la plantilla (compraste 3 en el parón y el tope vuelve a 2, o los fichaste por tu cuenta), no cuadraba NINGUNA
   // combinación, ni la de no hacer nada: el plan salía con las cuentas a medias y el de la IA fallaba siempre («no cuadra»)
-  if ((n > 25 && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || (nE > 0 && nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista))) return null;
+  if ((n > TOPE_PLANTILLA && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || (nE > 0 && nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista))) return null;
   const fin = margen - M.deuda;   // el saldo al acabar el día, contando como gastado todo lo pujado
   if (hayRev && fin < -M.deuda * X.topeDeuda) return null;
   // (19 nov) el bueno a su valor del parón, solo pagado con saldo: con él, nada de quedarse en negativo
@@ -491,7 +503,7 @@ function elegir(X, libres, fijos, oblig = 0) {
   const nAcc = new Uint8Array(T), nC = new Uint8Array(T), nP = new Uint8Array(T), nE = new Uint8Array(T), nOps = new Uint8Array(T), mala = new Uint8Array(T), cabe = new Uint8Array(T);
   // un jugador, una operación
   const choca = libres.map((o, i) => libres.reduce((m, p, k) => (k !== i && (p.pid === o.pid || fijos.some((f) => f.pid === o.pid)) ? m | (1 << k) : m), fijos.some((f) => f.pid === o.pid) ? 1 << i : 0));
-  const dinero = num(D.dinero), margen0 = dinero + M.deuda - num(M.misPujas), n0 = M.mias.length + (X.nPujas || 0);
+  const dinero = num(D.dinero), margen0 = dinero + M.deuda - num(M.misPujas), n0 = M.nPlantilla + (X.nPujas || 0);
   const venFijas = fijos.reduce((t, o) => t + (o.clase === 'vender' ? o.futura : 0), 0);
   // (lo que ya tienes para revender cuenta para los «2 a la vez», salvo lo que este plan vende)
   const maxE = Math.max(0, (X.paron ? 3 : 2) - (X.revVivos || 0) + revFuera(X, fijos));
@@ -525,7 +537,7 @@ function elegir(X, libres, fijos, oblig = 0) {
     if (cl > 0 && (caja < 0 || margen < 0)) continue;
     margen -= bid;
     if (bid > 0 && margen < 0) continue;
-    if ((nC[mask] + nP[mask] + nE[mask] > 0 && n0 - nAcc[mask] + nC[mask] + nP[mask] + nE[mask] > 25) || nC[mask] > A.maxOnce || nP[mask] > A.maxOnce || nE[mask] > maxE) continue;
+    if ((nC[mask] + nP[mask] + nE[mask] > 0 && n0 - nAcc[mask] + nC[mask] + nP[mask] + nE[mask] > TOPE_PLANTILLA) || nC[mask] > A.maxOnce || nP[mask] > A.maxOnce || nE[mask] > maxE) continue;
     const fin = margen - M.deuda;
     if (nE[mask] && fin < -M.deuda * X.topeDeuda) continue;
     if ((mask & saldoM) && fin < 0) continue;
@@ -690,7 +702,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const tocados = onceFijo.lineas.flat().filter((j) => j.estado === 'doubtful');
     const sancionados = M.mias.filter((x) => !vendidos.has(x.pid) && M.sancionCorta(x.j));
     ops.push({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: antesDe(inicio), confianza: 'media',
-      motivo: `Pon el ${onceFijo.nombre}: ${onceFijo.lineas.flat().map((j) => j.nombre).join(', ')}.${onceFijo.huecos ? ` Te faltan ${onceFijo.huecos} para completarlo.` : ''}${pujados.length && M.cierreMercado && M.proxima && M.cierreMercado < M.proxima.ini ? ` Si ganas la puja por ${pujados.join(' y ')}, mételo${pujados.length > 1 ? 's' : ''} en el once antes de que empiece la jornada.` : ''}${tocados.length ? ` Ojo con ${tocados.map((j) => j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
+      motivo: `Pon el ${onceFijo.nombre}: ${onceFijo.lineas.flat().map((j) => j.nombre).join(', ')}.${onceFijo.huecos ? ` Te faltan ${onceFijo.huecos} para completarlo.` : ''}${M.premiumAlinTxt(onceFijo, cierta)}${pujados.length && M.cierreMercado && M.proxima && M.cierreMercado < M.proxima.ini ? ` Si ganas la puja por ${pujados.join(' y ')}, mételo${pujados.length > 1 ? 's' : ''} en el once antes de que empiece la jornada.` : ''}${tocados.length ? ` Ojo con ${tocados.map((j) => j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
   }
   if (!ops.length) {
     ops.push({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', confianza: 'media',
@@ -720,11 +732,11 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     }
     const ver = X.V[`${a.tipo === 'pujar' ? 'P' : 'C'}-${a.pid}`];
     if (ver && !ver.ok) return corto(ver.aviso) || 'la app no la haría hoy';
-    if (llena) return 'Tienes la plantilla llena (25): no se puede pujar por nadie más sin vender antes.';
+    if (llena) return `Tienes la plantilla llena (${TOPE_PLANTILLA}): no se puede pujar por nadie más sin vender antes.`;
     if (cand && !cuentas(X, [...lista, cand])) return a.tipo === 'pujar' ? 'No cabe hoy: con lo que ya llevas pujado y el resto del plan pasarías del tope de deuda.' : 'No cabe hoy: una cláusula solo se paga con saldo y el del plan ya está gastado.';
     return 'Con el resto del plan ya no mejora tu once lo bastante para lo que cuesta.';
   };
-  const llena = M.mias.length >= 25;
+  const llena = M.llena, nPl = M.nPlantilla;
   const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid))
     .filter((a, i, xs) => xs.findIndex((b) => b.pid === a.pid) === i).slice(0, 6)
     .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador && !alternativas.some((o) => o.pid === d.pid) && !X.avisos.some((v) => v.pid === d.pid));
@@ -742,7 +754,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
       const cand = todos.find((o) => o.pid === m.pid && !o.forzada);
       const ver = X.V[`P-${m.pid}`];
       if (ver && !ver.ok) return corto(ver.aviso, 160) || 'La app no pujaría hoy por él.';
-      if (llena) return 'Tienes la plantilla llena (25): no se puede pujar por nadie más sin vender antes.';
+      if (llena) return `Tienes la plantilla llena (${TOPE_PLANTILLA}): no se puede pujar por nadie más sin vender antes.`;
       if (enAlt.has(String(m.pid))) return 'Vale para tu once, pero el plan de hoy lleva otros pasos antes: si te sobra dinero, es una opción.';
       if (cand && !cuentas(X, [...lista, cand])) return 'No cabe hoy: con lo que ya llevas pujado y el resto del plan pasarías del tope de deuda.';
       const deMas = num(m.puja) - num(m.j.valor);
@@ -805,7 +817,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const titVende = modo === 'cierre' ? ops.filter((o) => !o.descartada && o.accion === 'vender' && o.pid && M.perdida(o.pid) >= 0.3) : [];
   const titTxt = titVende.length ? `${titVende.map((o) => (o.j && o.j.nombre) || o.jugador).join(' y ')}${base.jornada < 0 ? ', porque hace falta el dinero para no empezar la jornada en negativo' : ''}` : '';
   const situacion = `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`
-    + (llena ? ` Tienes la plantilla llena (${M.mias.length} de 25): LaLiga no te deja pujar por nadie más hasta que vendas a uno.` : M.mias.length >= 23 ? ` Tienes ${M.mias.length} de 25 jugadores: te ${25 - M.mias.length === 1 ? 'queda 1 sitio' : `quedan ${25 - M.mias.length} sitios`}${X.nPujas && M.mias.length + X.nPujas >= 25 ? `, y ${X.nPujas === 1 ? 'la puja que tienes puesta lo ocupa si la ganas' : `las ${X.nPujas} pujas que tienes puestas los ocupan si las ganas`}: no se ficha a nadie más` : ''}.` : '')
+    + (llena ? ` Tienes la plantilla llena (${nPl} de ${TOPE_PLANTILLA}): LaLiga no te deja pujar por nadie más hasta que vendas a uno.` : nPl >= TOPE_PLANTILLA - 2 ? ` Tienes ${nPl} de ${TOPE_PLANTILLA} jugadores: te ${TOPE_PLANTILLA - nPl === 1 ? 'queda 1 sitio' : `quedan ${TOPE_PLANTILLA - nPl} sitios`}${X.nPujas && nPl + X.nPujas >= TOPE_PLANTILLA ? `, y ${X.nPujas === 1 ? 'la puja que tienes puesta lo ocupa si la ganas' : `las ${X.nPujas} pujas que tienes puestas los ocupan si las ganas`}: no se ficha a nadie más` : ''}.` : '')
     + (modo === 'paron' ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero (comprar lo que sube para venderlo antes de la jornada y vender lo que ha girado). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : '')
     + (modo === 'cierre' ? ` Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} (${cuando(M.vedaAhora.fin)}): hoy no se toca a los titulares, que no habría con qué reponerlos${titTxt ? `, salvo ${titTxt}` : ''}.` : '')
     + (modo === 'enjuego' ? ` La jornada ${M.enJuego.n} está en juego y tu once está cerrado: el plan ya mira a la siguiente.` : '')

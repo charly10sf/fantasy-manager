@@ -6,7 +6,7 @@
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, enIPhone, despues, nativo } from './puente.js';
 import { token, sesion } from './auth.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe, TOPE_PLANTILLA } from './util.js';
 import { K } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
@@ -35,7 +35,16 @@ function vuelveCupo() {
   return cuando(Date.now() + 864e5 - pasado);
 }
 
-export const clave = () => leer('gemini') || '';
+/* (iOS 3, 25 nov) En la app de iOS la IA es solo la de la app: no hay clave de Google (ni se pide ni se usa, aunque quedara
+   una guardada), y nada se manda a la IA sin el permiso de quien la usa (norma 5.1.2(i) de Apple: datos personales a una
+   IA de otra empresa, con permiso expreso antes). El permiso es de ese iPhone (LS «ia-permiso»: 'si' | 'no'; sin nada,
+   aún no ha contestado). Fuera de la app de iOS no cambia nada: ni permiso ni clave distinta */
+export const enAppIos = () => enApp && nativo.canal() === 'ios';
+export const pidePermisoIA = () => enAppIos();
+export const permisoIA = () => (pidePermisoIA() ? LS.get('ia-permiso', '') || '' : 'si');
+export const iaPermitida = () => permisoIA() === 'si';
+export const ponerPermisoIA = (si) => LS.set('ia-permiso', si ? 'si' : 'no');
+export const clave = () => (enAppIos() ? '' : leer('gemini') || '');
 export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); LS.del('ia-pausa'); };
 export const hayClave = () => !!clave();
 // web: la búsqueda en Google en el chat (solo cuando hace falta). (webPlan, la del plan con tu clave, solo la usaba el plan
@@ -669,6 +678,39 @@ const ESTADO_TXT = {
   suspended: 'SANCIONADO',
   out_of_league: 'FUERA DE LA LIGA (ya no está en LaLiga)',
 };
+/**
+ * (26 nov) Solo en una liga premium: las reglas de las funciones que el administrador tiene ENCENDIDAS, tal cual las da
+ * la ayuda de LaLiga Fantasy («Ligas premium», «Entrenador», «Cesiones») y las cifras de la propia liga. Las instrucciones
+ * de la IA dan por hecho la versión gratis («sin entrenador»): esto manda sobre ellas. Son reglas, no consejos: a quién
+ * poner de capitán o en el banquillo lo dirá la app cuando esté medido (parte B). Unos 100 tokens, y solo en ligas premium.
+ */
+export function premiumTxt(M) {
+  const P = M && M.premium;
+  if (!P || !P.liga || !P.leido) return '';   // una liga guardada de antes no trae qué funciones tiene: nada hasta actualizar
+  const si = [], no = [];
+  // (26 nov, parte B) lo que propone la app, medido con las jornadas jugadas: el capitán y el banquillo de su mejor once, a
+  // cuál de sus entrenadores alinear y, si no tiene, cuál fichar (`M.once`, `M.ficharEntrenador`): la IA dice lo mismo
+  const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  // (con la jornada en juego ya no se cambian: no se propone nada)
+  const pro = !M.enJuego && M.premiumPropuesta ? M.premiumPropuesta() : null;
+  const cap = P.capitan && pro ? pro.capitan : null, ban = (P.banquillo && pro && pro.banquillo) || [];
+  const mios = P.entrenador && M.mias ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league') : [];
+  const fe = P.entrenador && M.ficharEntrenador ? M.ficharEntrenador() : null;
+  const otroE = mios.length >= 2 && M.once && M.once.entrenador ? (mios.find((x) => x.j.id !== M.once.entrenador.id) || {}).j : null;
+  const entTxt = otroE && !M.enJuego ? `. De los suyos, LA APP ALINEA A ${M.once.entrenador.nombre}${M.mejorPartidoEnt(M.once.entrenador, otroE) ? ' (mejor partido esta jornada)' : ''}`
+    : fe ? `. NO TIENE ENTRENADOR y fichar uno compensa (no ocupa sitio y dan unos 2,4 puntos por jornada de media): la app ficharía a ${fe.j.nombre}, libre en el mercado (vale ${eur(fe.precio)}, ${d1(fe.media)} puntos por jornada)` : '';
+  if (P.entrenador) si.push(`ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de ${TOPE_PLANTILLA} jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador${entTxt}`); else no.push('entrenador (no se alinea ni puntúa)');
+  if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega' + (cap ? `. LA APP PROPONE DE CAPITÁN A ${cap.j.nombre} (~${d1(cap.pp)} puntos esperados, el que más de los suyos): di ese` : '')); else no.push('capitán');
+  if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán' + (ban.length ? `. LA APP PROPONE EN EL BANQUILLO: ${ban.map((b) => `${b.j.nombre} (${POS[b.pos]})`).join(', ')}: di esos` : '')); else no.push('banquillo');
+  if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): ya van en la lista de formaciones que puede usar'); else no.push('formaciones de más');
+  if (P.cesiones) si.push(`CESIONES: un jugador de otro mánager por ${P.cesionJornadas > 1 ? `${P.cesionJornadas} jornadas` : 'una jornada'}${P.cesionMax ? ` (${P.cesionMax} como mucho entre cedidos y peticiones)` : ''}, pagándole un mínimo que depende de su valor; se piden hasta 24 h antes de la jornada y el cedido no cuenta en el tope de plantilla`); else no.push('cesiones');
+  if (P.ideal) si.push('11 IDEAL: LaLiga paga un premio en dinero por cada jugador mío que entre en el 11 ideal de la jornada'); else no.push('premio del 11 ideal');
+  return `LIGA PREMIUM (esto manda sobre las reglas 10 y 11 en lo que digan de «versión gratis», entrenador y recompensa): recompensa diaria de ${eur(M.RECOMPENSA || 200000)} y blindaje de ${M.ESCUDO_H || 48} h.${si.length ? ` ${si.join('. ')}.` : ''}${no.length ? ` El administrador tiene APAGADO: ${no.join(', ')}.` : ''}`;
+}
+/** lo que se le dice a la IA de un entrenador: en una liga premium que los tiene, puntúa (ayuda de LaLiga, «Entrenador») */
+const entrenadorTxt = (M, j, largo) => (M && M.premium && M.premium.entrenador
+  ? (j.estado === 'out_of_league' ? 'ENTRENADOR DESTITUIDO: ya no puntúa' : 'ENTRENADOR: en esta liga premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; NO se vende por «no puntuar»')
+  : `ENTRENADOR: no se alinea ni puntúa${M && M.premium && M.premium.leido ? ' (el administrador de la liga tiene apagados los entrenadores)' : largo ? ' en la versión gratis' : ''}`);
 const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   (() => { const ine = M.inercia ? M.inercia(j.id) : null; if (ine && ine.fase !== 'plano') return null; return x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null; })(),
@@ -676,7 +718,7 @@ const lineaJ = (M, j, x = {}) => [
   // (la de 7 días lleva dentro los días de bajada: con el que acaba de empezar a subir, lo que sube estos días)
   x.tend && x.tend.rRec != null && x.tend.p7 != null && x.tend.p7 < 2 ? `lleva ${x.tend.racha} días subiendo (${pct(x.tend.rRec / 0.9 * 100)}/día)` : null,
   inerciaTxt(M, j),
-  j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa en la versión gratis' : null,
+  j.pos === 5 ? entrenadorTxt(M, j, true) : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
   j.pos < 5 ? forma(M, j.id) : null,
   j.pos < 5 ? historialTxt(M, j, PLAN_CORTO ? 3 : 5) : null,
@@ -696,7 +738,7 @@ const lineaBreve = (M, j) => {
     POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
     t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null,
     inerciaTxt(M, j),
-    j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa' : null,
+    j.pos === 5 ? entrenadorTxt(M, j, false) : null,
     j.media ? `media ${String(j.media).replace('.', ',')}` : null,
     onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null),
     j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts esperados` : null,
@@ -1112,6 +1154,9 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   L.push(`AHORA: ${ahora} (hora de España)`);
   L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo (${eur(M.deuda)}), pero solo pujando o comprando en el mercado: las cláusulas se pagan con saldo.`);
+  // (26 nov) en una liga premium, sus reglas (las instrucciones dan por hecho la versión gratis)
+  const prem = premiumTxt(M);
+  if (prem) L.push(prem);
   // (aviso de Domy, 31 oct) LaLiga cierra el once con el primer partido de la jornada: con ella en juego, todo lo que se
   // haga es para la siguiente (o para el parón, si va antes)
   if (M.enJuego) {
@@ -1161,8 +1206,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     L.push(`CAJA PARA CLÁUSULAS: ${eur(num(D.dinero))} ahora${cajaA > num(D.dinero) ? `; ${eur(cajaA)} si antes acepto las ofertas que ya tengo` : ''}. Lo que ponga a la venta hoy no entra hasta que acepte una oferta${M.cierreMercado ? ` (llegan en el cambio de mercado, ${cuando(M.cierreMercado)})` : ''}.${M.misPujas ? ` SALDO SI GANO MIS PUJAS DE AHORA: ${eur(num(D.dinero) - M.misPujas)} (cuenta así para empezar la jornada en positivo).` : ''}`);
   }
   if (M.once) {
-    const tit = new Set(M.once.lineas.flat().map((j) => j.id));
-    L.push(`\nJUEGA CON LA VERSIÓN GRATUITA. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
+    const tit = new Set([...M.once.lineas.flat().map((j) => j.id), ...(M.once.entrenador ? [M.once.entrenador.id] : [])]);
+    L.push(`\n${M.premium && M.premium.leido ? 'LIGA PREMIUM' : 'JUEGA CON LA VERSIÓN GRATUITA'}. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
     L.push(`MI PLANTILLA POR PUESTOS (sanos/total): ${M.puestos.map((p) => `${POS[p.pos]} ${p.sanos}/${p.total}${p.faltan ? ` (FALTAN ${p.faltan})` : ''}${p.conviene ? ` (conviene tener ${p.conviene} más, no es obligatorio)` : ''}${p.sobran ? ` (sobran ${p.sobran})` : ''}`).join(' · ')}.`);
     // con la jornada en juego, el «próximo partido» de cada uno mezcla esta jornada y la siguiente: solo quién es titular
     if (M.enJuego) L.push(`MI MEJOR ONCE (solo de referencia, para saber quién es titular y quién no; la alineación de la jornada ${M.proxima ? M.proxima.n : 'siguiente'} se decide cuando acabe esta): ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}.`);
@@ -1751,6 +1796,8 @@ export function aplicarCorto(json, R, D, M, c) {
 export const planesApp = (demo) => !demo && planesCfg().on;
 /** ¿se puede pedir un plan con IA? (la de la app o tu clave) */
 export const puedePlanIA = (demo) => planesApp(demo) || hayClave();
+/** ¿puede pedirse un plan con IA SOLO, sin que lo pida la persona? (en la app de iOS, solo con el permiso ya dado) */
+export const planIASolo = (demo) => puedePlanIA(demo) && iaPermitida();
 /** lo último que ha dicho el Worker del cupo de hoy ({ usados, gratis, max, extras, quedan, masConAnuncio }) o null */
 export function cupoPlanes() {
   const g = LS.get('planes-cupo', null);
@@ -1962,6 +2009,7 @@ export function sellarPlan(P, D, M) {
   return P;
 }
 export async function planDelDia(D, M, c, op = {}) {
+  if (!iaPermitida()) throw new ErrorIA('Sin tu permiso no se manda nada a la IA. Tienes el plan de la app; si quieres el de la IA, actívala en Ajustes → La IA.', 0, { sinPermiso: true });
   let P = null;
   if (planesApp(op.demo)) {
     try { P = await planCorto(D, M, c, { ...op, porApp: true }); } catch (e) {
@@ -2497,7 +2545,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
   for (const o of ops) {
     if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.decisionBase) continue;
     const d = M.decisionBase(o.pid);
-    if (!d || d.regla === 'entrenador') continue;
+    if (!d || (d.regla === 'entrenador' && d.accion === 'vender')) continue;   // en premium el entrenador se aguanta: esa venta sí se mira
     const acepta = o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '');
     const noEsta = acepta && d.accion === 'vender' && d.oferta === 'esperar' && d.matiz !== 'con-recambio';
     if (d.accion !== 'aguantar' && !noEsta) continue;
@@ -2669,7 +2717,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     if (!bien) {
       avisoAlin = llegaTarde.length
         ? `La alineación de la IA ponía a ${llegaTarde.map((t) => t.j.nombre).join(', ')}, que no llega${llegaTarde.length > 1 ? 'n' : ''}: su cláusula se abre ${cuando(llegaTarde[0].abre)}, cuando LaLiga ya ha cerrado el once de la jornada. Te pongo la mejor que sale con tu plantilla.`
-        : 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no es de las gratis): te pongo la mejor que sale con tu plantilla.';
+        : 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no vale en tu liga): te pongo la mejor que sale con tu plantilla.';
       alineacion = null;
     } else {
       // (aviso de Domy, 30 oct: «me recomienda alinear un defensa del Racing jugando contra el Madrid») la IA no siempre
@@ -2937,7 +2985,7 @@ let alCambiar = () => {};
 /** sinc.js se apunta aquí para subir lo que cambie */
 export const escucharCambios = (f) => { alCambiar = typeof f === 'function' ? f : () => {}; };
 export const cambioLocal = (clave) => { try { alCambiar(clave); } catch (e) { /* sin sincronizar, como antes */ } };
-const guardarChat = (l) => { LS.set(K('chat'), l); LS.set(K('chat-t'), Date.now()); cambioLocal('chat'); };
+export const guardarChat = (l) => { LS.set(K('chat'), l); LS.set(K('chat-t'), Date.now()); cambioLocal('chat'); };
 /** lo de este dispositivo, cada cosa con cuándo se cambió: { plan, chat, notas, hechos } (null lo que no hay) */
 export function paraSinc() {
   const p = ultimoPlan();
@@ -3156,8 +3204,9 @@ export function dineroPreguntado(pregunta, D, M, antes = '') {
 }
 // (25 nov) en el iPhone no hay Google Play: el dinero de un rival se abre invitando a un amigo (2 rivales por amigo)
 const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : enIPhone ? 'en el iPhone se abre invitando a un amigo, con el botón Invitar de arriba' : 'se abre viendo un anuncio en la app de Google Play');
-// «quién puede pagar tus cláusulas» se abre en la ficha de tu jugador, con un anuncio (o, en el iPhone, invitando)
-const comoSeAbreQuien = () => (topConAnuncio() ? 'se abre en la ficha de tu jugador, tocando su candado y viendo un anuncio corto' : comoSeAbre());
+// «quién puede pagar tus cláusulas» se abre en la ficha de tu jugador, con un anuncio
+// (en el iPhone, invitando solo se abre el dinero de los rivales: quién paga, de momento, no; como dondeTop de comunes.js)
+const comoSeAbreQuien = () => (topConAnuncio() ? 'se abre en la ficha de tu jugador, tocando su candado y viendo un anuncio corto' : enIPhone ? 'en el iPhone, de momento, no se puede abrir' : 'se abre viendo un anuncio en la app de Google Play');
 const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
 const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
 const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;
@@ -3236,7 +3285,10 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = nu
   const recientes = deEstaPregunta(DICHO_AHORA, pregunta) ? notas().filter((n) => DICHO_AHORA.ids.includes(n.id)) : [];
   const pend = M && deEstaPregunta(PENDIENTE, pregunta) ? PENDIENTE.lista : [];
   const dichas = [];
+  // (0.8.4o) lo que un rival le dijo que tiene: no se guarda solo; sale una tarjeta debajo de la respuesta para apuntarlo
+  let dineroRival = null;
   for (const a of j.apuntar || []) {
+    if (a && String(a.tipo || '') === 'dinero') { if (!dineroRival) dineroRival = dineroDeNota(a, D, pregunta); continue; }
     if (!a || !a.texto) continue;
     const pidA = a.jugador ? pidDe(a.jugador, D) : null;
     const k = pend.findIndex((x) => valeDicho(x.corr, pidA, D, M));
@@ -3260,7 +3312,25 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = nu
   }
   if (apuntadas.length || olvidadas) guardarNotas([...lista, ...apuntadas]);
   if (dichas.length) apuntadas.push(...guardarDicho(dichas));
-  return { texto: limpio, apuntadas, olvidadas, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
+  return { texto: limpio, apuntadas, olvidadas, dineroRival, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
+}
+/** (0.8.4o) de la nota «dinero» de la IA: qué rival y qué cifra, solo si la cifra está en lo que ha escrito él (en millones o
+    entera) y el rival es uno de tu liga (por su nombre, su equipo o su apodo). Si no, null: no sale la tarjeta */
+export function dineroDeNota(a, D, pregunta) {
+  if (!a || pregunta == null || !/\d/.test(String(pregunta))) return null;
+  let v = num(a.importe);
+  if (!(v > 0)) return null;
+  if (v < 5000) v *= 1e6;
+  const cifras = [...String(pregunta).matchAll(/\d[\d.,]*/g)].map((m) => {
+    const t = m[0].replace(/[.,]$/, ''), x = parseFloat(t.replace(/\.(?=\d{3}\b)/g, '').replace(',', '.'));
+    return Number.isFinite(x) ? (x >= 10000 ? x : x * 1e6) : null;
+  }).filter((x) => x != null);
+  if (!cifras.some((x) => Math.abs(x - v) <= Math.max(1e5, v * 0.01))) return null;
+  const yo = D && D.yo && D.yo.teamId, ap = apodosLiga();
+  const nombres = String(a.jugador || a.rival || '').split(/[()]/).map((x) => norm(x).trim()).filter((x) => x.length >= 2);
+  if (!nombres.length) return null;
+  const e = ((D && D.clasif) || []).find((x) => x.teamId !== yo && [x.manager, x.nombre, ...listaApodos(ap[String(x.teamId)])].some((n) => n && nombres.includes(norm(n).trim())));
+  return e ? { tid: String(e.teamId), v: Math.round(v), t: Date.now() } : null;
 }
 
 /** los últimos mensajes para Gemini, con las fotos enteras de los más recientes (como mucho 6) */
@@ -3555,7 +3625,7 @@ export function compraTxt(D, M, C) {
   const ganaUna = Math.round((v1 - C.precio) / 1e4) * 1e4;
   const corte = Math.round(v1 * (1 + E.corte) / 1e4) * 1e4;
   const OLa = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
-  const saldo = num(D.dinero), llega = saldo >= C.precio, llena = (M.mias || []).length >= 25;
+  const saldo = num(D.dinero), llega = saldo >= C.precio, llena = !!M.llena;
   const once = M.mejora ? num(M.mejora(j)) : 0;
   const sobre = j.valor ? C.precio / j.valor - 1 : 0;
   // cómo va de gente en ese puesto (Carlos: «teniendo en cuenta si me faltan jugadores de otras posiciones»)
@@ -3570,7 +3640,7 @@ export function compraTxt(D, M, C) {
   const espera = `rechazando las flojas (hasta ${N_ESPERA} cambios de mercado, uno al día), de media ${gana >= 0 ? `gana unos ${eur(gana, { signo: true })}` : `pierde unos ${eur(-gana)}`}`;
   const primera = `con la primera oferta, de media ${eur(ganaUna, { signo: true })} (puede salir entre ${eur(una.min - C.precio, { signo: true })} y ${eur(una.max - C.precio, { signo: true })})`;
   let ver;
-  if (llena) ver = 'NO PUEDE: tiene la plantilla llena (25) y antes tendría que vender a uno';
+  if (llena) ver = `NO PUEDE: tiene la plantilla llena (${TOPE_PLANTILLA}) y antes tendría que vender a uno`;
   else if (!llega) ver = `NO LE LLEGA: a otro mánager se le paga con saldo, sin deuda, y tiene ${eur(saldo)} (le faltan ${eur(C.precio - saldo)}); antes tendría que vender`;
   // (el que baja: la cuenta sale por poco y cada día de espera cuesta; se dice)
   else if (ok) ver = `${dia < 0 && gana < C.precio * 0.03 ? `SÍ, PARA REVENDERLO, PERO CON POCO MARGEN (baja unos ${eur(-dia)} al día: cuanto más espere, menos vale)` : 'SÍ, PARA REVENDERLO SIN PRISA'}: ${espera}; ${primera}. Que acepte la primera solo si pasa de ${eur(corte)}${once >= 0.3 ? `. Y si se lo queda, suma ${d1(once)} pts por jornada a su once` : ''}`;
@@ -4041,6 +4111,8 @@ export function consejoEnFrase(frase) {
   const k = norm(frase || '');
   // (lo que cuenta que decía antes el plan o ella no es un consejo de ahora: «el plan de las 06:25 decía aceptar la oferta»)
   if (/\b(decia|decias|dije|dijiste|ponia|proponia|mandaba|recomendaba|aconsejaba)\b/.test(k)) return null;
+  // (25 nov) «no aparece ninguna oferta por Hugo Duro que haya que aceptar» cuenta lo que no hay, no manda nada
+  if (/\b(no|ninguna?|nada)\b[^.]{0,70}\bque (haya|hay|tengas) que (aceptar|vender)\b/.test(k)) return null;
   if (NO_VENDE.test(k)) return 'A';
   if (SI_VENDE.test(k) && !CON_CONDICION.test(k)) return 'V';
   return null;
@@ -4244,7 +4316,7 @@ export function fotoChat(D, texto, hist = [], ahora = Date.now()) {
   return { texto, t: 0 };
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
-export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });
+export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio(), iphone: !!enIPhone && !topConAnuncio() });
 /** lo que va a la IA en el chat con tu clave (sin la conversación): se exporta para probarlo con la demo */
 export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web, alias = null } = {}) {
   return `${sistemaChat({ ...opcionesChat(), fotos, web, alias })}\n\n${datosChat(pregunta, D, M, c, { hist, web })}`;
@@ -4353,11 +4425,11 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
   // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
   // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
   let rev = { texto: n.texto, notas: [] };
-  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
+  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas + (n.dineroRival ? 1 : 0) }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
   n.texto = rev.texto;
   n.texto = repasoFinal(n.texto, pregunta, D, M, hist);
   const h2 = conversacion();
-  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
+  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, ...(n.dineroRival ? { dr: n.dineroRival } : {}), apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   guardarChat(h2.slice(-40));
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
@@ -4429,6 +4501,7 @@ export const resumenAviso = (t) => String(t || '').replace(/\n\n\*\*Revisado por
 const acabadaApp = (ok, t) => { if (enApp) nativo.preguntaAcabada(ok, ok ? resumenAviso(t) : String(t || '')); };
 
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false, dicho = [] } = {}) {
+  if (!iaPermitida()) throw new ErrorIA('Sin tu permiso no se manda nada a la IA. Actívala en Ajustes → La IA.', 0, { sinPermiso: true });
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
   // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
@@ -4470,7 +4543,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
  */
 export async function reanudarPregunta(D, M, c, { signal, alPaso } = {}) {
   const p = preguntaPendiente();
-  if (!p || !preguntasApp(!!D.demo)) return null;
+  if (!p || !preguntasApp(!!D.demo) || !iaPermitida()) return null;
   const hist = conversacion();
   const ult = hist[hist.length - 1];
   if (!ult || ult.r !== 'yo' || (ult.t || '') !== (p.t || '')) { LS.del('preg-rid'); return null; }

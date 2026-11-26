@@ -31,13 +31,16 @@ export const VIVE_HOLA = 90 * 86400, VIVE_REGISTRO = 400 * 86400, VIVE_USO = 9 *
 export const CAMBIOS_DIA = 3;
 // lo que se suma de una vez al tiempo de uso, en segundos (los que no tienen límite mandan lo de 5 minutos, o lo que quedó)
 export const MAX_USO = 600;
-const CANALES = new Set(['github', 'play', 'web']);
+// (iOS 3, 25 nov) «ios»: la app de iOS
+const CANALES = new Set(['github', 'play', 'ios', 'web']);
 // (25 nov, Carlos: «web incluye a los de iOS… si hubiera forma de diferenciarlos de la web de un ordenador») en la web, en qué
 // aparato va: lo mismo que cuenta el embudo (canalPaso de web/js/semaforo.js, por el navegador). Desde la 0.8.4
 export const DISPOSITIVOS = new Set(['web-iphone', 'web-android', 'web-pc']);
 const uidOk = (x) => /^\d{1,15}$/.test(String(x || ''));
 const diaOk = (x) => /^\d{4}-\d{2}-\d{2}$/.test(String(x || ''));
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
+// (0.8.4q, 26 nov) todas las ligas de la cuenta, no solo la que tiene abierta: ids de LaLiga separados por comas, 10 como mucho
+const limpiarLigas = (x) => [...new Set(String(x == null ? '' : x).split(',').map((s) => s.trim()).filter((s) => /^\d{1,20}$/.test(s)))].slice(0, 10).join(',');
 
 /** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
 export function diasAtras(hoy, n) {
@@ -174,13 +177,13 @@ function registrar(sql, uid, canal, primera, ahora, dia, evIn) {
   ponerReg(sql, uid, ficha, ahora, true);
   return hayEv;
 }
-/** b: { uid, nombre, foto, x: lo que manda la app (equipo, liga, v, canal, app, ad, fc, bv), ev, ahora, dia } */
+/** b: { uid, nombre, foto, x: lo que manda la app (equipo, liga, ligas, v, canal, app, ad, fc, bv, nd), ev, ahora, dia } */
 function hola(sql, b, ahora, dia) {
   const uid = String(b.uid), x = (b.x && typeof b.x === 'object') ? b.x : {};
   const fx = fila(sql.exec('SELECT d FROM ficha WHERE uid = ? AND ultima >= ?', uid, cortes(ahora).ficha));
   const m = fx ? JSON.parse(fx.d) : null;
   const nuevo = {
-    uid, nombre: corta(b.nombre, 40), equipo: corta(x.equipo, 40), liga: corta(x.liga, 20) || (m && m.liga) || '', v: corta(x.v, 12),
+    uid, nombre: corta(b.nombre, 40), equipo: corta(x.equipo, 40), liga: corta(x.liga, 20) || (m && m.liga) || '', ligas: limpiarLigas(x.ligas) || (m && m.ligas) || '', v: corta(x.v, 12),
     canal: corta(x.canal, 8), app: Math.max(0, Math.round(Number(x.app) || 0)),
     primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
     foto: corta(b.foto, 400),
@@ -190,21 +193,26 @@ function hola(sql, b, ahora, dia) {
     ...(x.fc && / !$/.test(String(x.v || '')) ? { fc: corta(x.fc, 60) } : {}),
     // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
     ...(((m && m.bv) || x.bv) ? { bv: (m && m.bv) || ahora } : {}),
+    // (0.8.4o) la novedad de apuntar el dinero de un rival ya vista: una vez por cuenta, como la bienvenida
+    ...(((m && m.nd) || x.nd) ? { nd: (m && m.nd) || ahora } : {}),
     // (0.8.4) en la web, en qué aparato: iPhone, Android u ordenador
     ...(String(x.canal) === 'web' && DISPOSITIVOS.has(String(x.disp)) ? { disp: String(x.disp) } : {}),
   };
   // (como en el KV: cada cuenta, como mucho una escritura por hora, salvo que cambie la versión, el equipo, la foto, lo de
-  // AlDia o el aparato, y esos cambios como mucho CAMBIOS_DIA al día; la bienvenida vista y la liga que llega tarde, siempre)
-  const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || '') || (m.disp || '') !== (nuevo.disp || ''));
+  // AlDia, el aparato o desde dónde (iOS 3: la app de iOS), y esos cambios como mucho CAMBIOS_DIA al día; la bienvenida vista y la liga que llega tarde, siempre)
+  const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || '') || (m.disp || '') !== (nuevo.disp || '') || (m.canal || '') !== nuevo.canal);
   const bvNueva = !!nuevo.bv && !(m && m.bv);
+  const ndNueva = !!nuevo.nd && !(m && m.nd);
   const ligaNueva = !!nuevo.liga && !!m && !m.liga;
+  // (0.8.4q) las ligas de la cuenta, siempre que cambien (no cuentan para CAMBIOS_DIA: /hola ya va con su freno)
+  const ligasNueva = !!nuevo.ligas && !!m && (m.ligas || '') !== nuevo.ligas;
   const cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
   const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
   if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-  if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) ponerFicha(sql, uid, nuevo, ahora, true);
+  if (!m || cabeCambio || bvNueva || ndNueva || ligaNueva || ligasNueva || ahora - (m.ultima || 0) > 60 * 60e3) ponerFicha(sql, uid, nuevo, ahora, true);
   let ev = false;
   try { ev = registrar(sql, uid, nuevo.canal, (m && m.primera) || ahora, ahora, dia, b.ev); } catch (e) { ev = false; }
-  return { ok: true, ev, ...(nuevo.bv ? { bv: nuevo.bv } : {}) };
+  return { ok: true, ev, ...(nuevo.bv ? { bv: nuevo.bv } : {}), ...(nuevo.nd ? { nd: nuevo.nd } : {}) };
 }
 
 /* ---------- /hola/todos: la pantalla «Quién usa la app» ---------- */

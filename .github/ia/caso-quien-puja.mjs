@@ -5,7 +5,7 @@
 //    no cuenta como de otro (y aprende sola si el número de LaLiga la incluye); una retirada se descuenta; nada dos veces;
 //  - el motor: cada libre con pujas de otros lleva `quien`, con todos los rivales o en la lista o descartados, las
 //    probabilidades de una sola puja suman 1, va del más probable al menos y lo que rondaría cada uno no baja del mínimo;
-//  - se descarta al que tiene 25 jugadores y al que no le llega ni con la deuda;
+//  - se descarta al que tiene 24 jugadores (la plantilla llena) y al que no le llega ni con la deuda;
 //  - el rival que hizo algo en la liga en el rato en que entró la puja sube en la lista, y se dice;
 //  - la tarjeta de la ficha dice que es una estimación y no cuenta el dinero de un rival con el dinero cerrado;
 //  - el aviso de puja nueva, solo por un libre por el que has pujado o que sigues, y sin decir quién si la función está cerrada;
@@ -66,13 +66,13 @@ try {
       medios: rivales.slice(0, 3).map((e) => A.M.quienPuja.plantillaDe(e.teamId)), formaciones: A.M.formaciones,
       sinPujas: A.M.mercado.filter((m) => m.tipo === 'liga' && m.id !== libre0.id).every((m) => m.ajenas === 0 && m.quien === null),
     };
-    // ---- no puede pujar: 25 jugadores, o no le llega ni con la deuda; y el que va sobrado ----
+    // ---- no puede pujar: 24 jugadores, o no le llega ni con la deuda; y el que va sobrado ----
     const [R1, R2, R3, R4] = rivales.map((e) => e.teamId);
     const nombre = (tid) => { const e = rivales.find((y) => y.teamId === tid); return e.manager || e.nombre; };
     const B = montar({ toca: (D) => {
       const deAlguien = new Set(Object.values(D.plantillas).flat().map((f) => f.pid));
       const sueltos = Object.values(D.maestro).filter((j) => !deAlguien.has(j.id) && j.pos >= 1 && j.pos <= 4 && j.id !== libre0.pid).map((j) => j.id);
-      while (D.plantillas[R1].length < 25 && sueltos.length) D.plantillas[R1].push({ ...D.plantillas[R1][0], pid: sueltos.pop() });
+      while (D.plantillas[R1].length < 24 && sueltos.length) D.plantillas[R1].push({ ...D.plantillas[R1][0], pid: sueltos.pop() });
       D.dineros = { [R2]: { v: -900e6 }, [R3]: { v: 900e6 } };
     } });
     const qb = B.x.quien;
@@ -89,7 +89,7 @@ try {
       nombres: qb.cands.slice(0, 2).every((c) => html.includes(c.nombre.replace(/&/g, '&amp;'))),
       sinDinero: !/sin tirar de deuda|\(no le llega\)|no pasa de/.test(html),
       cerradoDinero: Li.bloqueada('dineroRivales', R3) === true,
-      fuera: /No pueden pujar: /.test(html) && /\(25 jugadores\)/.test(html),
+      fuera: /No pueden pujar: /.test(html) && /\(plantilla llena\)/.test(html),
       largo: html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length,
     };
     // en la ficha del jugador, con la función cerrada (la liga de ejemplo): el candado dorado, no la lista
@@ -139,7 +139,7 @@ try {
   ok(m.ronda, 'lo que rondaría la puja de cada uno no baja del mínimo');
   ok(m.conMotivo, 'alguno lleva su porqué');
   ok(m.sinPujas, 'los libres sin pujas no llevan nada');
-  ok(r.fuera.llena && r.fuera.dinero, 'se descarta al que tiene 25 jugadores y al que no le llega ni con la deuda');
+  ok(r.fuera.llena && r.fuera.dinero, 'se descarta al que tiene 24 jugadores y al que no le llega ni con la deuda');
   ok(Math.abs(r.fuera.suma - 1) < 0.01 && r.fuera.sobrado, `y el resto sigue sumando 1 (${r.fuera.suma}); el que va sobrado lleva su motivo de dinero`);
   ok(r.html.estimacion && r.html.nombres && r.html.fuera, `la tarjeta dice que es una estimación, nombra a los primeros y a los que no pueden (${r.html.largo} caracteres)`);
   ok(r.html.cerradoDinero && r.html.sinDinero, 'y con el dinero de los rivales cerrado no cuenta nada de su dinero');

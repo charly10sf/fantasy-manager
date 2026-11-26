@@ -232,6 +232,9 @@ export const sinWebs = (t) => String(t || '')
 export const iniciales = (s) => norm(s).split(' ').filter(Boolean).slice(0, 2).map((x) => x[0]).join('').toUpperCase() || '?';
 
 export const POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT' };
+/** el máximo de jugadores por plantilla en LaLiga Fantasy: 24 (ayuda de LaLiga, «Entrenador»: «seguirá siendo de 24»;
+ *  Carlos, 26 nov, 15:02: «sí, el máximo son 24»). Con la plantilla llena no se puja ni se clausula. Todo lo cuenta de aquí */
+export const TOPE_PLANTILLA = 24;
 export const POS_LARGO = { 1: 'Portero', 2: 'Defensa', 3: 'Centrocampista', 4: 'Delantero', 5: 'Entrenador' };
 export const POS_PLURAL = { 1: 'Porteros', 2: 'Defensas', 3: 'Centrocampistas', 4: 'Delanteros', 5: 'Entrenador' };
 export const ESTADO = {
@@ -420,4 +423,6 @@ export const LOGO_P = `<svg class="logo" viewBox="6 10 188 188" aria-hidden="tru
 /* Google Play (desde la 0.7.1h, con la ficha aprobada). El distintivo es el oficial de Google (img/google-play.png), tal
    cual: sus normas no dejan cambiarle colores ni letras. La imagen trae su margen transparente alrededor. */
 export const PLAY_URL = 'https://play.google.com/store/apps/details?id=es.fantasymanager.app';
+// (iOS 3) la ficha de la app de iOS en la App Store (Apple ID 6839220127; funciona desde que Apple la aprueba)
+export const APP_STORE_URL = 'https://apps.apple.com/app/id6839220127';
 export const botonPlay = (cls = '') => `<a class="play-badge${cls ? ` ${cls}` : ''}" href="${PLAY_URL}" target="_blank" rel="noopener"><img src="img/google-play.png" alt="Disponible en Google Play" width="646" height="250"></a>`;

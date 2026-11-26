@@ -1,7 +1,8 @@
 # La app de iOS (ios/): la misma web de web/ en un WKWebView con su puente. Aquí se compila para el simulador, sin
 # certificados ni cuenta de Apple, y se prueba en el simulador (ios/Pruebas/PruebasUI.swift): arranca, la web servida por
 # el esquema propio es un sitio seguro y guarda bien, «Entrar» abre la página de LaLiga, la liga de ejemplo pinta las 7
-# pestañas y lo guardado aguanta al volver a abrir. Las capturas y lo que cuenta la app quedan como artefacto.
+# pestañas y lo guardado aguanta al volver a abrir. (iOS 2) Y los avisos, el aviso del servidor y los anuncios (con la app
+# y los bloques de prueba de Google). Las capturas y lo que cuenta la app quedan como artefacto.
 # No firma, no sube nada a Apple y no publica nada. Solo en la rama `ios` (y a mano cuando el archivo esté en main).
 name: App iOS
 
@@ -10,6 +11,11 @@ on:
     branches: [ios]
     paths: ['ios/**', 'web/**', '.github/paquete.py', '.github/workflows/ios.yml']
   workflow_dispatch:
+    inputs:
+      solo:
+        description: '«tienda»: solo compila y saca las capturas de la App Store (sin las pruebas de siempre)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -55,7 +61,7 @@ jobs:
   simulador:
     needs: remota
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 95
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -137,18 +143,108 @@ jobs:
           echo "UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
+      # (iOS 2) Mientras duran las pruebas, cada 5 s se le manda a la app del simulador un aviso «del servidor» de mentira
+      # (`simctl push`: lo mismo que mandaría el Worker por APNs cuando el plan está listo, sin pasar por Apple). Con la app
+      # abierta no se enseña; con la app fuera, la prueba lo busca y lo toca (test6AvisoDelServidor). Antes de que la app
+      # tenga permiso de notificaciones no hace nada.
       - name: Compilar y probar en el simulador
         run: |
           set -o pipefail
-          xcodebuild test \
+          cat > "$RUNNER_TEMP/push.apns" <<'JSON'
+          {"aps":{"alert":{"title":"Tu plan de hoy está listo","body":"Vende a X y espera"},"sound":"default","thread-id":"plan"},"hash":"hoy","fm":"plan"}
+          JSON
+          ( while true; do xcrun simctl push "$UDID" es.fantasymanager.app "$RUNNER_TEMP/push.apns" > /dev/null 2>&1 || true; sleep 5; done ) &
+          AVISOS=$!
+          ACCION=(test -resultBundlePath "$RUNNER_TEMP/pruebas.xcresult" -test-timeouts-enabled YES
+                  -maximum-test-execution-time-allowance 900 -skip-testing:FantasyManagerPruebas/Tienda)
+          # (a mano con «solo: tienda»: solo se compila, para sacar las capturas de la App Store sin esperar a las pruebas)
+          [ "${{ inputs.solo }}" = "tienda" ] && ACCION=(build-for-testing)
+          xcodebuild "${ACCION[@]}" \
             -project ios/FantasyManager.xcodeproj -scheme FantasyManager \
-            -destination "id=$UDID" \
-            -derivedDataPath "$RUNNER_TEMP/dd" -resultBundlePath "$RUNNER_TEMP/pruebas.xcresult" \
-            -test-timeouts-enabled YES -maximum-test-execution-time-allowance 900 \
+            -destination "id=$UDID" -derivedDataPath "$RUNNER_TEMP/dd" \
             MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
             FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" \
             2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error:|warning: (unre|var|depre|reference)|Test Case|Test Suite|^=== |\*\* |XCTAssert" || true
-          grep -q '\*\* TEST SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"
+          kill "$AVISOS" 2> /dev/null || true
+          if [ "${ACCION[0]}" = test ]; then grep -q '\*\* TEST SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"; else grep -q '\*\* TEST BUILD SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"; fi
+      # (iOS 6) Las capturas para la ficha de la App Store (ios/Pruebas/Tienda.swift), con lo ya compilado: un iPhone de 6,3"
+      # y uno de 6,9" (lo que pide hoy App Store Connect), recién borrados, con la app en español y la barra de estado de las fotos
+      # de Apple. Y la app en un iPad, en modo iPhone (los revisores a veces la prueban ahí): que arranque y se vea entera.
+      # El trabajo «ficha» de testflight.yml las sube desde el artefacto «ios-tienda». Si algo de aquí falla, las pruebas
+      # de siempre siguen valiendo
+      - name: Capturas para la App Store
+        continue-on-error: true
+        timeout-minutes: 35
+        run: |
+          buscar() { xcrun simctl list devices available -j | NOMBRES="$1" python3 -c "
+          import json, os, re, sys
+          nombres = os.environ['NOMBRES'].split('|')
+          mejor = None
+          for rt, lista in json.load(sys.stdin)['devices'].items():
+              m = re.search(r'iOS-(\\d+)-(\\d+)', rt)
+              if not m: continue
+              for d in lista:
+                  if d['name'] in nombres:
+                      nota = (-nombres.index(d['name']), int(m.group(1)), int(m.group(2)))
+                      if mejor is None or nota > mejor[0]: mejor = (nota, d['udid'], d['name'])
+          if mejor: print(mejor[1]); print(mejor[2], file=sys.stderr)
+          "; }
+          preparar() {
+            xcrun simctl shutdown "$1" 2> /dev/null || true
+            xcrun simctl erase "$1"
+            xcrun simctl boot "$1"; xcrun simctl bootstatus "$1" -b > /dev/null
+            xcrun simctl status_bar "$1" override --time "9:41" --dataNetwork wifi --wifiMode active --wifiBars 3 \
+              --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 || true
+          }
+          OUT="$RUNNER_TEMP/tienda"; mkdir -p "$OUT"
+          for par in "61|iPhone 17 Pro|iPhone 16 Pro|iPhone 15 Pro" "67|iPhone 17 Pro Max|iPhone 16 Pro Max|iPhone Air"; do
+            K="${par%%|*}"; U=$(buscar "${par#*|}")
+            [ -z "$U" ] && { echo "::warning::No hay simulador para las capturas de $K"; continue; }
+            preparar "$U"
+            xcodebuild test-without-building -project ios/FantasyManager.xcodeproj -scheme FantasyManager \
+              -destination "id=$U" -derivedDataPath "$RUNNER_TEMP/dd" -resultBundlePath "$RUNNER_TEMP/tienda-$K.xcresult" \
+              -only-testing:FantasyManagerPruebas/Tienda 2>&1 | grep -E "error:|Test Case|\*\* " || true
+            mkdir -p "$OUT/$K" "$RUNNER_TEMP/adj-$K"
+            xcrun xcresulttool export attachments --path "$RUNNER_TEMP/tienda-$K.xcresult" --output-path "$RUNNER_TEMP/adj-$K" || true
+            python3 - "$RUNNER_TEMP/adj-$K" "$OUT/$K" <<'PY' || true
+          import json, os, re, shutil, sys
+          de, a = sys.argv[1], sys.argv[2]
+          for prueba in json.load(open(os.path.join(de, 'manifest.json'))):
+              for x in prueba.get('attachments', []):
+                  base, ext = os.path.splitext(x.get('suggestedHumanReadableName') or x['exportedFileName'])
+                  base = re.sub(r'_\d+_[0-9A-Fa-f-]{36}$', '', base)
+                  if re.match(r'(\d+-[a-z]+|fallo)$', base):
+                      shutil.copyfile(os.path.join(de, x['exportedFileName']), os.path.join(a, base + ext))
+          PY
+            ls "$OUT/$K"; sips -g pixelWidth -g pixelHeight "$OUT/$K"/*.png 2> /dev/null | grep pixel | sort | uniq -c || true
+            xcrun simctl shutdown "$U" || true
+          done
+          # el iPad: la app de iPhone tal cual, abierta y con su captura a los 40 s
+          U=$(buscar "iPad Pro 13-inch (M5)|iPad Pro 13-inch (M4)|iPad Air 13-inch (M3)|iPad Air 11-inch (M3)|iPad (A16)|iPad mini (A17 Pro)")
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products" -maxdepth 2 -name 'FantasyManager.app' -path '*iphonesimulator*' | head -1)
+          if [ -n "$U" ] && [ -n "$APP" ]; then
+            # (con 8 min como mucho: la primera vez que arranca un iPad el simulador puede quedarse preparándolo)
+            ( preparar "$U"
+              xcrun simctl install "$U" "$APP"
+              xcrun simctl launch "$U" es.fantasymanager.app -AppleLanguages "(es)" -AppleLocale es_ES
+              sleep 40
+              mkdir -p "$OUT/ipad"
+              xcrun simctl io "$U" screenshot "$OUT/ipad/1-arranque.png"
+              xcrun simctl spawn "$U" launchctl list | grep -q es.fantasymanager.app && echo "iPad: la app sigue abierta" || echo "::warning::iPad: la app no sigue abierta"
+            ) & IPAD=$!
+            for i in $(seq 1 96); do kill -0 "$IPAD" 2> /dev/null || break; sleep 5; done
+            kill -0 "$IPAD" 2> /dev/null && { kill "$IPAD"; echo "::warning::iPad: no ha arrancado en 8 min"; }
+            xcrun simctl shutdown "$U" 2> /dev/null || true
+          else
+            echo "::warning::No hay simulador de iPad (o no encuentro la app compilada)"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: ios-tienda
+          path: ${{ runner.temp }}/tienda
+          retention-days: 30
+          if-no-files-found: ignore
       # las capturas y lo que ha contado la app, también si la prueba falla
       - name: Sacar las capturas
         if: always()

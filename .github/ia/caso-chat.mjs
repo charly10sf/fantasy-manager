@@ -54,6 +54,11 @@ const sis = CS.sistemaChat({ tono: c.tono, bloq: c.bloq, anuncio: c.anuncio, ali
 // (19 nov: 16.500 con lo de los tratos entre managers, el trueque de Carlos con Domy)
 ok(sis.length < 16500 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `las instrucciones del chat, cortas (${sis.length} caracteres) y sin las del plan`);
 ok(!/es una función top/.test(CS.sistemaChat({ bloq: ['dineroRivales', 'quienPaga', 'inercia'], anuncio: true })) && /candado/.test(CS.sistemaChat({ bloq: ['quienPaga'], anuncio: true })), 'lo cerrado, con su candado y sin «función top»');
+// (25 nov) en la web del iPhone no hay app de Google Play: el dinero de un rival se abre invitando y lo demás aún no
+{
+  const ip = CS.sistemaChat({ bloq: ['dineroRivales', 'quienPaga'], iphone: true }), web = CS.sistemaChat({ bloq: ['dineroRivales', 'quienPaga'] }), app = CS.sistemaChat({ bloq: ['dineroRivales'], anuncio: true, iphone: true });
+  ok(!/Google Play/.test(ip) && /invitando a un amigo/.test(ip) && /Google Play/.test(web) && !/invitando/.test(app), 'lo cerrado en la web del iPhone se abre invitando (sin Google Play); en el ordenador, Google Play; con anuncios, el candado');
+}
 ok(/SUS CLÁUSULAS, DE LA MÁS FÁCIL/.test(c.datos) && /EN EL MERCADO ME QUEDAN PARA PUJAS/.test(c.datos) && !/funci[oó]n top/.test(c.datos) && !/\bme faltan\b/.test(c.datos.slice(c.datos.indexOf('PLANTILLAS DE LOS RIVALES'))), 'los datos del chat: sus cláusulas ordenadas, lo que queda para pujar bien dicho, sin «función top» ni «me faltan» en los rivales');
 
 // ---- en la app, de punta a punta: la pregunta va al servidor (de mentira) y lo que se ve sale limpio ----
