@@ -7,7 +7,8 @@
    nada de lo que sale del dinero calculado (quién paga, el peligro, quién puja, el plan, lo que lee la IA, los avisos)
    cambia por haberla apuntado. Abierto (anuncio o invitar), entra en la cuenta como siempre; al cerrarse, vuelve a salir.
    Lo apuntado se sigue mandando para aprender (apunteDinero, con «Ayudar a mejorar la IA»). La app no lo pide sola: solo
-   la novedad, una vez. Prueba: .github/ia/caso-dinero-dicho.mjs */
+   la novedad, una vez. (Carlos, 26 nov, 03:34-03:35: nada de «aprende a calcular mejor», que daba a entender que sus
+   cuentas fallan: «ayudas a afinar aún más».) Prueba: .github/ia/caso-dinero-dicho.mjs */
 import { LS, esc, icono, cuando } from './util.js';
 import { K } from './datos.js';
 import { bloqueada } from './limite.js';
@@ -87,7 +88,7 @@ export function fichaDichoHTML(tid, { cerrado }) {
   if (!d) return `<div class="dd-ficha vacio"><p>¿Te ha dicho cuánto dinero tiene?</p><button type="button" class="btn chico sec" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('euro')}Apuntar</button></div>`;
   return `<div class="dd-ficha"><p>Te dijo <b>${esc(cifraDicho(d))}</b> ${esc(cuandoDicho(d.t))}.</p>
     <div class="dd-acc"><button type="button" class="enlace" data-accion="abrirDicho" data-tid="${esc(tid)}">Cambiar la cifra</button><button type="button" class="enlace apag" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></div></div>
-    ${cerrado ? '<p class="t2 peq dd-pie">Aquí solo se ve la cifra que pusiste tú. La app la usa por dentro para aprender a calcular mejor.</p>' : ''}`;
+    ${cerrado ? '<p class="t2 peq dd-pie">Es la cifra que pusiste tú: su dinero en la app sigue cerrado.</p>' : ''}`;
 }
 /** la casilla de la cifra apuntada, al lado de la del dinero cerrado */
 export const tileDicho = (d) => `<div class="eq2-t dd-tile"><b>${esc(cifraDicho(d))}</b><span>lo que te dijo</span></div>`;
@@ -112,7 +113,7 @@ export function ventanaDineroHTML(S, st) {
     return `<div class="dd-v-hecho"><span class="dd-v-ok" aria-hidden="true">${icono('ok')}</span>
       <h2 id="dd-v-t">Apuntado</h2>
       <p class="dd-v-res">${esc(q)} tiene ${st.aprox ? 'unos ' : ''}${esc(mill(st.v))} M.</p>
-      <p class="dd-v-sub">Lo verás en su ficha. La app lo usa para aprender a calcular mejor.</p>
+      <p class="dd-v-sub">Lo tienes en su ficha, y ayuda a afinar aún más el dinero de los rivales.</p>
       <button type="button" class="dd-v-sec" data-accion="ddOtro">Apuntar otro rival</button>
       <button type="button" class="dd-v-pri" data-accion="ddCerrar">Listo</button></div>`;
   }
@@ -145,7 +146,7 @@ export const novedadDineroHTML = () => `<div class="nvt-velo" data-accion="novDi
     <span class="dd-eti-r"><i></i>Novedad</span>
     <div class="nvd-dib" aria-hidden="true"><span class="nvd-cara">FR</span><span class="nvd-bur">«Tengo 52 kilos, tío»</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="nvd-m">52 M</span></div>
     <h2 id="nvd-t">Apunta el dinero de tus rivales</h2>
-    <p>Si alguien de tu liga te ha dicho cuánto dinero tiene, ponlo en la app. Así la app y la IA aprenden a calcular mejor el dinero de cada rival.</p>
+    <p>Si sabes cuánto dinero tiene alguien de tu liga porque te lo ha dicho, apúntalo: ayudas a que el motor de la app y la IA afinen aún más el dinero de cada rival.</p>
     <ul class="nvd-l">${['Puedes apuntarlo aunque tengas su dinero cerrado.', 'Solo ves lo que has puesto tú. Lo cerrado sigue cerrado.', 'No te lo vamos a estar pidiendo: lo apuntas cuando quieras.'].map((t) => `<li>${icono('ok')}${esc(t)}</li>`).join('')}</ul>
     <button type="button" class="dd-v-pri" data-accion="novDineroSi">Apuntar ahora</button>
     <button type="button" class="dd-v-no" data-accion="novDineroNo">Ahora no</button>

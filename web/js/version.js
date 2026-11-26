@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4o';
+export const VERSION = '0.8.4p';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -24,6 +24,16 @@ export const VERSION = '0.8.4o';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (26 nov, 03:34-03:35, Carlos: «el popup… da a entender que los cálculos de la app son malos» y «pon algo como que para
+    // ayudar a afinar aún más el dinero que tiene cada rival… que lo pongan»; a quien ya vio la de antes no le sale otra vez)
+    // los textos de apuntar el dinero de un rival, sin «aprende a calcular mejor»: la novedad, la ventana al guardar, el pie de
+    // la ficha y la línea de la 0.8.4o (dinero-dicho.js y version.js)
+    v: '0.8.4p', f: '2026-11-26', h: '', t: 'Retoques de textos',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'dinero', menor: true, t: 'El dinero apuntado, más claro', x: 'Los textos de apuntar el dinero de un rival lo cuentan mejor: lo que apuntas ayuda a afinar aún más el dinero de cada rival.' },
+    ],
+  },
+  {
     // (26 nov, claude/prompt-dinero-rivales.md del proyecto) apuntar lo que te ha dicho un rival que tiene, también con su
     // dinero cerrado (dinero-dicho.js): la hoja (ficha y Rivales), la ficha ya apuntada, las tostadas, la pastilla y el aviso
     // de Rivales, la ventana «Quién y cuánto», la novedad una vez por cuenta (LS «nov-dinero» y /hola nd del Worker) y la
@@ -31,7 +41,7 @@ export const NOVEDADES = [
     // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
     v: '0.8.4o', f: '2026-11-26', h: '02:50', t: 'Apunta el dinero de tus rivales',
     cosas: [
-      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. La app y la IA lo usan para aprender a calcular mejor el dinero de cada rival.' },
+      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú, y ayudas a que la app y la IA afinen aún más el dinero de cada rival.' },
     ],
   },
   {

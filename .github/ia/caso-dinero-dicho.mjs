@@ -165,7 +165,7 @@ const g = await page.evaluate(async (tid) => {
 ok(g.abre && g.caras === info.n && g.cerrada0 && g.abierta, `(g) la ventana: el desplegable, cerrado al abrir y con la cara de los ${info.n} rivales al tocarlo`);
 ok(g.elegido.cerrada && g.elegido.cara && g.elegido.boton.includes(R), `(g) al elegir uno, se cierra y el botón lo enseña con su cara: «${g.elegido.boton}»`);
 ok(g.sinRival === 'Elige quién te lo dijo.' && g.sinCifra === 'Pon cuánto te dijo, en millones.', `(g) sin rival o sin cifra no guarda: «${g.sinRival}» «${g.sinCifra}»`);
-ok(g.nota === 'Lo contamos entre 43 y 53 M.' && new RegExp(`Apuntado[\\s\\S]*${R} tiene unos 48 M[\\s\\S]*Lo verás en su ficha`).test(g.hecho), `(g) «Más o menos» y lo apuntado: «${g.nota}» · «${g.hecho.replace(/\s+/g, ' ').slice(0, 90)}»`);
+ok(g.nota === 'Lo contamos entre 43 y 53 M.' && new RegExp(`Apuntado[\\s\\S]*${R} tiene unos 48 M[\\s\\S]*Lo tienes en su ficha`).test(g.hecho), `(g) «Más o menos» y lo apuntado: «${g.nota}» · «${g.hecho.replace(/\s+/g, ' ').slice(0, 90)}»`);
 ok(g.guard && g.guard.min === 43e6 && g.guard.max === 53e6 && g.guard.v === 48e6 && g.cerrada, `(g) guardado entre 43 y 53 M y la ventana cerrada`);
 const G = await foto();
 ok(!dif(A, G).length, `(g) y con eso apuntado y su dinero cerrado, lo demás igual${dif(A, G).length ? ': ' + muestra(A, G, dif(A, G)[0]) : ''}`);
