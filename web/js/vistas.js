@@ -1284,7 +1284,7 @@ function eqPlantillaHTML(S, op) {
     maxPills: 2, conMini: true, op: op(x.pid),
   });
   let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.premium && M.premium.entrenador && M.mias.some((x) => x.j.pos === 5) ? `${M.mias.filter((x) => x.j.pos !== 5).length} jugadores y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : `${M.mias.length} jugadores`}</span></div>
-    <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
+    <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div><div class="eq-filas">`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
@@ -1306,7 +1306,8 @@ function eqPlantillaHTML(S, op) {
     const val = { valor: (x) => x.j.valor, puntos: (x) => num(x.j.puntos) }[orden];
     l += [...M.mias].sort((a, b) => val(b) - val(a)).map(fila).join('');
   }
-  return l;
+  // (26 nov, Carlos: «en el PC hay mucho espacio a la derecha») en una columna ancha, las filas van a dos columnas (CSS: .eq-pl)
+  return `<div class="eq-pl">${l}</div></div>`;
 }
 
 /** Cláusulas: el resumen en casillas, cómo funcionan (plegado) y cada uno con una barra de cuánto está su cláusula por

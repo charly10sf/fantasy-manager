@@ -90,7 +90,7 @@ export function clubes(S) {
   // (22 nov) a la derecha del título, la cruz de las bajas de la jornada (bajas.js)
   let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><div class="tit-fila"><h1 class="titulo">Clubes</h1>${cruzHTML(S)}</div>`;
   if (!n) return h + nada('Aún no tengo los equipos de LaLiga. Dale a Actualizar.');
-  h += tusClubesHTML(S, ids, mios);
+  const tus = tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {
     const e = D.equipos[id], t = M.equipoLiga(id);
     const eu = europaDe(e.nombre);
@@ -115,7 +115,10 @@ export function clubes(S) {
   const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-gol">Goles</span><span class="cf-dg">DG</span><span class="cf-pts">Pts</span></div>';
   // (22 nov, Carlos: «quita todo lo de debajo de la tabla, ya se entiende») Sin leyenda de colores ni su frase: cada fila
   // ya dice «Champions», «Europa League», «Conference» o «Descenso» en su línea de abajo.
-  return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>`;
+  // (26 nov, Carlos: «en el PC hay mucho espacio a la derecha») en una pantalla ancha, «Tus clubes» va a la derecha de la
+  // clasificación, en rejilla (CSS: .clubes-e); en el móvil y en un ordenador estrecho, encima, como siempre
+  const tabla = `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>`;
+  return h + `<div class="clubes-e${tus ? '' : ' sin-tus'}">${tus ? `<div class="cl-tus">${tus}</div>` : ''}<div class="cl-tabla">${tabla}</div></div>`;
 }
 
 /* ================= LA FICHA DE UN CLUB ================= */
