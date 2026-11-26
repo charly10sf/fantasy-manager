@@ -3393,7 +3393,9 @@
    "AS|https://as.com/futbol/cuidados-para-aimar-oroz-f202611-n/": 1795708117000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255869/barca-no-recurrira-sancion-fermin.html": 1795707067000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261126/11694243/aubameyang-deportivo-accidente-ferrari.html": 1795708297000,
-   "SPORT|136829154": 1795706247000
+   "SPORT|136829154": 1795706247000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261126/1004255902/pendientes-ilias-akhomach.html": 1795710069000
   },
   "hechos": [
    {
@@ -3867,7 +3869,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -4770,12 +4772,15 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-defiende-no-ampliado-numero-afectados-voto-suspendido-ley-nietos-20261126154702.html": 1795704422000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/26/el-deportivo-abanca-rival-del-athletic-en-los-octavos-de-final-de-la-copa-de-la-reina-radio-bilbao/": 1795708449000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/basquetcoruna/2026/11/26/leyma-baskonia-jugara-domingo-13-1230-horas-coincidira-depor-athletic-club-1615-horas/00031795707085629474191.htm": 1795707720000,
-   "SPORT|136881446": 1795703413000
+   "SPORT|136881446": 1795703413000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255905/atletico-rival-octavos-final.html": 1795710000000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261126/1004255895/athletic-medira-deportivo-octavos-final-copa-reina.html": 1795709462000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -4783,17 +4788,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 45,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 193240,
-  "salida": 22561,
+  "entrada": 197544,
+  "salida": 23571,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.479347,
+  "dolares": 0.480282,
   "reservado": 0
  },
  "recientes": {
@@ -9867,13 +9872,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6669,
+   "ok": 6670,
    "fallos": 0,
-   "ejecuciones": 5448,
+   "ejecuciones": 5449,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T16:26:19.376Z"
+   "ultima": "2026-11-26T16:31:16.294Z"
   }
  },
  "ptsDirecto": {},
@@ -9890,15 +9895,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:26:31.270Z"
+   "ultimaBien": "2026-11-26T16:31:29.279Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:26:31.270Z"
+   "ultimaBien": "2026-11-26T16:31:29.279Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:26:31.270Z"
+   "ultimaBien": "2026-11-26T16:31:29.279Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9906,11 +9911,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:26:31.270Z"
+   "ultimaBien": "2026-11-26T16:31:29.279Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:26:31.270Z"
+   "ultimaBien": "2026-11-26T16:31:29.279Z"
   }
  },
  "avisos": [
