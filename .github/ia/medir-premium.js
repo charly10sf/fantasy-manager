@@ -19,12 +19,12 @@ const desv = (l) => { if (l.length < 2) return null; const m = media(l); return 
 const mejorPor = (l, f) => l.reduce((m, x) => (m == null || f(x) > f(m) ? x : m), null);
 
 export async function medir(o) {
-  const { B, analizar, U, api, N, V, Dt, S, calib = null, desde = 4, hasta = 13, umbral = 0.7, paso = () => {} } = o;
+  const { B, analizar, U, api, N, V, Dt, S, calib = null, desde = 4, hasta = 13, umbral = 0.7, paso = () => {}, fichas = {}, sorteos = 40 } = o;
   const D0 = S.D, liga = D0.liga.id;
   // todos «disponibles»: el estado de hoy no es el de entonces
   const maestro = {};
   for (const [pid, j] of Object.entries(D0.maestro || {})) maestro[pid] = { ...j, estado: 'ok' };
-  const X = { sacado: Date.now(), datos: { ...D0, maestro }, hist: S.H, acthist: Dt.actHist(liga), det: { ...Dt.detalles() }, calib, cfg: Dt.cfg() };
+  const X = { sacado: Date.now(), datos: { ...D0, maestro }, hist: S.H, acthist: Dt.actHist(liga), det: { ...Dt.detalles(), ...fichas }, calib, cfg: Dt.cfg() };
   X.calPasado = await B.calendarioPasado({ api }, N, D0);
   let P = B.preparar(X, { analizar, U });
   const jors = P.jor.filter((j) => j.n >= desde && j.n <= hasta && j.fin < Date.now());
@@ -59,7 +59,7 @@ export async function medir(o) {
   await Promise.all([0, 1, 2].map(async () => {
     while (cola.length) {
       const id = cola.shift();
-      try { const d = N.detalleJugador(await api.jugador(id, liga)); if (d && Array.isArray(d.stats)) { X.det[id] = { ...(X.det[id] || {}), ...d }; pedidas++; } } catch (e) { fallidas++; }
+      try { const d = N.detalleJugador(await api.jugador(id, liga)); if (d && Array.isArray(d.stats)) { X.det[id] = { ...(X.det[id] || {}), ...d }; fichas[id] = X.det[id]; pedidas++; } } catch (e) { fallidas++; }
       await espera(120);
     }
   }));
@@ -82,8 +82,9 @@ export async function medir(o) {
     const cap = Object.fromEntries(POL.map((k) => [k, { pts: [], acierta: 0, sinJugar: 0 }]));
     const azar = [], distintos = { n: 0, appGana: 0, mediaGana: 0, igual: 0 }, porJ = {};
     const ban = { onces: 0, conEntrada: 0, dobles: 0, aplazados: 0, riesgoAcierta: 0, riesgoDe: 0,
-      pos: Object.fromEntries([1, 2, 3, 4].map((p) => [p, { huecos: 0, sinSuplente: 0, entra: 0, app: 0, media: 0, mejor: 0, appSinJugar: 0 }])) };
-    const ptsOnce = { app: [], media: [], mejor: [] };
+      pos: Object.fromEntries([1, 2, 3, 4].map((p) => [p, { huecos: 0, sinSuplente: 0, entra: 0, app: 0, media: 0, juega: 0, mejor: 0, appSinJugar: 0, juegaSinJugar: 0 }])) };
+    const ptsOnce = { app: [], media: [], juega: [], mejor: [] };
+    const sim = {};
     let saltadas = 0, cortos = 0, fueraPlantilla = 0, alineados = 0;
     for (const jo of jors) {
       const { M, D } = B.motorEn(P, jo.ini - 3 * HORA, cal === undefined ? {} : { calib: cal });
@@ -117,7 +118,7 @@ export async function medir(o) {
         // --- el banquillo: uno por puesto, de los de su plantilla de entonces que no alineó ---
         ban.onces++;
         let entradas = 0;
-        const suma = { app: 0, media: 0, mejor: 0 };
+        const suma = { app: 0, media: 0, juega: 0, mejor: 0 };
         for (const p of [1, 2, 3, 4]) {
           const tit = info.filter((x) => x.j.pos === p);
           if (!tit.length) continue;
@@ -125,7 +126,7 @@ export async function medir(o) {
           B_.huecos++;
           const cands = [...plant].filter((id) => !oc.ids.includes(id)).map((id) => D.maestro[id]).filter((j) => j && j.pos === p).map((j) => {
             const d = M.ppDetalle(j), r = real(String(j.id), jo.n);
-            return { j, pp: d ? d.final : 0, media: num(j.media), r: r ? r.pts : 0, min: r ? r.min : null };
+            return { j, pp: d ? d.final : 0, pT: d && d.T ? num(d.T.p) : 0, media: num(j.media), r: r ? r.pts : 0, min: r ? r.min : null };
           });
           if (!cands.length) { B_.sinSuplente++; continue; }
           const fuera = tit.filter((x) => x.min === 0);
@@ -135,14 +136,35 @@ export async function medir(o) {
           if (fueraJug.length > 1) ban.dobles++;
           // ¿el que no jugó era el titular de su puesto al que la app daba menos opciones de jugar?
           if (tit.length > 1) { ban.riesgoDe++; const flojo = mejorPor(tit, (x) => -num(x.pT == null ? 1 : x.pT)); if (fueraJug.includes(flojo)) ban.riesgoAcierta++; }
-          const a = mejorPor(cands, (x) => x.pp), m = mejorPor(cands, (x) => x.media), mj = mejorPor(cands, (x) => x.r);
+          const a = mejorPor(cands, (x) => x.pp), m = mejorPor(cands, (x) => x.media), mj = mejorPor(cands, (x) => x.r), ju = mejorPor(cands, (x) => x.pT * 100 + x.pp);
           B_.entra++; entradas++;
-          B_.app += a.r; B_.media += m.r; B_.mejor += mj.r;
-          suma.app += a.r; suma.media += m.r; suma.mejor += mj.r;
+          B_.app += a.r; B_.media += m.r; B_.mejor += mj.r; B_.juega += ju.r;
+          suma.app += a.r; suma.media += m.r; suma.mejor += mj.r; suma.juega += ju.r;
           if (a.min === 0) B_.appSinJugar++;
+          if (ju.min === 0) B_.juegaSinJugar++;
         }
         if (entradas) ban.conEntrada++;
         for (const k of Object.keys(suma)) ptsOnce[k].push(suma[k]);
+      }
+      // --- más muestra para el capitán: onces verosímiles sorteados de cada plantilla de entonces (por línea, los de más
+      // media con un factor al azar entre 0,5 y 1,5), con las 7 formaciones gratis. El azar, con semilla: se repite igual
+      const SJ = (sim[jo.n] = { n: 0, app: 0, appSeguro: 0, media: 0, mediaSegura: 0, mejor: 0 });
+      let semilla = 1000 + jo.n;
+      const azar01 = () => { semilla = (semilla * 1664525 + 1013904223) % 4294967296; return semilla / 4294967296; };
+      const FORM = [[4, 4, 2], [4, 3, 3], [3, 5, 2], [3, 4, 3], [5, 3, 2], [4, 5, 1], [5, 4, 1]];
+      for (const t of equipos) {
+        const pl = (antes[jo.n][t] || []).map((f) => D.maestro[f.pid]).filter((j) => j && j.pos >= 1 && j.pos <= 4).map((j) => {
+          const d = M.ppDetalle(j), r = real(String(j.id), jo.n), pT = d && d.T ? d.T.p : null;
+          return { j, pp: d ? d.final : 0, pT, media: num(j.media), r: r ? r.pts : 0, seguro: pT == null ? true : pT >= umbral };
+        });
+        for (let s = 0; s < sorteos; s++) {
+          const f = FORM[Math.floor(azar01() * FORM.length)], pide = { 1: 1, 2: f[0], 3: f[1], 4: f[2] };
+          const once = [];
+          for (const p of [1, 2, 3, 4]) once.push(...pl.filter((x) => x.j.pos === p).map((x) => ({ x, k: x.media * (0.5 + azar01()) })).sort((a, b) => b.k - a.k).slice(0, pide[p]).map((y) => y.x));
+          if (once.length < 9) continue;
+          const seg = once.some((x) => x.seguro) ? once.filter((x) => x.seguro) : once;
+          SJ.n++; SJ.app += mejorPor(once, (x) => x.pp).r; SJ.appSeguro += mejorPor(seg, (x) => x.pp).r; SJ.media += mejorPor(once, (x) => x.media).r; SJ.mediaSegura += mejorPor(seg, (x) => x.media).r; SJ.mejor += mejorPor(once, (x) => x.r).r;
+        }
       }
     }
     const n = cap.app.pts.length;
@@ -156,11 +178,18 @@ export async function medir(o) {
     res.capitan.appMenosMedia = par('app', 'media');
     res.capitan.cuandoNoCoinciden = distintos;
     res.capitan.porJornada = Object.fromEntries(Object.entries(porJ).map(([k, v]) => [k, v.n ? [r2(v.app / v.n), r2(v.mediaSegura / v.n), r2(v.mejor / v.n)] : null]));
+    {
+      const js = Object.values(sim).filter((v) => v.n), k = ['app', 'appSeguro', 'media', 'mediaSegura', 'mejor'];
+      const tot = js.reduce((s, v) => s + v.n, 0);
+      const dif = (a, b) => { const d = js.map((v) => (v[a] - v[b]) / v.n); const sd = desv(d); return { media: r2(media(d)), errorEntreJornadas: sd == null ? null : r2(sd / Math.sqrt(d.length)), jornadasGana: d.filter((x) => x > 0).length, jornadasPierde: d.filter((x) => x < 0).length }; };
+      res.capitanSorteado = { onces: tot, ...Object.fromEntries(k.map((x) => [x, r2(js.reduce((s, v) => s + v[x], 0) / tot)])), appMenosMediaSegura: dif('app', 'mediaSegura'), appMenosMedia: dif('app', 'media'), appSeguroMenosMediaSegura: dif('appSeguro', 'mediaSegura'),
+        porJornada: Object.fromEntries(Object.entries(sim).filter(([, v]) => v.n).map(([n, v]) => [n, [r2(v.app / v.n), r2(v.media / v.n), r2(v.mediaSegura / v.n)]])) };
+    }
     res.banquillo = {
       onces: ban.onces, conAlgunaEntrada: ban.conEntrada, parte: ban.onces ? r2(ban.conEntrada / ban.onces) : null, dosDelMismoPuesto: ban.dobles, soloAplazado: ban.aplazados,
       elDeMasRiesgo: ban.riesgoDe ? `${ban.riesgoAcierta}/${ban.riesgoDe}` : null,
-      puntosPorOnceYJornada: { app: r2(media(ptsOnce.app)), media: r2(media(ptsOnce.media)), mejor: r2(media(ptsOnce.mejor)) },
-      porPuesto: Object.fromEntries(Object.entries(ban.pos).map(([p, v]) => [p, { huecos: v.huecos, sinSuplente: v.sinSuplente, entra: v.entra, app: v.app, media: v.media, mejor: v.mejor, appSinJugar: v.appSinJugar }])),
+      puntosPorOnceYJornada: { app: r2(media(ptsOnce.app)), media: r2(media(ptsOnce.media)), elQueMasJuega: r2(media(ptsOnce.juega)), mejor: r2(media(ptsOnce.mejor)) },
+      porPuesto: Object.fromEntries(Object.entries(ban.pos).map(([p, v]) => [p, { ...v }])),
     };
     out[nombreV] = res;
   }
