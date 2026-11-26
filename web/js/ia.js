@@ -6,7 +6,7 @@
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, enIPhone, despues, nativo } from './puente.js';
 import { token, sesion } from './auth.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe, TOPE_PLANTILLA } from './util.js';
 import { K } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
@@ -688,7 +688,7 @@ export function premiumTxt(M) {
   const P = M && M.premium;
   if (!P || !P.liga || !P.leido) return '';   // una liga guardada de antes no trae qué funciones tiene: nada hasta actualizar
   const si = [], no = [];
-  if (P.entrenador) si.push('ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de 25 jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador'); else no.push('entrenador (no se alinea ni puntúa)');
+  if (P.entrenador) si.push(`ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de ${TOPE_PLANTILLA} jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador`); else no.push('entrenador (no se alinea ni puntúa)');
   if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega'); else no.push('capitán');
   if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán'); else no.push('banquillo');
   if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): la liga las tiene, pero la app aún no hace cuentas con ellas; propón solo las de la lista de formaciones'); else no.push('formaciones de más');
@@ -3629,7 +3629,7 @@ export function compraTxt(D, M, C) {
   const espera = `rechazando las flojas (hasta ${N_ESPERA} cambios de mercado, uno al día), de media ${gana >= 0 ? `gana unos ${eur(gana, { signo: true })}` : `pierde unos ${eur(-gana)}`}`;
   const primera = `con la primera oferta, de media ${eur(ganaUna, { signo: true })} (puede salir entre ${eur(una.min - C.precio, { signo: true })} y ${eur(una.max - C.precio, { signo: true })})`;
   let ver;
-  if (llena) ver = 'NO PUEDE: tiene la plantilla llena (25) y antes tendría que vender a uno';
+  if (llena) ver = `NO PUEDE: tiene la plantilla llena (${TOPE_PLANTILLA}) y antes tendría que vender a uno`;
   else if (!llega) ver = `NO LE LLEGA: a otro mánager se le paga con saldo, sin deuda, y tiene ${eur(saldo)} (le faltan ${eur(C.precio - saldo)}); antes tendría que vender`;
   // (el que baja: la cuenta sale por poco y cada día de espera cuesta; se dice)
   else if (ok) ver = `${dia < 0 && gana < C.precio * 0.03 ? `SÍ, PARA REVENDERLO, PERO CON POCO MARGEN (baja unos ${eur(-dia)} al día: cuanto más espere, menos vale)` : 'SÍ, PARA REVENDERLO SIN PRISA'}: ${espera}; ${primera}. Que acepte la primera solo si pasa de ${eur(corte)}${once >= 0.3 ? `. Y si se lo queda, suma ${d1(once)} pts por jornada a su once` : ''}`;

@@ -41,7 +41,7 @@ const COMUN = `
 await probar('martes', `${COMUN}
   return [
     ['el plan de la app', null, base],
-    ['pujar con 25 jugadores', 'r17', null],
+    ['pujar con 24 jugadores', 'r17', null],
     ['pujar por uno que no está en el mercado', 'no está en el mercado', plan([op({ accion: 'pujar', pid: mio.pid, j: mio.j, jugador: mio.j.nombre, importe: 1e6 })])],
     ['«antes de las 20:00» con el mercado a las 00:15', 'rM', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, cuando: 'hoy antes de las 20:00' })])],
     ['pujar «hoy» con el día de otra semana', 'rH', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, cuando: 'el dom 8' })])],
@@ -57,13 +57,13 @@ await probar('martes', `${COMUN}
     ['el titular nombra a uno descartado', 'titular', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, descartada: true })], { titular: 'Hoy, puja por ' + libre.j.nombre })],
   ].map((c) => (c[1] === 'r17' ? null : c)).filter(Boolean);
 `);
-// con 25 jugadores (m-25), pujar sin vender antes
-await probar('m-25', `${COMUN}
+// con 24 jugadores (m-24, la plantilla llena), pujar sin vender antes
+await probar('m-24', `${COMUN}
   return [
-    ['el plan de la app con 25', null, base],
-    ['pujar con 25 jugadores', 'r17', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio })])],
-    // (20 nov, Carlos: «con 25 jugadores tampoco se puede clausular, ya te lo dije»)
-    ...(() => { const c = M.clausulas.find((x) => x.abierta && x.clausula <= D.dinero) || M.clausulas.find((x) => x.abierta); return c ? [['clausular con 25 jugadores', 'r17', plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: c.clausula })])]] : []; })(),
+    ['el plan de la app con 24', null, base],
+    ['pujar con 24 jugadores', 'r17', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio })])],
+    // (20 nov, Carlos: «con la plantilla llena tampoco se puede clausular, ya te lo dije»)
+    ...(() => { const c = M.clausulas.find((x) => x.abierta && x.clausula <= D.dinero) || M.clausulas.find((x) => x.abierta); return c ? [['clausular con 24 jugadores', 'r17', plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: c.clausula })])]] : []; })(),
   ];
 `);
 // en negativo entre semana, con tres cambios de mercado por delante: no se malvende

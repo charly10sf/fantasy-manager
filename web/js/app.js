@@ -2234,7 +2234,7 @@ async function vigilarClausulables(antes) {
   // (21 nov, Carlos: «si un jugador hace muchísimos puntos… y tiene justo la cláusula abierta, que te salga clausúlalo
   // ya») el que acaba de hacer 8 puntos o más, con su partido ya acabado, la cláusula abierta y que te llega: los días
   // siguientes sube bastante más de lo que dice la inercia (medido con su liga, `efectoTras`). Si lo que se espera que
-  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con 25 jugadores no, que no se puede clausular
+  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con la plantilla llena no, que no se puede clausular
   if (!M.llena) {
     const acabado = (j) => { const p = (S.D.partidos || []).find((q) => q.jornada === V.n && (q.localId === j.equipoId || q.visitanteId === j.equipoId)); return !!(p && p.fecha && p.fecha + 2 * HORA <= Date.now()); };
     for (const x of M.clausulas || []) {

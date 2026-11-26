@@ -252,8 +252,8 @@ export const CASOS = [
     debe: ['cambio de mercado|00:15|esta noche|mañana'], nunca: ['(?<!no llega |no es |no )(al momento|al instante|enseguida|inmediat)'] },
   { id: 'ia-proteccion', tipo: 'chat', escena: 'martes', de: 'regla (Carlos, 13 nov): 14 días tras cualquier fichaje', pregunta: 'Si clausulo hoy a Niño, ¿cuánto tiempo tiene la cláusula protegida conmigo?',
     debe: ['14 d[ií]as'] },
-  { id: 'ia-plantilla', tipo: 'chat', escena: 'martes', de: 'regla (Carlos, 11 nov): 25 jugadores', pregunta: '¿Cuántos jugadores puedo tener como máximo en la plantilla?',
-    debe: ['\\b25\\b'] },
+  { id: 'ia-plantilla', tipo: 'chat', escena: 'martes', de: 'regla (Carlos, 26 nov): 24 jugadores', pregunta: '¿Cuántos jugadores puedo tener como máximo en la plantilla?',
+    debe: ['\\b24\\b'] },
   { id: 'ia-libre-fuera-del-mercado', tipo: 'chat', escena: 'martes', de: 'cosas que se inventa: fichar a un libre que hoy no sale', pregunta: '¿Puedo fichar hoy a Lejeune?',
     debe: ['no está (hoy )?en el mercado|hasta que salga|no se puede|no puedes|no sale|no ha salido'], nunca: ['p[uú]jale|puja \\d'] },
   { id: 'ia-trato-real', tipo: 'chat', escena: 'martes', de: 'un trato de verdad sí se apunta y se valora', pregunta: 'Sergio me ofrece a Kang-In Lee por 50 M. ¿Lo compro?',
@@ -334,8 +334,8 @@ export const CASOS = [
   // motor no puede proponer lo que la app tacharía) y los suyos. Cómo juega Carlos: entre semana tira de deuda para comprar
   // lo que sube y lo vende antes de la jornada; no vende a un suplente solo por hacer caja; en el parón, dinero antes que once.
   // (19 nov, sesión larga) y 'mercado-real': los valores y el mercado de verdad de un día (banco.mjs)
-  ...['martes', 'm-limpio', 'm-negativo', 'm-holgado', 'veda', 'm-cierre', 'm-cierre-negativo', 'enjuego', 'paron', 'm-25', 'm-hueco', 'm-clausula-mia', 'm-reventa', 'mercado-real'].map((escena) => ({
-    id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md: dinero, deuda, 25, blindajes, cierre y empezar la jornada en positivo',
+  ...['martes', 'm-limpio', 'm-negativo', 'm-holgado', 'veda', 'm-cierre', 'm-cierre-negativo', 'enjuego', 'paron', 'm-24', 'm-hueco', 'm-clausula-mia', 'm-reventa', 'mercado-real'].map((escena) => ({
+    id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md: dinero, deuda, 24, blindajes, cierre y empezar la jornada en positivo',
     debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
   { id: 'motor-martes-no-vende-de-mas', tipo: 'motor', escena: 'martes', de: 'Ibañez y Javi Guerra (Carlos, 3 nov) y «el plan vendía medio once» (25 oct): entre semana no se vende perdiendo ni se deja el once cojo',
     nunca: ['^OP: (vender|Aceptar oferta) Julián', '^VENDE_POR_CAJA', '^HUECOS: \\d+ → [1-9]'] },
@@ -361,8 +361,8 @@ export const CASOS = [
     debe: ['^OP: [^\\n]*\\[revender\\][^\\n]*vender el', '^(TITULAR|SITUACION):[^\\n]*par[oó]n'], nunca: ['^HUECOS: 0 → [1-9]'] },
   { id: 'motor-paron-no-vende-lo-que-sube', tipo: 'motor', escena: 'paron', de: 'Fornals (Carlos, 13 nov): en el parón tampoco se vende lo tuyo que sube fuerte',
     nunca: ['^OP: (vender|Aceptar oferta) (Álex Baena|Bellingham)'] },
-  { id: 'motor-25-lo-dice', tipo: 'motor', escena: 'm-25', de: 'regla 12: con 25 no cabe nadie más sin vender antes',
-    debe: ['^SITUACION:[^\\n]*25'] },
+  { id: 'motor-24-lo-dice', tipo: 'motor', escena: 'm-24', de: 'regla 12: con 24 no cabe nadie más sin vender antes',
+    debe: ['^SITUACION:[^\\n]*24'] },
   { id: 'motor-hueco-lo-tapa', tipo: 'motor', escena: 'm-hueco', de: 'un hueco en el once son 4 puntos menos: lo primero es taparlo',
     debe: ['^HUECOS: 1 → 0'] },
   { id: 'motor-clausula-mia-a-tiro', tipo: 'motor', escena: 'm-clausula-mia', de: 'un titular con la cláusula abierta a su valor: primero el blindaje gratis, no pagar',

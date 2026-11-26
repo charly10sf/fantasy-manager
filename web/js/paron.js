@@ -4,7 +4,7 @@
    Las cuentas son las del motor: lo de revender es `M.especular` (la misma proyección que el plan, que en el parón se
    frena más), lo que baja o sube hasta la vuelta sale de `M.inercia(pid).proy(días)` y lo que te quita del once, de
    `M.perdida`. Con «Cuándo gira un jugador» cerrada, lo que depende de la inercia va con su candado. */
-import { esc, eur, cuando, dura, icono, num, DIA, HORA, LS } from './util.js';
+import { esc, eur, cuando, dura, icono, num, DIA, HORA, LS, TOPE_PLANTILLA } from './util.js';
 import { K } from './datos.js';
 import { ava, candado } from './comunes.js';
 import { trayecto } from './graficos.js';
@@ -15,8 +15,8 @@ import { directo } from './directo.js';
 
 const NOM_POS = { 1: 'portero', 2: 'defensa', 3: 'centrocampista', 4: 'delantero' };
 const NOM_POSP = { 1: 'porteros', 2: 'defensas', 3: 'centrocampistas', 4: 'delanteros' };
-// (24) el máximo de jugadores por plantilla en LaLiga Fantasy: 25 (Carlos, 11 nov)
-export const PLANTILLA_MAX = 25;
+// (24) el máximo de jugadores por plantilla en LaLiga Fantasy: 24 (`TOPE_PLANTILLA` de util.js; Carlos, 26 nov)
+export const PLANTILLA_MAX = TOPE_PLANTILLA;
 const pctTxt = (x, d = 1) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x).toFixed(d).replace('.', ',')} %`;
 
 /** las secciones plegadas a mano, por parón (Carlos, 9 nov 13:41: «que se puedan plegar igual que en la principal») */

@@ -10,7 +10,7 @@ import { textoInercia } from './inercia-texto.js';
 import { correcciones, dichoTxt } from './dicho.js';
 import { crearQuienPuja } from './quien-puja.js';
 import { ajenasDe } from './pujas-vistas.js';
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj, TOPE_PLANTILLA } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -109,9 +109,9 @@ export function analizar(D, H, c, extra = {}) {
       idealPremio: pc.ideal || null, cesionMax: pc.cesionMax || null, cesionMin: pc.cesionMin || null, cesionJornadas: pc.cesionJornadas || null,
     };
   }
-  /** el tope de la plantilla (Carlos, 14 y 20 nov: con 25 no se puja ni se clausula). En una liga premium con entrenador,
+  /** el tope de la plantilla, 24 (`TOPE_PLANTILLA`; Carlos, 14 y 20 nov: lleno, no se puja ni se clausula). En una liga premium con entrenador,
    *  los entrenadores (2 como mucho) no cuentan en ese tope (ayuda de LaLiga, «Entrenador», ago 2026) */
-  M.TOPE = 25;
+  M.TOPE = TOPE_PLANTILLA;
   M.cuentaPlantilla = (js) => (js || []).filter((j) => j && !(M.premium.entrenador && j.pos === 5)).length;
   const yoEntrada = D.clasif.find((e) => e.teamId === yoTid) || null;
   M.yo = yoEntrada;
@@ -2330,7 +2330,7 @@ export function analizar(D, H, c, extra = {}) {
       ahora, rivales: M.rivalesTid, todos: D.clasif.map((e) => e.teamId), nombre: nombreEquipo, J,
       plantilla: (tid) => (D.plantillas || {})[tid] || [], valorEquipo: (tid) => num((M.equipo[tid] || {}).valor),
       capacidad: M.capacidad, compras: comprasQ, manual: manualQ, paga: (v, pid) => (M.pagaLiga ? M.pagaLiga(v, pid) : null),
-      deudaPct: num(c.deuda) / 100, minimoPos,
+      deudaPct: num(c.deuda) / 100, minimoPos, tope: M.TOPE,
     });
     M.quienPuja = qp;
     for (const m of M.mercado) {
@@ -2625,7 +2625,7 @@ export function analizar(D, H, c, extra = {}) {
       const js = fichas.map((x) => x.j).filter(Boolean);
       const falta = {};
       for (const p of [1, 2, 3, 4]) falta[p] = js.filter((j) => j.pos === p && !MALOS.has(j.estado)).length < MIN_PUESTO[p];
-      // con 25 no puede clausular: tendría que vender antes (Carlos, 20 nov)
+      // con la plantilla llena no puede clausular: tendría que vender antes (Carlos, 20 nov)
       const lleno = M.cuentaPlantilla(js) >= M.TOPE;
       // (20 nov, tarde, Carlos: «¿cómo puede ser peligro medio gente con un patrimonio de 600 M igual que otro con 90 M?»)
       // lo que puede sacar vendiendo: sus jugadores fuera de los 11 más caros, a lo que suele dar LaLiga (≈ su valor). Una
@@ -2663,7 +2663,7 @@ export function analizar(D, H, c, extra = {}) {
       // una sola cláusula tuya a tiro (Gulácsi) salían siete de ocho igual y el 1º, con 534 M de equipo y cuatro
       // clausulazos a ti, «bajo» por tener poco saldo hoy. Ahora, como lo ve él: PUEDE PAGAR (lo rico que es frente al más
       // rico de la liga: su saldo y la cuarta parte de su equipo) × SUELE CLAUSULAR, y lo que tiene a tiro ahora lo mueve
-      // de ×0,85 (nada) a ×1,35 (todo). Con 25 jugadores, ×0,7 (tiene que vender antes); quien te pelea el puesto, hasta un 10 % más
+      // de ×0,85 (nada) a ×1,35 (todo). Con la plantilla llena, ×0,7 (tiene que vender antes); quien te pelea el puesto, hasta un 10 % más
       const riq = riqMax > 0 ? riqDe[e.teamId] / riqMax : 0.5;
       const nivelDe = (p) => Math.min(100, 100 * Math.pow(riq, 0.6) * (lleno ? 0.7 : 1) * (0.4 + 0.6 * suele / 100) * (0.85 + 0.5 * (p / 100) ** 2) * (1 + 0.1 * cerca));
       const ah = calc(false);
@@ -3660,7 +3660,7 @@ export function motivoPeligro(r, { quien = true } = {}) {
   else if (!p.czTotal && ll) partes.push('~no ha clausulado en toda la temporada');
   if (riqueza && (!ricoPobre || ll)) partes.push(riqueza);
   if (p.cerca >= 0.5) partes.push('te pelea el puesto');
-  if (p.lleno) partes.push('con 25 jugadores no puede clausular sin vender antes');
+  if (p.lleno) partes.push(`con ${TOPE_PLANTILLA} jugadores no puede clausular sin vender antes`);
   if (!ll && !p.lleno && quien) {
     if (p.caras) partes.push('las cláusulas tuyas que puede pagar están caras para esta liga');
     else if (pobreSin || (p.sinDinero && p.riq == null)) partes.unshift(p.czTotal ? 'suele clausular, pero no le llega para ninguna cláusula tuya que se abre pronto' : 'no le llega para tus cláusulas que se abren pronto');

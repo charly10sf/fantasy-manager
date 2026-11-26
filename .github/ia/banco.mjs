@@ -111,10 +111,10 @@ export const ESCENAS = {
   'm-cierre': { hora: '2026-11-06T16:00:00+01:00', prep: 'for (const m of S.D.mercado) m.miPuja = null;' },
   // en negativo y con las cláusulas ya cerradas: no queda ningún cambio de mercado que valga antes de la jornada
   'm-cierre-negativo': { hora: '2026-11-06T16:00:00+01:00', prep: 'S.D.dinero = -4200000;' },
-  // la plantilla llena (25) y sin pujas puestas
-  'm-25': { hora: '2026-11-03T10:00:00+01:00', prep: `for (const m of S.D.mercado) m.miPuja = null;
+  // la plantilla llena (24, el tope de LaLiga Fantasy) y sin pujas puestas
+  'm-24': { hora: '2026-11-03T10:00:00+01:00', prep: `for (const m of S.D.mercado) m.miPuja = null;
     const con = new Set(Object.values(S.D.plantillas).flat().map((f) => f.pid)), enM = new Set(S.D.mercado.map((m) => m.pid));
-    const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, 10);
+    const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, Math.max(0, 24 - S.D.plantillas[S.D.yo.teamId].length));
     for (const j of libres) S.D.plantillas[S.D.yo.teamId].push({ pid: j.id, ptId: 'pt' + j.id, clausula: Math.round(j.valor * 1.6), protegidoHasta: Date.now() + 10 * 864e5, compra: j.valor });` },
   // sin porteros (un hueco en el once) y con dinero para taparlo
   'm-hueco': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 80000000;
@@ -367,6 +367,7 @@ export async function plan(escena, contesta, { largo = false } = {}) {
  * No usa nada de fuera (se manda a la página como texto): lo que necesita le llega por los argumentos.
  */
 export function arbitro(R, D, M, eur) {
+  const TOPE = 24;   // (corre también dentro de la página: la constante va aquí dentro)
   const L = [];
   const nom = (o) => (o.j && o.j.nombre) || o.jugador || '';
   const mal = [];
@@ -374,7 +375,8 @@ export function arbitro(R, D, M, eur) {
   const ciclos = (M.ventanaEsp && M.ventanaEsp.ciclos) || 0;
   const rev = (o) => String(o.objetivo || '').startsWith('revend');
   const acepta = (o) => o.accion === 'vender' && o.etiqueta === 'Aceptar oferta';
-  let caja = +D.dinero, pujado = +M.misPujas || 0, n = M.mias.length, escudos = 0, vuelve = 0, ventas = 0, aguantado = 0;
+  // (26 nov) n: los de la plantilla para el tope (24); en una liga premium con entrenador, los entrenadores no cuentan
+  let caja = +D.dinero, pujado = +M.misPujas || 0, n = M.mias.filter((x) => !(M.premium && M.premium.entrenador && x.j && x.j.pos === 5)).length, escudos = 0, vuelve = 0, ventas = 0, aguantado = 0;
   const salen = new Set(), entran = [], aceptadas = new Set();
   /* (19 nov, tercera parte) reglas que el árbitro no miraba: con 25 no se puja (17), el parón (dinero antes que once salvo lo
      que sube hasta la vuelta y los chollos o los buenos a su valor con saldo), nada «para hoy» que sea de otro día, en
@@ -420,7 +422,7 @@ export function arbitro(R, D, M, eur) {
       caja -= imp; n++; entran.push(o.j);
       if (rev(o)) { if (ciclos < 1) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
       else if (M.mereceClausula && !M.mereceClausula(cl) && !String(o.objetivo || '').startsWith('revend')) mal.push(`hoy: la cláusula de ${q} no pasa la regla de Hoy y las alarmas`);
-      if (hoy && n > 25) mal.push(`r17: clausula a ${q} con la plantilla llena`);
+      if (hoy && n > TOPE) mal.push(`r17: clausula a ${q} con la plantilla llena`);
     } else if (o.accion === 'pujar' || o.accion === 'comprar') {
       if (M.dueno[o.pid] && o.accion === 'pujar') mal.push(`${q} tiene dueño: no se puja`);
       const enM = (M.mercado || []).find((m) => m.pid === o.pid);
@@ -432,7 +434,7 @@ export function arbitro(R, D, M, eur) {
         const od = M.ofertaDuenoDe(o.j);
         if (od && od.sube && imp && imp < od.v - 1) mal.push(`rO: ${eur(imp)} a su dueño por ${q}, que sube, por debajo de lo que pediría (${eur(od.v)})`);
       }
-      if (hoy && n >= 25) mal.push(`r17: ${o.accion} por ${q} con ${n} jugadores`);
+      if (hoy && n >= TOPE) mal.push(`r17: ${o.accion} por ${q} con ${n} jugadores`);
       if (hoy) { pujado += imp; n++; entran.push(o.j); }
       // (24 nov) lo que se compra para aguantarlo (no sale revenderlo antes de la jornada, pero teniéndolo sí): su dinero no
       // vuelve antes de la jornada, así que se paga con saldo, y solo si el motor lo ve (`nr.aguantar`)
@@ -470,7 +472,7 @@ export function arbitro(R, D, M, eur) {
   for (const o of R.ops.filter((x) => !x.descartada && x.accion === 'vender' && M.noVender && M.noVender.has(x.pid))) mal.push(`rD: vende a ${(o.j && o.j.nombre) || o.jugador}, y ha dicho que no lo vende`);
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)
   if (caja - pujado < -M.deuda - 1 && caja - pujado < +D.dinero - (+M.misPujas || 0) - 1) mal.push(`r4: ${eur(caja - pujado)} pasa el tope de deuda (${eur(-M.deuda)})`);
-  if (n > 25) mal.push(`r12: la plantilla se iría a ${n}`);
+  if (n > TOPE) mal.push(`r12: la plantilla se iría a ${n}`);
   if (aguantado && caja - pujado < -1) mal.push(`rG: compra para aguantar (${eur(aguantado)}) y el saldo se queda en ${eur(caja - pujado)}: eso solo se paga con saldo`);
   // (Carlos, 20 nov: «si le preguntas una cosa a la IA, debe estar actualizada al momento») el plan, con la liga recién
   // pedida: no con la de hace más de media hora

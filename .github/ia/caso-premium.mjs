@@ -5,7 +5,7 @@
 //  (2) liga estándar con un entrenador en plantilla: como siempre (vender, paso del plan, texto de la IA)
 //  (3) liga premium con entrenador: se aguanta, el plan no lo vende, la IA lee que puntúa 5/2/0 y va en el once
 //  (4) entrenador destituido en premium: vender (ya no puntúa) y no se alinea
-//  (5) el tope de 25: en premium con entrenador, los entrenadores no cuentan
+//  (5) el tope de 24: en premium con entrenador, los entrenadores no cuentan
 //  (6) recompensa diaria: 100 mil en estándar, 200 mil en premium; blindaje 24 h y 48 h
 //  (7) la alineación de LaLiga con entrenador, capitán y banquillo: los once son once; el capitán solo si es uno de ellos
 //  (8) una foto de la liga guardada antes de esta versión (premium sin `pf`): ninguna función activa
@@ -90,9 +90,9 @@ const r = await P.page.evaluate(async () => {
   out.viejo = montar({ premium: true, sinPf: true });
   out.estOferta = montar({ oferta: true });
   out.preOferta = montar({ premium: true, oferta: true });
-  out.e24 = montar({ jugadores: 24 });               // estándar: 24 jugadores + 1 entrenador = 25 fichas
-  out.p24 = montar({ premium: true, jugadores: 24 });   // premium: los mismos, y no está llena
-  out.p25 = montar({ premium: true, jugadores: 25 });   // premium con 25 jugadores: llena
+  out.e23 = montar({ jugadores: 23 });               // estándar: 23 jugadores + 1 entrenador = 24 fichas
+  out.p23 = montar({ premium: true, jugadores: 23 });   // premium: los mismos, y no está llena
+  out.p24 = montar({ premium: true, jugadores: 24 });   // premium con 24 jugadores: llena
 
   // (7) la alineación, como viene de /teams/{equipo}/lineup
   const jug = (id, pt) => ({ playerMaster: { id: String(id), positionId: 1 }, buyoutClause: 1, playerTeamId: String(pt) });
@@ -149,10 +149,10 @@ ok(r.pre.ctxLargo - r.est.ctxLargo < 900, `(3) lo que crece lo que lee la IA en 
 ok(r.dest.accion === 'vender' && /no puntúa/.test(r.dest.porque) && r.dest.entOnce === null, `(4) destituido en premium: vender y fuera del once (${r.dest.porque})`);
 ok(r.dest.vendePlan === true && r.dest.ctxDest, '(4) destituido: el plan lleva su venta y la IA lo lee como destituido');
 // (5)
-ok(r.e24.fichas === 25 && r.e24.n === 25 && r.e24.llena === true, `(5) estándar, 24 jugadores y 1 entrenador: cuenta 25 y está llena, como hasta ahora (${r.e24.n})`);
-ok(r.p24.fichas === 25 && r.p24.n === 24 && r.p24.llena === false, `(5) premium, 24 jugadores y 1 entrenador: cuenta 24 y NO está llena (${r.p24.n})`);
-ok(r.p25.n === 25 && r.p25.llena === true, `(5) premium, 25 jugadores y 1 entrenador: llena (${r.p25.n})`);
-ok(/plantilla llena/.test(r.e24.noFichar || '') && !/plantilla llena/.test(r.p24.noFichar || '') && /plantilla llena/.test(r.p25.noFichar || ''), `(5) «no puedes fichar: plantilla llena» sale con la misma cuenta (estándar: ${(r.e24.noFichar || '').slice(0, 40)}… / premium 24: ${(r.p24.noFichar || 'nada').slice(0, 40)})`);
+ok(r.e23.fichas === 24 && r.e23.n === 24 && r.e23.llena === true, `(5) estándar, 23 jugadores y 1 entrenador: cuenta 24 y está llena (${r.e23.n})`);
+ok(r.p23.fichas === 24 && r.p23.n === 23 && r.p23.llena === false, `(5) premium, 23 jugadores y 1 entrenador: cuenta 23 y NO está llena (${r.p23.n})`);
+ok(r.p24.n === 24 && r.p24.llena === true, `(5) premium, 24 jugadores y 1 entrenador: llena (${r.p24.n})`);
+ok(/plantilla llena \(24\)/.test(r.e23.noFichar || '') && !/plantilla llena/.test(r.p23.noFichar || '') && /plantilla llena \(24\)/.test(r.p24.noFichar || ''), `(5) «no puedes fichar: plantilla llena» sale con la misma cuenta (estándar: ${(r.e23.noFichar || '').slice(0, 40)}… / premium 23: ${(r.p23.noFichar || 'nada').slice(0, 40)})`);
 // (6)
 ok(r.pre.rec === 200000 && r.pre.escudo === 48 && r.pre.premium.liga, '(6) premium: recompensa diaria de 200 mil y blindaje de 48 h');
 // (7)

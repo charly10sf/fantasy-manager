@@ -28,14 +28,17 @@ export const NOVEDADES = [
     // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad
     // (`premium`, `config.premiumFeatures`: normalizar.js `premiumDe`, motor `M.premium`); el entrenador, que en premium puntúa
     // 5/2/0, ya no se manda vender (decide.js regla 2, plan.js, `planAuto`, la ficha, lo que lee la IA) y va en el once
-    // (`mejorOnce`); no cuenta en el tope de 25 (`M.nPlantilla`, `M.llena`); recompensa diaria de 200 mil; la alineación de
+    // (`mejorOnce`); no cuenta en el tope de 24 (`M.nPlantilla`, `M.llena`); recompensa diaria de 200 mil; la alineación de
     // LaLiga con capitán, banquillo y entrenador leída aparte (`alineacionDe` en vivo.js; `idsOnce` ya no puede colar un id
     // que no es de jugador); las reglas de lo encendido, a la IA (`premiumTxt`); y la línea «Premium» del Diagnóstico.
     // La ficha de un entrenador, sin ningún cartel (Carlos, 13:50: «No quiero nada de ese cartel. En ningún lado»).
     // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
+    // (15:02, Carlos: «sí, el máximo son 24») El tope de la plantilla es 24, no 25, en toda la app: `TOPE_PLANTILLA` de
+    // util.js, del que lo leen el motor (`M.TOPE`), quién puja (`ctx.tope`), el plan, decide.js, el parón, la IA y el chat.
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
     cosas: [
-      { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 25 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
     ],
   },
   {
@@ -976,7 +979,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'plan', t: 'Los titulares que bajan', x: 'El plan solo pone a la venta a un titular cuando baja todos los días, y mira también lo más alto y lo más bajo que ha valido esta temporada. Si no tienes a otro en su puesto que puntúe, no te lo vende: te avisa en «Mirados y descartados» de que antes hace falta un sustituto.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'especular', t: 'Revender a más de una jornada', x: 'Lo que compras para revender ya no hay que venderlo siempre antes de la jornada. Si sigue subiendo, empiezas la jornada en positivo sin venderlo y aún está protegido, el plan te dice que lo puedes aguantar. Se vende cuando deja de subir o antes de que se le acabe la protección.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'escudo', t: 'Blindajes al empezar la jornada', x: 'En «Los próximos días» sale cuándo se reabren las cláusulas al empezar la jornada y, si te queda un blindaje gratis, en quién usarlo.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 25 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
+      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 24 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
       { tipo: 'mejora', d: 'reloj', t: 'El plan de la IA dice de cuándo es', x: 'Cuando ves el último plan hecho con la IA, sale la hora a la que se hizo y, si puede no estar al día (está preparando otro, ha fallado o ya tiene unas horas), te lo avisa.', menor: true },
     ],
   },
