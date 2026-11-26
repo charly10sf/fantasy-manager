@@ -3178,7 +3178,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136739601": 1795421298000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000,
    "SPORT|136740352": 1795422809000,
@@ -9760,13 +9759,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6568,
+   "ok": 6569,
    "fallos": 0,
-   "ejecuciones": 5347,
+   "ejecuciones": 5348,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T08:06:13.762Z"
+   "ultima": "2026-11-26T08:11:17.364Z"
   }
  },
  "ptsDirecto": {},
@@ -9783,15 +9782,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:07:05.322Z"
+   "ultimaBien": "2026-11-26T08:11:30.342Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:07:05.322Z"
+   "ultimaBien": "2026-11-26T08:11:30.342Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:07:05.322Z"
+   "ultimaBien": "2026-11-26T08:11:30.342Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9799,11 +9798,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:07:05.322Z"
+   "ultimaBien": "2026-11-26T08:11:30.342Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:07:05.322Z"
+   "ultimaBien": "2026-11-26T08:11:30.342Z"
   }
  },
  "avisos": [
