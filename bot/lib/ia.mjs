@@ -38,8 +38,11 @@ export const textoSistema = (sistema) => (Array.isArray(sistema) ? sistema.map((
 
 // lo que se espera que salga de cada pregunta, en tokens (para la reserva de antes de llamar: M16). Se puede cambiar en config.ia.salidaEstimada
 const SALIDA = { clasificar: 2500, redactar: 700, revisar: 300, pulir: 500 };
+// caracteres por token de lo que se manda (26 nov, la prueba de la caché con la IA de verdad: la guía, 11.898 caracteres y 5.554
+// tokens; los ejemplos y el editor, ~2,1; los hechos en JSON, ~1,8). Antes se contaba 3,5 y la reserva se quedaba en la mitad.
+export const CARACTERES_POR_TOKEN = 2;
 /**
- * lo que se reserva antes de preguntar, en dólares: la entrada (unos 3,5 caracteres por token) y la salida esperada. Con `cache`, las
+ * lo que se reserva antes de preguntar, en dólares: la entrada (unos 2 caracteres por token) y la salida esperada. Con `cache`, las
  * instrucciones al precio de escribirlas en caché (lo más caro que puede pasar: 2 veces la entrada a 1 hora), para no quedarse corto.
  */
 export function estimarCoste({ modelo = SONNET, prompt = '', sistema = '', uso = 'redactar', config = {}, cache = false } = {}) {
@@ -47,9 +50,9 @@ export function estimarCoste({ modelo = SONNET, prompt = '', sistema = '', uso =
   const salida = ((config.ia || {}).salidaEstimada || {})[uso] ?? SALIDA[uso] ?? 800;
   const sis = textoSistema(sistema);
   // (sin caché, la cuenta de siempre)
-  if (!cache || !sis) return Math.round(((Math.ceil((String(prompt).length + sis.length) / 3.5) * p.entrada + salida * p.salida) / 1e6) * 1e6) / 1e6;
+  if (!cache || !sis) return Math.round(((Math.ceil((String(prompt).length + sis.length) / CARACTERES_POR_TOKEN) * p.entrada + salida * p.salida) / 1e6) * 1e6) / 1e6;
   const precioInstr = ttlCache(config) === '1h' ? (p.cacheEscribe1h ?? p.entrada * 2) : p.cacheEscribe;
-  const entrada = Math.ceil(String(prompt).length / 3.5), instr = Math.ceil(sis.length / 3.5);
+  const entrada = Math.ceil(String(prompt).length / CARACTERES_POR_TOKEN), instr = Math.ceil(sis.length / CARACTERES_POR_TOKEN);
   return Math.round(((entrada * p.entrada + instr * precioInstr + salida * p.salida) / 1e6) * 1e6) / 1e6;
 }
 

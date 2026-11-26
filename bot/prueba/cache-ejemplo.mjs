@@ -7,7 +7,7 @@
 // Las peticiones van a un `fetch` de mentira que guarda el cuerpo. Uso: node bot/prueba/cache-ejemplo.mjs (sale con 1 si algo falla)
 import { readFileSync } from 'node:fs';
 import { coste, PRECIOS, SONNET, HAIKU, bloquesSistema } from '../lib/claude.mjs';
-import { preguntar, estimarCoste, ttlCache, textoSistema } from '../lib/ia.mjs';
+import { preguntar, estimarCoste, ttlCache, textoSistema, CARACTERES_POR_TOKEN } from '../lib/ia.mjs';
 import { redactar, sistemaDe, sistemaBloques } from '../lib/redaccion.mjs';
 import { revisarConIA, SISTEMA as SISTEMA_REVISOR } from '../lib/revisor.mjs';
 import { GUIA, ejemplosPara } from '../lib/voz.mjs';
@@ -92,15 +92,17 @@ ok(Math.abs(coste(SONNET, { cache_creation_input_tokens: 1000 }) - 0.0025) < 1e-
 ok(Math.abs(coste(HAIKU, { cache_creation_input_tokens: 1000, cache_creation: { ephemeral_1h_input_tokens: 1000 } }) - 0.0002) < 1e-12, 'Haiku: 1.000 escritos a 1 hora, 0,0002 $');
 // la respuesta de preguntar: dólares con el desglose y el uso con la suma, como siempre
 const r = await preguntar({ uso: 'redactar', registro: { datos: {} }, config: conCfg(), prompt: 'x', esquema: { type: 'OBJECT' }, sistema: sistemaBloques('noticias'), cache: true, pedir: fetchFalso({ texto: 'a' }) });
+// la guía real, contada a 2 caracteres por token, no se queda corta (5.554 tokens medidos el 26 nov)
+ok(Math.ceil(GUIA.length / CARACTERES_POR_TOKEN) >= 5554, `la reserva cuenta la guía en ${Math.ceil(GUIA.length / CARACTERES_POR_TOKEN)} tokens (medidos: 5.554)`);
 ok(r.ok && r.uso.cacheEscribe === 4800 && Math.abs(r.dolares - (900 * 2 + 120 * 10 + 4800 * 4) / 1e6) < 1e-12, `preguntar: cacheEscribe es la suma y los dólares, a 1 hora (${r.dolares} $)`);
 // la reserva de antes de preguntar: las instrucciones a lo de escribir 1 hora (lo más caro), el resto como siempre
 const sis = sistemaBloques('final'), pr = 'p'.repeat(3500);
 const sinC = estimarCoste({ modelo: SONNET, prompt: pr, sistema: sis, uso: 'redactar', config: conCfg() });
 const conC = estimarCoste({ modelo: SONNET, prompt: pr, sistema: sis, uso: 'redactar', config: conCfg(), cache: true });
 const con5 = estimarCoste({ modelo: SONNET, prompt: pr, sistema: sis, uso: 'redactar', config: conCfg({ cacheTTL: '5m' }), cache: true });
-const instr = Math.ceil(textoSistema(sis).length / 3.5);
+const instr = Math.ceil(textoSistema(sis).length / CARACTERES_POR_TOKEN);
 ok(sinC === estimarCoste({ modelo: SONNET, prompt: pr, sistema: sistemaDe('final'), uso: 'redactar', config: conCfg() }), 'sin caché, la estimación de siempre (con el texto o con los bloques)');
-ok(Math.abs(conC - (1000 * 2 + instr * 4 + 700 * 10) / 1e6) < 1e-6 && conC > sinC && con5 < conC && con5 > sinC, `con caché de 1 hora se reserva más (${sinC} → ${conC} $; a 5 min, ${con5} $)`);
+ok(Math.abs(conC - (Math.ceil(3500 / CARACTERES_POR_TOKEN) * 2 + instr * 4 + 700 * 10) / 1e6) < 1e-6 && conC > sinC && con5 < conC && con5 > sinC, `con caché de 1 hora se reserva más (${sinC} → ${conC} $; a 5 min, ${con5} $)`);
 
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');
 process.exit(fallos ? 1 : 0);
