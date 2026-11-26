@@ -3164,7 +3164,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
    "SPORT|136739601": 1795421298000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000,
@@ -9743,13 +9742,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6549,
+   "ok": 6550,
    "fallos": 0,
-   "ejecuciones": 5328,
+   "ejecuciones": 5329,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T06:26:10.084Z"
+   "ultima": "2026-11-26T06:31:11.682Z"
   }
  },
  "ptsDirecto": {},
@@ -9766,15 +9765,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T06:26:18.634Z"
+   "ultimaBien": "2026-11-26T06:31:23.719Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T06:26:18.634Z"
+   "ultimaBien": "2026-11-26T06:31:23.719Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T06:26:18.634Z"
+   "ultimaBien": "2026-11-26T06:31:23.719Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9782,11 +9781,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T06:26:18.634Z"
+   "ultimaBien": "2026-11-26T06:31:23.719Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T06:26:18.634Z"
+   "ultimaBien": "2026-11-26T06:31:23.719Z"
   }
  },
  "avisos": [
