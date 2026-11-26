@@ -379,6 +379,7 @@ export const BLOQUEO = {
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
   quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
+  parteRivales: ['Parte de la jornada', 'Qué le falta a cada rival y qué puedes hacer tú con eso.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
@@ -401,7 +402,7 @@ export function candado(clave, { como = null, rid = null } = {}) {
 // (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play. (25 nov, auditoría, hallazgo 10) invitando a un amigo
 // solo se abre el dinero de los rivales (2 por amigo): las demás, en el iPhone, de momento no se abren (sin prometer la app
 // de la App Store: Carlos, 25 nov)
-export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : ' Se abre gratis en la app de Google Play, con un anuncio.');
+export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : clave === 'parteRivales' && anunciosPorVez(clave) > 1 ? ` Se abre gratis en la app de Google Play, con ${anunciosPorVez(clave) === 2 ? 'dos' : anunciosPorVez(clave)} anuncios.` : ' Se abre gratis en la app de Google Play, con un anuncio.');
 /** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
     ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
@@ -410,6 +411,7 @@ export function colaCandado(clave, rid = null) {
 export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
+  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo hasta que empiece la jornada con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
   if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;

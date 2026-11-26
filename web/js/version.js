@@ -35,6 +35,8 @@ export const NOVEDADES = [
     // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
     // (15:02, Carlos: «sí, el máximo son 24») El tope de la plantilla es 24, no 25, en toda la app: `TOPE_PLANTILLA` de
     // util.js, del que lo leen el motor (`M.TOPE`), quién puja (`ctx.tope`), el plan, decide.js, el parón, la IA y el chat.
+    // (26 nov, el encargo 3) EL PARTE DE LOS RIVALES: Rivales → Parte (parte.js, `parteHTML` en vistas.js; función top
+    // «parteRivales», 2 anuncios hasta que empieza la jornada). Lo medido y las reglas, en claude/nota-parte.md del proyecto.
     // (26 nov, tarde) LA PARTE B: que ayude a jugarla, medido antes con J4-J13 (claude/nota-premium-parte-b.md del proyecto;
     // .github/ia/medir-premium.js y medir-entrenador.mjs). Las 5 formaciones de más en el mejor once (`M.formaciones`,
     // `M.formacionVale`; `formaOnce` lee un 4-6-0); el capitán y el banquillo que propone el motor (`M.capitanDe`,
@@ -53,6 +55,7 @@ export const NOVEDADES = [
       // pintado al lado del nombre en los pasos de fichar del plan y en «Antes de nada» (vistas.js); prueba: caso-origen.mjs
       { para: 'dueño', tipo: 'mejora', d: 'plan', menor: true, t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
       { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre con dos anuncios hasta que empieza la jornada.' },
     ],
   },
   {

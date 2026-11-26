@@ -158,6 +158,9 @@ jobs:
       # (26 nov) de dónde sale cada fichaje del plan: «Mercado», «En venta · equipo», «Cláusula · equipo»
       - name: Origen de los fichajes
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-origen.mjs
+      # (26 nov) el parte de los rivales: los hechos de cada rival, las líneas, las llaves y la pestaña de Rivales
+      - name: El parte de los rivales
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-parte.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs

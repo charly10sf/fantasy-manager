@@ -959,6 +959,17 @@ export function analizar(D, H, c, extra = {}) {
     }
   }
   M.flujos = flujos;
+  /** (26 nov, el parte de los rivales) ¿LaLiga ya le ha pagado el premio de la última jornada acabada? true: pagado; false:
+   *  aún puede llegarle; null: no ha acabado ninguna o ya no se espera. El dinero de cada rival no cuenta el premio hasta que
+   *  sale en los movimientos, así que con él por llegar no se puede dar a nadie por «en rojo»: le entra de golpe (100 mil
+   *  por punto). LaLiga lo paga entre 5 y 6 horas después de `fin` (131 premios de la liga de Carlos: de 4,9 a 5,8 h) y no
+   *  todos lo cobran cada jornada: pasadas 12 horas, el que no lo tiene ya no lo va a tener */
+  M.premioPagado = (tid) => {
+    const ult = jornadas.filter((jo) => jo.fin <= ahora).pop();
+    if (!ult) return null;
+    if (AH.lista.some((x) => x.clase === 'premio' && x.t > ult.ini && tidDe(x.quienId, x.quien) === tid)) return true;
+    return ahora - ult.fin < 12 * HORA ? false : null;
+  };
   M.histMov = { desde: AH.desde || null, completa: !!AH.completa, n: AH.lista.length };
   // cuántos de cada tipo (para el diagnóstico)
   M.histTipos = AH.lista.reduce((o, a) => { const k = a.tipo != null ? `${a.tipo}` : a.clase; o[k] = o[k] || { n: 0, conImporte: 0 }; o[k].n++; if (num(a.importe)) o[k].conImporte++; return o; }, {});
@@ -2610,12 +2621,14 @@ export function analizar(D, H, c, extra = {}) {
        ha bajado en ESTA actualización: lo de los últimos 2 días y poco más (datos.js deja de pedir páginas al llegar a lo
        que ya tenía). Un blindaje de hace 4 días, en un parón de dos semanas, no estaba ahí y la app creía que quedaban 2.
        Ahora se cuentan también los del historial guardado (extra.actHist, todo lo visto desde el principio) */
-    const vistos = new Set(), mios = [];
+    const vistos = new Set(), mios = [], blindaRival = {};
     const idB = (a) => a.id || `${a.t}|${a.pid}|${a.quienId}`;
     for (const a of [...(D.actividad || []), ...((extra.actHist && extra.actHist.lista) || [])]) {
       if (a.clase !== 'blindaje' || !a.t || a.t <= desde || vistos.has(idB(a))) continue;
       vistos.add(idB(a));
-      if (yoTid && M.teamDeUsuario(a.quienId, a.quien) === yoTid) mios.push(a);
+      const q = M.teamDeUsuario(a.quienId, a.quien);
+      if (yoTid && q === yoTid) mios.push(a);
+      else if (q) (blindaRival[q] ||= []).push(a);
     }
     // «ya he blindado a X» cuenta como uno gastado si LaLiga no lo trae (el mismo jugador, desde 3 h antes de decirlo)
     const dichos = [...DICHO.blindados.values()].filter((n) => n.t > desde && !mios.some((a) => a.pid === n.pid && a.t > n.t - 3 * HORA));
@@ -2627,6 +2640,16 @@ export function analizar(D, H, c, extra = {}) {
       const despues = mios.filter((a) => a.t > nb.t).length + dichos.filter((n) => n.t > nb.t).length;
       usados = Math.min(2, 2 - Math.max(0, nb.n - despues));
     }
+    /** (26 nov, el parte de los rivales) los blindajes de un rival esta jornada, contados como los tuyos: los que se ven en
+     *  los movimientos desde que acabó la última. `completo`: el historial guardado llega hasta entonces (si no, puede
+     *  haber gastado alguno que no se ha visto y no se dice nada) */
+    M.escudosDe = (tid) => {
+      // (los de las 6 h siguientes al final de la jornada no se cuentan: LaLiga cierra la jornada y paga el premio 5-6 h
+      // después, y no se sabe si uno puesto en ese rato gasta de la jornada vieja o de la nueva; contarlo de menos calla)
+      const n = Math.min(2, (blindaRival[tid] || []).filter((a) => a.t > (desde || 0) + 6 * HORA).length);
+      const hist = extra.actHist || null;
+      return { usados: n, quedan: 2 - n, desde, completo: !!D.demo || !!(hist && hist.lista && hist.lista.length && (hist.completa || (hist.desde && hist.desde <= (desde || 0) + HORA))) };
+    };
     M.escudosMios = { usados, quedan: Math.max(0, 2 - usados), desde, hasta: sig ? sig.fin : null, horas: M.ESCUDO_H, vistos: mios.length, ...(nb ? { dicho: nb.id } : {}) };
     if (nb) M.dicho.push({ ...nb, txt: dichoTxt(nb), hasta: nb.caduca || (sig ? sig.fin : null) });
     for (const n of dichos) if (M.dueno[n.pid] === yoTid) M.dicho.push({ ...n, txt: dichoTxt(n, J(n.pid).nombre), hasta: n.t + ESCUDO });

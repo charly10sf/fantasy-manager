@@ -1,7 +1,7 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
 import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe, elDia } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
@@ -18,6 +18,7 @@ import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos, origenFichaje } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
+import { parte, visibles } from './parte.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -1395,6 +1396,62 @@ export function equipo(S) {
 /* ================= RIVALES ================= */
 /** una cláusula de un rival que te llega: con tu dinero, abierta o que se abre en menos de 48 h */
 const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
+/** el parte de los rivales con las llaves de ahora: { jornada, toca, desde, abierto, rivales: los que tienen algo que se pueda
+    enseñar, ya ordenados }. Lo ÚNICO que se pinta sale de `visibles`. Si algo falla dentro, Rivales no se cae: sale vacío */
+export function parteVisto(S) {
+  try {
+    const P = parte(S.M, S.D);
+    const abierto = !bloqueada('parteRivales');
+    return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }) };
+  } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
+}
+const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', 'oro'], blindajes: ['escudo', 'azul'] };
+const PARTE_POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+/** el resumen de arriba: cuántos rivales hay de cada cosa, contando SOLO lo que se ve */
+const PARTE_RES = [['rojo', 'en negativo', 'en negativo', ''], ['falta', 'corto de un puesto', 'cortos de un puesto', 'oro'], ['blindajes', 'sin blindajes', 'sin blindajes', 'azul']];
+/** la gráfica de «le falta» (Carlos, 26 nov, 18:33: fuera los cuadrados por puesto; «algo que denote calidad»): SU CAMPO en
+    pequeño, de portería a portería. En cada línea, un punto por cada uno que tiene y puede jugar (hasta lo que cabe en un
+    once: 1, 5, 5 y 3) y, donde le falta, un aro que late. `ps`: [{ p, n, falta }] de parte.js */
+const PARTE_CABE = { 1: 1, 2: 5, 3: 5, 4: 3 }, PARTE_X = { 1: 30, 2: 106, 3: 190, 4: 274 };
+function parteCampo(ps) {
+  const fig = ps.map((x) => {
+    const hay = Math.min(num(x.n), PARTE_CABE[x.p]), aros = Math.min(num(x.falta), PARTE_CABE[x.p]), n = Math.min(hay + aros, 5);
+    const paso = n > 4 ? 14.5 : 17, cx = PARTE_X[x.p], antes = Math.floor((n - aros) / 2);
+    let g = '';
+    for (let k = 0; k < n; k++) {
+      const cy = Math.round((45 + (k - (n - 1) / 2) * paso) * 10) / 10, aro = k >= antes && k < antes + aros;
+      g += aro ? `<circle class="pc-a" cx="${cx}" cy="${cy}" r="6.2"/>` : `<circle class="pc-d" cx="${cx}" cy="${cy}" r="4.6"/>`;
+    }
+    return `${g}<text class="pc-t${x.falta ? ' mal' : ''}" x="${cx}" y="103" text-anchor="middle">${PARTE_POS[x.p]}</text>`;
+  }).join('');
+  const txt = ps.map((x) => `${PARTE_POS[x.p]} ${x.n}${x.falta ? ` (falta${x.falta > 1 ? 'n' : ''} ${x.falta})` : ''}`).join(', ');
+  return `<svg class="parte-campo" viewBox="0 0 304 108" role="img" aria-label="${esc(txt)}"><rect class="pc-c" x="1" y="1" width="302" height="88" rx="10"/><path class="pc-l" d="M152 1v88M1 23h30v44H1M303 23h-30v44h30"/><circle class="pc-l" cx="152" cy="45" r="15"/>${fig}</svg>`;
+}
+/** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que te cambia los planes, con su acción.
+    CORTO (Carlos, 26 nov, 18:10: «menos texto y más sintetizado y entendible»): arriba, cuándo empieza la jornada y cuántos
+    rivales hay de cada cosa; de cada línea, el hecho en negrita con su cifra, UNA frase con lo que puedes hacer y, en «le
+    falta», su campo en pequeño (`parteCampo`); los blindajes gastados, dos escudos apagados. Sale desde 4 días antes de la jornada (antes dice cuándo, sin candado: no hay nada
+    que abrir). QUIÉN está en negativo sale con el parte abierto (Carlos, 26 nov, 18:34: «solo eso, no por cuánto»); la cifra,
+    solo con el dinero de ese rival abierto, y entonces el candado del final lo dice */
+function parteHTML(S, PV) {
+  const { M } = S;
+  if (!PV.jornada) return nada('El parte sale cuando hay una jornada por delante.');
+  if (!PV.toca) return nada(`El parte de la jornada ${PV.jornada} sale ${PV.desde && PV.desde > Date.now() ? `${elDia(PV.desde)}, 4 días antes de que empiece` : 'cuando acabe la que se está jugando'}.`);
+  let h = `<p class="t2 peq">Jornada ${PV.jornada}${PV.ini ? ` · empieza ${cuando(PV.ini)}` : ''}</p>`;
+  if (!PV.abierto) return h + candado('parteRivales');
+  if (PV.rivales.length) {
+    const res = PARTE_RES.map(([t, uno, varios, col]) => { const n = PV.rivales.filter((x) => x.lineas.some((l) => l.tipo === t)).length; return n ? `<span class="pill parte-c ${col}"><b>${n}</b> ${n === 1 ? uno : varios}</span>` : ''; }).join('');
+    h += `<div class="parte-res">${res}</div>`;
+    h += PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
+    ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0];
+      const cuerpo = `${icono(ic)}<div><span class="parte-t"><b>${esc(l.txt)}</b>${l.tipo === 'blindajes' ? `<span class="parte-esc" title="${esc(l.dato || '')}">${icono('escudo')}${icono('escudo')}</span>` : l.dato ? `<span class="parte-d">${esc(l.dato)}</span>` : ''}</span>${l.puestos ? parteCampo(l.puestos) : ''}<span class="parte-a">${esc(l.accion)}</span>${l.nota ? `<span class="parte-n">${esc(l.nota)}</span>` : ''}</div>`;
+      return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('');
+  } else h += nada('Hoy no hay nada de tus rivales que te cambie los planes.');
+  // quién está en negativo ya se ve; por cuánto, solo con su dinero abierto: el candado sale si a alguno de los que salen le falta la cifra
+  if (PV.rivales.some((x) => x.lineas.some((l) => l.sinCifra))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con su dinero abierto, sale también por cuánto.</span></div>`;
+  return h;
+}
+
 export function rivales(S) {
   const { M } = S;
   const seg = S.seg.rivales || 'clasif';
@@ -1402,9 +1459,12 @@ export function rivales(S) {
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
   // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
+  // (26 nov) el parte de los rivales: su número, solo con la llave abierta (cerrado no dice ni cuántos)
+  const PV = parteVisto(S);
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['parte', 'Parte', PV.abierto ? PV.rivales.length : 0, 'verde']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
+  else if (seg === 'parte') h += parteHTML(S, PV);
   else if (seg !== 'clausulas') {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);

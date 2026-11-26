@@ -1358,7 +1358,7 @@ function cerrarTopA() {
   clearTimeout(topT);
   const hasta = proximoCierreTop();
   if (!hasta) return;
-  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.max(1000, hasta - Date.now() + 500));
+  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.min(2e9, Math.max(1000, hasta - Date.now() + 500)));
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
@@ -1394,7 +1394,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const deRival = rid != null && POR_JORNADA.includes(clave);
       const hasta = abiertaHasta(clave, rid);
-      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
+      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto hasta que empiece la jornada' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -1502,7 +1502,7 @@ function rehacer() {
   fijarLiga(S.D.liga && S.D.liga.id);
   // el cierre del APK de GitHub no va con el dueño: sabido quién es, se quita la ventana si ya no toca
   if (enApkGithub() && !cierreApk().cerrada) { const v = document.getElementById('aviso-play'); if (v && !v.querySelector('[data-accion="cerrarAvisoPlay"]')) v.remove(); }
-  fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n);
+  fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n, S.M && S.M.proxima ? S.M.proxima.ini : 0);
   cerrarTopA();
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
   aprender(S.D, S.M, S.det);
