@@ -31,6 +31,40 @@ export const noMerece = (M, o) => {
   return !!x && !M.mereceClausula(x);
 };
 
+/** (26 nov, idea de IsmaelMartín; Carlos: «al lado de cada jugador, si es del mercado o de un rival, y de cuál») de
+ *  dónde sale un fichaje que recomienda la app: del mercado libre, de lo que tiene en venta un rival o de su cláusula.
+ *  Lo dice la app con sus datos, nunca la IA. El rival va por el nombre de su equipo en la liga (no el apodo).
+ *  Devuelve { tipo: 'mercado' | 'venta' | 'clausula' | 'trato', tid, txt } o null */
+export function origenFichaje(M, o) {
+  if (!M || !o) return null;
+  const acc = String(o.accion || o.tipo || '').toLowerCase();
+  if (!['pujar', 'comprar', 'ofertar', 'clausular'].includes(acc)) return null;
+  const pid = String(o.pid || (o.j && o.j.id) || '');
+  if (!pid) return null;
+  const r = String(o.ref || '').trim().toUpperCase().charAt(0);
+  const yo = String((M.yo && M.yo.teamId) || '');
+  const eq = (tid) => { const e = tid && M.equipo && M.equipo[tid]; return (e && (e.nombre || e.manager)) || ''; };
+  const de = (tipo, tid, pre) => { const n = eq(tid); return n ? { tipo, tid: String(tid), txt: `${pre} · ${n}` } : null; };
+  if (acc === 'clausular' || r === 'C') {
+    const x = (M.clausulas || []).find((c) => String(c.pid) === pid);
+    const tid = (x && x.rival && x.rival.teamId) || (M.dueno && M.dueno[pid] !== yo ? M.dueno[pid] : null);
+    if (tid) return de('clausula', tid, 'Cláusula');
+  } else if (r === 'T') {
+    const tid = M.dueno && M.dueno[pid];
+    if (tid && String(tid) !== yo) return de('trato', tid, 'Trato');
+  } else {
+    const m = (M.mercado || []).find((y) => String(y.pid) === pid && !(y.tipo === 'manager' && String(y.vendedorTeamId || '') === yo));
+    if (m) return m.tipo === 'manager' ? de('venta', m.vendedorTeamId, 'En venta') : { tipo: 'mercado', tid: null, txt: 'Mercado' };
+  }
+  // ya fichado (o fuera del mercado): lo que dice la actividad de la liga, y si no, la referencia del paso
+  const a = (M.actividad || []).filter((y) => y.esYo && String(y.pid) === pid && (y.clase === 'compra' || y.clase === 'clausula')).sort((x, y) => y.t - x.t)[0];
+  if (a) {
+    if (a.otroT && String(a.otroT) !== yo) return de(a.clase === 'clausula' ? 'clausula' : 'venta', a.otroT, a.clase === 'clausula' ? 'Cláusula' : 'En venta');
+    if (a.clase === 'compra' && !a.otroT && !a.otro) return { tipo: 'mercado', tid: null, txt: 'Mercado' };
+  }
+  return r === 'P' ? { tipo: 'mercado', tid: null, txt: 'Mercado' } : null;
+}
+
 export function paronLejos(M, ahora = Date.now()) {
   return !!(M && M.paron && M.proxima && M.paron.ini <= M.proxima.ini && M.paron.fin > ahora && M.proxima.ini - ahora > PARON_VUELTA);
 }

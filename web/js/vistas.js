@@ -16,7 +16,7 @@ import { guiaClave } from './clave.js';
 import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
-import { paronLejos } from './operaciones.js';
+import { paronLejos, origenFichaje } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
@@ -520,6 +520,10 @@ function clavesDe(o) {
   const d = o.datos || {};
   return [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean);
 }
+/** (26 nov, IsmaelMartín) de dónde sale un fichaje (origenFichaje), al lado del nombre: si no cabe, baja de línea
+ *  entera (nunca se corta) */
+const ORI_CLS = { mercado: 'libre', venta: 'vende', trato: 'vende', clausula: 'abierta' };
+const oriHTML = (ori) => (ori ? `<span class="pill pp-ori ${ORI_CLS[ori.tipo] || ''}">${esc(ori.txt)}</span>` : '');
 function pasoOp(S, P, o) {
   const j = o.j;
   const ok = hecho(S, P, o);
@@ -534,6 +538,8 @@ function pasoOp(S, P, o) {
   // la cara y el nombre abren su ficha (30 oct, Carlos: sin tener que ir a buscarlo al mercado); el resto de la
   // tarjeta la sigue abriendo y cerrando
   // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
+  // (26 nov, IsmaelMartín) de dónde sale el fichaje: «Mercado», «En venta · equipo» o «Cláusula · equipo»
+  const ori = o.descartada ? null : origenFichaje(S.M, o);
   const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
   // (24 nov) si la app lo ha sacado al repasar el plan con los datos de ahora, el paso dice qué ha cambiado y desde cuándo
   const cambiaTxt = pasoCambiaTxt(P, o);
@@ -569,7 +575,7 @@ function pasoOp(S, P, o) {
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
       ${cara}
       <span class="pp-c">
-        <span class="pp-l1">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
+        <span class="pp-l1${ori ? ' con-ori' : ''}">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b>${oriHTML(ori)}</span>
         <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(o.descartada ? String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, '') : porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
@@ -624,9 +630,11 @@ function urgenteFila(S, a, nota) {
   const j = a.pid ? S.M.J(a.pid) : null;
   const largo = a.cuando && a.cuando.length > 14;
   const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(a.icono || 'alerta')}</span>`;
+  // (26 nov) un fichaje urgente dice también de dónde sale
+  const ori = ['clausular', 'pujar'].includes(a.tipo) ? origenFichaje(S.M, a) : null;
   return `<details class="paso2 paso3 urg t-${esc(a.tipo)}"><summary>
       <span class="pp-num" aria-hidden="true">${icono('alerta')}</span>${cara}
-      <span class="pp-c"><span class="pp-l1"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b></span>
+      <span class="pp-c"><span class="pp-l1${ori ? ' con-ori' : ''}"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b>${oriHTML(ori)}</span>
       <span class="pp-l2s">${a.cuando && !largo ? `<span class="pp-cu">${esc(a.cuando)}</span><i>·</i>` : ''}<span class="pp-porque">${esc(a.texto)}</span></span></span><span></span>
     </summary><div class="pp-d">${largo ? `<p class="pp-sub">${esc(a.cuando)}</p>` : ''}<p class="pp-mot pp-mot1">${esc(a.texto)}</p>${nota ? `<div class="aviso-op">${icono('info')}${esc(nota)}</div>` : ''}
       <div class="op-pie">${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : a.hash ? `<button data-ir="${esc(a.hash)}">${icono('flecha')}Ver</button>` : ''}${conSustituto(S, a) ? `<button data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}<button data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}">${icono('cerrar')}Quitar hasta mañana</button></div></div></details>`;

@@ -2176,6 +2176,9 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-l2s.con-est .pp-est { display: block; flex: 0 1 auto; max-width: 100%; white-space: normal; overflow: visible; text-overflow: clip; }
 .pp-l2s.con-est i, .pp-l2s.con-est .pp-porque { display: none; }
 .pp-l2s .pp-porque { display: block; -webkit-line-clamp: unset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); }
+/* (26 nov) de dónde sale el fichaje, al lado del nombre: si no cabe, baja de línea entera (nunca se corta) */
+.pp-l1.con-ori { flex-wrap: wrap; row-gap: 3px; }
+.pp-l1 .pp-ori { flex: 0 1 auto; max-width: 100%; white-space: normal; font-size: var(--t-mini); line-height: 1.25; padding: 1px 6px; }
 .paso3[open] .pp-l2s .pp-porque { display: none; } .paso3[open] .pp-l2s i { display: none; }
 .paso3 .pp-imp { font-size: var(--t-cuerpo); }
 .paso3 > .pp-d { padding: 0 14px 14px 14px; }
