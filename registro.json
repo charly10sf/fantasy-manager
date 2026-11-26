@@ -3387,7 +3387,8 @@
    "SPORT|136883480": 1795696566000,
    "AS|https://as.com/futbol/primera/quique-mourino-es-un-entrenador-que-trasciende-a-los-tiempos-f202611-n/": 1795700836000,
    "AS|https://as.com/futbol/primera/castro-zabiri-ha-cambiado-la-cara-al-racing-f202611-n/": 1795700555000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/ruben-martin-parte-aficion-no-le-perdonado-le-pegado-bronca-julian-alvarez-simeone-poniendo-pecho-20261126_3482294.html": 1795701725000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/ruben-martin-parte-aficion-no-le-perdonado-le-pegado-bronca-julian-alvarez-simeone-poniendo-pecho-20261126_3482294.html": 1795701725000,
+   "SPORT|136884904": 1795698136000
   },
   "hechos": [
    {
@@ -3834,7 +3835,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -4747,17 +4748,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 175486,
-  "salida": 20639,
+  "entrada": 177515,
+  "salida": 20731,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.476611,
+  "dolares": 0.47686,
   "reservado": 0
  },
  "recientes": {
@@ -9836,13 +9837,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6641,
+   "ok": 6642,
    "fallos": 0,
-   "ejecuciones": 5420,
+   "ejecuciones": 5421,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T14:11:16.269Z"
+   "ultima": "2026-11-26T14:16:12.278Z"
   }
  },
  "ptsDirecto": {},
@@ -9859,15 +9860,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:11:25.614Z"
+   "ultimaBien": "2026-11-26T14:16:25.058Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:11:25.614Z"
+   "ultimaBien": "2026-11-26T14:16:25.058Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:11:25.614Z"
+   "ultimaBien": "2026-11-26T14:16:25.058Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9875,11 +9876,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:11:25.614Z"
+   "ultimaBien": "2026-11-26T14:16:25.058Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:11:25.614Z"
+   "ultimaBien": "2026-11-26T14:16:25.058Z"
   }
  },
  "avisos": [
