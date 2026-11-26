@@ -2303,6 +2303,13 @@
    "jornada": 14,
    "id": "2125922972669976576",
    "t": "2026-11-26T12:01:49.455Z"
+  },
+  {
+   "clave": "caidas|14|3197",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125935517292523959",
+   "t": "2026-11-26T12:51:40.266Z"
   }
  ],
  "estados": {
@@ -4763,16 +4770,16 @@
   "dia": "2026-11-26",
   "llamadas": {
    "clasificar": 27,
-   "redactar": 19,
-   "revisar": 9,
+   "redactar": 23,
+   "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152243,
-  "salida": 18004,
-  "cacheLee": 98733,
-  "cacheEscribe": 44840,
-  "dolares": 0.443652,
+  "entrada": 161219,
+  "salida": 18589,
+  "cacheLee": 126777,
+  "cacheEscribe": 45815,
+  "dolares": 0.474158,
   "reservado": 0
  },
  "recientes": {
@@ -4972,10 +4979,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-24T06:02:48.661Z",
-    "texto": "🚨 Mala noticia para la defensa de los azulones: Djene se pierde el Espanyol-Getafe del lunes 30 a las 21:00 porque vio la roja en la jornada 13. Ya venía de capa caída: vale 12 M y ha dejado por el camino 8,6 M en el último mes.\n\nCarvajal, también fijo atrás, es duda por una lesión sin determinar desde el 22 de noviembre. No hay plazo, así que nadie sabe aún si llega a ese partido en el campo de los pericos."
-   },
-   {
     "t": "2026-11-24T06:02:50.163Z",
     "texto": "El Villarreal llega a Balaídos el domingo 29 con dos titulares habituales en duda.\n\nAkhomach, que jugó 60 minutos o más en sus cinco últimos partidos, tiene un 27 % de titularidad: lo tiene difícil para salir de inicio ante el Celta. Su cotización tampoco acompaña, porque vale 8,2 M tras perder 5,1 M en el último mes.\n\nFoyth, en la zaga, arrastra molestias musculares desde el 30 de octubre y también está en duda."
    },
@@ -4990,6 +4993,10 @@
    {
     "t": "2026-11-24T09:01:40.795Z",
     "texto": "🚨 Manu Sánchez, fijo en la zaga del Levante, es duda para recibir al Racing el viernes 27 a las 21:00 en el Ciutat de València. Arrastra molestias en la rodilla y juega casi siempre.\n\nA su cotización tampoco le sienta bien: vale 1,5 M y ha perdido 1,3 M en el último mes."
+   },
+   {
+    "t": "2026-11-26T12:51:40.268Z",
+    "texto": "El Cuti Romero es duda para el sábado a las 18:30 en el Martínez Valero, donde el Atleti visita al Elche.\n\nCon un 31 % de titularidad, puede quedarse fuera, y eso que es un central que juega casi siempre. El precio ya lo refleja: vale 34 M tras perder 23 M en el último mes."
    }
   ],
   "balance": [
@@ -9851,13 +9858,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6624,
+   "ok": 6625,
    "fallos": 0,
-   "ejecuciones": 5403,
+   "ejecuciones": 5404,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:46:11.389Z"
+   "ultima": "2026-11-26T12:51:20.568Z"
   }
  },
  "ptsDirecto": {},
@@ -9874,15 +9881,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:46:23.533Z"
+   "ultimaBien": "2026-11-26T12:51:46.103Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:46:23.533Z"
+   "ultimaBien": "2026-11-26T12:51:46.103Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:46:23.533Z"
+   "ultimaBien": "2026-11-26T12:51:46.103Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9890,11 +9897,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:46:23.533Z"
+   "ultimaBien": "2026-11-26T12:51:46.103Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:46:23.533Z"
+   "ultimaBien": "2026-11-26T12:51:46.103Z"
   }
  },
  "avisos": [
