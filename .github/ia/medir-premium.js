@@ -82,8 +82,8 @@ export async function medir(o) {
     const cap = Object.fromEntries(POL.map((k) => [k, { pts: [], acierta: 0, sinJugar: 0 }]));
     const azar = [], distintos = { n: 0, appGana: 0, mediaGana: 0, igual: 0 }, porJ = {};
     const ban = { onces: 0, conEntrada: 0, dobles: 0, aplazados: 0, riesgoAcierta: 0, riesgoDe: 0,
-      pos: Object.fromEntries([1, 2, 3, 4].map((p) => [p, { huecos: 0, sinSuplente: 0, entra: 0, app: 0, media: 0, juega: 0, mejor: 0, appSinJugar: 0, juegaSinJugar: 0 }])) };
-    const ptsOnce = { app: [], media: [], juega: [], mejor: [] };
+      pos: Object.fromEntries([1, 2, 3, 4].map((p) => [p, { huecos: 0, sinSuplente: 0, entra: 0, app: 0, media: 0, juega: 0, mixto: 0, mejor: 0, appSinJugar: 0, juegaSinJugar: 0 }])) };
+    const ptsOnce = { app: [], media: [], juega: [], mixto: [], mejor: [] };
     const sim = {};
     let saltadas = 0, cortos = 0, fueraPlantilla = 0, alineados = 0;
     for (const jo of jors) {
@@ -118,7 +118,7 @@ export async function medir(o) {
         // --- el banquillo: uno por puesto, de los de su plantilla de entonces que no alineó ---
         ban.onces++;
         let entradas = 0;
-        const suma = { app: 0, media: 0, juega: 0, mejor: 0 };
+        const suma = { app: 0, media: 0, juega: 0, mixto: 0, mejor: 0 };
         for (const p of [1, 2, 3, 4]) {
           const tit = info.filter((x) => x.j.pos === p);
           if (!tit.length) continue;
@@ -137,9 +137,11 @@ export async function medir(o) {
           // ¿el que no jugó era el titular de su puesto al que la app daba menos opciones de jugar?
           if (tit.length > 1) { ban.riesgoDe++; const flojo = mejorPor(tit, (x) => -num(x.pT == null ? 1 : x.pT)); if (fueraJug.includes(flojo)) ban.riesgoAcierta++; }
           const a = mejorPor(cands, (x) => x.pp), m = mejorPor(cands, (x) => x.media), mj = mejorPor(cands, (x) => x.r), ju = mejorPor(cands, (x) => x.pT * 100 + x.pp);
+          // mixto: de los que tienen 6 de cada 10 de jugar, el de más puntos esperados; si no hay ninguno, el que más juega
+          const fijos = cands.filter((x) => x.pT >= 0.6), mx = fijos.length ? mejorPor(fijos, (x) => x.pp) : ju;
           B_.entra++; entradas++;
-          B_.app += a.r; B_.media += m.r; B_.mejor += mj.r; B_.juega += ju.r;
-          suma.app += a.r; suma.media += m.r; suma.mejor += mj.r; suma.juega += ju.r;
+          B_.app += a.r; B_.media += m.r; B_.mejor += mj.r; B_.juega += ju.r; B_.mixto += mx.r;
+          suma.app += a.r; suma.media += m.r; suma.mejor += mj.r; suma.juega += ju.r; suma.mixto += mx.r;
           if (a.min === 0) B_.appSinJugar++;
           if (ju.min === 0) B_.juegaSinJugar++;
         }
@@ -188,7 +190,7 @@ export async function medir(o) {
     res.banquillo = {
       onces: ban.onces, conAlgunaEntrada: ban.conEntrada, parte: ban.onces ? r2(ban.conEntrada / ban.onces) : null, dosDelMismoPuesto: ban.dobles, soloAplazado: ban.aplazados,
       elDeMasRiesgo: ban.riesgoDe ? `${ban.riesgoAcierta}/${ban.riesgoDe}` : null,
-      puntosPorOnceYJornada: { app: r2(media(ptsOnce.app)), media: r2(media(ptsOnce.media)), elQueMasJuega: r2(media(ptsOnce.juega)), mejor: r2(media(ptsOnce.mejor)) },
+      puntosPorOnceYJornada: { app: r2(media(ptsOnce.app)), media: r2(media(ptsOnce.media)), elQueMasJuega: r2(media(ptsOnce.juega)), mixto: r2(media(ptsOnce.mixto)), mejor: r2(media(ptsOnce.mejor)) },
       porPuesto: Object.fromEntries(Object.entries(ban.pos).map(([p, v]) => [p, { ...v }])),
     };
     out[nombreV] = res;
