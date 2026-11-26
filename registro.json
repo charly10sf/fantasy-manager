@@ -3383,7 +3383,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255820/aubameyang-pedri-jugador-me-impresiona.html": 1795697311000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/aubameyang-sufre-accidente-dirigia-entrenar-deportivo-20261126_3482906.html": 1795698557000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/26/aubameyang-sufre-un-accidente-leve-con-su-ferrari-a-tres-dias-del-depor-barca-cadena-ser/": 1795699081000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261126/1004255837/bellingham-lamine-julian-zabiri-fortuno.html": 1795698826000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261126/1004255837/bellingham-lamine-julian-zabiri-fortuno.html": 1795698826000,
+   "SPORT|136883480": 1795696566000
   },
   "hechos": [
    {
@@ -3830,7 +3831,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -4743,17 +4744,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169274,
-  "salida": 20233,
+  "entrada": 171340,
+  "salida": 20351,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.475786,
+  "dolares": 0.476052,
   "reservado": 0
  },
  "recientes": {
@@ -9832,13 +9833,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6635,
+   "ok": 6636,
    "fallos": 0,
-   "ejecuciones": 5414,
+   "ejecuciones": 5415,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T13:41:11.570Z"
+   "ultima": "2026-11-26T13:46:11.965Z"
   }
  },
  "ptsDirecto": {},
@@ -9855,15 +9856,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:41:20.202Z"
+   "ultimaBien": "2026-11-26T13:46:23.793Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:41:20.202Z"
+   "ultimaBien": "2026-11-26T13:46:23.793Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:41:20.202Z"
+   "ultimaBien": "2026-11-26T13:46:23.793Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9871,11 +9872,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:41:20.202Z"
+   "ultimaBien": "2026-11-26T13:46:23.793Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:41:20.202Z"
+   "ultimaBien": "2026-11-26T13:46:23.793Z"
   }
  },
  "avisos": [
