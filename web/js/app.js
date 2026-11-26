@@ -5163,6 +5163,14 @@ function novInvRecordar() {
   const n = NOVEDADES.find((x) => x.aviso && x.aviso.ir && x.aviso.ir.accion === 'invitarAmigo');
   return n ? { ...n.aviso, eti: 'Premios por invitar' } : null;
 }
+/* (0.8.4s) la tarjeta de novedades con su lista: cada cosa con `solo` sale solo donde se nota ('pc': en el ordenador;
+   'premium': en una liga premium). Si no queda nada de la lista, se enseña igual con lo que queda */
+function avisoMio(a) {
+  if (!a || !Array.isArray(a.lista)) return a;
+  const pc = document.documentElement.classList.contains('escritorio') && !enApp;
+  const prem = !!(S.D && S.D.liga && S.D.liga.premium === true);
+  return { ...a, lista: a.lista.filter((c) => !c.solo || (c.solo === 'pc' && pc) || (c.solo === 'premium' && prem)) };
+}
 function novInvRecordado() {
   const g = novAvisos() || { visto: [], pend: null };
   g.invT = Date.now();
@@ -5177,7 +5185,9 @@ function novAvisoEsperar() {
   const mirar = () => {
     // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
     if (Date.now() > hasta) { novAvisoEsperando = false; return; }
-    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa'))) { setTimeout(mirar, 1000); return; }
+    // (0.8.4s) ni encima de la bienvenida ni de la presentación de un tema (lo mismo que espera la del iPhone), y en la liga
+    // de ejemplo se espera: la novedad sale con tu liga
+    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente && !enDemo())) { setTimeout(mirar, 1000); return; }
     // (0.8.4e) la de la app para iPhone va antes y, si sale hoy, la de invitar se deja para otro día
     if (iphoneToca()) { setTimeout(mirar, 1500); return; }
     if (iphoneHoy()) { novAvisoEsperando = false; return; }
@@ -5187,7 +5197,7 @@ function novAvisoEsperar() {
     const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
     if (n) {
       novAvisoEsperando = false;
-      tarjetaNovedad(n.aviso, { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
+      tarjetaNovedad(avisoMio(n.aviso), { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
       return;
     }
     // sin tarjeta de versión pendiente: el recordatorio de invitar, si toca

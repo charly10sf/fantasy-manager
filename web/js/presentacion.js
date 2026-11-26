@@ -187,11 +187,12 @@ export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {})
   const capa = document.createElement('div');
   capa.className = 'nvt-capa';
   capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
-    <div class="nvt" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
       <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
       <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
       <h2 id="nvt-t">${esc(a.t)}</h2>
       ${a.x ? `<p>${esc(a.x)}</p>` : ''}
+      ${a.lista && a.lista.length ? `<ul class="nvt-lista">${a.lista.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</li>`).join('')}</ul>` : ''}
       ${a.mas ? `<span class="nvt-mas">${esc(a.mas)}</span>` : ''}
       ${a.ir ? `<button type="button" class="btn ancho" data-nvt="ir">${esc(a.ir.txt || 'Verlo')}</button>` : ''}
       <button type="button" class="nvt-no" data-nvt="no">${a.ir ? 'Ahora no' : 'Vale'}</button>

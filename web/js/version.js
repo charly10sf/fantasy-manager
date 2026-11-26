@@ -55,19 +55,39 @@ export const NOVEDADES = [
     // demanda alta»; 3 ligas o más, sin la tuya; Carlos, 18:53: «textos más reducidos… tampoco 60 pestañas», y 19:31:
     // «lo dejaría gratis, y mejor integrado»: sin tarjeta propia ni candado). No toca la puja ni le llega a la IA.
     // La medida, preparada: .github/ia/medir-otras-ligas.mjs. Pruebas: .github/ia/caso-otras-ligas.mjs y worker/prueba/datos.mjs
-    v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
+    // (26 nov, 22:19, Carlos: «poner un pequeño pop-up de las novedades que hay») ESTA VERSIÓN SE CUENTA A TODOS (todos: true;
+    // excepción que pide él a la regla del 20 nov), con la tarjeta pequeña (aviso, como la de invitar: tarjetaNovedad), nunca
+    // la presentación entera. Una vez por dispositivo (LS «avisos-nov»), con la liga cargada y sin pisar la bienvenida, el
+    // tutorial ni la del iPhone. `lista`: una línea por cosa; `solo` la enseña solo donde se nota ('pc': el ordenador ancho;
+    // 'premium': una liga premium). Lo de otras ligas (apagado), las dos ligas y los avisos terminados no se cuentan
+    v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'El parte de los rivales', todos: true,
+    aviso: {
+      d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
+      lista: [
+        { t: 'Parte de los rivales', x: 'Quién va en negativo, a quién le falta un puesto y quién ya no puede blindar.' },
+        { t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
+        { t: 'De dónde sale cada fichaje', x: 'En el plan: mercado, en venta o cláusula.' },
+        { t: 'Plantilla de 24', x: 'Como en LaLiga Fantasy.' },
+        { t: 'Más ancha en el ordenador', x: 'Equipo y Clubes usan toda la pantalla.', solo: 'pc' },
+      ],
+      ir: { v: 'rivales', seg: 'rivales:parte', txt: 'Ver el parte' },
+    },
     cosas: [
+      // (26 nov, 20:01, Carlos) «Dar por terminado» en los avisos de fallo: claude/nota-avisos-terminar.md del proyecto
+      { para: 'dueño', tipo: 'mejora', d: 'chat', menor: true, t: 'Dar un aviso por terminado', x: 'En un aviso que espera respuesta hay un botón para darlo por terminado sin contestar (un «gracias», algo ya hablado): deja de salir como sin contestar. Si vuelve a escribir, sale otra vez.' },
       // (26 nov, aviso de «como comiendo lomo»: «No son mis jugadores») con dos ligas, al cambiar de una a otra la
       // sincronización de esos segundos y el plan o la pregunta que se recogen después ponían lo de una liga en la otra
       // (sinc.js `pararSinc`/`ligaBien`, `ligaActiva` de datos.js, `liga` en plan-rid y preg-rid; caso-sinc (i))
       { para: 'dueño', tipo: 'arreglo', d: 'ia', menor: true, t: 'Con dos ligas, cada una lo suyo', x: 'Si juegas en dos ligas, al cambiar de una a otra ya no se cuelan el plan, las preguntas ni lo que le has contado a la IA de la otra liga.' },
       { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
-      { para: 'dueño', tipo: 'nuevo', d: 'campo', menor: true, t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, el plan lleva la puja por el que conviene fichar, con su dinero contado. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
+      { tipo: 'nuevo', d: 'campo', t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, el plan lleva la puja por el que conviene fichar, con su dinero contado. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
       // (26 nov, 20:26, idea de IsmaelMartín; claude/prompt-origen-fichajes.md del proyecto) `origenFichaje` en operaciones.js,
       // pintado al lado del nombre en los pasos de fichar del plan y en «Antes de nada» (vistas.js); prueba: caso-origen.mjs
-      { para: 'dueño', tipo: 'mejora', d: 'plan', menor: true, t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
-      { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
-      { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre con dos anuncios hasta que empieza la jornada.' },
+      { tipo: 'mejora', d: 'plan', t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
+      { tipo: 'arreglo', d: 'candado', t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
+      { tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre con dos anuncios hasta que empieza la jornada.' },
+      // (26 nov, 20:41-21:55, Carlos: «hay mucho espacio a la derecha») Equipo como Hoy y Clubes a todo lo ancho (vistas.js, clubes.js, app.css)
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'Más ancha en el ordenador', x: 'En el ordenador, Equipo pone tu once a lo ancho, como Hoy, y Clubes enseña tus clubes arriba (se pliegan) y la clasificación entera, con casa, fuera y más datos.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', menor: true, t: 'Lo que se paga y se puja en todas las ligas', x: 'La app empieza a juntar, sin nombres ni ligas, lo que se paga por cada jugador, cuántas pujas lleva cada libre y qué cláusulas se pagan en todas las ligas que la usan. Todavía no se ve nada: hacen falta unas semanas de datos y comprobar que acierta. Después, la ficha de un libre del mercado dirá lo que se ha pagado por él en otras ligas.', ir: { v: 'mercado' } },
     ],
   },
