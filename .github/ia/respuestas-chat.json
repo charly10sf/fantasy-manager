@@ -2,351 +2,31 @@
  {
   "escena": "m-premium",
   "esf": "low",
-  "id": "pm-capitan",
-  "tipo": "premium",
-  "pre": "¿A quién pongo de capitán esta jornada?",
-  "hist": [],
-  "crudo": "Ponte a **Ionut Radu** de capitán. Es el que más puntos esperados tiene de tu once (~9,3 en Sevilla, 7º), así que doblado te deja unos 18,6. Es titular, viene de hacer 16 puntos en la jornada 9 y su valor sigue subiendo (+238 mil hoy). Solo dobla si juega, pero no hay motivo para dudar.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Ponte a **Ionut Radu** de capitán. Es el que más puntos esperados tiene de tu once (~9,3 en Sevilla, 7º), así que doblado te deja unos 18,6. Es titular, viene de hacer 16 puntos en la jornada 9 y su valor sigue subiendo (+238 mil hoy). Solo dobla si juega, pero no hay motivo para dudar.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   }
-  ],
-  "ms": 3582,
-  "coste": 5114.400000000001,
-  "entra": 48019,
-  "sale": 625,
-  "cache": {
-   "lee": 0,
-   "escribe": 30646,
-   "sin": 9711
-  },
-  "largo": 76668,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 56
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-capitan-no-juega",
-  "tipo": "premium",
-  "pre": "¿Y si al final no juega, qué pasa con el doble?",
-  "hist": [
-   {
-    "r": "yo",
-    "t": "¿A quién pongo de capitán esta jornada?"
-   },
-   {
-    "r": "ia",
-    "t": "Ponte a **Ionut Radu** de capitán. Es el que más puntos esperados tiene de tu once (~9,3 en Sevilla, 7º), así que doblado te deja unos 18,6. Es titular, viene de hacer 16 puntos en la jornada 9 y su valor sigue subiendo (+238 mil hoy). Solo dobla si juega, pero no hay motivo para dudar."
-   }
-  ],
-  "crudo": "Si Ionut Radu no juega, el doble no se aplica a nadie: el capitán solo dobla si juega, así que no pierdes nada más que sus puntos. Y tampoco se pasa automáticamente a otro, por lo que no hay que hacer nada raro: el resto del once puntúa igual. Lo que sí tienes que mirar es que no te quedes sin portero titular, porque Agirrezabala está en el banquillo y Ionut es tu único POR de once. Antes de las 14:00 del sábado (7 nov) puedes cambiar el capitán si ves algo raro.",
-  "texto": "Si Ionut Radu no juega, el doble no se aplica a nadie: el capitán solo dobla si juega, así que no pierdes nada más que sus puntos. Y tampoco se pasa automáticamente a otro, por lo que no hay que hacer nada raro: el resto del once puntúa igual. Lo que sí tienes que mirar es que no te quedes sin portero titular, porque Agirrezabala está en el banquillo y Ionut es tu único POR de once. Antes de las 14:00 del sábado (7 nov) puedes cambiar el capitán si ves algo raro.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1705,
-  "coste": 1359.8000000000002,
-  "entra": 12593,
-  "sale": 201,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9528
-  },
-  "largo": 76326,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 93
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
   "id": "pm-capitan-entrenador",
   "tipo": "premium",
   "pre": "¿Puedo poner de capitán a mi entrenador para que me dé el doble?",
   "hist": [],
-  "crudo": "Sí puedes, en principio, porque el entrenador está en tu once, pero no te compensa. Míster Uno puntúa 5 si su Atlético gana, 2 si empata y 0 si pierde, con una media de 3,1, así que doblado sale unos 6 puntos. Ionut Radu, que la app propone como capitán, tiene unos 9,3 esperados (unos 18,6 doblado) y va subiendo tras su partidazo del J9. Deja a Radu de capitán.",
-  "texto": "Sí puedes, en principio, porque el entrenador está en tu once, pero no te compensa. Míster Uno puntúa 5 si su Atlético gana, 2 si empata y 0 si pierde, con una media de 3,1, así que doblado sale unos 6 puntos. Ionut Radu, que la app propone como capitán, tiene unos 9,3 esperados (unos 18,6 doblado) y va subiendo tras su partidazo del J9. Deja a Radu de capitán.",
+  "crudo": "No, el entrenador no puede ser capitán en esta liga: el capitán tiene que ser uno de los once jugadores y el entrenador queda fuera de esa opción. Lo que sí puedes hacer es ponerlo en el once, donde puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Para el doble, la app propone a Ionut Radu (unos 9,3 puntos esperados, el que más de los tuyos), y ahí lo tienes de capitán.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "No, el entrenador no puede ser capitán en esta liga: el capitán tiene que ser uno de los once jugadores y el entrenador queda fuera de esa opción. Lo que sí puedes hacer es ponerlo en el once, donde puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Para el doble, la app propone a Ionut Radu (unos 9,3 puntos esperados, el que más de los tuyos), y ahí lo tienes de capitán.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4228,
-  "coste": 1609.5,
-  "entra": 12440,
-  "sale": 731,
+  "ms": 1583,
+  "coste": 4865.3,
+  "entra": 47638,
+  "sale": 203,
   "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9375
+   "lee": 0,
+   "escribe": 30667,
+   "sin": 9304
   },
-  "largo": 76017,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 70
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-banquillo",
-  "tipo": "premium",
-  "pre": "¿A quién pongo en el banquillo?",
-  "hist": [],
-  "crudo": "Hugo Duro en el banquillo, de delantero. Es la opción que te propone la app y no tiene rival claro: sale a 1,87 M, su media es 2 y en Betis (11º) se esperan unos 2,4 puntos. Entra solo si Raphinha o Julián Álvarez no juega ni un minuto, así que cuenta como seguro, no como titular.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Hugo Duro\", \"importe\": null, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hugo Duro en el banquillo, de delantero. Es la opción que te propone la app y no tiene rival claro: sale a 1,87 M, su media es 2 y en Betis (11º) se esperan unos 2,4 puntos. Entra solo si Raphinha o Julián Álvarez no juega ni un minuto, así que cuenta como seguro, no como titular.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Hugo Duro"
-   }
-  ],
-  "ms": 6796,
-  "coste": 1921.9,
-  "entra": 12844,
-  "sale": 1275,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9779
-  },
-  "largo": 76811,
+  "largo": 75916,
   "inventadas": [],
   "marcas": [],
   "frases": 3,
-  "palabras": 57
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-banquillo-regla",
-  "tipo": "premium",
-  "pre": "¿Y cuándo entra uno del banquillo a puntuar?",
-  "hist": [
-   {
-    "r": "yo",
-    "t": "¿A quién pongo en el banquillo?"
-   },
-   {
-    "r": "ia",
-    "t": "Hugo Duro en el banquillo, de delantero. Es la opción que te propone la app y no tiene rival claro: sale a 1,87 M, su media es 2 y en Betis (11º) se esperan unos 2,4 puntos. Entra solo si Raphinha o Julián Álvarez no juega ni un minuto, así que cuenta como seguro, no como titular."
-   }
-  ],
-  "crudo": "Entra solo cuando un titular de su misma posición no juega ni un minuto de la jornada. Para Hugo Duro, eso significa que Raphinha o Julián Álvarez se queden sin jugar. Si los dos juegan, no puntúa. No hereda el doble del capitán, así que aunque entre, puntúa lo suyo. El once se cierra el sáb 7, 14:00, con el primer partido.",
-  "texto": "Entra solo cuando un titular de su misma posición no juega ni un minuto de la jornada. Para Hugo Duro, eso significa que Raphinha o Julián Álvarez se queden sin jugar. Si los dos juegan, no puntúa. No hereda el doble del capitán, así que aunque entre, puntúa lo suyo. El once se cierra el sáb 7, 14:00, con el primer partido.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 2668,
-  "coste": 1484.5,
-  "entra": 12580,
-  "sale": 453,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9515
-  },
-  "largo": 76309,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 5,
-  "palabras": 62
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-entrenador",
-  "tipo": "premium",
-  "pre": "¿Qué entrenador alineo esta jornada?",
-  "hist": [],
-  "crudo": "Alinea a **Míster Uno** (Atlético), que es el titular de tu once. Su Atlético juega en Málaga (20º), así que puntúa 5 si gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va en el banquillo, y solo entra en el once si lo cambias, así que no hace falta alinearlo.",
-  "texto": "Alinea a **Míster Uno** (Atlético), que es el titular de tu once. Su Atlético juega en Málaga (20º), así que puntúa 5 si gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va en el banquillo, y solo entra en el once si lo cambias, así que no hace falta alinearlo.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 3543,
-  "coste": 1612.3000000000002,
-  "entra": 13033,
-  "sale": 618,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9968
-  },
-  "largo": 77237,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 53
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-entrenador-vendo",
-  "tipo": "premium",
-  "pre": "¿Vendo a Míster Dos? Los entrenadores no puntúan, ¿no?",
-  "hist": [],
-  "crudo": "No, en tu liga Premium el entrenador sí puntúa: 5 si su equipo gana, 2 si empata y 0 si pierde. Pero Míster Dos es suplente y tu entrenador alineado es Míster Uno, así que hoy no suma nada. Aun así, no lo vendas: no cuenta para el tope de 24 jugadores y su cláusula de 1,50 M (+97 % sobre su valor) no la paga nadie. Venderlo solo te daría unos 760 mil a LaLiga, que llegarían en el cambio de mercado de mañana a las 00:15, no ahora.",
-  "texto": "No, en tu liga Premium el entrenador sí puntúa: 5 si su equipo gana, 2 si empata y 0 si pierde. Pero Míster Dos es suplente y tu entrenador alineado es Míster Uno, así que hoy no suma nada. Aun así, no lo vendas: no cuenta para el tope de 24 jugadores y su cláusula de 1,50 M (+97 % sobre su valor) no la paga nadie. Venderlo solo te daría unos 760 mil a LaLiga, que llegarían en el cambio de mercado de mañana a las 00:15, no ahora.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 7088,
-  "coste": 1888.5,
-  "entra": 12715,
-  "sale": 1234,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9650
-  },
-  "largo": 76501,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 90
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-entrenador-puntos",
-  "tipo": "premium",
-  "pre": "¿Cuántos puntos da un entrenador?",
-  "hist": [],
-  "crudo": "Un entrenador puntúa en tu liga premium: 5 si su equipo gana, 2 si empata y 0 si pierde, y solo cuenta si lo alineas (tienes uno en el once, Míster Uno, del Atlético). Ojo, que no es un jugador más: es uno de los dos que puedes tener en plantilla y no cuenta en el tope de 24.",
-  "texto": "Un entrenador puntúa en tu liga premium: 5 si su equipo gana, 2 si empata y 0 si pierde, y solo cuenta si lo alineas (tienes uno en el once, Míster Uno, del Atlético). Ojo, que no es un jugador más: es uno de los dos que puedes tener en plantilla y no cuenta en el tope de 24.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1203,
-  "coste": 1306.9,
-  "entra": 12429,
-  "sale": 128,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9364
-  },
-  "largo": 75986,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 2,
-  "palabras": 59
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-tope",
-  "tipo": "premium",
-  "pre": "Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?",
-  "hist": [],
-  "crudo": "No, los entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 en plantilla, y aparte de eso tienes 15 jugadores (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que tu plantilla queda en 15 de 24 más los dos míster. Ojo, solo se alinea uno, y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde.",
-  "texto": "No, los entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 en plantilla, y aparte de eso tienes 15 jugadores (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que tu plantilla queda en 15 de 24 más los dos míster. Ojo, solo se alinea uno, y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 2049,
-  "coste": 1415.4,
-  "entra": 12449,
-  "sale": 341,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9384
-  },
-  "largo": 76033,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 68
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-formacion",
-  "tipo": "premium",
-  "pre": "¿Puedo jugar con un 4-2-4 en mi liga?",
-  "hist": [],
-  "crudo": "Sí, el 4-2-4 está entre las formaciones que puedes usar en tu liga, junto con las demás de la lista. Cámbiala al alinear antes de que empiece la jornada 10 (sáb 7, 14:00). Ahora mismo tienes el 4-4-2, así que no hay nada que hacer si no te cambia el once.",
-  "texto": "Sí, el 4-2-4 está entre las formaciones que puedes usar en tu liga, junto con las demás de la lista. Cámbiala al alinear antes de que empiece la jornada 10 (sáb 7, 14:00). Ahora mismo tienes el 4-4-2, así que no hay nada que hacer si no te cambia el once.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1878,
-  "coste": 1381.6000000000001,
-  "entra": 12436,
-  "sale": 276,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9371
-  },
-  "largo": 75990,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 51
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-once",
-  "tipo": "premium",
-  "pre": "¿Qué once pongo para la próxima jornada, con capitán y banquillo?",
-  "hist": [],
-  "crudo": "Pon el once que te propone la app: 4-4-2 con Ionut Radu; Catena, V. Chust, Sergio Gómez y Jon Martin; Álex Baena, Bellingham, Rodri y Pathé I. Ciss; Raphinha y Julián Álvarez; y Míster Uno de entrenador. Son unos 72,3 puntos esperados. Capitán, Ionut Radu (unos 9,3 esperados, el que más de tus jugadores puede sumar). De banquillo, Hugo Duro, que entra por la posición de delantero si un titular de esa línea no juega. El once se cierra sáb 7, 14:00, así que puedes dejarlo tal cual hasta entonces.",
-  "texto": "Pon el once que te propone la app: 4-4-2 con Ionut Radu; Catena, V. Chust, Sergio Gómez y Jon Martin; Álex Baena, Bellingham, Rodri y Pathé I. Ciss; Raphinha y Julián Álvarez; y Míster Uno de entrenador. Son unos 72,3 puntos esperados. Capitán, Ionut Radu (unos 9,3 esperados, el que más de tus jugadores puede sumar). De banquillo, Hugo Duro, que entra por la posición de delantero si un titular de esa línea no juega. El once se cierra sáb 7, 14:00, así que puedes dejarlo tal cual hasta entonces.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 6940,
-  "coste": 1897.5,
-  "entra": 12440,
-  "sale": 1307,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9375
-  },
-  "largo": 76018,
-  "inventadas": [],
-  "marcas": [
-   "largo: 7 frases"
-  ],
-  "frases": 7,
-  "palabras": 90
+  "palabras": 77
  },
  {
   "escena": "m-premium",
@@ -355,68 +35,109 @@
   "tipo": "premium",
   "pre": "¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?",
   "hist": [],
-  "crudo": "No tengo la cifra exacta. Sé que LaLiga paga un premio en dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, pero el importe no me figura en tus datos, así que no te lo voy a inventar. Lo que sí puedes tener en cuenta es que ese premio se suma a los puntos de la jornada, que ya te pagan 100.000 € por cada punto del equipo.",
-  "texto": "No tengo la cifra exacta. Sé que LaLiga paga un premio en dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, pero el importe no me figura en tus datos, así que no te lo voy a inventar. Lo que sí puedes tener en cuenta es que ese premio se suma a los puntos de la jornada, que ya te pagan 100.000 € por cada punto del equipo.",
+  "crudo": "Por cada jugador tuyo que entre en el 11 ideal de la jornada, LaLiga te paga un premio en dinero, pero la cantidad no la tengo en los datos, así que no te puedo dar la cifra. Lo que sí sé es que se paga por jugador, no por el equipo entero.",
+  "texto": "Por cada jugador tuyo que entre en el 11 ideal de la jornada, LaLiga te paga un premio en dinero, pero la cantidad no la tengo en los datos, así que no te puedo dar la cifra. Lo que sí sé es que se paga por jugador, no por el equipo entero.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 2341,
-  "coste": 2099.6000000000004,
-  "entra": 18996,
-  "sale": 400,
+  "ms": 2083,
+  "coste": 2076.3,
+  "entra": 18998,
+  "sale": 353,
   "cache": {
-   "lee": 30647,
+   "lee": 30668,
    "escribe": 0,
    "sin": 15931
   },
-  "largo": 91403,
+  "largo": 91453,
   "inventadas": [],
-  "marcas": [
-   "dice lo que no debe (\\b100[ .]?(000|mil)\\b)"
-  ],
-  "frases": 3,
-  "palabras": 73
+  "marcas": [],
+  "frases": 2,
+  "palabras": 52
  },
  {
   "escena": "m-premium",
   "esf": "low",
-  "id": "pm-cesion",
+  "id": "pm-fichar-ent",
   "tipo": "premium",
-  "pre": "¿Puedo pedirle cedido a Marcos a Oyarzabal para esta jornada? ¿Cuánto me costaría?",
+  "pre": "No tengo entrenador. ¿Ficho alguno?",
   "hist": [],
-  "crudo": "Sí, puedes. Las cesiones se piden hasta el viernes 6 a las 14:00, 24 h antes del primer partido, y el cedido no cuenta en el tope de 24 jugadores. Pero no tengo el mínimo que te pediría Rival 2 por cederlo, así que no te puedo dar el precio. Lo que sí sé es que Oyarzabal ronda 4 pts esperados en su próximo partido, que es poco para tu once: entraría como suplente en DEL, y tu suplente actual, Hugo Duro, promedia 2,4. Solo tiene sentido si necesitas un banquillo mejor para esa jornada.",
-  "texto": "Sí, puedes. Las cesiones se piden hasta el viernes 6 a las 14:00, 24 h antes del primer partido, y el cedido no cuenta en el tope de 24 jugadores. Pero no tengo el mínimo que te pediría Marcos por cederlo, así que no te puedo dar el precio. Lo que sí sé es que Oyarzabal ronda 4 pts esperados en su próximo partido, que es poco para tu once: entraría como suplente en DEL, y tu suplente actual, Hugo Duro, promedia 2,4. Solo tiene sentido si necesitas un banquillo mejor para esa jornada.",
+  "crudo": "Sí, puja por Míster Libre, el entrenador libre del mercado: vale 970 mil y da unos 3,6 puntos por jornada de media, frente a los 2,4 de media de un entrenador cualquiera. La puja es de 1,07 M (+10,3 % sobre su valor), y se resuelve mañana a las 00:15, así que llega a tiempo para la jornada 10 (sáb 7, 14:00). Si no te lo llevas, no pagas nada, porque es una subasta a ciegas. Ocupa una de las dos plazas de entrenador sin restar sitio en la plantilla.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"P-ent3\", \"accion\": \"pujar\", \"jugador\": \"Míster Libre\", \"importe\": 1070000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Sí, puja por Míster Libre, el entrenador libre del mercado: vale 970 mil y da unos 3,6 puntos por jornada de media, frente a los 2,4 de media de un entrenador cualquiera. La puja es de 1,07 M (+10,3 % sobre su valor), y se resuelve mañana a las 00:15, así que llega a tiempo para la jornada 10 (sáb 7, 14:00). Si no te lo llevas, no pagas nada, porque es una subasta a ciegas. Ocupa una de las dos plazas de entrenador sin restar sitio en la plantilla.",
+  "revision": [],
+  "apuntadas": [],
+  "corr": [],
+  "promete": false,
+  "recomiendo": [
+   {
+    "accion": "pujar",
+    "jugador": "Míster Libre"
+   }
+  ],
+  "ms": 3816,
+  "coste": 4239.9,
+  "entra": 38884,
+  "sale": 703,
+  "cache": {
+   "lee": 7292,
+   "escribe": 22212,
+   "sin": 10390
+  },
+  "largo": 75894,
+  "inventadas": [],
+  "marcas": [],
+  "frases": 4,
+  "palabras": 90
+ },
+ {
+  "escena": "m-premium",
+  "esf": "low",
+  "id": "pm-fichar-ent-cuanto",
+  "tipo": "premium",
+  "pre": "¿Y cuánto pujo por él?",
+  "hist": [
+   {
+    "r": "yo",
+    "t": "No tengo entrenador. ¿Ficho alguno?"
+   },
+   {
+    "r": "ia",
+    "t": "Sí, puja por Míster Libre, el entrenador libre del mercado: vale 970 mil y da unos 3,6 puntos por jornada de media, frente a los 2,4 de media de un entrenador cualquiera. La puja es de 1,07 M (+10,3 % sobre su valor), y se resuelve mañana a las 00:15, así que llega a tiempo para la jornada 10 (sáb 7, 14:00). Si no te lo llevas, no pagas nada, porque es una subasta a ciegas. Ocupa una de las dos plazas de entrenador sin restar sitio en la plantilla."
+   }
+  ],
+  "crudo": "Puja 1,07 M, que es la cifra que te propone la app. Ojo: se resuelve mañana a las 00:15 y la puja se paga con saldo, así que lo tienes que tener disponible ya. Como es subasta a ciegas, si alguien puja más no pagas nada.",
+  "texto": "Puja 1,07 M, que es la cifra que te propone la app. Ojo: se resuelve mañana a las 00:15 y la puja se paga con saldo, así que lo tienes que tener disponible ya. Como es subasta a ciegas, si alguien puja más no pagas nada.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 6374,
-  "coste": 2600.1000000000004,
-  "entra": 19986,
-  "sale": 1203,
+  "ms": 1086,
+  "coste": 2034.1000000000001,
+  "entra": 19846,
+  "sale": 99,
   "cache": {
-   "lee": 30647,
+   "lee": 29505,
    "escribe": 0,
-   "sin": 16921
+   "sin": 16895
   },
-  "largo": 92806,
+  "largo": 91121,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 94
+  "frases": 3,
+  "palabras": 46
  },
  {
   "escena": "m-premium",
   "esf": "low",
-  "id": "pm-que-hago",
+  "id": "pm-fichar-ent-plan",
   "tipo": "plan",
   "pre": "¿Qué hago hoy?",
   "hist": [],
-  "crudo": "Hoy, dos cosas. Pon a la venta a Fran García (14,53 M): ha girado a la baja (−71 mil hoy, venía subiendo) y es suplente, así que venderlo no te quita puntos. LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, y el dinero no entra hasta que la aceptes. Y puja por El Hilali, como mucho 10,46 M antes de las 00:15: sube un 4 % al día y es para revender, no para el once.\n\nOjo con el saldo: si ganas a Courtois (36,30 M), te queda en −29,87 M. Agirrezabala y Jon Martin los pondrías a la venta el jueves para aceptar la oferta del viernes, y son los que te devuelven a positivo antes del sábado a las 14:00.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"ahora\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hoy, dos cosas. Pon a la venta a Fran García (14,53 M): ha girado a la baja (−71 mil hoy, venía subiendo) y es suplente, así que venderlo no te quita puntos. LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, y el dinero no entra hasta que la aceptes. Y puja por El Hilali, como mucho 10,46 M antes de las 00:15: sube un 4 % al día y es para revender, no para el once.\n\nOjo con el saldo: si ganas a Courtois (36,30 M), te queda en −29,87 M. Agirrezabala y Jon Martin los pondrías a la venta el jueves para aceptar la oferta del viernes, y son los que te devuelven a positivo antes del sábado a las 14:00.",
+  "crudo": "Hoy tienes cuatro movimientos. Pon a Fran García a la venta: ha girado a la baja (−71 mil hoy), no entra en tu once y su oferta de LaLiga llegará en el cambio de mercado de mañana 00:15, no antes. Clausula ya a Niño por 1,02 M, que te deja 5,41 M de saldo y suma unos 3,8 pts por jornada. Antes de mañana 00:15 puja 1,07 M por Míster Libre como entrenador, que puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Y pon como máximo 10,46 M en la puja por El Hilali para revender, que sube un 4,0 % al día.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"hoy\"}, {\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": \"P-ent3\", \"accion\": \"pujar\", \"jugador\": \"Míster Libre\", \"importe\": 1070000, \"cuando\": \"hoy antes de las 00:15\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy antes de las 00:15\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Hoy tienes cuatro movimientos. Pon a Fran García a la venta: ha girado a la baja (−71 mil hoy), no entra en tu once y su oferta de LaLiga llegará en el cambio de mercado de mañana 00:15, no antes. Clausula ya a Niño por 1,02 M, que te deja 5,41 M de saldo y suma unos 3,8 pts por jornada. Antes de mañana 00:15 puja 1,07 M por Míster Libre como entrenador, que puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Y pon como máximo 10,46 M en la puja por El Hilali para revender, que sube un 4,0 % al día.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -425,60 +146,158 @@
    {
     "accion": "vender",
     "jugador": "Fran García"
+   },
+   {
+    "accion": "clausular",
+    "jugador": "Niño"
+   },
+   {
+    "accion": "pujar",
+    "jugador": "Míster Libre"
    },
    {
     "accion": "pujar",
     "jugador": "El Hilali"
    }
   ],
-  "ms": 10594,
-  "coste": 2323.8,
-  "entra": 13443,
-  "sale": 1959,
+  "ms": 6469,
+  "coste": 2055.8,
+  "entra": 13403,
+  "sale": 1431,
   "cache": {
-   "lee": 30647,
+   "lee": 29505,
    "escribe": 0,
-   "sin": 10378
+   "sin": 10452
   },
-  "largo": 78042,
+  "largo": 76024,
   "inventadas": [],
   "marcas": [],
-  "frases": 6,
-  "palabras": 128
+  "frases": 5,
+  "palabras": 108
  },
  {
   "escena": "m-premium",
   "esf": "low",
-  "id": "pm-fichar-ent",
+  "id": "pm-apagado-capitan",
   "tipo": "premium",
-  "pre": "No tengo entrenador. ¿Ficho alguno?",
+  "pre": "¿A quién pongo de capitán y en el banquillo?",
   "hist": [],
-  "crudo": "No hace falta fichar. Ya tienes dos entrenadores en tu plantilla: Míster Uno (Atlético), que está alineado, y Míster Dos (Athletic), de reserva. En esta liga Premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, así que Míster Uno es el que cuenta para la jornada 10. Guarda el dinero para los jugadores.",
-  "texto": "No hace falta fichar. Ya tienes dos entrenadores en tu plantilla: Míster Uno (Atlético), que está alineado, y Míster Dos (Athletic), de reserva. En esta liga Premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, así que Míster Uno es el que cuenta para la jornada 10. Guarda el dinero para los jugadores.",
+  "crudo": "En tu liga el capitán y el banquillo están desactivados por el administrador, así que no tienes que elegir ninguno y no puntúa nada de eso. Lo que sí cuenta es el once: el de la jornada 10 se cierra el sáb 7 a las 14:00. Ahí lo que decide es que Ionut Radu, Catena, Bellingham, Raphinha y Rodri sigan titulares, como ya están.",
+  "texto": "En tu liga el capitán y el banquillo están desactivados por el administrador, así que no tienes que elegir ninguno y no puntúa nada de eso. Lo que sí cuenta es el once: el de la jornada 10 se cierra el sáb 7 a las 14:00. Ahí lo que decide es que Ionut Radu, Catena, Bellingham, Raphinha y Rodri sigan titulares, como ya están.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3611,
-  "coste": 1647.2,
-  "entra": 13422,
-  "sale": 610,
+  "ms": 2976,
+  "coste": 4009.9,
+  "entra": 37944,
+  "sale": 431,
   "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 10357
+   "lee": 7292,
+   "escribe": 21985,
+   "sin": 9734
   },
-  "largo": 77969,
+  "largo": 74086,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (\\{ENTL\\})"
-  ],
-  "frases": 4,
-  "palabras": 62
+  "marcas": [],
+  "frases": 3,
+  "palabras": 64
  },
  {
-  "escena": "m-premium",
+  "escena": "sabado-premium",
+  "esf": "low",
+  "id": "pm-capitan-entrenador",
+  "tipo": "premium",
+  "pre": "¿Puedo poner de capitán a mi entrenador para que me dé el doble?",
+  "hist": [],
+  "crudo": "No, el entrenador no puede ser capitán: el doble solo lo da uno de los once jugadores. Tu capitán tiene que ser Ionut Radu, que es la propuesta de la app, con unos 9,3 puntos esperados (el que más de los tuyos), y solo doblará si juega. Míster Uno sí va en el once, puntúa 5 si el Atlético gana, 2 si empata y 0 si pierde, pero sin doblar.",
+  "texto": "No, el entrenador no puede ser capitán: el doble solo lo da uno de los once jugadores. Tu capitán tiene que ser Ionut Radu, que es la propuesta de la app, con unos 9,3 puntos esperados (el que más de los tuyos), y solo doblará si juega. Míster Uno sí va en el once, puntúa 5 si el Atlético gana, 2 si empata y 0 si pierde, pero sin doblar.",
+  "revision": [],
+  "apuntadas": [],
+  "corr": [],
+  "promete": false,
+  "recomiendo": [],
+  "ms": 1244,
+  "coste": 3912.6000000000004,
+  "entra": 38356,
+  "sale": 154,
+  "cache": {
+   "lee": 7292,
+   "escribe": 22373,
+   "sin": 9661
+  },
+  "largo": 74834,
+  "inventadas": [],
+  "marcas": [],
+  "frases": 3,
+  "palabras": 70
+ },
+ {
+  "escena": "sabado-premium",
+  "esf": "low",
+  "id": "pm-ideal",
+  "tipo": "premium",
+  "pre": "¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?",
+  "hist": [],
+  "crudo": "No tengo la cifra de ese premio: en los datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedo decirte es que no hay que hacer nada especial: cuenta el jugador que tengas en tu once y que entre en ese 11 ideal.",
+  "texto": "No tengo la cifra de ese premio: en los datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedo decirte es que no hay que hacer nada especial: cuenta el jugador que tengas en tu once y que entre en ese 11 ideal.",
+  "revision": [],
+  "apuntadas": [],
+  "corr": [],
+  "promete": false,
+  "recomiendo": [],
+  "ms": 2013,
+  "coste": 2079.6000000000004,
+  "entra": 19256,
+  "sale": 308,
+  "cache": {
+   "lee": 29666,
+   "escribe": 0,
+   "sin": 16289
+  },
+  "largo": 90372,
+  "inventadas": [],
+  "marcas": [],
+  "frases": 2,
+  "palabras": 59
+ },
+ {
+  "escena": "sabado-premium",
+  "esf": "low",
+  "id": "pm-fichar-ent",
+  "tipo": "premium",
+  "pre": "No tengo entrenador. ¿Ficho alguno?",
+  "hist": [],
+  "crudo": "Sí, pero no te da puntos en la jornada 10: la puja se resuelve mañana a las 00:15, cuando ya ha empezado (hoy a las 14:00), así que sumaría desde la jornada 11. Puja por Míster Libre, el entrenador libre, con 1,07 M (+10,3 % sobre su valor de 970 mil). Es una subasta a ciegas: si no la ganas, no pagas nada, y con tu saldo de 6,43 M te llega de sobra. Como entrenador se alinea 1 y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y no ocupa sitio en tu plantilla. Vale la pena porque hoy tu once no puntúa ningún entrenador y él da de media 3,6 puntos por jornada.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"P-ent3\", \"accion\": \"pujar\", \"jugador\": \"Míster Libre\", \"importe\": 1070000, \"cuando\": \"ahora\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Sí, pero no te da puntos en la jornada 10: la puja se resuelve mañana a las 00:15, cuando ya ha empezado (hoy a las 14:00), así que sumaría desde la jornada 11. Puja por Míster Libre, el entrenador libre, con 1,07 M (+10,3 % sobre su valor de 970 mil). Es una subasta a ciegas: si no la ganas, no pagas nada, y con tu saldo de 6,43 M te llega de sobra. Como entrenador se alinea 1 y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y no ocupa sitio en tu plantilla. Vale la pena porque hoy tu once no puntúa ningún entrenador y él da de media 3,6 puntos por jornada.",
+  "revision": [],
+  "apuntadas": [],
+  "corr": [],
+  "promete": false,
+  "recomiendo": [
+   {
+    "accion": "pujar",
+    "jugador": "Míster Libre"
+   }
+  ],
+  "ms": 4888,
+  "coste": 4318.1,
+  "entra": 38441,
+  "sale": 948,
+  "cache": {
+   "lee": 7292,
+   "escribe": 21896,
+   "sin": 10342
+  },
+  "largo": 75214,
+  "inventadas": [],
+  "marcas": [],
+  "frases": 5,
+  "palabras": 120
+ },
+ {
+  "escena": "sabado-premium",
   "esf": "low",
   "id": "pm-fichar-ent-cuanto",
   "tipo": "premium",
@@ -490,491 +309,40 @@
    },
    {
     "r": "ia",
-    "t": "No hace falta fichar. Ya tienes dos entrenadores en tu plantilla: Míster Uno (Atlético), que está alineado, y Míster Dos (Athletic), de reserva. En esta liga Premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, así que Míster Uno es el que cuenta para la jornada 10. Guarda el dinero para los jugadores."
+    "t": "Sí, pero no te da puntos en la jornada 10: la puja se resuelve mañana a las 00:15, cuando ya ha empezado (hoy a las 14:00), así que sumaría desde la jornada 11. Puja por Míster Libre, el entrenador libre, con 1,07 M (+10,3 % sobre su valor de 970 mil). Es una subasta a ciegas: si no la ganas, no pagas nada, y con tu saldo de 6,43 M te llega de sobra. Como entrenador se alinea 1 y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y no ocupa sitio en tu plantilla. Vale la pena porque hoy tu once no puntúa ningún entrenador y él da de media 3,6 puntos por jornada."
    }
   ],
-  "crudo": "No tengo ningún entrenador libre en el mercado que pueda pujar por él. Además, en Premium solo caben dos entrenadores en plantilla y ya tienes Míster Uno y Míster Dos, así que otro no entraría. Si te refieres a un jugador, dime cuál y te miro la puja.",
-  "texto": "No tengo ningún entrenador libre en el mercado que pueda pujar por él. Además, en Premium solo caben dos entrenadores en plantilla y ya tienes Míster Uno y Míster Dos, así que otro no entraría. Si te refieres a un jugador, dime cuál y te miro la puja.",
+  "crudo": "Pujas 1,07 M por Míster Libre, que es el importe que te propone la app (+10,3 % sobre su valor de 970 mil). Es una puja a ciegas desde su precio, así que si la gana, paga esa cifra con tu saldo de 6,43 M, y si no la gana, no pagas nada. Se resuelve mañana a las 00:15, y como ya habrá empezado la jornada 10 (hoy a las 14:00), te sumará desde la jornada 11.",
+  "texto": "Pujas 1,07 M por Míster Libre, que es el importe que te propone la app (+10,3 % sobre su valor de 970 mil). Es una puja a ciegas desde su precio, así que si la gana, paga esa cifra con tu saldo de 6,43 M, y si no la gana, no pagas nada. Se resuelve mañana a las 00:15, y como ya habrá empezado la jornada 10 (hoy a las 14:00), te sumará desde la jornada 11.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3158,
-  "coste": 2201.8,
-  "entra": 19798,
-  "sale": 444,
+  "ms": 1275,
+  "coste": 2066.3,
+  "entra": 19833,
+  "sale": 166,
   "cache": {
-   "lee": 30647,
+   "lee": 29189,
    "escribe": 0,
-   "sin": 16733
+   "sin": 16914
   },
-  "largo": 92922,
+  "largo": 90561,
   "inventadas": [],
   "marcas": [],
   "frases": 3,
-  "palabras": 48
- },
- {
-  "escena": "m-premium",
-  "esf": "low",
-  "id": "pm-apagado-capitan",
-  "tipo": "premium",
-  "pre": "¿A quién pongo de capitán y en el banquillo?",
-  "hist": [],
-  "crudo": "Capitán: Ionut Radu, que puntúa doble y es el que más esperas de los tuyos (~9,3 puntos, en Sevilla, con 16 puntos el último partido y la inercia subiendo). En el banquillo, Hugo Duro (DEL), que es la propuesta de la app; entra solo si un delantero titular no juega ni un minuto, así que no hereda el doble.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Capitán: Ionut Radu, que puntúa doble y es el que más esperas de los tuyos (~9,3 puntos, en Sevilla, con 16 puntos el último partido y la inercia subiendo). En el banquillo, Hugo Duro (DEL), que es la propuesta de la app; entra solo si un delantero titular no juega ni un minuto, así que no hereda el doble.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   }
-  ],
-  "ms": 1356,
-  "coste": 1383.6000000000001,
-  "entra": 12761,
-  "sale": 215,
-  "cache": {
-   "lee": 30647,
-   "escribe": 0,
-   "sin": 9696
-  },
-  "largo": 76633,
-  "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador)"
-  ],
-  "frases": 2,
-  "palabras": 59
+  "palabras": 77
  },
  {
   "escena": "sabado-premium",
   "esf": "low",
-  "id": "pm-capitan",
-  "tipo": "premium",
-  "pre": "¿A quién pongo de capitán esta jornada?",
-  "hist": [],
-  "crudo": "Ionut Radu, sin dudarlo: es el que más puntos esperados tiene de los tuyos, unos 9,3 en Sevilla (7º), y es titular de POR con 32,69 M de valor y una media de 8,8. Como capitán puntúa doble, así que ahí está tu mejor apuesta. Y ojo, que el capitán solo dobla si juega, así que confirma que sigue en el once antes de las 14:00.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy 14:00\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Ionut Radu, sin dudarlo: es el que más puntos esperados tiene de los tuyos, unos 9,3 en Sevilla (7º), y es titular de POR con 32,69 M de valor y una media de 8,8. Como capitán puntúa doble, así que ahí está tu mejor apuesta. Y ojo, que el capitán solo dobla si juega, así que confirma que sigue en el once antes de las 14:00.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   }
-  ],
-  "ms": 1635,
-  "coste": 3972.6000000000004,
-  "entra": 38556,
-  "sale": 234,
-  "cache": {
-   "lee": 7292,
-   "escribe": 22352,
-   "sin": 9887
-  },
-  "largo": 75235,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 66
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-capitan-no-juega",
-  "tipo": "premium",
-  "pre": "¿Y si al final no juega, qué pasa con el doble?",
-  "hist": [
-   {
-    "r": "yo",
-    "t": "¿A quién pongo de capitán esta jornada?"
-   },
-   {
-    "r": "ia",
-    "t": "Ionut Radu, sin dudarlo: es el que más puntos esperados tiene de los tuyos, unos 9,3 en Sevilla (7º), y es titular de POR con 32,69 M de valor y una media de 8,8. Como capitán puntúa doble, así que ahí está tu mejor apuesta. Y ojo, que el capitán solo dobla si juega, así que confirma que sigue en el once antes de las 14:00."
-   }
-  ],
-  "crudo": "Si Ionut Radu no juega, el doble no se activa: el capitán solo dobla si su jugador juega, así que no te quedas sin puntos por el capitán, simplemente no sumas el extra. Por eso no conviene elegir a nadie con dudas: Ionut Radu no tiene ningún aviso de lesión en los datos, así que mientras no cambie nada antes de las 14:00 hoy, cuenta con él. Y revisa el once justo antes del primer partido, que ahí se cierra.",
-  "texto": "Si Ionut Radu no juega, el doble no se activa: el capitán solo dobla si su jugador juega, así que no te quedas sin puntos por el capitán, simplemente no sumas el extra. Por eso no conviene elegir a nadie con dudas: Ionut Radu no tiene ningún aviso de lesión en los datos, así que mientras no cambie nada antes de las 14:00 hoy, cuenta con él. Y revisa el once justo antes del primer partido, que ahí se cierra.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1714,
-  "coste": 1372.6000000000001,
-  "entra": 12861,
-  "sale": 173,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9896
-  },
-  "largo": 75282,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 80
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-capitan-entrenador",
-  "tipo": "premium",
-  "pre": "¿Puedo poner de capitán a mi entrenador para que me dé el doble?",
-  "hist": [],
-  "crudo": "No, el capitán tiene que ser un jugador del once, y tus entrenadores no cuentan como jugadores. Míster Uno sí va en el once como entrenador (puntúa 5 si su equipo gana, 2 si empata), pero en esta liga premium el doble del capitán solo se aplica a un jugador de campo que esté jugando. Para el capitán te propongo Ionut Radu, que es el que más puntos esperados tiene de tus jugadores (~9,3 para el partido en Sevilla).\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy 14:00\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "No, el capitán tiene que ser un jugador del once, y tus entrenadores no cuentan como jugadores. Míster Uno sí va en el once como entrenador (puntúa 5 si su equipo gana, 2 si empata), pero en esta liga premium el doble del capitán solo se aplica a un jugador de campo que esté jugando. Para el capitán te propongo Ionut Radu, que es el que más puntos esperados tiene de tus jugadores (~9,3 para el partido en Sevilla).",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   }
-  ],
-  "ms": 1761,
-  "coste": 1398.3000000000002,
-  "entra": 12698,
-  "sale": 257,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9733
-  },
-  "largo": 74935,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 79
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-banquillo",
-  "tipo": "premium",
-  "pre": "¿A quién pongo en el banquillo?",
-  "hist": [],
-  "crudo": "Ponle en el banquillo a **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que es lo que propone la app. Agirrezabala cubre a Ionut Radu, que juega en Sevilla con unos 9,3 pts esperados, así que solo entra si Radu no juega un minuto. Moncayola es el suplente de media con 3,4 pts esperados contra el Levante, y Hugo Duro, con unos 2,4 contra el Betis, es el de menos peso, pero como en el DEL ya tienes a tres titulares sanos no le quita nada a tu once.",
-  "texto": "Ponle en el banquillo a **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que es lo que propone la app. Agirrezabala cubre a Ionut Radu, que juega en Sevilla con unos 9,3 pts esperados, así que solo entra si Radu no juega un minuto. Moncayola es el suplente de media con 3,4 pts esperados contra el Levante, y Hugo Duro, con unos 2,4 contra el Betis, es el de menos peso, pero como en el DEL ya tienes a tres titulares sanos no le quita nada a tu once.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 5148,
-  "coste": 1733.6000000000001,
-  "entra": 12921,
-  "sale": 883,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9956
-  },
-  "largo": 75378,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 89
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-banquillo-regla",
-  "tipo": "premium",
-  "pre": "¿Y cuándo entra uno del banquillo a puntuar?",
-  "hist": [
-   {
-    "r": "yo",
-    "t": "¿A quién pongo en el banquillo?"
-   },
-   {
-    "r": "ia",
-    "t": "Ponle en el banquillo a **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que es lo que propone la app. Agirrezabala cubre a Ionut Radu, que juega en Sevilla con unos 9,3 pts esperados, así que solo entra si Radu no juega un minuto. Moncayola es el suplente de media con 3,4 pts esperados contra el Levante, y Hugo Duro, con unos 2,4 contra el Betis, es el de menos peso, pero como en el DEL ya tienes a tres titulares sanos no le quita nada a tu once."
-   }
-  ],
-  "crudo": "Entra solo si un titular de su misma posición no juega ni un minuto de la jornada; si el titular juega aunque sea uno, el del banquillo se queda fuera. Así que Agirrezabala solo sustituye a Ionut Radu, Moncayola a alguno de los medios (Rodri, Bellingham, Álex Baena, Pathé I. Ciss o Raphinha no, que es delantero) y Hugo Duro a Julián Álvarez o Raphinha si alguno se queda sin jugar. Y ojo, el banquillo no hereda el doble del capitán: puntúa con sus puntos normales. Como tu capitán es Ionut Radu, si no juega entra Agirrezabala y tu doble se pierde.",
-  "texto": "Entra solo si un titular de su misma posición no juega ni un minuto de la jornada; si el titular juega aunque sea uno, el del banquillo se queda fuera. Así que Agirrezabala solo sustituye a Ionut Radu, Moncayola a alguno de los medios (Rodri, Bellingham, Álex Baena, Pathé I. Ciss o Raphinha no, que es delantero) y Hugo Duro a Julián Álvarez o Raphinha si alguno se queda sin jugar. Y ojo, el banquillo no hereda el doble del capitán: puntúa con sus puntos normales. Como tu capitán es Ionut Radu, si no juega entra Agirrezabala y tu doble se pierde.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1622,
-  "coste": 1418.2,
-  "entra": 12927,
-  "sale": 251,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9962
-  },
-  "largo": 75415,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 5,
-  "palabras": 102
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-entrenador",
-  "tipo": "premium",
-  "pre": "¿Qué entrenador alineo esta jornada?",
-  "hist": [],
-  "crudo": "Alinea a **Míster Uno** (Atlético). Es tu entrenador titular y la app lo elige por tener el mejor partido de la jornada. Puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Tienes que ponerlo antes de las 14:00 de hoy, junto con el once.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Míster Uno\", \"importe\": null, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Alinea a **Míster Uno** (Atlético). Es tu entrenador titular y la app lo elige por tener el mejor partido de la jornada. Puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Tienes que ponerlo antes de las 14:00 de hoy, junto con el once.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Míster Uno"
-   }
-  ],
-  "ms": 3874,
-  "coste": 1642.9,
-  "entra": 12934,
-  "sale": 699,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9969
-  },
-  "largo": 75384,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 48
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-entrenador-vendo",
-  "tipo": "premium",
-  "pre": "¿Vendo a Míster Dos? Los entrenadores no puntúan, ¿no?",
-  "hist": [],
-  "crudo": "No, en tu liga premium los entrenadores sí puntúan: 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos es tu segundo entrenador: en esta jornada Míster Uno va alineado (mejor partido) y Dos va de suplente, así que hoy no suma. Venderlo solo te daría unos 0,76 M, y como LaLiga no ofrece hasta el cambio de mercado de mañana a las 00:15, no entraría dinero ahora. No hay prisa ni motivo para venderlo: no ocupa sitio en el tope de 24 jugadores y te sirve de repuesto si Uno falla.",
-  "texto": "No, en tu liga premium los entrenadores sí puntúan: 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos es tu segundo entrenador: en esta jornada Míster Uno va alineado (mejor partido) y Dos va de suplente, así que hoy no suma. Venderlo solo te daría unos 0,76 M, y como LaLiga no ofrece hasta el cambio de mercado de mañana a las 00:15, no entraría dinero ahora. No hay prisa ni motivo para venderlo: no ocupa sitio en el tope de 24 jugadores y te sirve de repuesto si Uno falla.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 4858,
-  "coste": 1731.2,
-  "entra": 13107,
-  "sale": 841,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 10142
-  },
-  "largo": 75720,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 96
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-entrenador-puntos",
-  "tipo": "premium",
-  "pre": "¿Cuántos puntos da un entrenador?",
-  "hist": [],
-  "crudo": "Un entrenador puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y en esta liga premium solo se alinea uno. Tú tienes a Míster Uno en tu once: el Atlético es 3º y lleva 19 pts, así que es buena opción. Míster Dos va de suplente.",
-  "texto": "Un entrenador puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y en esta liga premium solo se alinea uno. Tú tienes a Míster Uno en tu once: el Atlético es 3º y lleva 19 pts, así que es buena opción. Míster Dos va de suplente.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 918,
-  "coste": 1324.7,
-  "entra": 12687,
-  "sale": 112,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9722
-  },
-  "largo": 74904,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 50
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-tope",
-  "tipo": "premium",
-  "pre": "Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?",
-  "hist": [],
-  "crudo": "No, los dos entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 entrenadores en plantilla sin que resten plazas. Tú tienes 15 jugadores de campo, así que te quedan 9 plazas libres.",
-  "texto": "No, los dos entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 entrenadores en plantilla sin que resten plazas. Tú tienes 15 jugadores de campo, así que te quedan 9 plazas libres.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 1938,
-  "coste": 1431.7,
-  "entra": 12707,
-  "sale": 322,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9742
-  },
-  "largo": 74951,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 39
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-formacion",
-  "tipo": "premium",
-  "pre": "¿Puedo jugar con un 4-2-4 en mi liga?",
-  "hist": [],
-  "crudo": "Sí, puedes: 4-2-4 está en tu lista de formaciones de la Liga Premium, junto a 3-4-3, 3-5-2, 4-3-3, 4-4-2, 4-5-1, 5-3-2, 5-4-1, 5-2-3, 4-6-0, 3-6-1 y 3-3-4. Ojo, con tu plantilla ahora mismo (2 porteros, 5 defensas, 5 medios y 3 delanteros) solo te da para cuatro delanteros si buscas uno más, y eso no lo tienes en el once: tu mejor once es el 4-4-2, que ya te da unos 72,3 puntos esperados. Si quieres probar el 4-2-4 tendrías que meter un delantero de tu banquillo o fichar uno, y como el once se cierra hoy a las 14:00, cualquier cambio tiene que estar hecho antes.",
-  "texto": "Sí, puedes: 4-2-4 está en tu lista de formaciones de la Liga Premium, junto a 3-4-3, 3-5-2, 4-3-3, 4-4-2, 4-5-1, 5-3-2, 5-4-1, 5-2-3, 4-6-0, 3-6-1 y 3-3-4. Ojo, con tu plantilla ahora mismo (2 porteros, 5 defensas, 5 medios y 3 delanteros) solo te da para cuatro delanteros si buscas uno más, y eso no lo tienes en el once: tu mejor once es el 4-4-2, que ya te da unos 72,3 puntos esperados. Si quieres probar el 4-2-4 tendrías que meter un delantero de tu banquillo o fichar uno, y como el once se cierra hoy a las 14:00, cualquier cambio tiene que estar hecho antes.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 2068,
-  "coste": 1423.9,
-  "entra": 12694,
-  "sale": 309,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9729
-  },
-  "largo": 74908,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 107
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-once",
-  "tipo": "premium",
-  "pre": "¿Qué once pongo para la próxima jornada, con capitán y banquillo?",
-  "hist": [],
-  "crudo": "Alinea el 4-4-2 de tu mejor once, unos 72,3 puntos esperados: Ionut Radu (POR); Catena, V. Chust, Sergio Gómez y Jon Martín (DEF); Álex Baena, Bellingham, Rodri y Pathé I. Ciss (MED); Raphinha y Julián Álvarez (DEL), con Míster Uno de entrenador. Capitán: Ionut Radu, unos 9,3 puntos esperados, así que se doblan. Banquillo: Agirrezabala (POR), Moncayola (MED) y Hugo Duro (DEL). Tienes hasta hoy a las 14:00, en unas 3 h 29 min, porque después ya no entra en la jornada 10.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy 14:00\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Alinea el 4-4-2 de tu mejor once, unos 72,3 puntos esperados: Ionut Radu (POR); Catena, V. Chust, Sergio Gómez y Jon Martín (DEF); Álex Baena, Bellingham, Rodri y Pathé I. Ciss (MED); Raphinha y Julián Álvarez (DEL), con Míster Uno de entrenador. Capitán: Ionut Radu, unos 9,3 puntos esperados, así que se doblan. Banquillo: Agirrezabala (POR), Moncayola (MED) y Hugo Duro (DEL). Tienes hasta hoy a las 14:00, en unas 3 h 29 min, porque después ya no entra en la jornada 10.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   }
-  ],
-  "ms": 5782,
-  "coste": 1822.3000000000002,
-  "entra": 12698,
-  "sale": 1105,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 9733
-  },
-  "largo": 74936,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 6,
-  "palabras": 83
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-ideal",
-  "tipo": "premium",
-  "pre": "¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?",
-  "hist": [],
-  "crudo": "No tengo la cifra de ese premio: en tus datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedes hacer es mirar en la app, en la sección de premios o del 11 ideal, cuánto se paga antes de contar con ello para decidir.",
-  "texto": "No tengo la cifra de ese premio: en tus datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedes hacer es mirar en la app, en la sección de premios o del 11 ideal, cuánto se paga antes de contar con ello para decidir.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 2009,
-  "coste": 2069.4,
-  "entra": 19254,
-  "sale": 288,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 16289
-  },
-  "largo": 90322,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 2,
-  "palabras": 60
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-cesion",
-  "tipo": "premium",
-  "pre": "¿Puedo pedirle cedido a Marcos a Oyarzabal para esta jornada? ¿Cuánto me costaría?",
-  "hist": [],
-  "crudo": "No, ya no puedes. Las cesiones se piden hasta 24 h antes de la jornada, y eso fue ayer a las 14:00, así que para la 10 la ventana está cerrada. Tampoco tengo el mínimo que pide Rival 2 por cederlo, así que no te puedo dar una cifra. Y de todas formas, como su cláusula se abre hoy a las 14:00, a esa hora no llegaría al once: el cierre del once es el primer partido.",
-  "texto": "No, ya no puedes. Las cesiones se piden hasta 24 h antes de la jornada, y eso fue ayer a las 14:00, así que para la 10 la ventana está cerrada. Tampoco tengo el mínimo que pide Marcos por cederlo, así que no te puedo dar una cifra. Y de todas formas, como su cláusula se abre hoy a las 14:00, a esa hora no llegaría al once: el cierre del once es el primer partido.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 3358,
-  "coste": 2292.4,
-  "entra": 20279,
-  "sale": 529,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 17314
-  },
-  "largo": 91810,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 76
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-que-hago",
+  "id": "pm-fichar-ent-plan",
   "tipo": "plan",
   "pre": "¿Qué hago hoy?",
   "hist": [],
-  "crudo": "Hoy tienes dos cosas que hacer antes de las 14:00. Alinea el 4-4-2 de la app (unos 72,3 pts esperados) con Ionut Radu de capitán (~9,3 pts) y de banquillo Agirrezabala, Moncayola y Hugo Duro. Pon también a la venta a Fran García: ha girado a la baja (−71 mil hoy, venía subiendo), no entra en tu once y el dinero llegará en la subasta de mañana a las 00:15, no antes. Con Álex Baena, aguanta la oferta de Rival 5 (66,17 M, caduca mañana a las 00:15): sigue subiendo y es titular en tu once.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy\"}, {\"ref\": \"V-1023\", \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hoy tienes dos cosas que hacer antes de las 14:00. Alinea el 4-4-2 de la app (unos 72,3 pts esperados) con Ionut Radu de capitán (~9,3 pts) y de banquillo Agirrezabala, Moncayola y Hugo Duro. Pon también a la venta a Fran García: ha girado a la baja (−71 mil hoy, venía subiendo), no entra en tu once y el dinero llegará en la subasta de mañana a las 00:15, no antes. Con Álex Baena, aguanta la oferta de Hugo (66,17 M, caduca mañana a las 00:15): sigue subiendo y es titular en tu once.",
+  "crudo": "Antes de las 14:00 tienes tres cosas. Alinea el 4-4-2 con Ionut Radu de capitán (unos 7,6 pts esperados, el que más de tu once) y en el banquillo Agirrezabala (POR), Pathé I. Ciss (MED) y Hugo Duro (DEL). Pon a la venta a Fran García: ha girado a la baja (−71 mil hoy) y es suplente, así que no te quita nada, pero no entra dinero hasta que acepte una oferta en el cambio de mañana 00:15. Y puja 1,07 M por Míster Libre, entrenador libre que da unos 3,6 pts por jornada: con tus 6,43 M de saldo te llega, y si no lo ganas no pagas nada.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": null, \"cuando\": \"hoy\"}, {\"ref\": \"P-ent3\", \"accion\": \"pujar\", \"jugador\": \"Míster Libre\", \"importe\": 1070000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Antes de las 14:00 tienes tres cosas. Alinea el 4-4-2 con Ionut Radu de capitán (unos 7,6 pts esperados, el que más de tu once) y en el banquillo Agirrezabala (POR), Pathé I. Ciss (MED) y Hugo Duro (DEL). Pon a la venta a Fran García: ha girado a la baja (−71 mil hoy) y es suplente, así que no te quita nada, pero no entra dinero hasta que acepte una oferta en el cambio de mañana 00:15. Y puja 1,07 M por Míster Libre, entrenador libre que da unos 3,6 pts por jornada: con tus 6,43 M de saldo te llega, y si no lo ganas no pagas nada.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -987,91 +355,26 @@
    {
     "accion": "vender",
     "jugador": "Fran García"
-   }
-  ],
-  "ms": 6705,
-  "coste": 1995.8000000000002,
-  "entra": 13163,
-  "sale": 1359,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 10198
-  },
-  "largo": 75838,
-  "inventadas": [],
-  "marcas": [],
-  "frases": 4,
-  "palabras": 95
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-fichar-ent",
-  "tipo": "premium",
-  "pre": "No tengo entrenador. ¿Ficho alguno?",
-  "hist": [],
-  "crudo": "No necesitas fichar ninguno: ya tienes dos. Míster Uno (Atlético) es el que alineas, está de titular en tu once y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va de suplente. Como la plantilla admite dos entrenadores como máximo, no puedes fichar un tercero.",
-  "texto": "No necesitas fichar ninguno: ya tienes dos. Míster Uno (Atlético) es el que alineas, está de titular en tu once y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va de suplente. Como la plantilla admite dos entrenadores como máximo, no puedes fichar un tercero.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 4519,
-  "coste": 1721,
-  "entra": 13235,
-  "sale": 795,
-  "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 10270
-  },
-  "largo": 75969,
-  "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (\\{ENTL\\})"
-  ],
-  "frases": 4,
-  "palabras": 53
- },
- {
-  "escena": "sabado-premium",
-  "esf": "low",
-  "id": "pm-fichar-ent-cuanto",
-  "tipo": "premium",
-  "pre": "¿Y cuánto pujo por él?",
-  "hist": [
-   {
-    "r": "yo",
-    "t": "No tengo entrenador. ¿Ficho alguno?"
    },
    {
-    "r": "ia",
-    "t": "No necesitas fichar ninguno: ya tienes dos. Míster Uno (Atlético) es el que alineas, está de titular en tu once y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va de suplente. Como la plantilla admite dos entrenadores como máximo, no puedes fichar un tercero."
+    "accion": "pujar",
+    "jugador": "Míster Libre"
    }
   ],
-  "crudo": "No hay ningún entrenador libre en el mercado, así que no hay nada que pujar. Ya tienes el máximo de dos, y además Míster Uno está de titular y puntúa, así que no te hace falta otro. Si te refieres a otro jugador, dime cuál y te digo cuánto conviene pujar.",
-  "texto": "No hay ningún entrenador libre en el mercado, así que no hay nada que pujar. Ya tienes el máximo de dos, y además Míster Uno está de titular y puntúa, así que no te hace falta otro. Si te refieres a otro jugador, dime cuál y te digo cuánto conviene pujar.",
-  "revision": [],
-  "apuntadas": [],
-  "corr": [],
-  "promete": false,
-  "recomiendo": [],
-  "ms": 2675,
-  "coste": 2164.7,
-  "entra": 19592,
-  "sale": 411,
+  "ms": 7721,
+  "coste": 2154.4,
+  "entra": 13324,
+  "sale": 1644,
   "cache": {
-   "lee": 29645,
+   "lee": 29189,
    "escribe": 0,
-   "sin": 16627
+   "sin": 10405
   },
-  "largo": 90883,
+  "largo": 75344,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 51
+  "frases": 5,
+  "palabras": 110
  },
  {
   "escena": "sabado-premium",
@@ -1080,46 +383,27 @@
   "tipo": "premium",
   "pre": "¿A quién pongo de capitán y en el banquillo?",
   "hist": [],
-  "crudo": "Capitán: **Ionut Radu**, que espera unos 9,3 puntos en Sevilla y es el que más de tu plantilla rinde; como juega, su puntuación sale doblada. Banquillo: **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que son los que la app propone. Agirrezabala entra solo si Radu no juega ni un minuto, y Moncayola y Hugo Duro cubren a los suplentes de su posición con ~3,4 y ~2,4 puntos esperados.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Ionut Radu\", \"importe\": null, \"cuando\": \"hoy 14:00\"}, {\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Agirrezabala\", \"importe\": null, \"cuando\": \"hoy 14:00\"}, {\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Moncayola\", \"importe\": null, \"cuando\": \"hoy 14:00\"}, {\"ref\": null, \"accion\": \"alinear\", \"jugador\": \"Hugo Duro\", \"importe\": null, \"cuando\": \"hoy 14:00\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Capitán: **Ionut Radu**, que espera unos 9,3 puntos en Sevilla y es el que más de tu plantilla rinde; como juega, su puntuación sale doblada. Banquillo: **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que son los que la app propone. Agirrezabala entra solo si Radu no juega ni un minuto, y Moncayola y Hugo Duro cubren a los suplentes de su posición con ~3,4 y ~2,4 puntos esperados.",
+  "crudo": "Con el administrador apagado no hay capitán ni banquillo que elegir: en tu liga no se puntúa el capitán y los suplentes entran solo si hace falta. Lo que sí decide puntos es el once de hoy, que puedes cambiar hasta las 14:00. Ahí, Ionut Radu (~7,6) y Bellingham (~6,9) son tus piezas más fuertes, y Jon Martin y Sergio Gómez, con ~1,8 y ~1,6, son los que menos aportan.",
+  "texto": "Con el administrador apagado no hay capitán ni banquillo que elegir: en tu liga no se puntúa el capitán y los suplentes entran solo si hace falta. Lo que sí decide puntos es el once de hoy, que puedes cambiar hasta las 14:00. Ahí, Ionut Radu (~7,6) y Bellingham (~6,9) son tus piezas más fuertes, y Jon Martin y Sergio Gómez, con ~1,8 y ~1,6, son los que menos aportan.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
-  "recomiendo": [
-   {
-    "accion": "alinear",
-    "jugador": "Ionut Radu"
-   },
-   {
-    "accion": "alinear",
-    "jugador": "Agirrezabala"
-   },
-   {
-    "accion": "alinear",
-    "jugador": "Moncayola"
-   },
-   {
-    "accion": "alinear",
-    "jugador": "Hugo Duro"
-   }
-  ],
-  "ms": 5030,
-  "coste": 1785.6000000000001,
-  "entra": 12981,
-  "sale": 975,
+  "recomiendo": [],
+  "ms": 3281,
+  "coste": 4040.7000000000003,
+  "entra": 37792,
+  "sale": 523,
   "cache": {
-   "lee": 29645,
-   "escribe": 0,
-   "sin": 10016
+   "lee": 7292,
+   "escribe": 21669,
+   "sin": 9977
   },
-  "largo": 75484,
+  "largo": 74018,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador)"
-  ],
+  "marcas": [],
   "frases": 3,
-  "palabras": 69
+  "palabras": 70
  },
  {
   "escena": "martes",
@@ -1128,28 +412,26 @@
   "tipo": "premium",
   "pre": "¿A quién pongo de capitán esta jornada?",
   "hist": [],
-  "crudo": "Yo pondría a **Ionut Radu**: es el que más puntos esperados tiene en tu once, unos 7,6 en Sevilla (7º), y acaba de hacer 16 puntos en la J9, con la inercia subiendo. Si prefieres un jugador de campo, **Bellingham** es la alternativa con más garantías: unos 6,9 ante el Espanyol y titular con el ~79 % de probabilidad, y además sube de valor cada día. Raphinha (~6,6 en Villarreal, 1º) queda algo por detrás.",
-  "texto": "Yo pondría a **Ionut Radu**: es el que más puntos esperados tiene en tu once, unos 7,6 en Sevilla (7º), y acaba de hacer 16 puntos en la J9, con la inercia subiendo. Si prefieres un jugador de campo, **Bellingham** es la alternativa con más garantías: unos 6,9 ante el Espanyol y titular con el ~79 % de probabilidad, y además sube de valor cada día. Raphinha (~6,6 en Villarreal, 1º) queda algo por detrás.",
+  "crudo": "Aquí no hay capitán: en tu liga, como en la versión gratis, no existe esa figura (solo las Premium lo tienen), así que no hace falta elegir nada. Lo que sí te toca es vigilar el once: Bellingham (~6,9 pts vs Espanyol) y Raphinha (~6,6 vs Villarreal) son tus dos que más puntúan, y los dos son titulares.",
+  "texto": "Aquí no hay capitán: en tu liga, como en la versión gratis, no existe esa figura (solo las Premium lo tienen), así que no hace falta elegir nada. Lo que sí te toca es vigilar el once: Bellingham (~6,9 pts vs Espanyol) y Raphinha (~6,6 vs Villarreal) son tus dos que más puntúan, y los dos son titulares.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3834,
-  "coste": 4117.1,
-  "entra": 37901,
-  "sale": 654,
+  "ms": 1361,
+  "coste": 3872.6000000000004,
+  "entra": 38026,
+  "sale": 140,
   "cache": {
    "lee": 7292,
    "escribe": 22039,
-   "sin": 9623
+   "sin": 9748
   },
-  "largo": 73948,
+  "largo": 74183,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (no (hay|tiene|existe|est[aá])|premium)"
-  ],
-  "frases": 3,
-  "palabras": 75
+  "marcas": [],
+  "frases": 2,
+  "palabras": 58
  }
 ]

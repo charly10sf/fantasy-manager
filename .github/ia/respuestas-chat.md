@@ -1,258 +1,102 @@
 # El chat con claude-haiku-5-5 de verdad
 
-2026-11-26T18:39:02.785Z · escenas m-premium, sabado-premium, martes · esfuerzo low
+2026-11-26T18:48:10.385Z · escenas m-premium, sabado-premium, martes · esfuerzo low
 
 
-**Resumen:** 35 respuestas; 0 con algo que no sale de los datos, 7 con marcas; 6.87 céntimos en total (0.196 por respuesta); tiempo medio 3673 ms; 16445 tokens de entrada de media; largo medio 72 palabras.
+**Resumen:** 13 respuestas; 0 con algo que no sale de los datos, 0 con marcas; 4.17 céntimos en total (0.321 por respuesta); tiempo medio 3061 ms; 29365 tokens de entrada de media; largo medio 77 palabras.
 
 
-**Caché (19 nov):** 979256 tokens leídos de la caché, 75037 escritos y 383844 sin caché; 34 de 35 respuestas leyeron algo de ella.
+**Caché (19 nov):** 221474 tokens leídos de la caché, 162841 escritos y 156042 sin caché; 12 de 13 respuestas leyeron algo de ella.
 
 
 ## Escena «m-premium», esfuerzo low
 
 
-### pm-capitan (premium): «¿A quién pongo de capitán esta jornada?»
-
-3582 ms · 48019 tokens de entrada y 625 de salida · 0.511 céntimos · 56 palabras, 4 frases
-
-> Ponte a **Ionut Radu** de capitán. Es el que más puntos esperados tiene de tu once (~9,3 en Sevilla, 7º), así que doblado te deja unos 18,6. Es titular, viene de hacer 16 puntos en la jornada 9 y su valor sigue subiendo (+238 mil hoy). Solo dobla si juega, pero no hay motivo para dudar.
-
-
-### pm-capitan-no-juega (premium): «¿Y si al final no juega, qué pasa con el doble?»
-
-1705 ms · 12593 tokens de entrada y 201 de salida · 0.136 céntimos · 93 palabras, 4 frases
-
-> Si Ionut Radu no juega, el doble no se aplica a nadie: el capitán solo dobla si juega, así que no pierdes nada más que sus puntos. Y tampoco se pasa automáticamente a otro, por lo que no hay que hacer nada raro: el resto del once puntúa igual. Lo que sí tienes que mirar es que no te quedes sin portero titular, porque Agirrezabala está en el banquillo y Ionut es tu único POR de once. Antes de las 14:00 del sábado (7 nov) puedes cambiar el capitán si ves algo raro.
-
-
 ### pm-capitan-entrenador (premium): «¿Puedo poner de capitán a mi entrenador para que me dé el doble?»
 
-4228 ms · 12440 tokens de entrada y 731 de salida · 0.161 céntimos · 70 palabras, 4 frases
+1583 ms · 47638 tokens de entrada y 203 de salida · 0.487 céntimos · 77 palabras, 3 frases
 
-> Sí puedes, en principio, porque el entrenador está en tu once, pero no te compensa. Míster Uno puntúa 5 si su Atlético gana, 2 si empata y 0 si pierde, con una media de 3,1, así que doblado sale unos 6 puntos. Ionut Radu, que la app propone como capitán, tiene unos 9,3 esperados (unos 18,6 doblado) y va subiendo tras su partidazo del J9. Deja a Radu de capitán.
-
-
-### pm-banquillo (premium): «¿A quién pongo en el banquillo?»
-
-6796 ms · 12844 tokens de entrada y 1275 de salida · 0.192 céntimos · 57 palabras, 3 frases
-
-> Hugo Duro en el banquillo, de delantero. Es la opción que te propone la app y no tiene rival claro: sale a 1,87 M, su media es 2 y en Betis (11º) se esperan unos 2,4 puntos. Entra solo si Raphinha o Julián Álvarez no juega ni un minuto, así que cuenta como seguro, no como titular.
-
-
-### pm-banquillo-regla (premium): «¿Y cuándo entra uno del banquillo a puntuar?»
-
-2668 ms · 12580 tokens de entrada y 453 de salida · 0.148 céntimos · 62 palabras, 5 frases
-
-> Entra solo cuando un titular de su misma posición no juega ni un minuto de la jornada. Para Hugo Duro, eso significa que Raphinha o Julián Álvarez se queden sin jugar. Si los dos juegan, no puntúa. No hereda el doble del capitán, así que aunque entre, puntúa lo suyo. El once se cierra el sáb 7, 14:00, con el primer partido.
-
-
-### pm-entrenador (premium): «¿Qué entrenador alineo esta jornada?»
-
-3543 ms · 13033 tokens de entrada y 618 de salida · 0.161 céntimos · 53 palabras, 3 frases
-
-> Alinea a **Míster Uno** (Atlético), que es el titular de tu once. Su Atlético juega en Málaga (20º), así que puntúa 5 si gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va en el banquillo, y solo entra en el once si lo cambias, así que no hace falta alinearlo.
-
-
-### pm-entrenador-vendo (premium): «¿Vendo a Míster Dos? Los entrenadores no puntúan, ¿no?»
-
-7088 ms · 12715 tokens de entrada y 1234 de salida · 0.189 céntimos · 90 palabras, 4 frases
-
-> No, en tu liga Premium el entrenador sí puntúa: 5 si su equipo gana, 2 si empata y 0 si pierde. Pero Míster Dos es suplente y tu entrenador alineado es Míster Uno, así que hoy no suma nada. Aun así, no lo vendas: no cuenta para el tope de 24 jugadores y su cláusula de 1,50 M (+97 % sobre su valor) no la paga nadie. Venderlo solo te daría unos 760 mil a LaLiga, que llegarían en el cambio de mercado de mañana a las 00:15, no ahora.
-
-
-### pm-entrenador-puntos (premium): «¿Cuántos puntos da un entrenador?»
-
-1203 ms · 12429 tokens de entrada y 128 de salida · 0.131 céntimos · 59 palabras, 2 frases
-
-> Un entrenador puntúa en tu liga premium: 5 si su equipo gana, 2 si empata y 0 si pierde, y solo cuenta si lo alineas (tienes uno en el once, Míster Uno, del Atlético). Ojo, que no es un jugador más: es uno de los dos que puedes tener en plantilla y no cuenta en el tope de 24.
-
-
-### pm-tope (premium): «Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?»
-
-2049 ms · 12449 tokens de entrada y 341 de salida · 0.142 céntimos · 68 palabras, 3 frases
-
-> No, los entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 en plantilla, y aparte de eso tienes 15 jugadores (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que tu plantilla queda en 15 de 24 más los dos míster. Ojo, solo se alinea uno, y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde.
-
-
-### pm-formacion (premium): «¿Puedo jugar con un 4-2-4 en mi liga?»
-
-1878 ms · 12436 tokens de entrada y 276 de salida · 0.138 céntimos · 51 palabras, 3 frases
-
-> Sí, el 4-2-4 está entre las formaciones que puedes usar en tu liga, junto con las demás de la lista. Cámbiala al alinear antes de que empiece la jornada 10 (sáb 7, 14:00). Ahora mismo tienes el 4-4-2, así que no hay nada que hacer si no te cambia el once.
-
-
-### pm-once (premium): «¿Qué once pongo para la próxima jornada, con capitán y banquillo?»
-
-6940 ms · 12440 tokens de entrada y 1307 de salida · 0.190 céntimos · 90 palabras, 7 frases · **COTEJO: largo: 7 frases**
-
-> Pon el once que te propone la app: 4-4-2 con Ionut Radu; Catena, V. Chust, Sergio Gómez y Jon Martin; Álex Baena, Bellingham, Rodri y Pathé I. Ciss; Raphinha y Julián Álvarez; y Míster Uno de entrenador. Son unos 72,3 puntos esperados. Capitán, Ionut Radu (unos 9,3 esperados, el que más de tus jugadores puede sumar). De banquillo, Hugo Duro, que entra por la posición de delantero si un titular de esa línea no juega. El once se cierra sáb 7, 14:00, así que puedes dejarlo tal cual hasta entonces.
+> No, el entrenador no puede ser capitán en esta liga: el capitán tiene que ser uno de los once jugadores y el entrenador queda fuera de esa opción. Lo que sí puedes hacer es ponerlo en el once, donde puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Para el doble, la app propone a Ionut Radu (unos 9,3 puntos esperados, el que más de los tuyos), y ahí lo tienes de capitán.
 
 
 ### pm-ideal (premium): «¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?»
 
-2341 ms · 18996 tokens de entrada y 400 de salida · 0.210 céntimos · 73 palabras, 3 frases · **COTEJO: dice lo que no debe (\b100[ .]?(000|mil)\b)**
+2083 ms · 18998 tokens de entrada y 353 de salida · 0.208 céntimos · 52 palabras, 2 frases
 
-> No tengo la cifra exacta. Sé que LaLiga paga un premio en dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, pero el importe no me figura en tus datos, así que no te lo voy a inventar. Lo que sí puedes tener en cuenta es que ese premio se suma a los puntos de la jornada, que ya te pagan 100.000 € por cada punto del equipo.
-
-
-### pm-cesion (premium): «¿Puedo pedirle cedido a Marcos a Oyarzabal para esta jornada? ¿Cuánto me costaría?»
-
-6374 ms · 19986 tokens de entrada y 1203 de salida · 0.260 céntimos · 94 palabras, 5 frases
-
-> Sí, puedes. Las cesiones se piden hasta el viernes 6 a las 14:00, 24 h antes del primer partido, y el cedido no cuenta en el tope de 24 jugadores. Pero no tengo el mínimo que te pediría Marcos por cederlo, así que no te puedo dar el precio. Lo que sí sé es que Oyarzabal ronda 4 pts esperados en su próximo partido, que es poco para tu once: entraría como suplente en DEL, y tu suplente actual, Hugo Duro, promedia 2,4. Solo tiene sentido si necesitas un banquillo mejor para esa jornada.
-
-
-### pm-que-hago (plan): «¿Qué hago hoy?»
-
-10594 ms · 13443 tokens de entrada y 1959 de salida · 0.232 céntimos · 128 palabras, 6 frases
-
-> Hoy, dos cosas. Pon a la venta a Fran García (14,53 M): ha girado a la baja (−71 mil hoy, venía subiendo) y es suplente, así que venderlo no te quita puntos. LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, y el dinero no entra hasta que la aceptes. Y puja por El Hilali, como mucho 10,46 M antes de las 00:15: sube un 4 % al día y es para revender, no para el once.
-> 
-> Ojo con el saldo: si ganas a Courtois (36,30 M), te queda en −29,87 M. Agirrezabala y Jon Martin los pondrías a la venta el jueves para aceptar la oferta del viernes, y son los que te devuelven a positivo antes del sábado a las 14:00.
+> Por cada jugador tuyo que entre en el 11 ideal de la jornada, LaLiga te paga un premio en dinero, pero la cantidad no la tengo en los datos, así que no te puedo dar la cifra. Lo que sí sé es que se paga por jugador, no por el equipo entero.
 
 
 ### pm-fichar-ent (premium): «No tengo entrenador. ¿Ficho alguno?»
 
-3611 ms · 13422 tokens de entrada y 610 de salida · 0.165 céntimos · 62 palabras, 4 frases · **COTEJO: no dice lo que debe (\{ENTL\})**
+3816 ms · 38884 tokens de entrada y 703 de salida · 0.424 céntimos · 90 palabras, 4 frases
 
-> No hace falta fichar. Ya tienes dos entrenadores en tu plantilla: Míster Uno (Atlético), que está alineado, y Míster Dos (Athletic), de reserva. En esta liga Premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, así que Míster Uno es el que cuenta para la jornada 10. Guarda el dinero para los jugadores.
+> Sí, puja por Míster Libre, el entrenador libre del mercado: vale 970 mil y da unos 3,6 puntos por jornada de media, frente a los 2,4 de media de un entrenador cualquiera. La puja es de 1,07 M (+10,3 % sobre su valor), y se resuelve mañana a las 00:15, así que llega a tiempo para la jornada 10 (sáb 7, 14:00). Si no te lo llevas, no pagas nada, porque es una subasta a ciegas. Ocupa una de las dos plazas de entrenador sin restar sitio en la plantilla.
 
 
 ### pm-fichar-ent-cuanto (premium): «¿Y cuánto pujo por él?»
 
-3158 ms · 19798 tokens de entrada y 444 de salida · 0.220 céntimos · 48 palabras, 3 frases
+1086 ms · 19846 tokens de entrada y 99 de salida · 0.203 céntimos · 46 palabras, 3 frases
 
-> No tengo ningún entrenador libre en el mercado que pueda pujar por él. Además, en Premium solo caben dos entrenadores en plantilla y ya tienes Míster Uno y Míster Dos, así que otro no entraría. Si te refieres a un jugador, dime cuál y te miro la puja.
+> Puja 1,07 M, que es la cifra que te propone la app. Ojo: se resuelve mañana a las 00:15 y la puja se paga con saldo, así que lo tienes que tener disponible ya. Como es subasta a ciegas, si alguien puja más no pagas nada.
+
+
+### pm-fichar-ent-plan (plan): «¿Qué hago hoy?»
+
+6469 ms · 13403 tokens de entrada y 1431 de salida · 0.206 céntimos · 108 palabras, 5 frases
+
+> Hoy tienes cuatro movimientos. Pon a Fran García a la venta: ha girado a la baja (−71 mil hoy), no entra en tu once y su oferta de LaLiga llegará en el cambio de mercado de mañana 00:15, no antes. Clausula ya a Niño por 1,02 M, que te deja 5,41 M de saldo y suma unos 3,8 pts por jornada. Antes de mañana 00:15 puja 1,07 M por Míster Libre como entrenador, que puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Y pon como máximo 10,46 M en la puja por El Hilali para revender, que sube un 4,0 % al día.
 
 
 ### pm-apagado-capitan (premium): «¿A quién pongo de capitán y en el banquillo?»
 
-1356 ms · 12761 tokens de entrada y 215 de salida · 0.138 céntimos · 59 palabras, 2 frases · **COTEJO: no dice lo que debe (apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador)**
+2976 ms · 37944 tokens de entrada y 431 de salida · 0.401 céntimos · 64 palabras, 3 frases
 
-> Capitán: Ionut Radu, que puntúa doble y es el que más esperas de los tuyos (~9,3 puntos, en Sevilla, con 16 puntos el último partido y la inercia subiendo). En el banquillo, Hugo Duro (DEL), que es la propuesta de la app; entra solo si un delantero titular no juega ni un minuto, así que no hereda el doble.
+> En tu liga el capitán y el banquillo están desactivados por el administrador, así que no tienes que elegir ninguno y no puntúa nada de eso. Lo que sí cuenta es el once: el de la jornada 10 se cierra el sáb 7 a las 14:00. Ahí lo que decide es que Ionut Radu, Catena, Bellingham, Raphinha y Rodri sigan titulares, como ya están.
 
 
 ## Escena «sabado-premium», esfuerzo low
 
 
-### pm-capitan (premium): «¿A quién pongo de capitán esta jornada?»
-
-1635 ms · 38556 tokens de entrada y 234 de salida · 0.397 céntimos · 66 palabras, 3 frases
-
-> Ionut Radu, sin dudarlo: es el que más puntos esperados tiene de los tuyos, unos 9,3 en Sevilla (7º), y es titular de POR con 32,69 M de valor y una media de 8,8. Como capitán puntúa doble, así que ahí está tu mejor apuesta. Y ojo, que el capitán solo dobla si juega, así que confirma que sigue en el once antes de las 14:00.
-
-
-### pm-capitan-no-juega (premium): «¿Y si al final no juega, qué pasa con el doble?»
-
-1714 ms · 12861 tokens de entrada y 173 de salida · 0.137 céntimos · 80 palabras, 3 frases
-
-> Si Ionut Radu no juega, el doble no se activa: el capitán solo dobla si su jugador juega, así que no te quedas sin puntos por el capitán, simplemente no sumas el extra. Por eso no conviene elegir a nadie con dudas: Ionut Radu no tiene ningún aviso de lesión en los datos, así que mientras no cambie nada antes de las 14:00 hoy, cuenta con él. Y revisa el once justo antes del primer partido, que ahí se cierra.
-
-
 ### pm-capitan-entrenador (premium): «¿Puedo poner de capitán a mi entrenador para que me dé el doble?»
 
-1761 ms · 12698 tokens de entrada y 257 de salida · 0.140 céntimos · 79 palabras, 3 frases
+1244 ms · 38356 tokens de entrada y 154 de salida · 0.391 céntimos · 70 palabras, 3 frases
 
-> No, el capitán tiene que ser un jugador del once, y tus entrenadores no cuentan como jugadores. Míster Uno sí va en el once como entrenador (puntúa 5 si su equipo gana, 2 si empata), pero en esta liga premium el doble del capitán solo se aplica a un jugador de campo que esté jugando. Para el capitán te propongo Ionut Radu, que es el que más puntos esperados tiene de tus jugadores (~9,3 para el partido en Sevilla).
-
-
-### pm-banquillo (premium): «¿A quién pongo en el banquillo?»
-
-5148 ms · 12921 tokens de entrada y 883 de salida · 0.173 céntimos · 89 palabras, 3 frases
-
-> Ponle en el banquillo a **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que es lo que propone la app. Agirrezabala cubre a Ionut Radu, que juega en Sevilla con unos 9,3 pts esperados, así que solo entra si Radu no juega un minuto. Moncayola es el suplente de media con 3,4 pts esperados contra el Levante, y Hugo Duro, con unos 2,4 contra el Betis, es el de menos peso, pero como en el DEL ya tienes a tres titulares sanos no le quita nada a tu once.
-
-
-### pm-banquillo-regla (premium): «¿Y cuándo entra uno del banquillo a puntuar?»
-
-1622 ms · 12927 tokens de entrada y 251 de salida · 0.142 céntimos · 102 palabras, 5 frases
-
-> Entra solo si un titular de su misma posición no juega ni un minuto de la jornada; si el titular juega aunque sea uno, el del banquillo se queda fuera. Así que Agirrezabala solo sustituye a Ionut Radu, Moncayola a alguno de los medios (Rodri, Bellingham, Álex Baena, Pathé I. Ciss o Raphinha no, que es delantero) y Hugo Duro a Julián Álvarez o Raphinha si alguno se queda sin jugar. Y ojo, el banquillo no hereda el doble del capitán: puntúa con sus puntos normales. Como tu capitán es Ionut Radu, si no juega entra Agirrezabala y tu doble se pierde.
-
-
-### pm-entrenador (premium): «¿Qué entrenador alineo esta jornada?»
-
-3874 ms · 12934 tokens de entrada y 699 de salida · 0.164 céntimos · 48 palabras, 4 frases
-
-> Alinea a **Míster Uno** (Atlético). Es tu entrenador titular y la app lo elige por tener el mejor partido de la jornada. Puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Tienes que ponerlo antes de las 14:00 de hoy, junto con el once.
-
-
-### pm-entrenador-vendo (premium): «¿Vendo a Míster Dos? Los entrenadores no puntúan, ¿no?»
-
-4858 ms · 13107 tokens de entrada y 841 de salida · 0.173 céntimos · 96 palabras, 4 frases
-
-> No, en tu liga premium los entrenadores sí puntúan: 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos es tu segundo entrenador: en esta jornada Míster Uno va alineado (mejor partido) y Dos va de suplente, así que hoy no suma. Venderlo solo te daría unos 0,76 M, y como LaLiga no ofrece hasta el cambio de mercado de mañana a las 00:15, no entraría dinero ahora. No hay prisa ni motivo para venderlo: no ocupa sitio en el tope de 24 jugadores y te sirve de repuesto si Uno falla.
-
-
-### pm-entrenador-puntos (premium): «¿Cuántos puntos da un entrenador?»
-
-918 ms · 12687 tokens de entrada y 112 de salida · 0.132 céntimos · 50 palabras, 3 frases
-
-> Un entrenador puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y en esta liga premium solo se alinea uno. Tú tienes a Míster Uno en tu once: el Atlético es 3º y lleva 19 pts, así que es buena opción. Míster Dos va de suplente.
-
-
-### pm-tope (premium): «Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?»
-
-1938 ms · 12707 tokens de entrada y 322 de salida · 0.143 céntimos · 39 palabras, 3 frases
-
-> No, los dos entrenadores no cuentan para el tope de 24 jugadores. En Liga Premium puedes tener hasta 2 entrenadores en plantilla sin que resten plazas. Tú tienes 15 jugadores de campo, así que te quedan 9 plazas libres.
-
-
-### pm-formacion (premium): «¿Puedo jugar con un 4-2-4 en mi liga?»
-
-2068 ms · 12694 tokens de entrada y 309 de salida · 0.142 céntimos · 107 palabras, 3 frases
-
-> Sí, puedes: 4-2-4 está en tu lista de formaciones de la Liga Premium, junto a 3-4-3, 3-5-2, 4-3-3, 4-4-2, 4-5-1, 5-3-2, 5-4-1, 5-2-3, 4-6-0, 3-6-1 y 3-3-4. Ojo, con tu plantilla ahora mismo (2 porteros, 5 defensas, 5 medios y 3 delanteros) solo te da para cuatro delanteros si buscas uno más, y eso no lo tienes en el once: tu mejor once es el 4-4-2, que ya te da unos 72,3 puntos esperados. Si quieres probar el 4-2-4 tendrías que meter un delantero de tu banquillo o fichar uno, y como el once se cierra hoy a las 14:00, cualquier cambio tiene que estar hecho antes.
-
-
-### pm-once (premium): «¿Qué once pongo para la próxima jornada, con capitán y banquillo?»
-
-5782 ms · 12698 tokens de entrada y 1105 de salida · 0.182 céntimos · 83 palabras, 6 frases
-
-> Alinea el 4-4-2 de tu mejor once, unos 72,3 puntos esperados: Ionut Radu (POR); Catena, V. Chust, Sergio Gómez y Jon Martín (DEF); Álex Baena, Bellingham, Rodri y Pathé I. Ciss (MED); Raphinha y Julián Álvarez (DEL), con Míster Uno de entrenador. Capitán: Ionut Radu, unos 9,3 puntos esperados, así que se doblan. Banquillo: Agirrezabala (POR), Moncayola (MED) y Hugo Duro (DEL). Tienes hasta hoy a las 14:00, en unas 3 h 29 min, porque después ya no entra en la jornada 10.
+> No, el entrenador no puede ser capitán: el doble solo lo da uno de los once jugadores. Tu capitán tiene que ser Ionut Radu, que es la propuesta de la app, con unos 9,3 puntos esperados (el que más de los tuyos), y solo doblará si juega. Míster Uno sí va en el once, puntúa 5 si el Atlético gana, 2 si empata y 0 si pierde, pero sin doblar.
 
 
 ### pm-ideal (premium): «¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?»
 
-2009 ms · 19254 tokens de entrada y 288 de salida · 0.207 céntimos · 60 palabras, 2 frases
+2013 ms · 19256 tokens de entrada y 308 de salida · 0.208 céntimos · 59 palabras, 2 frases
 
-> No tengo la cifra de ese premio: en tus datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedes hacer es mirar en la app, en la sección de premios o del 11 ideal, cuánto se paga antes de contar con ello para decidir.
-
-
-### pm-cesion (premium): «¿Puedo pedirle cedido a Marcos a Oyarzabal para esta jornada? ¿Cuánto me costaría?»
-
-3358 ms · 20279 tokens de entrada y 529 de salida · 0.229 céntimos · 76 palabras, 4 frases
-
-> No, ya no puedes. Las cesiones se piden hasta 24 h antes de la jornada, y eso fue ayer a las 14:00, así que para la 10 la ventana está cerrada. Tampoco tengo el mínimo que pide Marcos por cederlo, así que no te puedo dar una cifra. Y de todas formas, como su cláusula se abre hoy a las 14:00, a esa hora no llegaría al once: el cierre del once es el primer partido.
-
-
-### pm-que-hago (plan): «¿Qué hago hoy?»
-
-6705 ms · 13163 tokens de entrada y 1359 de salida · 0.200 céntimos · 95 palabras, 4 frases
-
-> Hoy tienes dos cosas que hacer antes de las 14:00. Alinea el 4-4-2 de la app (unos 72,3 pts esperados) con Ionut Radu de capitán (~9,3 pts) y de banquillo Agirrezabala, Moncayola y Hugo Duro. Pon también a la venta a Fran García: ha girado a la baja (−71 mil hoy, venía subiendo), no entra en tu once y el dinero llegará en la subasta de mañana a las 00:15, no antes. Con Álex Baena, aguanta la oferta de Hugo (66,17 M, caduca mañana a las 00:15): sigue subiendo y es titular en tu once.
+> No tengo la cifra de ese premio: en los datos solo consta que LaLiga paga dinero por cada jugador tuyo que entre en el 11 ideal de la jornada, sin importe. Lo que sí puedo decirte es que no hay que hacer nada especial: cuenta el jugador que tengas en tu once y que entre en ese 11 ideal.
 
 
 ### pm-fichar-ent (premium): «No tengo entrenador. ¿Ficho alguno?»
 
-4519 ms · 13235 tokens de entrada y 795 de salida · 0.172 céntimos · 53 palabras, 4 frases · **COTEJO: no dice lo que debe (\{ENTL\})**
+4888 ms · 38441 tokens de entrada y 948 de salida · 0.432 céntimos · 120 palabras, 5 frases
 
-> No necesitas fichar ninguno: ya tienes dos. Míster Uno (Atlético) es el que alineas, está de titular en tu once y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde. Míster Dos (Athletic) va de suplente. Como la plantilla admite dos entrenadores como máximo, no puedes fichar un tercero.
+> Sí, pero no te da puntos en la jornada 10: la puja se resuelve mañana a las 00:15, cuando ya ha empezado (hoy a las 14:00), así que sumaría desde la jornada 11. Puja por Míster Libre, el entrenador libre, con 1,07 M (+10,3 % sobre su valor de 970 mil). Es una subasta a ciegas: si no la ganas, no pagas nada, y con tu saldo de 6,43 M te llega de sobra. Como entrenador se alinea 1 y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde, y no ocupa sitio en tu plantilla. Vale la pena porque hoy tu once no puntúa ningún entrenador y él da de media 3,6 puntos por jornada.
 
 
 ### pm-fichar-ent-cuanto (premium): «¿Y cuánto pujo por él?»
 
-2675 ms · 19592 tokens de entrada y 411 de salida · 0.216 céntimos · 51 palabras, 3 frases
+1275 ms · 19833 tokens de entrada y 166 de salida · 0.207 céntimos · 77 palabras, 3 frases
 
-> No hay ningún entrenador libre en el mercado, así que no hay nada que pujar. Ya tienes el máximo de dos, y además Míster Uno está de titular y puntúa, así que no te hace falta otro. Si te refieres a otro jugador, dime cuál y te digo cuánto conviene pujar.
+> Pujas 1,07 M por Míster Libre, que es el importe que te propone la app (+10,3 % sobre su valor de 970 mil). Es una puja a ciegas desde su precio, así que si la gana, paga esa cifra con tu saldo de 6,43 M, y si no la gana, no pagas nada. Se resuelve mañana a las 00:15, y como ya habrá empezado la jornada 10 (hoy a las 14:00), te sumará desde la jornada 11.
+
+
+### pm-fichar-ent-plan (plan): «¿Qué hago hoy?»
+
+7721 ms · 13324 tokens de entrada y 1644 de salida · 0.215 céntimos · 110 palabras, 5 frases
+
+> Antes de las 14:00 tienes tres cosas. Alinea el 4-4-2 con Ionut Radu de capitán (unos 7,6 pts esperados, el que más de tu once) y en el banquillo Agirrezabala (POR), Pathé I. Ciss (MED) y Hugo Duro (DEL). Pon a la venta a Fran García: ha girado a la baja (−71 mil hoy) y es suplente, así que no te quita nada, pero no entra dinero hasta que acepte una oferta en el cambio de mañana 00:15. Y puja 1,07 M por Míster Libre, entrenador libre que da unos 3,6 pts por jornada: con tus 6,43 M de saldo te llega, y si no lo ganas no pagas nada.
 
 
 ### pm-apagado-capitan (premium): «¿A quién pongo de capitán y en el banquillo?»
 
-5030 ms · 12981 tokens de entrada y 975 de salida · 0.179 céntimos · 69 palabras, 3 frases · **COTEJO: no dice lo que debe (apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador)**
+3281 ms · 37792 tokens de entrada y 523 de salida · 0.404 céntimos · 70 palabras, 3 frases
 
-> Capitán: **Ionut Radu**, que espera unos 9,3 puntos en Sevilla y es el que más de tu plantilla rinde; como juega, su puntuación sale doblada. Banquillo: **Agirrezabala** (POR), **Moncayola** (MED) y **Hugo Duro** (DEL), que son los que la app propone. Agirrezabala entra solo si Radu no juega ni un minuto, y Moncayola y Hugo Duro cubren a los suplentes de su posición con ~3,4 y ~2,4 puntos esperados.
+> Con el administrador apagado no hay capitán ni banquillo que elegir: en tu liga no se puntúa el capitán y los suplentes entran solo si hace falta. Lo que sí decide puntos es el once de hoy, que puedes cambiar hasta las 14:00. Ahí, Ionut Radu (~7,6) y Bellingham (~6,9) son tus piezas más fuertes, y Jon Martin y Sergio Gómez, con ~1,8 y ~1,6, son los que menos aportan.
 
 
 ## Escena «martes», esfuerzo low
@@ -260,6 +104,6 @@
 
 ### pm-estandar-capitan (premium): «¿A quién pongo de capitán esta jornada?»
 
-3834 ms · 37901 tokens de entrada y 654 de salida · 0.412 céntimos · 75 palabras, 3 frases · **COTEJO: no dice lo que debe (no (hay|tiene|existe|est[aá])|premium)**
+1361 ms · 38026 tokens de entrada y 140 de salida · 0.387 céntimos · 58 palabras, 2 frases
 
-> Yo pondría a **Ionut Radu**: es el que más puntos esperados tiene en tu once, unos 7,6 en Sevilla (7º), y acaba de hacer 16 puntos en la J9, con la inercia subiendo. Si prefieres un jugador de campo, **Bellingham** es la alternativa con más garantías: unos 6,9 ante el Espanyol y titular con el ~79 % de probabilidad, y además sube de valor cada día. Raphinha (~6,6 en Villarreal, 1º) queda algo por detrás.
+> Aquí no hay capitán: en tu liga, como en la versión gratis, no existe esa figura (solo las Premium lo tienen), así que no hace falta elegir nada. Lo que sí te toca es vigilar el once: Bellingham (~6,9 pts vs Espanyol) y Raphinha (~6,6 vs Villarreal) son tus dos que más puntúan, y los dos son titulares.
