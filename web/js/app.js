@@ -1966,7 +1966,7 @@ function saludarSiToca(por = 'cada10') {
   if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
   // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
-  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }), ...(LS.get('nov-dinero', 0) ? { nd: true } : {}) })
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, ligas: (S.D.ligas || []).map((l) => l.id).filter(Boolean).slice(0, 10).join(','), equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }), ...(LS.get('nov-dinero', 0) ? { nd: true } : {}) })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
     .then(() => invitarSiToca())
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos

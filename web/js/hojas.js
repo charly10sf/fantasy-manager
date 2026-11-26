@@ -1657,6 +1657,8 @@ export function embudoDatos(E, ahora) {
   return { canales, origenes };
 }
 
+/** (0.8.4q) todas las ligas de una cuenta: la que tenía abierta y las demás que manda (las webs de antes, solo la abierta) */
+const ligasDe = (x) => [...new Set([String(x.liga || ''), ...String(x.ligas || '').split(',')].filter(Boolean))];
 function cuentasQ(S, lista, ahora, minPlay) {
   const porUid = new Map(lista.map((x) => [String(x.uid), x]));
   const D = S.D;
@@ -1665,7 +1667,7 @@ function cuentasQ(S, lista, ahora, minPlay) {
   // por su número de cuenta; si no cuadra, por el nombre de su equipo en esta liga o por su nombre de mánager
   const ligaId = D && D.liga ? String(D.liga.id) : '';
   const buscar = (e) => porUid.get(String(e.managerId)) || porUid.get(String(e.userId))
-    || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && String(x.liga || '') === ligaId && norm(x.equipo) === norm(e.nombre))
+    || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && ligasDe(x).includes(ligaId) && norm(x.equipo) === norm(e.nombre))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.nombre && e.manager && norm(x.nombre) === norm(e.manager));
   const liga = tabla.map((e) => { const x = buscar(e); if (x) deLiga.add(String(x.uid)); return { nombre: e.manager || e.nombre, equipo: e.manager ? e.nombre : '', x }; });
   const fuera = lista.filter((x) => !deLiga.has(String(x.uid))).sort((a, b) => b.ultima - a.ultima);
@@ -1681,8 +1683,18 @@ function cuentasQ(S, lista, ahora, minPlay) {
     // (0.7.13za, Carlos 16 nov: «¿de las que han entrado, hay alguna de la misma liga?») las de fuera, agrupadas por la liga que
     // manda cada cuenta: las que comparten liga, juntas y primero; después, las que van solas en la suya; y al final, las que
     // aún no han dicho la suya (la app no les cargó la liga). Si el equipo se llama igual que el mánager, no se repite.
-    const porLiga = new Map();
-    for (const x of fuera) { const k = String(x.liga || ''); if (!porLiga.has(k)) porLiga.set(k, []); porLiga.get(k).push(x); }
+    // (0.8.4q, 26 nov, Carlos: «uno ha invitado a 2 amigos y no salen juntos») una cuenta puede estar en varias ligas y antes
+    // contaba solo la que tenía abierta: ahora, todas las que manda (`ligas`; las webs de antes, solo `liga`). Se juntan por la
+    // liga que más cuentas comparten: la más grande se lleva a todas las suyas, después la siguiente con las que quedan, y así.
+    const cuantas = new Map();
+    for (const x of fuera) for (const k of ligasDe(x)) cuantas.set(k, (cuantas.get(k) || 0) + 1);
+    const orden = [...cuantas].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1] || (a[0] === ligaId ? -1 : b[0] === ligaId ? 1 : 0));
+    const puesta = new Set(), porLiga = new Map();
+    for (const [k] of orden) {
+      const l = fuera.filter((x) => !puesta.has(x) && ligasDe(x).includes(k));
+      if (l.length > 1) { porLiga.set(k, l); for (const x of l) puesta.add(x); }
+    }
+    for (const x of fuera) if (!puesta.has(x)) { const k = String(x.liga || '') || ligasDe(x)[0] || ''; if (!porLiga.has(k)) porLiga.set(k, []); porLiga.get(k).push(x); }
     const juntas = [...porLiga].filter(([k, l]) => k && l.length > 1).sort((a, b) => b[1].length - a[1].length || b[1][0].ultima - a[1][0].ultima);
     const solas = [...porLiga].filter(([k, l]) => k && l.length === 1).map(([, l]) => l[0]);
     const sinLiga = porLiga.get('') || [];

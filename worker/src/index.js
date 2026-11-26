@@ -1742,7 +1742,7 @@ async function apodos(req, env, c) {
  * Antes iba en el KV (p:, r:, u:) y era casi todo lo que gastaba de sus topes gratis.
  */
 // lo que se queda de lo que manda la app (el objeto lo corta y lo limpia igual)
-const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'nd', 'disp'];
+const HOLA_CAMPOS = ['equipo', 'liga', 'ligas', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'nd', 'disp'];
 async function hola(req, env, c, ruta) {
   if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);

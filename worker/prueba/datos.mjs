@@ -1917,3 +1917,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   W2.noticiasPausaHasta(0);
   globalThis.fetch = fN;
 }
+
+// (0.8.4q) todas las ligas de la cuenta: limpias (solo ids, sin repetir) y, si cambian, al momento aunque no haya pasado la
+// hora; una web de antes (sin ligas) no las borra. Directo al objeto, para no gastar el freno de /hola de las cuentas de arriba
+{
+  const holaO = (x) => QRq.get('quien|todos').fetch('https://x/quien', { method: 'POST', body: JSON.stringify({ op: 'hola', uid: '5555', nombre: 'L', foto: '', x: { equipo: 'L', liga: '1', v: '0.8.4q', canal: 'web', app: 0, ...x } }) });
+  await holaO({ ligas: '1,77, abc,77,<b>' });
+  ok(fichaDe(5555).ligas === '1,77', `las ligas de la cuenta, limpias (${fichaDe(5555).ligas})`);
+  await holaO({ ligas: '1,88' });
+  ok(fichaDe(5555).ligas === '1,88', `las ligas, al día en cuanto cambian (${fichaDe(5555).ligas})`);
+  await holaO({});
+  ok(fichaDe(5555).ligas === '1,88', 'una web de antes (sin ligas) no las borra');
+  await QRq.get('quien|todos').fetch('https://x/quien', { method: 'POST', body: JSON.stringify({ op: 'borrar', uid: '5555' }) });
+}

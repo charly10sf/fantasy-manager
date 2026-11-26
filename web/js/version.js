@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4p';
+export const VERSION = '0.8.4q';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8.4p';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, 04:18, Carlos: «solo salen 10 ligas y 2 jugadores en todas… uno ha invitado a 2 amigos, tendrían que salir
+    // mínimo 3») cada cuenta mandaba solo la liga que tenía abierta, y quien está en varias salía en otra (el que invitó a dos:
+    // 018307127, un amigo ahí y el otro con 018133782 abierta). Ahora /hola manda todas (`ligas`, 10 como mucho; quien.js las
+    // guarda limpias y al momento si cambian) y «Quién usa la app» junta por la liga que más cuentas comparten (`ligasDe`,
+    // `cuentasQ` en hojas.js). Las fichas de antes se completan solas cuando cada uno vuelve a abrir la app.
+    v: '0.8.4q', f: '2026-11-26', h: '04:38', t: 'Quién usa la app',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'grafica', menor: true, t: 'Las ligas, bien contadas', x: 'Quien está en varias ligas ya no sale solo en la que tenía abierta: las cuentas de una misma liga salen juntas aunque cada uno tenga otra abierta. Se va completando a medida que cada uno abre la app.' },
+    ],
+  },
   {
     // (26 nov, 03:34-03:35, Carlos: «el popup… da a entender que los cálculos de la app son malos» y «pon algo como que para
     // ayudar a afinar aún más el dinero que tiene cada rival… que lo pongan»; a quien ya vio la de antes no le sale otra vez)

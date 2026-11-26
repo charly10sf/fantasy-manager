@@ -39,6 +39,8 @@ export const DISPOSITIVOS = new Set(['web-iphone', 'web-android', 'web-pc']);
 const uidOk = (x) => /^\d{1,15}$/.test(String(x || ''));
 const diaOk = (x) => /^\d{4}-\d{2}-\d{2}$/.test(String(x || ''));
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
+// (0.8.4q, 26 nov) todas las ligas de la cuenta, no solo la que tiene abierta: ids de LaLiga separados por comas, 10 como mucho
+const limpiarLigas = (x) => [...new Set(String(x == null ? '' : x).split(',').map((s) => s.trim()).filter((s) => /^\d{1,20}$/.test(s)))].slice(0, 10).join(',');
 
 /** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
 export function diasAtras(hoy, n) {
@@ -175,13 +177,13 @@ function registrar(sql, uid, canal, primera, ahora, dia, evIn) {
   ponerReg(sql, uid, ficha, ahora, true);
   return hayEv;
 }
-/** b: { uid, nombre, foto, x: lo que manda la app (equipo, liga, v, canal, app, ad, fc, bv, nd), ev, ahora, dia } */
+/** b: { uid, nombre, foto, x: lo que manda la app (equipo, liga, ligas, v, canal, app, ad, fc, bv, nd), ev, ahora, dia } */
 function hola(sql, b, ahora, dia) {
   const uid = String(b.uid), x = (b.x && typeof b.x === 'object') ? b.x : {};
   const fx = fila(sql.exec('SELECT d FROM ficha WHERE uid = ? AND ultima >= ?', uid, cortes(ahora).ficha));
   const m = fx ? JSON.parse(fx.d) : null;
   const nuevo = {
-    uid, nombre: corta(b.nombre, 40), equipo: corta(x.equipo, 40), liga: corta(x.liga, 20) || (m && m.liga) || '', v: corta(x.v, 12),
+    uid, nombre: corta(b.nombre, 40), equipo: corta(x.equipo, 40), liga: corta(x.liga, 20) || (m && m.liga) || '', ligas: limpiarLigas(x.ligas) || (m && m.ligas) || '', v: corta(x.v, 12),
     canal: corta(x.canal, 8), app: Math.max(0, Math.round(Number(x.app) || 0)),
     primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
     foto: corta(b.foto, 400),
@@ -202,10 +204,12 @@ function hola(sql, b, ahora, dia) {
   const bvNueva = !!nuevo.bv && !(m && m.bv);
   const ndNueva = !!nuevo.nd && !(m && m.nd);
   const ligaNueva = !!nuevo.liga && !!m && !m.liga;
+  // (0.8.4q) las ligas de la cuenta, siempre que cambien (no cuentan para CAMBIOS_DIA: /hola ya va con su freno)
+  const ligasNueva = !!nuevo.ligas && !!m && (m.ligas || '') !== nuevo.ligas;
   const cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
   const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
   if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-  if (!m || cabeCambio || bvNueva || ndNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) ponerFicha(sql, uid, nuevo, ahora, true);
+  if (!m || cabeCambio || bvNueva || ndNueva || ligaNueva || ligasNueva || ahora - (m.ultima || 0) > 60 * 60e3) ponerFicha(sql, uid, nuevo, ahora, true);
   let ev = false;
   try { ev = registrar(sql, uid, nuevo.canal, (m && m.primera) || ahora, ahora, dia, b.ev); } catch (e) { ev = false; }
   return { ok: true, ev, ...(nuevo.bv ? { bv: nuevo.bv } : {}), ...(nuevo.nd ? { nd: nuevo.nd } : {}) };
