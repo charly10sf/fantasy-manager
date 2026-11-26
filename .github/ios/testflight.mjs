@@ -14,9 +14,12 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import os from 'node:os';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const ENC = path.join(AQUI, 'contacto.enc');
+const DIST = path.join(AQUI, 'distribucion.enc'); // el certificado de distribución propio (.p12 y su contraseña), cifrado
 const APP = '6839220127'; // Apple ID de la app en App Store Connect
 const API = 'https://api.appstoreconnect.apple.com';
 const GRUPO = 'Probadores'; // el grupo externo, con enlace público
@@ -51,6 +54,12 @@ Signing in ("Entrar") opens LaLiga's own login page in the system sign-in sheet 
 Ads: Google AdMob (test ads in this beta build). Before league data is sent to the AI provider, the app asks for permission and rival names are replaced with aliases.`;
 
 // ---------- la credencial de la API (JWT ES256, 20 min) ----------
+/** el .p8 tal cual lo pegue cada uno (en una línea, con \r, sin cabeceras): se rehace el PEM, como jwtApns del Worker */
+function normaP8(txt) {
+  const b = String(txt || '').replace(/-----[^-]+-----/g, '').replace(/\\n/g, '').replace(/[^A-Za-z0-9+/=]/g, '');
+  return `-----BEGIN PRIVATE KEY-----\n${b.match(/.{1,64}/g).join('\n')}\n-----END PRIVATE KEY-----\n`;
+}
+const claveP8 = () => crypto.createPrivateKey(normaP8(process.env.ASC_KEY_P8));
 const b64u = (b) => Buffer.from(b).toString('base64url');
 function credencial() {
   const id = process.env.ASC_KEY_ID, iss = process.env.ASC_ISSUER_ID, p8 = process.env.ASC_KEY_P8;
@@ -58,7 +67,7 @@ function credencial() {
   const ahora = Math.floor(Date.now() / 1000);
   const cab = b64u(JSON.stringify({ alg: 'ES256', kid: id, typ: 'JWT' }));
   const cuerpo = b64u(JSON.stringify({ iss, iat: ahora, exp: ahora + 19 * 60, aud: 'appstoreconnect-v1' }));
-  const firma = crypto.sign('sha256', Buffer.from(`${cab}.${cuerpo}`), { key: p8, dsaEncoding: 'ieee-p1363' });
+  const firma = crypto.sign('sha256', Buffer.from(`${cab}.${cuerpo}`), { key: claveP8(), dsaEncoding: 'ieee-p1363' });
   return `${cab}.${cuerpo}.${b64u(firma)}`;
 }
 
@@ -85,7 +94,7 @@ async function api(metodo, ruta, cuerpo) {
 // ---------- cifrar lo personal con la clave pública de ASC_KEY_P8 ----------
 const INFO_HKDF = Buffer.from('fantasy-manager contacto testflight');
 function clavePublica() {
-  const priv = crypto.createPrivateKey(process.env.ASC_KEY_P8);
+  const priv = claveP8();
   return crypto.createPublicKey(priv).export({ type: 'spki', format: 'der' }).toString('base64');
 }
 function cifrar(publica, datos) {
@@ -98,8 +107,7 @@ function cifrar(publica, datos) {
   const d = Buffer.concat([c.update(Buffer.from(JSON.stringify(datos))), c.final(), c.getAuthTag()]);
   return { v: 1, e: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), iv: iv.toString('base64'), d: d.toString('base64') };
 }
-function descifrar(sobre) {
-  const priv = crypto.createPrivateKey(process.env.ASC_KEY_P8);
+function descifrar(sobre, priv = claveP8()) {
   const efimera = crypto.createPublicKey({ key: Buffer.from(sobre.e, 'base64'), type: 'spki', format: 'der' });
   const comun = crypto.diffieHellman({ privateKey: priv, publicKey: efimera });
   const k = Buffer.from(crypto.hkdfSync('sha256', comun, Buffer.alloc(0), INFO_HKDF, 32));
@@ -217,7 +225,16 @@ async function configurar(numero) {
     for (const p of datos.probadores || []) ocultar(p.email);
   } else console.log('::warning::Sin .github/ios/contacto.enc: no se pone el contacto ni los probadores, ni se envía a revisión');
 
-  const build = await compilacion(numero);
+  let build = null;
+  try { build = await compilacion(numero); } catch (e) {
+    if (numero || !/ninguna compilación/.test(e.message)) throw e;
+    // sin compilación todavía: se deja hecho todo lo que no depende de ella
+    console.log('::notice::Aún no hay compilación: se deja lista la información de la beta, el grupo, el contacto y los probadores');
+    await infoBeta();
+    const g0 = await grupoExterno();
+    if (datos) { await contactoRevision(datos.contacto); await probadores(g0, datos.probadores); }
+    return;
+  }
   console.log(`la compilación ${build.attributes.version}: lista`);
   if (build.attributes.usesNonExemptEncryption == null) {
     await api('PATCH', `/v1/builds/${build.id}`, { data: { type: 'builds', id: build.id, attributes: { usesNonExemptEncryption: false } } });
@@ -243,9 +260,79 @@ async function configurar(numero) {
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.replace(/\n/g, '\n\n') + '\n');
 }
 
+
+// ---------- el certificado de distribución propio (la firma en la nube de Apple estropea las tildes del nombre) ----------
+const NOMBRE_PERFIL = 'FM App Store (Actions)';
+const BUNDLE = 'es.fantasymanager.app';
+const sinCeros = (x) => String(x || '').toUpperCase().replace(/^0+/, '');
+
+/** crea un certificado Apple Distribution con una clave nueva y lo deja, cifrado para la sesión que lo pide, en el registro */
+async function certificado() {
+  const ya = await api('GET', '/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=50&fields[certificates]=name,expirationDate,serialNumber,certificateType');
+  console.log(`certificados de distribución que ya hay: ${ya.data.length}`);
+  for (const c of ya.data) console.log(`  ${c.id} ${c.attributes.name} caduca ${c.attributes.expirationDate}`);
+  // los que se piden revocar a mano (revocar.txt, un id por línea); nunca se revoca uno sin pedirlo: una compilación
+  // pendiente de revisión firmada con él podría quedar como binario no válido
+  const RV = path.join(AQUI, 'revocar.txt');
+  if (fs.existsSync(RV)) for (const id of fs.readFileSync(RV, 'utf8').split(/\s+/).filter(Boolean)) {
+    try { await api('DELETE', `/v1/certificates/${id}`); console.log(`revocado ${id}`); } catch (e) { console.log(`no se ha podido revocar ${id}: ${e.message}`); }
+  }
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'fm-cert-'));
+  const o = (args) => execFileSync('openssl', args, { cwd: d, stdio: ['ignore', 'pipe', 'pipe'] });
+  o(['genrsa', '-out', 'k.pem', '2048']);
+  o(['req', '-new', '-key', 'k.pem', '-out', 'c.csr', '-subj', '/CN=Fantasy Manager Actions/emailAddress=fantasymanager.web.app@gmail.com']);
+  const csr = fs.readFileSync(path.join(d, 'c.csr'), 'utf8');
+  const r = await api('POST', '/v1/certificates', { data: { type: 'certificates', attributes: { certificateType: 'DISTRIBUTION', csrContent: csr } } });
+  const cert = r.data;
+  fs.writeFileSync(path.join(d, 'c.der'), Buffer.from(cert.attributes.certificateContent, 'base64'));
+  o(['x509', '-inform', 'DER', '-in', 'c.der', '-out', 'c.pem']);
+  const clave = crypto.randomBytes(18).toString('base64url');
+  const legado = ['-keypbe', 'PBE-SHA1-3DES', '-certpbe', 'PBE-SHA1-3DES', '-macalg', 'sha1'];
+  try { o(['pkcs12', '-export', '-legacy', '-inkey', 'k.pem', '-in', 'c.pem', '-out', 'c.p12', '-passout', `pass:${clave}`, '-name', 'FM Distribution']); }
+  catch { o(['pkcs12', '-export', ...legado, '-inkey', 'k.pem', '-in', 'c.pem', '-out', 'c.p12', '-passout', `pass:${clave}`, '-name', 'FM Distribution']); }
+  const p12 = fs.readFileSync(path.join(d, 'c.p12')).toString('base64');
+  fs.rmSync(d, { recursive: true, force: true });
+  const datos = { p12, clave, id: cert.id, serie: cert.attributes.serialNumber, caduca: cert.attributes.expirationDate };
+  fs.writeFileSync(DIST, JSON.stringify(cifrar(clavePublica(), datos)) + '\n');
+  if (fs.existsSync(RV)) fs.rmSync(RV);
+  console.log(`certificado creado: ${cert.id} ${cert.attributes.name} caduca ${cert.attributes.expirationDate} serie ${cert.attributes.serialNumber}; guardado cifrado en .github/ios/distribucion.enc`);
+}
+
+/** deja el .p12 del certificado propio en `ruta` y su contraseña en `ruta`.clave (para la firma; nunca en el registro) */
+function p12(ruta) {
+  if (!fs.existsSync(DIST)) throw new Error('No hay .github/ios/distribucion.enc: lanzar antes el trabajo «certificado» ([certificado] en el commit)');
+  const d = descifrar(JSON.parse(fs.readFileSync(DIST, 'utf8')));
+  ocultar(d.clave);
+  fs.writeFileSync(ruta, Buffer.from(d.p12, 'base64'), { mode: 0o600 });
+  fs.writeFileSync(ruta + '.clave', d.clave, { mode: 0o600 });
+  console.log(`certificado ${d.id}, serie ${d.serie}, caduca ${d.caduca}`);
+  fs.writeFileSync(ruta + '.serie', String(d.serie));
+  const dias = (Date.parse(d.caduca) - Date.now()) / 864e5;
+  if (dias < 30) console.log(`::warning::El certificado de distribución caduca en ${Math.round(dias)} días: renovarlo con [certificado]`);
+}
+
+/** el perfil App Store de la app con el certificado de esa serie, en `ruta` (se rehace cada vez: es gratis) */
+async function perfil(ruta, serie) {
+  const b = await api('GET', `/v1/bundleIds?filter[identifier]=${BUNDLE}&limit=5`);
+  const bid = b.data.find((x) => x.attributes.identifier === BUNDLE);
+  if (!bid) throw new Error(`No está el App ID ${BUNDLE}`);
+  const cs = await api('GET', '/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=50&fields[certificates]=serialNumber,name,expirationDate');
+  const c = cs.data.find((x) => sinCeros(x.attributes.serialNumber) === sinCeros(serie));
+  if (!c) throw new Error(`No está en Apple el certificado de la serie ${serie} (¿revocado?)`);
+  const ps = await api('GET', `/v1/profiles?filter[name]=${encodeURIComponent(NOMBRE_PERFIL)}&limit=20`);
+  for (const p of ps.data) await api('DELETE', `/v1/profiles/${p.id}`).catch(() => {});
+  const r = await api('POST', '/v1/profiles', { data: { type: 'profiles', attributes: { name: NOMBRE_PERFIL, profileType: 'IOS_APP_STORE' }, relationships: { bundleId: { data: { type: 'bundleIds', id: bid.id } }, certificates: { data: [{ type: 'certificates', id: c.id }] } } } });
+  fs.writeFileSync(ruta, Buffer.from(r.data.attributes.profileContent, 'base64'));
+  console.log(`perfil «${NOMBRE_PERFIL}»: ${r.data.attributes.uuid}, caduca ${r.data.attributes.expirationDate}; certificado ${c.attributes.name}, caduca ${c.attributes.expirationDate}`);
+}
+
 const [modo, a1, a2] = process.argv.slice(2);
-if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
+if (modo === 'p8') { fs.writeFileSync(a1, normaP8(process.env.ASC_KEY_P8), { mode: 0o600 }); claveP8(); console.log('la clave de la API, en su archivo'); }
+else if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
 else if (modo === 'cifrar') { fs.writeFileSync(ENC, JSON.stringify(cifrar(a1, JSON.parse(fs.readFileSync(a2, 'utf8')))) + '\n'); console.log('escrito', ENC); }
 else if (modo === 'comprobar') { const d = descifrar(JSON.parse(fs.readFileSync(ENC, 'utf8'))); console.log('contacto.enc se lee bien:', Object.keys(d.contacto || {}).join(', '), '·', (d.probadores || []).length, 'probadores'); }
+else if (modo === 'certificado') await certificado();
+else if (modo === 'p12') p12(a1);
+else if (modo === 'perfil') await perfil(a1, a2);
 else if (modo === 'configurar') await configurar(a1 || process.env.BUILD || '');
 else { console.error('modo: clave | cifrar | comprobar | configurar'); process.exit(2); }
