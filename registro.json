@@ -3199,10 +3199,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000,
-   "SPORT|136772486": 1795461059000,
    "SPORT|136769461": 1795462222000,
    "SPORT|136772532": 1795462129000,
    "SPORT|136772178": 1795462124000,
@@ -3394,35 +3392,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255926/balde-aire-goleada-baku-pedri-mando-gerard-lopez-foco.html": 1795712627000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/",
-    "medio": "AS",
-    "t": 1795461041000,
-    "id": "2314",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Vivian sigue lesionado y no entrena con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     2,
-     0
-    ]
-   },
-   {
-    "guid": "SPORT|136772486",
-    "medio": "SPORT",
-    "t": 1795461059000,
-    "id": "2338",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aimar Duñabeitia sigue con molestias tras el partido contra Las Palmas",
-    "motivo": "molestias tras pedir el cambio en el partido",
-    "plazo": "",
-    "nums": [
-     67
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/",
     "medio": "AS",
@@ -4774,33 +4743,33 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261126/1004255895/athletic-medira-deportivo-octavos-final-copa-reina.html": 1795709462000,
    "SPORT|136891331": 1795708026000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255938/alemania-pierde-lideres-mundial-sancion.html": 1795714036000,
-   "SPORT|136893721": 1795712134000
+   "SPORT|136893721": 1795712134000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/suspenden-besiktas-hapoel-beer-sheva-europa-league-batalla-campal-pancartas-apoyo-palestina-20261126_3483274.html": 1795720025000,
+   "SPORT|136894988": 1795715585000,
+   "SPORT|136892989": 1795715495000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136894988": 1795719371833,
-   "SPORT|136892989": 1795719371833
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 209581,
-  "salida": 25588,
+  "entrada": 211845,
+  "salida": 25932,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.482494,
+  "dolares": 0.482892,
   "reservado": 0
  },
  "recientes": {
@@ -9869,13 +9838,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6701,
+   "ok": 6702,
    "fallos": 0,
-   "ejecuciones": 5480,
+   "ejecuciones": 5481,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T19:06:11.732Z"
+   "ultima": "2026-11-26T19:11:13.637Z"
   }
  },
  "ptsDirecto": {},
@@ -9892,15 +9861,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:06:20.301Z"
+   "ultimaBien": "2026-11-26T19:11:28.276Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:06:20.301Z"
+   "ultimaBien": "2026-11-26T19:11:28.276Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:06:20.301Z"
+   "ultimaBien": "2026-11-26T19:11:28.276Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9908,11 +9877,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:06:20.301Z"
+   "ultimaBien": "2026-11-26T19:11:28.276Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:06:20.301Z"
+   "ultimaBien": "2026-11-26T19:11:28.276Z"
   }
  },
  "avisos": [
