@@ -4602,7 +4602,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/levante/20261126/1004255538/levante-rompe-laterales-toljan-manu-sanchez-ko.html": 1795672800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255643/1-2-prat-vence-vic.html": 1795647889000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255642/grupo-1-pone-dia-disputa-dos-aplazados.html": 1795647744000,
-   "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795676131000
+   "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795676131000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795679085000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000
   },
   "hechos": [
    {
@@ -4655,28 +4657,25 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795680081562,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795680373762
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 14,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 89717,
-  "salida": 6082,
+  "entrada": 91620,
+  "salida": 6243,
   "cacheLee": 73819,
   "cacheEscribe": 23316,
-  "dolares": 0.300152,
+  "dolares": 0.300423,
   "reservado": 0
  },
  "recientes": {
@@ -9760,13 +9759,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6571,
+   "ok": 6572,
    "fallos": 0,
-   "ejecuciones": 5350,
+   "ejecuciones": 5351,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T08:21:13.198Z"
+   "ultima": "2026-11-26T08:26:14.987Z"
   }
  },
  "ptsDirecto": {},
@@ -9783,15 +9782,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:21:25.110Z"
+   "ultimaBien": "2026-11-26T08:26:27.730Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:21:25.110Z"
+   "ultimaBien": "2026-11-26T08:26:27.730Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:21:25.110Z"
+   "ultimaBien": "2026-11-26T08:26:27.730Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9799,11 +9798,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:21:25.110Z"
+   "ultimaBien": "2026-11-26T08:26:27.730Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:21:25.110Z"
+   "ultimaBien": "2026-11-26T08:26:27.730Z"
   }
  },
  "avisos": [
