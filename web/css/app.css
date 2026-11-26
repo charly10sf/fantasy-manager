@@ -3530,6 +3530,7 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt-ico.ni-origen { background: rgba(255, 197, 71, 0.13); color: #ffc547; }
 .nvt-ico.ni-ordenador { background: rgba(94, 178, 255, 0.14); color: #5eb2ff; }
 .nvt-novs b { display: block; font: 700 14.5px/1.25 'Barlow'; color: var(--texto); }
+.nvt-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px; vertical-align: 2px; background: rgba(255, 197, 71, 0.14); color: #ffc547; font: 700 10.5px/1.5 'Barlow'; font-style: normal; letter-spacing: .6px; text-transform: uppercase; white-space: nowrap; }
 .nvt-novs li span, .nvt-novs .nr-c span, .nvt-des span { display: block; font: 400 13.5px/1.3 'Barlow'; color: var(--texto-2); }
 /* A, lista */
 .nvt-lista, .nvt-cor { list-style: none; margin: 12px 0 14px; padding: 0; text-align: left; }

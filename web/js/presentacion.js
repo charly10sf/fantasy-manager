@@ -98,7 +98,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
       ${arreglos.length ? `<section class="nv-notas">
         <p class="nv-eti">Notas de la actualización</p>
         <h2>Correcciones</h2>
-        <ol>${arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}${nuevas.length > 1 ? `<small>${esc(c.v)}</small>` : ''}</li>`).join('')}</ol>
+        <ol>${arreglos.map((c) => `<li><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}${nuevas.length > 1 ? `<small>${esc(c.v)}</small>` : ''}</li>`).join('')}</ol>
       </section>` : ''}
       <section class="nv-fin">
         <div class="nv-fin-logo">${LOGO}</div>
@@ -190,20 +190,21 @@ const ICO_NOV = {
   origen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg>',
   ordenador: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
 };
+const tagNov = (c) => (c.tag ? ` <em class="nvt-tag">${esc(c.tag)}</em>` : '');
 const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.ico)}" aria-hidden="true">${ICO_NOV[c.ico]}</i>` : '');
 /** la lista de la tarjeta de novedades en sus tres diseños: «lista» (una fila por cosa), «rejilla» (la primera a lo ancho
     y las demás en cuadros) y «destacada» (la primera grande, con su dibujo, y las demás en una línea cada una) */
 function listaNov(a) {
   const L = a.lista;
   if (a.estilo === 'rejilla') {
-    return `<div class="nvt-rej">${L.map((c, i) => `<div class="nr-c${i === 0 ? ' ancha' : ''}">${icoNov(c)}<b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div>`).join('')}</div>`;
+    return `<div class="nvt-rej">${L.map((c, i) => `<div class="nr-c${i === 0 ? ' ancha' : ''}">${icoNov(c)}<b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div>`).join('')}</div>`;
   }
   if (a.estilo === 'destacada') {
     const [p, ...r] = L;
-    return `<div class="nvt-des"><svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg><b>${esc(p.t)}</b>${p.x ? `<span>${esc(p.x)}</span>` : ''}</div>
-      ${r.length ? `<div class="nvt-mas-t">Y además</div><ul class="nvt-cor">${r.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}`;
+    return `<div class="nvt-des"><svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg><b>${esc(p.t)}${tagNov(p)}</b>${p.x ? `<span>${esc(p.x)}</span>` : ''}</div>
+      ${r.length ? `<div class="nvt-mas-t">Y además</div><ul class="nvt-cor">${r.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}`;
   }
-  return `<ul class="nvt-lista">${L.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
+  return `<ul class="nvt-lista">${L.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
 }
 export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
@@ -277,8 +278,8 @@ export function tarjetaIphone({ apple = '', linea = '', alCerrar = () => {} } = 
 export function listaNovedades() {
   return visibles().map((n) => `<div class="nvl">
     <div class="nvl-cab"><b>${esc(n.v)}</b><span>${esc(n.t)}</span><small>${esc(fechaNov(n))}</small></div>
-    ${(n.cosas || []).map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
-    ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
+    ${(n.cosas || []).map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+    ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
   </div>`).join('');
 }
 
@@ -295,7 +296,7 @@ export const ultimaImportante = () => (importantes()[0] || {}).v || null;
 export function listaImportantes() {
   return importantes().map((n) => `<div class="nvl">
     <div class="nvl-cab"><b>${esc(n.v)}</b><small>${esc(fechaNov(n))}</small></div>
-    ${n.cosas.map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+    ${n.cosas.map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
     ${n.arreglos.length ? `<div class="nvl-arreglos"><small>También se ha arreglado</small><ul>${n.arreglos.map((c) => `<li>${esc(c.t)}</li>`).join('')}</ul></div>` : ''}
   </div>`).join('');
 }
