@@ -3393,7 +3393,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261126/1004255902/pendientes-ilias-akhomach.html": 1795710069000,
    "SPORT|136888920": 1795707019000,
-   "SPORT|136888251": 1795708781000
+   "SPORT|136888251": 1795708781000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255935/llorente-vuelve-responder-preocupa-caviar-azucar-problema.html": 1795713983000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261126/1004255936/sazonov-vuelve-once-getafe-georgia.html": 1795713887000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255926/balde-aire-goleada-baku-pedri-mando-gerard-lopez-foco.html": 1795712627000
   },
   "hechos": [
    {
@@ -3867,7 +3870,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4774,12 +4777,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255905/atletico-rival-octavos-final.html": 1795710000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261126/1004255895/athletic-medira-deportivo-octavos-final-copa-reina.html": 1795709462000,
-   "SPORT|136891331": 1795708026000
+   "SPORT|136891331": 1795708026000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255938/alemania-pierde-lideres-mundial-sancion.html": 1795714036000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
   "espera": {}
@@ -4787,17 +4791,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 50,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 203478,
-  "salida": 23889,
+  "entrada": 207754,
+  "salida": 25493,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.481035,
+  "dolares": 0.482264,
   "reservado": 0
  },
  "recientes": {
@@ -9866,13 +9870,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6681,
+   "ok": 6682,
    "fallos": 0,
-   "ejecuciones": 5460,
+   "ejecuciones": 5461,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T17:26:22.754Z"
+   "ultima": "2026-11-26T17:31:20.855Z"
   }
  },
  "ptsDirecto": {},
@@ -9889,15 +9893,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:26:35.649Z"
+   "ultimaBien": "2026-11-26T17:31:39.856Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:26:35.649Z"
+   "ultimaBien": "2026-11-26T17:31:39.856Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:26:35.649Z"
+   "ultimaBien": "2026-11-26T17:31:39.856Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9905,11 +9909,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:26:35.649Z"
+   "ultimaBien": "2026-11-26T17:31:39.856Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:26:35.649Z"
+   "ultimaBien": "2026-11-26T17:31:39.856Z"
   }
  },
  "avisos": [
