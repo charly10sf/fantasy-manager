@@ -3199,7 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/oyono-vuelve-plan-terzic-sesion-berenguer-yuri-yeray.html": 1795454061000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261123/1004254610/yeray-causa-baja-sesion-puerta-abierta-laporte-ejercita-normalidad.html": 1795454608000,
    "AS|https://as.com/futbol/un-nuevo-impulso-para-el-athletic-f202611-n/": 1795456434000,
@@ -3395,7 +3394,8 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261126/11694243/aubameyang-deportivo-accidente-ferrari.html": 1795708297000,
    "SPORT|136829154": 1795706247000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261126/1004255902/pendientes-ilias-akhomach.html": 1795710069000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261126/1004255902/pendientes-ilias-akhomach.html": 1795710069000,
+   "SPORT|136888920": 1795707019000
   },
   "hechos": [
    {
@@ -3869,7 +3869,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -4788,17 +4788,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 197544,
-  "salida": 23571,
+  "entrada": 199632,
+  "salida": 23686,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.480282,
+  "dolares": 0.480548,
   "reservado": 0
  },
  "recientes": {
@@ -9872,13 +9872,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6670,
+   "ok": 6671,
    "fallos": 0,
-   "ejecuciones": 5449,
+   "ejecuciones": 5450,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T16:31:16.294Z"
+   "ultima": "2026-11-26T16:36:12.688Z"
   }
  },
  "ptsDirecto": {},
@@ -9895,15 +9895,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:31:29.279Z"
+   "ultimaBien": "2026-11-26T16:36:23.355Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:31:29.279Z"
+   "ultimaBien": "2026-11-26T16:36:23.355Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:31:29.279Z"
+   "ultimaBien": "2026-11-26T16:36:23.355Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9911,11 +9911,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:31:29.279Z"
+   "ultimaBien": "2026-11-26T16:36:23.355Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:31:29.279Z"
+   "ultimaBien": "2026-11-26T16:36:23.355Z"
   }
  },
  "avisos": [
