@@ -54,7 +54,7 @@ try {
       const planPuja = (A.M.mercado || []).some((m) => m.tipo === 'liga' && m.j.pos === 1 && (A.M.decisionFichar(m.pid) || {}).accion === 'fichar');
       const vendoPortero = (A.M.mias || []).some((x) => x.j.pos === 1 && (A.M.decision(x.pid) || {}).accion === 'vender');
       let pidPuja = null;
-      const B = montar((D) => { sinPorteros(D); const m = meterPorteroLibre(D); m.miPuja = m.precio; pidPuja = m.pid; });
+      const B = montar((D) => { sinPorteros(D); const m = meterPorteroLibre(D); for (const x of D.mercado) if (pos(D, x.pid) === 1) x.miPuja = null; m.miPuja = m.precio; pidPuja = m.pid; });
       const lb = lineasDe(B).filter((l) => l.tipo === 'falta' && l.pos === 1);
       const C = montar((D) => { sinPorteros(D); const m = meterPorteroLibre(D); m.miPuja = m.precio; const mol = Object.values(D.maestro).find((j) => j.pos === 2 && j.estado === 'ok'); for (let i = 0; D.plantillas[tid].length < 25; i++) { const id = `prueba-def-${i}`; D.maestro[id] = { ...mol, id, nombre: `Relleno ${i}` }; D.plantillas[tid].push({ pid: id, clausula: Math.max(1e6, mol.valor) }); } window.__n25 = D.plantillas[tid].length; });
       const lc = lineasDe(C).filter((l) => l.tipo === 'falta' && l.pos === 1);
