@@ -4783,7 +4783,8 @@ function novedades() {
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
   iphoneEsperar();
-  novDineroEsperar();
+  // (26 nov, 03:38, Carlos: «quita lo del popup para todos y haz que solo salga en la sección Rivales») la novedad del
+  // dinero ya no sale: se cuenta en el aviso de Rivales (avisoRivalesHTML). novDineroEsperar se queda sin llamar.
   novAvisoAlArrancar(vista);
   if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega

@@ -30,7 +30,7 @@ export const NOVEDADES = [
     // la ficha y la línea de la 0.8.4o (dinero-dicho.js y version.js)
     v: '0.8.4p', f: '2026-11-26', h: '', t: 'Retoques de textos',
     cosas: [
-      { para: 'dueño', tipo: 'arreglo', d: 'dinero', menor: true, t: 'El dinero apuntado, más claro', x: 'Los textos de apuntar el dinero de un rival lo cuentan mejor: lo que apuntas ayuda a afinar aún más el dinero de cada rival.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'dinero', menor: true, t: 'El dinero apuntado, más claro', x: 'La ventana de la novedad ya no sale: lo cuenta un aviso corto en Rivales, que se quita con su ×. A quien ya vio la ventana no le sale. Los textos dicen que la app ya calcula el dinero exacto a falta de las recompensas diarias y que lo apuntado lo afina.' },
     ],
   },
   {
@@ -41,7 +41,7 @@ export const NOVEDADES = [
     // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
     v: '0.8.4o', f: '2026-11-26', h: '02:50', t: 'Apunta el dinero de tus rivales',
     cosas: [
-      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú. La cuenta de la app, con su más o menos, ya es buena: con lo que apuntas, la app y la IA la afinan aún más.' },
+      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú. La app ya calcula su dinero exacto a falta de las recompensas diarias que coja: con lo que apuntas, la app y la IA lo afinan aún más.' },
     ],
   },
   {

@@ -76,6 +76,12 @@ ok(!dif(A, A2).length, `(a) dos pasadas seguidas pintan lo mismo (${Object.keys(
 await page.click('.nav [data-ir="rivales"]');
 const enFila = await page.$(`.fila[data-r="${info.tid}"] .dd-ap`);
 ok(!!enFila && !!(await page.$('.dd-aviso')), '(b) en su fila de Rivales, «Apuntar», y el aviso de arriba');
+await page.locator('.dd-aviso').screenshot({ path: process.env.CAPTURA_AVISO || '/tmp/aviso-rivales.png' }).catch(() => {});
+ok(!(await page.$('.nvt-dd')), '(b) la ventana de la novedad ya no sale sola');
+{ // a quien ya le salió la ventana de la 0.8.4o (LS «nov-dinero») no le sale el aviso
+  const sin = await page.evaluate(async () => { const { LS } = await import('./js/util.js'); LS.set('nov-dinero', Date.now()); const { avisoRivalesVisto } = await import('./js/dinero-dicho.js'); const r = avisoRivalesVisto(); LS.set('nov-dinero', 0); return r; });
+  ok(sin, '(b) a quien ya vio la ventana de la novedad no le sale el aviso de Rivales');
+}
 await enFila.click();
 await page.clock.runFor(400);
 ok(!!(await page.$('.hoja .dd-hoja')) && /Verás solo tu cifra: su dinero sigue cerrado/.test(await page.textContent('.hoja')), '(b) la hoja, con «Verás solo tu cifra: su dinero sigue cerrado»');

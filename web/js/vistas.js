@@ -1363,7 +1363,7 @@ export function rivales(S) {
     // el dinero de cada uno cerrado: un solo candado arriba (antes, uno en cada fila)
     const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
     // (0.8.4o) con el dinero de alguno cerrado, en su fila «Apuntar» (o «Te dijo 48 M»): un aviso arriba hasta que se quita
-    const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId) && !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
+    const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
     h += ancho() ? cols(avisoD + candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
   } else {

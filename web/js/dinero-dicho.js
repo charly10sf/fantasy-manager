@@ -8,7 +8,7 @@
    cambia por haberla apuntado. Abierto (anuncio o invitar), entra en la cuenta como siempre; al cerrarse, vuelve a salir.
    Lo apuntado se sigue mandando para aprender (apunteDinero, con «Ayudar a mejorar la IA»). La app no lo pide sola: solo
    la novedad, una vez. (Carlos, 26 nov, 03:34-03:35: nada de «aprende a calcular mejor», que daba a entender que sus
-   cuentas fallan: «ayudas a afinar aún más»; 03:36: que quede claro que la cuenta con su más o menos ya es buena.) Prueba: .github/ia/caso-dinero-dicho.mjs */
+   cuentas fallan: «ayudas a afinar aún más»; 03:50: «ya lo calcula exactamente a falta de la recompensa diaria».) Prueba: .github/ia/caso-dinero-dicho.mjs */
 import { LS, esc, icono, cuando } from './util.js';
 import { K } from './datos.js';
 import { bloqueada } from './limite.js';
@@ -101,9 +101,10 @@ export function pillRival(tid) {
   return `<span class="pill dd-ap" role="button" tabindex="0" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('euro')}Apuntar</span>`;
 }
 /** el aviso de arriba de la clasificación: sale hasta que se quita (o hasta que apuntas a alguien) y no vuelve */
-export const avisoRivalesVisto = () => !!LS.get('dd-aviso-rivales', 0);
+// a quien ya le salió la novedad (la ventana de la 0.8.4o, LS «nov-dinero») tampoco le sale el aviso (Carlos, 26 nov, 03:35)
+export const avisoRivalesVisto = () => !!LS.get('dd-aviso-rivales', 0) || !!LS.get('nov-dinero', 0);
 export const quitarAvisoRivales = () => LS.set('dd-aviso-rivales', Date.now());
-export const avisoRivalesHTML = () => `<div class="dd-aviso">${icono('euro')}<p>¿Alguien te ha dicho su dinero? Toca <b>Apuntar</b> en su fila.</p><button type="button" class="b-ico" data-accion="quitarAvisoDicho" aria-label="Quitar este aviso">${icono('cerrar')}</button></div>`;
+export const avisoRivalesHTML = () => `<div class="dd-aviso">${icono('euro')}<p>¿Alguien de tu liga te ha dicho cuánto dinero tiene? Toca <b>Apuntar</b> en su fila: lo tendrás en su ficha. La app ya calcula su dinero exacto a falta de las recompensas diarias que coja; con lo que apuntes se afina aún más.</p><button type="button" class="b-ico" data-accion="quitarAvisoDicho" aria-label="Quitar este aviso">${icono('cerrar')}</button></div>`;
 
 /** la ventana «Quién y cuánto» (diseño «Main»), en el centro. st: { sel, v, aprox, err, fase: 'pide' | 'hecho', hecho } */
 export function ventanaDineroHTML(S, st) {
@@ -146,7 +147,7 @@ export const novedadDineroHTML = () => `<div class="nvt-velo" data-accion="novDi
     <span class="dd-eti-r"><i></i>Novedad</span>
     <div class="nvd-dib" aria-hidden="true"><span class="nvd-cara">FR</span><span class="nvd-bur">«Tengo 52 kilos, tío»</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="nvd-m">52 M</span></div>
     <h2 id="nvd-t">Apunta el dinero de tus rivales</h2>
-    <p>Fantasy Manager ya calcula el dinero de cada rival, con su más o menos, y esa cuenta es buena. Si alguien de tu liga te ha dicho cuánto tiene, apúntalo: ayudas a que el motor de la app y la IA lo afinen aún más.</p>
+    <p>Fantasy Manager ya calcula el dinero exacto de cada rival, a falta de las recompensas diarias que coja. Si alguien de tu liga te ha dicho cuánto tiene, apúntalo: ayudas a que el motor de la app y la IA lo afinen aún más.</p>
     <ul class="nvd-l">${['Puedes apuntarlo aunque tengas su dinero cerrado.', 'Solo ves lo que has puesto tú. Lo cerrado sigue cerrado.', 'No te lo vamos a estar pidiendo: lo apuntas cuando quieras.'].map((t) => `<li>${icono('ok')}${esc(t)}</li>`).join('')}</ul>
     <button type="button" class="dd-v-pri" data-accion="novDineroSi">Apuntar ahora</button>
     <button type="button" class="dd-v-no" data-accion="novDineroNo">Ahora no</button>
