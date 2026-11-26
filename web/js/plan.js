@@ -379,8 +379,8 @@ function candidatos(X, vetados) {
     const kE = `P-${fe.pid}`, cuandoE = M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy';
     nuevo({ k: kE, clase: 'pujar', objetivo: 'entrenador', ent: true, pid: fe.pid, j: fe.j, importe: fe.puja, puja: fe.puja, euros: X.punto * fe.media - (fe.puja - fe.precio), ref: kE, interes: 100,
       op: () => ({ accion: 'pujar', ref: kE, objetivo: 'entrenador', pid: fe.pid, jugador: fe.j.nombre, donde: 'en el mercado', importe: fe.precio, puja_max: fe.puja, cuando: cuandoE, confianza: 'media',
-        motivo: `No tienes entrenador: ${fe.j.nombre} lleva ${d1(fe.media)} puntos por jornada y vale ${eur(fe.precio)}. No ocupa sitio en la plantilla. Es una subasta a ciegas: si no la ganas, no pagas nada.`,
-        datos: { porque: `no tienes entrenador: lleva ${d1(fe.media)} pts por jornada`, cuanto: `puja de ${eur(fe.puja)} (vale ${eur(fe.precio)})`, cuando: cuandoE, siNo: 'sigues sin entrenador' } }) });
+        motivo: `No tienes entrenador: ${fe.j.nombre} lleva ${d1(fe.media)} puntos por jornada y vale ${eur(fe.precio)}. No ocupa sitio en la plantilla. Puja lo que vale, sin pagar de más: si no la ganas, no pagas nada.`,
+        datos: { porque: `no tienes entrenador: lleva ${d1(fe.media)} pts por jornada`, cuanto: `puja de ${eur(fe.puja)}${fe.puja > fe.precio ? ` (vale ${eur(fe.precio)})` : ' (lo que vale)'}`, cuando: cuandoE, siNo: 'sigues sin entrenador' } }) });
   }
 
   /* E. especular: comprar lo que sube y venderlo antes de la jornada (con el margen de deuda) */

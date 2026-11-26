@@ -1565,7 +1565,7 @@ export function mercado(S) {
       const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
       ml += `<div class="grupo"><span>Entrenadores</span><span>${ents.length}</span></div>${ents.map((m) => filaJugador(m, {
         sub: `${esc(m.j.equipo)}${M.proximoPartido(m.j.equipoId) ? ` · ${rivalSub(M, m.j)}` : ''}`,
-        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? `<span class="pill bien">No tienes entrenador · puja ${eur(fe.puja)}</span>` : '', estadoPill(m.j)],
+        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? '<span class="pill bien">No tienes entrenador</span>' : '', estadoPill(m.j)],
         derecha: `<div class="v">${eur(m.precio)}</div><div class="d apag">${d1e(m.media)} pts por jornada</div>`,
       })).join('')}`;
     }

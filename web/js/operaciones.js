@@ -190,7 +190,7 @@ export function textoOp(o, M = null) {
   switch (o.ref[0]) {
     case 'P': {
       // (26 nov) un entrenador (liga premium): sin lo de los jugadores (ni lo que se paga por los de su valor, ni revender)
-      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; ${o.miPuja ? `MI PUJA ACTUAL ${eur(o.miPuja)}; ` : ''}la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)}), pagado con saldo`;
+      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; ${o.miPuja ? `MI PUJA ACTUAL ${eur(o.miPuja)}; ` : ''}la app pujaría ${eur(o.puja)}, lo que vale y NI UN EURO MÁS (los entrenadores casi siempre bajan de valor: no sirven para revender), pagado con saldo`;
       // (lo que se paga en esta liga por los libres va entero una sola vez, en su bloque; aquí, lo de los de su valor,
       // que es con lo que hay que comparar: un +100 % por uno de 600 mil puede ser lo normal; Carlos, 30 oct)
       const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor, o.pid) : null;

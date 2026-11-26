@@ -1926,9 +1926,8 @@ export function analizar(D, H, c, extra = {}) {
     // (solo con los que ya son tuyos: lo mismo que dicen Equipo, la ficha y la IA aunque el plan fiche a alguien)
     const mio = (j) => j && misJs.some((x) => x.id === j.id);
     const c = M.capitanDe(once.lineas.flat().filter(mio)), b = M.banquilloDe(once.lineas, (plantilla || []).filter(mio)) || [];
-    // (sin entrenador y con uno libre que puedes pagar: se dice aquí también, con la puja del paso de pujar del plan)
-    const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
-    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}${fe ? ` No tienes entrenador: ${fe.j.nombre} está libre en el mercado (puja ${eur(fe.puja)}).` : ''}`;
+    // (fichar entrenador ya no se repite aquí: lo dice su paso de pujar del plan; Carlos, 26 nov, 20:22: sin insistir)
+    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}`;
   };
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
   const cacheMejora = {};
@@ -2265,11 +2264,12 @@ export function analizar(D, H, c, extra = {}) {
      jugadores), solo en una liga premium que los tiene. Medido con los datos públicos de J4-J13
      (.github/ia/medir-entrenador.mjs): los 20 que siguen dan 2,45 puntos por jornada de media (5 si gana, 2 si empata) y
      valen de 0,68 a 1,33 M; no ocupan sitio en la plantilla. Por eso, sin ninguno, fichar uno compensa (`M.ficharEntrenador`) */
-  /* (26 nov, noche) lo que se puja por un entrenador libre: un 10 % sobre su valor, redondeado a 10 mil hacia arriba. NO ESTÁ
-     MEDIDO (no hay datos de ninguna liga premium: cuando los haya, medir lo que se paga por ellos); valen sobre 1 M y dan
-     unos 2,4 puntos por jornada, así que un 10 % de más (unos 100 mil) se paga solo en media jornada. Es la ÚNICA cifra:
-     la leen el plan (paso de pujar, plan.js), Equipo, Mercado y la IA */
-  const pujaEntrenador = (precio) => Math.ceil(precio * 1.1 / 10000) * 10000;
+  /* (26 nov, noche) lo que se puja por un entrenador libre: SU VALOR, sin nada de más (Carlos, 26 nov, 20:22: «los
+     entrenadores normalmente solo bajan… no sirven para especular ni para mucho en general»: pagar de más por algo que baja
+     es tirarlo; si otro lo quiere más, se lo lleva y al día siguiente se mira otro). Es la ÚNICA cifra: la leen el plan
+     (paso de pujar, plan.js), Equipo y la IA. REGLA SUYA: los entrenadores no se recomiendan cada dos por tres: solo se
+     propone fichar uno si no tienes ninguno; nunca un segundo, nunca para revender, y van fuera del radar y los chollos */
+  const pujaEntrenador = (precio) => precio;
   M.entrenadoresMercado = M.premium.entrenador
     ? (D.mercado || []).filter((m) => esEnt(m.pid) && m.tipo !== 'manager' && !M.dueno[m.pid])
       .map((m) => { const j = J(m.pid); const precio = num(j.valor) || num(m.precio); return { pid: m.pid, tipo: m.tipo, j, precio, puja: pujaEntrenador(precio), media: num(j.media), pts: M.ppEntrenador(j), miPuja: m.miPuja || null, cierra: m.cierra || null }; })
