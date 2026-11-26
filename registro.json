@@ -3394,7 +3394,8 @@
    "SPORT|136829154": 1795706247000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255907/barca-rival-octavos-copa-reina.html": 1795710158000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261126/1004255902/pendientes-ilias-akhomach.html": 1795710069000,
-   "SPORT|136888920": 1795707019000
+   "SPORT|136888920": 1795707019000,
+   "SPORT|136888251": 1795708781000
   },
   "hechos": [
    {
@@ -3868,7 +3869,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -4788,17 +4789,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 201447,
-  "salida": 23772,
+  "entrada": 203478,
+  "salida": 23889,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.480773,
+  "dolares": 0.481035,
   "reservado": 0
  },
  "recientes": {
@@ -9872,13 +9873,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6676,
+   "ok": 6677,
    "fallos": 0,
-   "ejecuciones": 5455,
+   "ejecuciones": 5456,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T17:01:17.768Z"
+   "ultima": "2026-11-26T17:06:17.958Z"
   }
  },
  "ptsDirecto": {},
@@ -9895,15 +9896,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:01:27.290Z"
+   "ultimaBien": "2026-11-26T17:06:29.554Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:01:27.290Z"
+   "ultimaBien": "2026-11-26T17:06:29.554Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:01:27.290Z"
+   "ultimaBien": "2026-11-26T17:06:29.554Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9911,11 +9912,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:01:27.290Z"
+   "ultimaBien": "2026-11-26T17:06:29.554Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:01:27.290Z"
+   "ultimaBien": "2026-11-26T17:06:29.554Z"
   }
  },
  "avisos": [
