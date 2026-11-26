@@ -18,7 +18,7 @@
    se mira ninguna llave: lo hace quien pinta (hojas.js) y quien se lo cuenta a la IA (ia.js), con `visibles`.
 
    LO MEDIDO con la liga de Carlos (J4-J13) decide qué líneas salen: está encima de LINEAS y en claude/nota-parte.md. */
-import { num, eur, cuando } from './util.js';
+import { num, eur, antesDe } from './util.js';
 import { ofertaDueno, esClausulable } from './motor.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
@@ -136,7 +136,7 @@ export function parte(M, D, opc = {}) {
       if (cands.length) {
         const c = cands[0];
         lineas.push({ tipo: 'rojo', llave: 'dinero', orden: 0, pid: c.j.id, importe: c.of,
-          txt: `Está en negativo: si no vende antes de ${cuando(jo.ini)}, no puntúa en la jornada.`,
+          txt: `Está en negativo: si no vende ${antesDe(jo.ini)}, no puntúa en la jornada.`,
           // (si no lo tiene a la venta, que lo ponga: lo que es seguro en LaLiga es ofertar por lo que está en el mercado)
           accion: `${c.venta ? `Ofértale ${eur(c.of)} por ${c.j.nombre}, que lo tiene a la venta` : `Dile que ponga a la venta a ${c.j.nombre} y ofértale ${eur(c.of)}`}${c.gana >= 0.1 ? `: te da ${d1(c.gana)} pts más por jornada` : ''}.` });
       }
