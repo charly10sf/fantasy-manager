@@ -3073,7 +3073,7 @@
   "3194": "ok",
   "3195": "ok",
   "3196": "ok",
-  "3197": "injured",
+  "3197": "doubtful",
   "3198": "ok",
   "3199": "ok",
   "3200": "ok",
@@ -3368,7 +3368,8 @@
    "AS|https://as.com/futbol/champions/paso-adelante-del-cuti-romero-salta-al-campo-y-mira-hacia-el-barca-f202611-n/": 1795693366000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255789/optimismo-rodri-christensen.html": 1795693326000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/26/aubameyang-sufre-accidente-dirigia-entrenar.html": 1795693975000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-terna-candidatos-psg-suplir-doue-kvaratskhelia-20261126_3482766.html": 1795694210000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-terna-candidatos-psg-suplir-doue-kvaratskhelia-20261126_3482766.html": 1795694210000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/26/aubameyang-antes-del-deportivo-barca-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-radio-coruna/": 1795695972000
   },
   "hechos": [
    {
@@ -3787,11 +3788,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/26/aubameyang-antes-del-deportivo-barca-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-radio-coruna/",
+    "medio": "Cadena SER",
+    "t": 1795695972000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "problemas físicos",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4579,8 +4592,8 @@
     "t": 0
    },
    "3197": {
-    "e": "injured",
-    "t": 1793811974660
+    "e": "doubtful",
+    "t": 1795695974134
    },
    "3207": {
     "e": "ok",
@@ -4730,17 +4743,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 19,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 141689,
-  "salida": 15595,
+  "entrada": 143669,
+  "salida": 16104,
   "cacheLee": 98733,
   "cacheEscribe": 44840,
-  "dolares": 0.44139,
+  "dolares": 0.441843,
   "reservado": 0
  },
  "recientes": {
@@ -9819,13 +9832,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6619,
+   "ok": 6620,
    "fallos": 0,
-   "ejecuciones": 5398,
+   "ejecuciones": 5399,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:21:13.416Z"
+   "ultima": "2026-11-26T12:26:14.134Z"
   }
  },
  "ptsDirecto": {},
@@ -9842,15 +9855,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:21:24.455Z"
+   "ultimaBien": "2026-11-26T12:26:30.988Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:21:24.455Z"
+   "ultimaBien": "2026-11-26T12:26:30.988Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:21:24.455Z"
+   "ultimaBien": "2026-11-26T12:26:30.988Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9858,11 +9871,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:21:24.455Z"
+   "ultimaBien": "2026-11-26T12:26:30.988Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:21:24.455Z"
+   "ultimaBien": "2026-11-26T12:26:30.988Z"
   }
  },
  "avisos": [
