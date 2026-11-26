@@ -132,7 +132,7 @@ try {
       if (obj) {
         const C = montar((D) => { abre(D); const e = D.clasif.find((x) => x.teamId === obj.teamId); const otros = D.plantillas[obj.teamId].filter((f) => f.pid !== obj.pid).slice(0, 2); otros.forEach((f, i) => D.actividad.unshift({ id: `prueba-c${i}`, t: Math.max(desde + HORA, ahora - (i + 1) * HORA), clase: 'blindaje', tipo: 4, pid: f.pid, quienId: e.userId || e.managerId || null, quien: e.manager })); });
         const lc = lineasDe(C, obj.teamId).filter((l) => l.tipo === 'blindajes');
-        lineaSi = lc.length === 1 && lc[0].llave === 'parte' && lc[0].pids.includes(obj.pid) && /no puede blindarlo/.test(lc[0].accion);
+        lineaSi = lc.length === 1 && lc[0].llave === 'parte' && lc[0].pids.includes(obj.pid) && /^No puede proteger a .*: puedes clausularlos? por /.test(lc[0].accion);
         out.txtBlind = lc[0] ? `${lc[0].txt} [${lc[0].dato}] ${lc[0].accion}` : '';
       }
       out.lineaBlind = lineaSi;
@@ -182,7 +182,7 @@ try {
       const conDinero = pinta(G);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Sin blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d/;
+      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
         cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),

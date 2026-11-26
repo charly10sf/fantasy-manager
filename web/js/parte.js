@@ -248,8 +248,10 @@ export function parte(M, D, opc = {}) {
       const mias = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.abierta && !planNo(x.pid) && esClausulable(M, x, ahora)).slice(0, 2);
       if (mias.length) {
         lineas.push({ tipo: 'blindajes', llave: 'parte', orden: 2, pids: mias.map((x) => x.pid),
-          txt: 'Sin blindajes', dato: '0 de 2',
-          accion: `Si clausulas a ${mias.map((x) => `${x.j.nombre} (${eur(x.clausula)})`).join(' o a ')}, no puede blindarlo${mias.length > 1 ? 's' : ''}.` });
+          txt: 'Ha gastado sus 2 blindajes', dato: '0 de 2',
+          // (Carlos, 26 nov, 18:50, con «Si clausulas a X, no puede blindarlo»: «no se entiende») primero lo que no puede hacer él
+          accion: mias.length > 1 ? `No puede proteger a ${mias[0].j.nombre} ni a ${mias[1].j.nombre}: puedes clausularlos por ${eur(mias[0].clausula)} y ${eur(mias[1].clausula)}.`
+            : `No puede proteger a ${mias[0].j.nombre}: puedes clausularlo por ${eur(mias[0].clausula)}.` });
       }
     }
 
