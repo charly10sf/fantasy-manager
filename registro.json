@@ -3390,7 +3390,9 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/ruben-martin-parte-aficion-no-le-perdonado-le-pegado-bronca-julian-alvarez-simeone-poniendo-pecho-20261126_3482294.html": 1795701725000,
    "SPORT|136884904": 1795698136000,
    "SPORT|136875363": 1795702557000,
-   "SPORT|136881446": 1795703413000
+   "SPORT|136881446": 1795703413000,
+   "AS|https://as.com/futbol/cuidados-para-aimar-oroz-f202611-n/": 1795708117000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255869/barca-no-recurrira-sancion-fermin.html": 1795707067000
   },
   "hechos": [
    {
@@ -3833,11 +3835,23 @@
     "motivo": "lesionado ante el Levante",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255869/barca-no-recurrira-sancion-fermin.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795707067000,
+    "id": "1715",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Fermín se pierde los partidos ante Deportivo y Atlético",
+    "motivo": "expulsión por protestas",
+    "plazo": "se perderá dos partidos",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -4753,17 +4767,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187192,
-  "salida": 21667,
+  "entrada": 189324,
+  "salida": 21912,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.478295,
+  "dolares": 0.478631,
   "reservado": 0
  },
  "recientes": {
@@ -9837,13 +9851,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6663,
+   "ok": 6664,
    "fallos": 0,
-   "ejecuciones": 5442,
+   "ejecuciones": 5443,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T15:56:11.695Z"
+   "ultima": "2026-11-26T16:01:12.323Z"
   }
  },
  "ptsDirecto": {},
@@ -9860,15 +9874,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:56:23.309Z"
+   "ultimaBien": "2026-11-26T16:01:21.704Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:56:23.309Z"
+   "ultimaBien": "2026-11-26T16:01:21.704Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:56:23.309Z"
+   "ultimaBien": "2026-11-26T16:01:21.704Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9876,11 +9890,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:56:23.309Z"
+   "ultimaBien": "2026-11-26T16:01:21.704Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:56:23.309Z"
+   "ultimaBien": "2026-11-26T16:01:21.704Z"
   }
  },
  "avisos": [
