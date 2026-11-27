@@ -3402,7 +3402,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261126/1004256039/aperribay-estalla-arbitraje-real-baja-cesped-quejarse.html": 1795732051000,
    "SPORT|136903769": 1795731479000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-sentencia-debate-9_0_2008594734.html": 1795755643000,
-   "El Correo|https://www.elcorreo.com/athletic/malaga-aferra-goles-nino-principal-amenaza-athletic-20261126004439-nt.html": 1795736680000
+   "El Correo|https://www.elcorreo.com/athletic/malaga-aferra-goles-nino-principal-amenaza-athletic-20261126004439-nt.html": 1795736680000,
+   "SPORT|136908943": 1795755664000
   },
   "hechos": [
    {
@@ -3835,7 +3836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4761,17 +4762,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 9145,
-  "salida": 695,
+  "entrada": 11229,
+  "salida": 1179,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.053703,
+  "dolares": 0.054153,
   "reservado": 0
  },
  "recientes": {
@@ -9840,13 +9841,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6871,
+   "ok": 6872,
    "fallos": 0,
-   "ejecuciones": 5613,
+   "ejecuciones": 5614,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T06:06:11.849Z"
+   "ultima": "2026-11-27T06:11:10.690Z"
   }
  },
  "ptsDirecto": {},
@@ -9863,15 +9864,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:06:20.683Z"
+   "ultimaBien": "2026-11-27T06:11:23.927Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:06:20.683Z"
+   "ultimaBien": "2026-11-27T06:11:23.927Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:06:20.683Z"
+   "ultimaBien": "2026-11-27T06:11:23.927Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9879,11 +9880,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:06:20.683Z"
+   "ultimaBien": "2026-11-27T06:11:23.927Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:06:20.683Z"
+   "ultimaBien": "2026-11-27T06:11:23.927Z"
   }
  },
  "avisos": [
