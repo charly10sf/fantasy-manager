@@ -5291,6 +5291,11 @@
    "h": "592eb84582ab",
    "desde": 1795471874755,
    "fin": 1795470989654
+  },
+  "14|135": {
+   "h": "482d22d0a37b",
+   "desde": 1795816572246,
+   "fin": 1795816572246
   }
  },
  "iaDias": [
@@ -5799,7 +5804,8 @@
    "6106243",
    "6106421",
    "6106391",
-   "6106269"
+   "6106269",
+   "5868146"
   ],
   "equipos": [
    "9866",
@@ -8096,7 +8102,7 @@
     "e": "Levante",
     "g": {
      "liga": [
-      3,
+      4,
       0,
       0,
       0,
@@ -9037,7 +9043,7 @@
     "e": "Racing Santander",
     "g": {
      "liga": [
-      11,
+      12,
       1,
       0,
       0,
@@ -9050,8 +9056,8 @@
     "e": "Real Betis",
     "g": {
      "liga": [
+      4,
       2,
-      1,
       0,
       0,
       0
@@ -10107,13 +10113,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7084,
+   "ok": 7086,
    "fallos": 0,
-   "ejecuciones": 5804,
+   "ejecuciones": 5805,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T21:51:11.820Z"
+   "ultima": "2026-11-27T21:56:11.750Z"
   }
  },
  "ptsDirecto": {
@@ -10167,27 +10173,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:51:14.920Z"
+   "ultimaBien": "2026-11-27T21:56:15.380Z"
   }
  },
  "avisos": [
