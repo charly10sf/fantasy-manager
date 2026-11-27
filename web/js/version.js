@@ -31,7 +31,7 @@ export const NOVEDADES = [
     // puesto y tus puntos, no se recoge); Invitar sale de la cabecera del móvil y va en una tarjeta dorada arriba de Ajustes
     // (hojas.js, `.inv-oro`); el ordenador lleva el mismo material. El cristal se quita solo donde no toca (sin ajuste).
     // ESTA VERSIÓN SE CUENTA A TODOS con la tarjeta pequeña (Carlos, 27 nov: «la 0.9, la del rediseño gordo»), una línea.
-    v: '0.9', f: '2026-11-27', t: 'Nuevo diseño', todos: true,
+    v: '0.9', f: '2026-11-28', h: '00:52', t: 'Nuevo diseño', todos: true,
     aviso: { d: 'cristal', eti: 'Novedades', t: 'Nuevo diseño', x: 'La app estrena aspecto: más limpia, con la barra y los menús de cristal. Todo sigue donde estaba.' },
     cosas: [
       { tipo: 'nuevo', d: 'cristal', t: 'Nuevo diseño', x: 'La app estrena aspecto en el móvil y en el ordenador: la barra de abajo y los menús flotan como un cristal, las fichas son más limpias y en la cabecera ves tu puesto y tus puntos. Todo sigue donde estaba.', importante: true },
