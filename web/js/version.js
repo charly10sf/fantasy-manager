@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5d';
+export const VERSION = '0.9';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,21 @@ export const VERSION = '0.8.5d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (27 nov, Carlos: «un rediseño completo… mucho más minimalista, que denote más calidad y con diseño y funciones tipo
+    // Liquid»; lo decidido, en claude/rediseno-liquid-afinado.md del proyecto) EL REDISEÑO «LIQUID»: la sección «0.9» del
+    // final de app.css (con la clase `lq` de <html>) y liquid.js (lo que se mueve). La barra de abajo flota en una cápsula
+    // de cristal, con la gota en la pestaña activa, y se encoge al bajar; la cabecera son dos cápsulas (la de la liga, con tu
+    // puesto y tus puntos, no se recoge); Invitar sale de la cabecera del móvil y va en una tarjeta dorada arriba de Ajustes
+    // (hojas.js, `.inv-oro`); el ordenador lleva el mismo material. El cristal se quita solo donde no toca (sin ajuste).
+    // ESTA VERSIÓN SE CUENTA A TODOS con la tarjeta pequeña (Carlos, 27 nov: «la 0.9, la del rediseño gordo»), una línea.
+    v: '0.9', f: '2026-11-27', t: 'Nuevo diseño', todos: true,
+    aviso: { d: 'pantalla', eti: 'Novedades', t: 'Nuevo diseño', x: 'La app estrena aspecto: más limpia, con la barra y los menús de cristal. Todo sigue donde estaba.' },
+    cosas: [
+      { tipo: 'nuevo', d: 'pantalla', t: 'Nuevo diseño', x: 'La app estrena aspecto en el móvil y en el ordenador: la barra de abajo y los menús flotan como un cristal, las fichas son más limpias y en la cabecera ves tu puesto y tus puntos. Todo sigue donde estaba.', importante: true },
+      { tipo: 'mejora', d: 'regalo', t: 'Invitar, en Ajustes', x: 'Invitar a un amigo está ahora arriba del todo de Ajustes, en una tarjeta dorada.' },
+    ],
+  },
   {
     // (27 nov, Carlos: «quita el aviso de "es el último plan de hoy a las xx.xx, puede que no esté al día"; que solo salga si han
     // pasado 13 h desde el último plan») vistas.js, rama `esIA` de `planHTML`: solo con 13 h o más desde `P.t`.

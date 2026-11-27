@@ -1059,6 +1059,13 @@ export function ajustes(S) {
   const abiertas = S.ajAbiertas || {};
   const dueno = avisosGuardados().admin;
   let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  // (0.9; Carlos, 27 nov, 13:31: Invitar «dentro de Ajustes, pero bien a la vista, no dentro de ningún submenú») la tarjeta
+  // dorada de invitar, arriba del todo, encima del buscador. Dice lo mismo que decía su fila de «Cuenta y liga» (rivales por
+  // elegir, el contador o el premio) y sale en los mismos casos: con tu liga y con las invitaciones en marcha
+  if (!enDemo() && ses && invitarOn()) {
+    const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
+    h += `<button class="inv-oro" data-accion="invitarAmigo"><span class="inv-oro-ic">${icono('estrella')}</span><span class="inv-oro-tx"><b>Invita a un amigo</b><small>${pe ? 'Tienes rivales por elegir' : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales'}</small></span><span class="inv-oro-ir">${pe ? 'Elegir' : 'Invitar'}</span></button>`;
+  }
   // el buscador; debajo, avisar de un fallo y el tutorial (lo del fallo va arriba desde el 25 oct, lo pidió Carlos)
   h += `<div class="aj-busca">${icono('buscar')}<input id="buscaAj" type="search" placeholder="Buscar en Ajustes" aria-label="Buscar en Ajustes" autocomplete="off" value="${esc(S.ajBusca || '')}"></div>`;
   {
@@ -1097,9 +1104,9 @@ export function ajustes(S) {
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
   // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
   if (!enDemo() && ses && invitarOn()) {
-    const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
+    const uid = S.D && S.D.yo && S.D.yo.userId;
     if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Pon el código de quien te pasó la app', btnA('ponerCodigo', 'Poner código', { sec: false }), 'codigo invitacion amigo');
-    c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
+    // («Invita a un amigo» ya no es una fila de aquí: desde la 0.9 es la tarjeta dorada de arriba del todo de Ajustes)
   }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
   /* ---- (0.8a) apodos de los rivales ---- */
