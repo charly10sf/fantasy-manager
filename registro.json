@@ -4747,32 +4747,31 @@
    "SPORT|136892989": 1795715495000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000,
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795759273282
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 11229,
-  "salida": 1179,
+  "entrada": 13048,
+  "salida": 1304,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.054153,
+  "dolares": 0.054397,
   "reservado": 0
  },
  "recientes": {
@@ -9841,13 +9840,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6873,
+   "ok": 6874,
    "fallos": 0,
-   "ejecuciones": 5615,
+   "ejecuciones": 5616,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T06:16:12.469Z"
+   "ultima": "2026-11-27T06:21:22.619Z"
   }
  },
  "ptsDirecto": {},
@@ -9864,15 +9863,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:16:23.864Z"
+   "ultimaBien": "2026-11-27T06:21:37.322Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:16:23.864Z"
+   "ultimaBien": "2026-11-27T06:21:37.322Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:16:23.864Z"
+   "ultimaBien": "2026-11-27T06:21:37.322Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9880,11 +9879,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:16:23.864Z"
+   "ultimaBien": "2026-11-27T06:21:37.322Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:16:23.864Z"
+   "ultimaBien": "2026-11-27T06:21:37.322Z"
   }
  },
  "avisos": [
