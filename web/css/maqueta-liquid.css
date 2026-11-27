@@ -360,8 +360,10 @@ html.dD .marcador { border-radius: 22px; }
    del contenido son translúcidas (sin desenfoque: no cuestan) para que la dejen pasar; la gota es una lente clara.
    ===================================================================================================================== */
 html.dM { --luz: radial-gradient(80% 46% at 14% 0%, rgba(238, 28, 60, 0.34), transparent 72%), radial-gradient(60% 34% at 98% 5%, rgba(255, 120, 70, 0.15), transparent 72%), radial-gradient(90% 40% at 88% 100%, rgba(238, 28, 60, 0.13), transparent 72%);
-  --cristal: rgba(30, 24, 30, 0.36); --cristal-grueso: rgba(24, 18, 24, 0.68); --cristal-desenfoque: blur(18px) saturate(200%); --cristal-borde: rgba(255, 255, 255, 0.07);
-  --cristal-brillo: inset 1px 1px 0 rgba(255, 255, 255, 0.30), inset -1px -1px 0 rgba(255, 255, 255, 0.10), inset 0 0 16px rgba(255, 255, 255, 0.045);
+  --cristal: rgba(30, 24, 30, 0.34); --cristal-grueso: rgba(24, 18, 24, 0.68); --cristal-desenfoque: blur(18px) saturate(200%); --cristal-borde: rgba(255, 255, 255, 0.06);
+  /* el canto: luz arriba a la izquierda y abajo a la derecha, un reflejo que cae desde arriba y sombra por dentro abajo (da grosor) */
+  --cristal-brillo: inset 1px 1px 0 rgba(255, 255, 255, 0.42), inset -1px -1px 0 rgba(255, 255, 255, 0.15), inset 0 14px 18px -14px rgba(255, 255, 255, 0.14), inset 0 -14px 18px -14px rgba(0, 0, 0, 0.32);
+  --cristal-sombra: 0 0 0 0.5px rgba(0, 0, 0, 0.5), 0 14px 30px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.28);
   --gota: linear-gradient(180deg, rgba(255, 255, 255, 0.21), rgba(255, 255, 255, 0.08)); --gota-canto: inset 1px 1px 0 rgba(255, 255, 255, 0.34), inset -1px -1px 0 rgba(255, 255, 255, 0.10), 0 2px 10px rgba(0, 0, 0, 0.25);
   --muelle-ms: 440ms; --r-tarj: 22px; --r-ctl: 14px; }
 html.dM body::before { height: 100%; }
@@ -374,21 +376,51 @@ html.dM .nav button { color: rgba(244, 242, 243, 0.80); }
 html.dM .nav button.activo { color: #fff; }
 html.dM .tabs-in.con-pil::before, html.dM .tabs button.activo { background: linear-gradient(180deg, rgba(255, 255, 255, 0.19), rgba(255, 255, 255, 0.09)); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.26), inset -1px -1px 0 rgba(255, 255, 255, 0.08); }
 html.dM .tabs-in.con-pil button.activo { background: none; box-shadow: none; }
-html.dM .tabs-in.con-pil.pil-oro::before { background: #ffc547; box-shadow: none; }
+/* la pestaña dorada (el parte): una lente dorada con el texto en oro, no un bloque amarillo */
+html.dM .tabs-in.con-pil.pil-oro::before, html.dM .tabs-in:not(.con-pil) button.tab-oro.activo { background: linear-gradient(180deg, rgba(255, 197, 71, 0.36), rgba(255, 197, 71, 0.14)); box-shadow: inset 1px 1px 0 rgba(255, 230, 165, 0.55), inset -1px -1px 0 rgba(255, 197, 71, 0.22), 0 0 18px rgba(255, 197, 71, 0.16); }
+html.dM .tabs button.tab-oro.activo { color: #ffd676; }
+html.dM .tabs button.tab-oro.activo .tab-n.oro { background: #ffc547; color: #1a1420; }
+html.dM .tabs button.tab-oro:not(.activo) { background: none; box-shadow: none; }
+/* el número de una pestaña: más pequeño y arriba del todo de su esquina, para que pise menos el texto (el hueco de cada
+   pestaña no se toca: en Equipo son cinco de igual ancho y van justas) */
+html.dM .tabs .tab-n { top: 1px; right: 1px; min-width: 15px; height: 15px; padding: 0 3px; font: 700 10.5px/15px 'Barlow'; background: rgba(255, 255, 255, 0.18); color: var(--texto); }
+html.dM .tabs .tab-n.rojo { background: var(--rojo-btn); color: #fff; }
 /* la cabecera: sin banda; dos cápsulas de cristal y, al desplazarse, un apagado suave detrás */
 html.dM .sup::before { display: none; }
-html.dM .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -20px; background: linear-gradient(rgba(5, 5, 6, 0.62), rgba(5, 5, 6, 0.30) 60%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
+html.dM .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -24px; background: linear-gradient(rgba(5, 5, 6, 0.84), rgba(5, 5, 6, 0.56) 42%, rgba(5, 5, 6, 0.26) 76%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
 html.dM.desplazada .sup::after { opacity: 1; }
 html.dM .sup-liga, html.dM .sup-btns { position: relative; z-index: 0; }
 html.dM .sup-liga { flex: 0 1 auto; min-width: 0; margin-right: auto; }
 html.dM .sup-marca { z-index: 1; }
-html.dM .sup-liga::before, html.dM .sup-btns::before { content: ''; position: absolute; z-index: -1; border-radius: 24px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
-html.dM .sup-liga::after, html.dM .sup-btns::after { content: ''; position: absolute; z-index: -1; border-radius: 24px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 6px 18px rgba(0, 0, 0, 0.32); pointer-events: none; }
-html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -5px -12px -5px -54px; }
-html.dM .sup-btns::before, html.dM .sup-btns::after { inset: 0 -6px 0 -4px; }
+html.dM .sup-liga::before, html.dM .sup-btns::before { content: ''; position: absolute; z-index: -1; border-radius: 25px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
+html.dM .sup-liga::after, html.dM .sup-btns::after { content: ''; position: absolute; z-index: -1; border-radius: 25px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 8px 20px rgba(0, 0, 0, 0.34), 0 1px 4px rgba(0, 0, 0, 0.25); pointer-events: none; }
+html.dM .sup-liga { display: flex; flex-direction: column; justify-content: center; min-height: 36px; }
+html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -7px -12px -7px -54px; }
+html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -6px -1px -4px; }
+html.dM .sup .sup-beta { bottom: -5px; }
+/* en pantallas estrechas las dos cápsulas se tocaban: más hueco entre ellas y la de la liga se sale menos */
+@media (max-width: 380px) { html.dM .sup { gap: 14px; } html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -7px -8px -7px -56px; } html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -4px -1px -2px; } }
+/* al bajar, la cápsula de los botones se recoge a solo iconos (como la barra de abajo) y vuelve al subir */
+html.dM .sup .b-ico { transition: min-width var(--muelle-ms) var(--muelle), font-size var(--muelle-ms) var(--muelle), margin var(--muelle-ms) var(--muelle), transform var(--toque); }
+html.dM.nav-min:not(.con-hoja) .sup .b-ico { min-width: 42px; font-size: 0; gap: 0; }
+html.dM.nav-min:not(.con-hoja) .sup .b-preg { margin: 0; }
+/* el botón de la pantalla abierta (Pregunta, Ajustes), con la misma lente que la pestaña activa de abajo */
+html.dM .sup .b-ico.activo { background: var(--gota); box-shadow: var(--gota-canto); }
+/* «Invitar dentro de Ajustes» (html.inv-aj, para comparar): fuera de la cápsula; en Ajustes ya tiene su fila */
+html.inv-aj .sup #bInvitar { display: none; }
 html.dM .sup .b-ico, html.dM .sup .b-ico:not(.b-inv):not(.b-preg) { background: none; box-shadow: none; border-radius: 20px; }
 html.dM .sup-toca, html.dM .sup-tx { color: var(--texto-2); } /* «Al día» sobre el cristal: con el gris de antes se quedaba en 3,7:1 */
 html.dM .sup .sup-beta { box-shadow: 0 0 0 2px rgba(26, 18, 22, 0.92); }
+/* con el selector de sección pegado bajo la cabecera, lo que asoma entre las dos cápsulas se apaga (html.tabs-pegada, del guion) */
+html.dM.tabs-pegada .tabs { background: linear-gradient(rgba(5, 5, 6, 0.30), rgba(5, 5, 6, 0.16) 12px, rgba(5, 5, 6, 0) 34px); }
+/* debajo de la barra: el apagado, más suave detrás de la barra (deja pasar más luz) y cerrado del todo en el borde */
+html.dM .nav::before { background: linear-gradient(rgba(5, 5, 6, 0), rgba(5, 5, 6, 0.28) 27%, rgba(5, 5, 6, 0.46) 60%, rgba(5, 5, 6, 0.80) 87%, rgba(5, 5, 6, 0.98) 96%); }
+/* los títulos de dentro de cada pantalla que seguían en mayúsculas, como los demás (con tit-c vuelven a las de C) */
+html.dM:not(.tit-c) :is(.grupo, .pleg > summary b, .llevas-t, .cambio-once .co-t) { font-family: 'Barlow', sans-serif; font-weight: 600; text-transform: none; letter-spacing: 0; }
+html.dM:not(.tit-c) .grupo { font-size: 15px; }
+html.dM:not(.tit-c) .graf-cab > span { font-weight: 600; font-size: 14px; text-transform: none; letter-spacing: 0; }
+/* (fallo de hoy en main, para el paso 2) la cifra de la caja de cierre del plan se partía en dos líneas: «5,42» y «M» */
+html.dM .cierre .v { white-space: nowrap; flex: none; }
 html.dM.sin-cristal .sup::after { background: var(--negro); inset: 0; }
 html.dM.sin-cristal main { --s1: #111114; --s2: #19191e; --s3: #24242b; }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {

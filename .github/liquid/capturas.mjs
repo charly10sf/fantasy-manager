@@ -1,6 +1,6 @@
 // (rediseño «Liquid», maqueta) capturas de web/maqueta-liquid.html: cada dirección en cada pantalla, arriba del todo y
 // desplazada, a 390×844. Con la web servida en local (python3 -m http.server 8765 dentro de web/):
-//   node .github/liquid/capturas.mjs <carpeta> [dirs=A,B,C,D,M,0] [motor=chromium|webkit] [pantallas] [opciones: sc,n2,tx160,w320,rt,pc,tc]
+//   node .github/liquid/capturas.mjs <carpeta> [dirs=A,B,C,D,M,0] [motor=chromium|webkit] [pantallas] [opciones: sc,n2,tx160,w320,w360,rt,pc,tc,inv]
 // CARAS=<caras.json de caras.mjs> mete las caras y los escudos de la liga de ejemplo sin esperar a LaLiga.
 import fs from 'node:fs';
 const PW = process.env.PW_MODULO || '/opt/npm-tools/node_modules/playwright/index.mjs';
@@ -36,7 +36,7 @@ for (const d of dirsA.split(',')) {
     const ctx = await contexto(), p = await ctx.newPage();
     p.on('pageerror', (e) => console.log('ERROR', d, e.message));
     if (op.has('rt')) { const s = await ctx.newCDPSession(p); await s.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] }); }
-    await p.goto(`${BASE}/maqueta-liquid.html?dentro=1&d=${d}&p=hoy${top ? '&top=1' : ''}${motor === 'chromium' ? '&cap=1' : ''}${op.has('sc') ? '&sc=1' : ''}${op.has('n2') ? '&n=2' : ''}${tx ? `&tx=${tx.slice(2)}` : ''}${op.has('tc') ? '&tc=1' : ''}`);
+    await p.goto(`${BASE}/maqueta-liquid.html?dentro=1&d=${d}&p=hoy${top ? '&top=1' : ''}${motor === 'chromium' ? '&cap=1' : ''}${op.has('sc') ? '&sc=1' : ''}${op.has('inv') ? '&inv=1' : ''}${op.has('n2') ? '&n=2' : ''}${tx ? `&tx=${tx.slice(2)}` : ''}${op.has('tc') ? '&tc=1' : ''}`);
     await p.waitForFunction(() => document.documentElement.classList.contains('maq-lista'), null, { timeout: 60000 });
     await p.addStyleTag({ content: QUIETO });
     for (const pa of mias) {

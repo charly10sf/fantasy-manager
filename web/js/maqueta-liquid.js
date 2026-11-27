@@ -36,6 +36,7 @@ async function dentro() {
     };
   }
   if (Q.get('tx')) texto(Q.get('tx'));
+  if (Q.get('inv') === '1') html.classList.add('inv-aj'); // Invitar, fuera de la cabecera (dentro de Ajustes)
   if (Q.get('tc') === '1') html.classList.add('tit-c'); // la mezcla, con los títulos condensados de C
   // ?bl=12: probar con menos desenfoque (para las medidas)
   if (Q.get('bl')) { const st = document.createElement('style'); st.textContent = `html.dL { --cristal-desenfoque: blur(${+Q.get('bl')}px) saturate(170%) !important; }`; document.head.append(st); }
@@ -120,16 +121,23 @@ function texto(v) {
 function movimiento() {
   // 1. desplazada (la cabecera pasa a cristal) y baja/sube (la barra se encoge al bajar y vuelve al subir)
   let y0 = 0, pend = false, acum = 0;
+  // el selector de sección, ¿pegado ya bajo la cabecera? (la mezcla apaga lo que asoma entre las dos cápsulas)
+  const pegada = () => { const t = document.querySelector('#vista .tabs'), s = document.querySelector('.sup'); html.classList.toggle('tabs-pegada', !!(t && s && window.scrollY > 6 && t.getBoundingClientRect().top <= s.getBoundingClientRect().bottom + 1)); };
   const mirar = () => {
     pend = false;
     const y = Math.max(0, window.scrollY);
     html.classList.toggle('desplazada', y > 6);
+    pegada();
     const d = y - y0; y0 = y;
-    if (y < 40) { html.classList.remove('nav-min'); acum = 0; return; }
+    if (y < 40) { if (html.classList.contains('nav-min')) { html.classList.remove('nav-min'); seguirCapsulas(); } acum = 0; return; }
     acum = (Math.sign(d) === Math.sign(acum) ? acum : 0) + d;
+    const antes = html.classList.contains('nav-min');
     if (acum > 28) html.classList.add('nav-min');
     else if (acum < -18) html.classList.remove('nav-min');
+    if (antes !== html.classList.contains('nav-min')) seguirCapsulas();
   };
+  // (solo capturas y vídeos) mientras la cápsula de los botones se recoge o se abre, su cristal de captura la sigue
+  const seguirCapsulas = () => { if (!html.classList.contains('maq-captura')) return; const fin = performance.now() + 650; const paso = () => { capsulasCaptura(); if (performance.now() < fin) requestAnimationFrame(paso); }; requestAnimationFrame(paso); };
   window.addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(mirar); } }, { passive: true });
 
   // 1b. escribiendo en Pregunta (el teclado abierto): la barra se aparta
@@ -247,9 +255,11 @@ function movimiento() {
     const liga = document.querySelector('.sup-liga'), btns = document.querySelector('.sup-btns'); if (!liga || !btns) return;
     if (!capsulas) capsulas = [0, 1].map(() => { const d = document.createElement('div'); d.className = 'maq-capsula'; document.body.append(d); return d; });
     const a = liga.getBoundingClientRect(), b = btns.getBoundingClientRect(), W = window.innerWidth;
-    [[a.left - 54, a.top - 5, a.right + 12, a.bottom + 5], [b.left - 4, b.top, b.right + 6, b.bottom]].forEach(([x0, y0, x1, y1], i) => {
+    // cuánto se sale cada cápsula de su caja lo dice el propio CSS (cambia con el ancho de la pantalla)
+    const caja = (el, r) => { const c = getComputedStyle(el, '::before'), n = (v) => parseFloat(v) || 0; return [r.left + n(c.left), r.top + n(c.top), r.right - n(c.right), r.bottom - n(c.bottom)]; };
+    [caja(liga, a), caja(btns, b)].forEach(([x0, y0, x1, y1], i) => {
       const iz = Math.min(60, Math.max(0, x0)), de = Math.min(60, Math.max(0, W - x1)), ar = Math.min(60, Math.max(0, y0)), ab = 60;
-      capsulas[i].style.cssText = `left:${x0 - iz}px;top:${y0 - ar}px;width:${x1 - x0 + iz + de}px;height:${y1 - y0 + ar + ab}px;clip-path:inset(${ar}px ${de}px ${ab}px ${iz}px round 24px)`;
+      capsulas[i].style.cssText = `left:${x0 - iz}px;top:${y0 - ar}px;width:${x1 - x0 + iz + de}px;height:${y1 - y0 + ar + ab}px;clip-path:inset(${ar}px ${de}px ${ab}px ${iz}px round 25px)`;
     });
   };
 
@@ -266,9 +276,9 @@ function movimiento() {
    ===================================================================================================================== */
 function fuera() {
   let dir = (Q.get('d') || 'M').toUpperCase(), pant = Q.get('p') || 'hoy', y = Q.get('y') === '1';
-  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '', tc: Q.get('tc') === '1' };
+  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '', tc: Q.get('tc') === '1', inv: Q.get('inv') === '1' };
   const marco = document.getElementById('marco');
-  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}`;
+  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.inv ? '&inv=1' : ''}`;
   marco.innerHTML = `
     <div class="mq-movil"><div class="mq-pant"><iframe id="mq-app" title="La app con la dirección elegida" src="maqueta-liquid.html${dirDe()}"></iframe>
       <div class="mq-teclado" aria-hidden="true">${teclado()}</div></div></div>
@@ -280,10 +290,10 @@ function fuera() {
     document.getElementById('mq-sel').innerHTML = `
       <div class="mq-fila"><b>Dirección</b>${DIRS.map(([k, t]) => b('d', k, t, dir === k)).join('')}</div>
       <div class="mq-fila"><b>Pantalla</b>${PANTS.map(([k, t]) => b('p', k, t, pant === k)).join('')}</div>
-      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'tc', 'Títulos condensados (mezcla)', op.tc)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
+      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'inv', 'Invitar dentro de Ajustes', op.inv)}${b('o', 'tc', 'Títulos condensados (mezcla)', op.tc)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
         <span class="mq-anchos">${['320', '360', '', '430'].map((w) => b('w', w, w || '390', op.w === w)).join('')}</span>
         <a class="mq-entera" href="maqueta-liquid.html${dirDe()}">Pantalla completa ↗</a></div>`;
-    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.w ? `&w=${op.w}` : ''}`);
+    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.inv ? '&inv=1' : ''}${op.w ? `&w=${op.w}` : ''}`);
     marco.classList.toggle('con-teclado', pant === 'pregunta');
     marco.style.setProperty('--mq-w', `${op.w || 390}px`);
     marco.dataset.w = op.w || '390';
@@ -295,6 +305,7 @@ function fuera() {
     if (d.p) { pant = d.p; manda({ maq: 'ver', p: pant, y: pant === 'barra' ? 1 : (y ? 1 : 0) }); }
     if (d.w != null && 'w' in d) op.w = d.w;
     if (d.o === 'y') { y = !y; manda({ maq: 'ver', p: pant, y: y ? 1 : 0 }); }
+    if (d.o === 'inv') { op.inv = !op.inv; manda({ maq: 'clase', c: 'inv-aj', si: op.inv }); }
     if (d.o === 'tc') { op.tc = !op.tc; manda({ maq: 'clase', c: 'tit-c', si: op.tc }); }
     if (d.o === 'sc') { op.sc = !op.sc; manda({ maq: 'clase', c: 'sin-cristal', si: op.sc }); }
     if (d.o === 'n2') { op.n2 = !op.n2; manda({ maq: 'clase', c: 'nivel-2', si: op.n2 }); }
