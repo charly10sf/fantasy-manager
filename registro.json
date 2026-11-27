@@ -3217,12 +3217,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
    "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
-   "SPORT|136786191": 1795516703000,
    "SPORT|136790672": 1795518790000,
    "SPORT|136786855": 1795518496000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
@@ -9816,13 +9814,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6926,
+   "ok": 6927,
    "fallos": 0,
-   "ejecuciones": 5668,
+   "ejecuciones": 5669,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:36:20.539Z"
+   "ultima": "2026-11-27T10:41:14.519Z"
   }
  },
  "ptsDirecto": {},
@@ -9839,15 +9837,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:36:34.015Z"
+   "ultimaBien": "2026-11-27T10:41:25.180Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:36:34.015Z"
+   "ultimaBien": "2026-11-27T10:41:25.180Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:36:34.015Z"
+   "ultimaBien": "2026-11-27T10:41:25.180Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9855,11 +9853,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:36:34.015Z"
+   "ultimaBien": "2026-11-27T10:41:25.180Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:36:34.015Z"
+   "ultimaBien": "2026-11-27T10:41:25.180Z"
   }
  },
  "avisos": [
