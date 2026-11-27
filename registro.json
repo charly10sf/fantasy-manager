@@ -2371,6 +2371,21 @@
     "extra": 0,
     "jugador": "Iván Romero"
    }
+  },
+  {
+   "clave": "directo|135|Pablo García|gol1",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126427473944740201",
+   "t": "2026-11-27T21:26:32.051Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "135",
+    "equipo": "87",
+    "min": 66,
+    "extra": 0,
+    "jugador": "Pablo García"
+   }
   }
  ],
  "estados": {
@@ -4944,16 +4959,16 @@
   "dia": "2026-11-27",
   "llamadas": {
    "clasificar": 55,
-   "redactar": 14,
+   "redactar": 16,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 157531,
-  "salida": 27561,
-  "cacheLee": 94308,
+  "entrada": 161003,
+  "salida": 27792,
+  "cacheLee": 109234,
   "cacheEscribe": 41327,
-  "dolares": 0.326921,
+  "dolares": 0.337667,
   "reservado": 0
  },
  "recientes": {
@@ -5091,10 +5106,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T22:26:29.778Z",
-    "texto": "🟥 Roja para Djene en el 90': el Getafe termina con diez en el Coliseum y pierde 0-2 con el Atlético.\n\nEl defensa se queda en -6 puntos. Si lo tenías, la jornada se le ha torcido del todo."
-   },
-   {
     "t": "2026-11-22T22:26:31.803Z",
     "texto": "⚽ Grimaldo marca de penalti en el 90+2' y el Atlético cierra el 0-3 en el Coliseum.\n\nEl lateral se va a 15 puntos, casi el doble de su media, y es el defensa que más puntos lleva esta temporada. Con el partido ya acabado, es jornada redonda si lo tenías."
    },
@@ -5109,6 +5120,10 @@
    {
     "t": "2026-11-27T20:46:18.959Z",
     "texto": "⚽ Se rompe el partido en el Ciutat de València: el Levante se adelanta en el 42' y es 1-0 al Racing.\n\nIván Romero marca y lleva 4 puntos. Es su cuarto gol entre Liga, Champions y Copa. Rey, que lo asiste, también va por 4."
+   },
+   {
+    "t": "2026-11-27T21:26:32.053Z",
+    "texto": "⚽ Pablo García empata para el Racing en el 66': Levante 1-1 Racing. Pablo García va por 5 puntos de momento y Almeida, que da el pase, por 4."
    }
   ],
   "novedades": [
@@ -10034,17 +10049,33 @@
    "w": "2026-11-27T20:43:22Z",
    "f": "2026-11-27T20:46:11.451Z",
    "rf": "44:17"
+  },
+  "fm|135|1662379|66": {
+   "j": "Pablo García",
+   "m": "66'",
+   "f": "2026-11-27T21:26:23.052Z",
+   "rf": "67:24",
+   "casado": true
+  },
+  "directo|135|Pablo García|gol1": {
+   "j": "Pablo García",
+   "m": "66'",
+   "e": "2026-11-27T21:26:23.052Z",
+   "re": "67'",
+   "w": "2026-11-27T21:24:37Z",
+   "f": "2026-11-27T21:26:23.052Z",
+   "rf": "67:24"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7072,
+   "ok": 7074,
    "fallos": 0,
-   "ejecuciones": 5798,
+   "ejecuciones": 5799,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T21:21:25.446Z"
+   "ultima": "2026-11-27T21:26:23.052Z"
   }
  },
  "ptsDirecto": {
@@ -10059,6 +10090,18 @@
    "g": 0,
    "a": 1,
    "t": 1795812371451
+  },
+  "14|135|2712": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795814783052
+  },
+  "14|135|1529": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795814783052
   }
  },
  "golesAnulados": {
@@ -10074,27 +10117,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:21:31.450Z"
+   "ultimaBien": "2026-11-27T21:26:37.132Z"
   }
  },
  "avisos": [
