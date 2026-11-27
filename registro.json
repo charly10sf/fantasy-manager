@@ -3219,7 +3219,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
-   "SPORT|136783558": 1795512757000,
    "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
@@ -9828,13 +9827,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6913,
+   "ok": 6914,
    "fallos": 0,
-   "ejecuciones": 5655,
+   "ejecuciones": 5656,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T09:31:11.043Z"
+   "ultima": "2026-11-27T09:36:11.778Z"
   }
  },
  "ptsDirecto": {},
@@ -9851,15 +9850,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:31:28.028Z"
+   "ultimaBien": "2026-11-27T09:36:19.701Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:31:28.028Z"
+   "ultimaBien": "2026-11-27T09:36:19.701Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:31:28.028Z"
+   "ultimaBien": "2026-11-27T09:36:19.701Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9867,11 +9866,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:31:28.028Z"
+   "ultimaBien": "2026-11-27T09:36:19.701Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:31:28.028Z"
+   "ultimaBien": "2026-11-27T09:36:19.701Z"
   }
  },
  "avisos": [
