@@ -3253,7 +3253,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261124/1004255072/aramburu-luka-sucic-margen-zubieta-dos-dias-partido-londres.html": 1795548702000,
-   "SPORT|136809414": 1795547078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/24/mourinho-vestuario-vegas-pasa-vegas-queda-vegas.html": 1795559768000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255140/posible-once-barca-baku-flick-estrenara-tridente-dia-rotaciones.html": 1795586400000,
@@ -3447,7 +3446,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000,
    "SPORT|136260402": 1795800660000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000,
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000
+   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000,
+   "SPORT|136940118": 1795802506000
   },
   "hechos": [
    {
@@ -3982,7 +3982,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -4900,17 +4900,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 141657,
-  "salida": 25526,
+  "entrada": 143683,
+  "salida": 25953,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.290189,
+  "dolares": 0.290605,
   "reservado": 0
  },
  "recientes": {
@@ -9979,13 +9979,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7028,
+   "ok": 7029,
    "fallos": 0,
-   "ejecuciones": 5770,
+   "ejecuciones": 5771,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T19:01:13.649Z"
+   "ultima": "2026-11-27T19:06:11.280Z"
   }
  },
  "ptsDirecto": {},
@@ -10002,15 +10002,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:01:43.310Z"
+   "ultimaBien": "2026-11-27T19:06:22.460Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:01:43.310Z"
+   "ultimaBien": "2026-11-27T19:06:22.460Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:01:43.310Z"
+   "ultimaBien": "2026-11-27T19:06:22.460Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10018,11 +10018,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:01:43.310Z"
+   "ultimaBien": "2026-11-27T19:06:22.460Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:01:43.310Z"
+   "ultimaBien": "2026-11-27T19:06:22.460Z"
   }
  },
  "avisos": [
