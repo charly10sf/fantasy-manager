@@ -80,7 +80,10 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Con qué se compila
+        # Xcode 27.1 mientras la imagen lo tenga: las subidas con Xcode 27.2 (27B52) las rechaza ahora App Store Connect
+        # (ITMS-90534, foros de Apple, hilos 854417 y 854462). Si App Store Connect ya lo acepta, se quita esta línea.
         run: |
+          if [ -d /Applications/Xcode_27.1.app ]; then sudo xcode-select -s /Applications/Xcode_27.1.app; fi
           xcodebuild -version
           xcodebuild -showsdks | grep -i iphoneos || true
           SDK=$(xcodebuild -showsdks | grep -oE 'iphoneos[0-9]+' | head -1 | grep -oE '[0-9]+')

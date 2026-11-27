@@ -121,9 +121,18 @@ final class PruebasUI: XCTestCase {
 
     /// baja la lista de avisos del iPhone (desde el borde de arriba)
     private func bajarAvisos() {
-        let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.0))
-        arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+        // desde el borde de arriba, a la izquierda de la isla (en iOS 27, empezar en el centro a veces abre la búsqueda)
+        let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.005))
+        arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.9)))
         Thread.sleep(forTimeInterval: 1.5)
+    }
+
+    /// En iOS 27 un aviso tocado en la pantalla bloqueada (o en la lista de avisos, que se le parece) no abre la app hasta
+    /// deslizar desde abajo: es lo que hace una persona
+    private func desbloquear() {
+        let abajo = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.995))
+        abajo.press(forDuration: 0.05, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35)))
+        Thread.sleep(forTimeInterval: 1)
     }
 
     /// Busca un aviso del iPhone por lo que pone, lo toca y espera a que la app llegue a donde tiene que llegar (`llega`).
@@ -139,6 +148,10 @@ final class PruebasUI: XCTestCase {
                 if aviso.exists && aviso.isHittable {
                     aviso.tap()
                     if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
+                    if app.state != .runningForeground {
+                        desbloquear()
+                        if llega(esperar("la app tras tocar el aviso y desbloquear", 8, falla: false, llega)) { return true }
+                    }
                     print("=== tocar el aviso === el toque no ha abierto la app: a la lista de avisos")
                 }
                 XCUIDevice.shared.press(.home)

@@ -70,7 +70,10 @@ jobs:
           name: ios-remota
           path: ${{ runner.temp }}/remota
       - name: Con qué se compila
+        # Xcode 27.1 mientras la imagen lo tenga: las subidas con Xcode 27.2 (27B52) las rechaza ahora App Store Connect
+        # (ITMS-90534, foros de Apple, hilos 854417 y 854462). Si App Store Connect ya lo acepta, se quita esta línea.
         run: |
+          if [ -d /Applications/Xcode_27.1.app ]; then sudo xcode-select -s /Applications/Xcode_27.1.app; fi
           sw_vers
           xcodebuild -version
           ls /Applications | grep -i '^Xcode' || true
