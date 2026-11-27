@@ -3409,7 +3409,9 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/": 1795776541000,
    "SPORT|136918464": 1795773211000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256173/rodri-empieza-trabajar-grupo.html": 1795776315000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/27/alerta-guido-paterna-entrenamiento-valencia-136918798.html": 1795777600000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/27/alerta-guido-paterna-entrenamiento-valencia-136918798.html": 1795777600000,
+   "AS|https://as.com/futbol/primera/simeone-con-bajas-arriba-pero-con-el-cuti-romero-mas-cerca-f202611-n/": 1795778023000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000
   },
   "hechos": [
    {
@@ -3810,11 +3812,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795777949000,
+    "id": "3264",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Dani Ceballos vuelve a entrenarse con sus compañeros del Betis",
+    "motivo": "molestias musculares",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -4679,7 +4693,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000,
@@ -4738,17 +4751,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 5,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 57591,
-  "salida": 9062,
+  "entrada": 59755,
+  "salida": 9302,
   "cacheLee": 30720,
   "cacheEscribe": 19822,
-  "dolares": 0.145181,
+  "dolares": 0.145517,
   "reservado": 0
  },
  "recientes": {
@@ -9817,13 +9830,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6936,
+   "ok": 6937,
    "fallos": 0,
-   "ejecuciones": 5678,
+   "ejecuciones": 5679,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:26:11.794Z"
+   "ultima": "2026-11-27T11:31:16.582Z"
   }
  },
  "ptsDirecto": {},
@@ -9840,15 +9853,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:26:25.947Z"
+   "ultimaBien": "2026-11-27T11:31:31.740Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:26:25.947Z"
+   "ultimaBien": "2026-11-27T11:31:31.740Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:26:25.947Z"
+   "ultimaBien": "2026-11-27T11:31:31.740Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9856,11 +9869,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:26:25.947Z"
+   "ultimaBien": "2026-11-27T11:31:31.740Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:26:25.947Z"
+   "ultimaBien": "2026-11-27T11:31:31.740Z"
   }
  },
  "avisos": [
