@@ -390,22 +390,54 @@ html.dM .sup::before { display: none; }
 html.dM .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -24px; background: linear-gradient(rgba(5, 5, 6, 0.84), rgba(5, 5, 6, 0.56) 42%, rgba(5, 5, 6, 0.26) 76%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
 html.dM.desplazada .sup::after { opacity: 1; }
 html.dM .sup-liga, html.dM .sup-btns { position: relative; z-index: 0; }
-html.dM .sup-liga { flex: 0 1 auto; min-width: 0; margin-right: auto; }
 html.dM .sup-marca { z-index: 1; }
-html.dM .sup-liga::before, html.dM .sup-btns::before { content: ''; position: absolute; z-index: -1; border-radius: 25px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
-html.dM .sup-liga::after, html.dM .sup-btns::after { content: ''; position: absolute; z-index: -1; border-radius: 25px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 8px 20px rgba(0, 0, 0, 0.34), 0 1px 4px rgba(0, 0, 0, 0.25); pointer-events: none; }
-html.dM .sup-liga { display: flex; flex-direction: column; justify-content: center; min-height: 36px; }
-html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -7px -12px -7px -54px; }
-html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -6px -1px -4px; }
-html.dM .sup .sup-beta { bottom: -5px; }
-/* en pantallas estrechas las dos cápsulas se tocaban: más hueco entre ellas y la de la liga se sale menos */
-@media (max-width: 380px) { html.dM .sup { gap: 14px; } html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -7px -8px -7px -56px; } html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -4px -1px -2px; } }
+html.dM .sup-liga::before, html.dM .sup-btns::before { content: ''; position: absolute; z-index: -1; border-radius: 28px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
+html.dM .sup-liga::after, html.dM .sup-btns::after { content: ''; position: absolute; z-index: -1; border-radius: 28px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 8px 20px rgba(0, 0, 0, 0.34), 0 1px 4px rgba(0, 0, 0, 0.25); pointer-events: none; }
+/* la cápsula de la liga (Carlos, 27 nov, 13:31: «un poco más grande… añadir ahí algo más de info. Que no se corte el
+   "actualizando"»): ocupa todo el ancho que dejan los botones y el nombre va más grande; a la derecha del nombre, tu
+   puesto (.maq-pos) y, a la derecha del estado, tus puntos (.maq-pts): los pone el guion y al tocarlos se va a la
+   clasificación. El estado («Actualizando…») manda: si los puntos no caben a su lado se quitan (html.sin-pts), y solo
+   si ni solo cabe (320 px con «Sin actualizar · 13:20») se acorta (html.est-corta) */
+html.dM .sup { padding-top: 12px; padding-bottom: 12px; gap: 12px; }
+html.dM .sup-marca, html.dM .sup .logo { width: 40px; height: 40px; }
+html.dM .sup-liga { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: center; align-items: center; column-gap: 8px; row-gap: 2px; flex: 1 1 auto; min-width: min-content; min-height: 40px; margin-right: 10px; }
+html.dM .sup-nombre { grid-column: 1; grid-row: 1; width: 0; min-width: 100%; text-align: left; }
+html.dM .sup-liga b { font-size: 17.5px; }
+html.dM:not(.tit-c) .sup-liga b { font-size: 16.5px; }
+html.dM #supEstado { grid-column: 1 / -1; grid-row: 2; justify-self: start; font-size: 13.5px; white-space: nowrap; }
+html.dM #supEstado > .sup-tx { flex: none; overflow: visible; }
+html.dM .sup-queda { grid-column: 1 / -1; }
+.maq-pos, .maq-pts { display: none; }
+html.dM .maq-pos { grid-column: 2; grid-row: 1; display: inline-flex; align-items: center; min-height: 0; padding: 2px 7px 1px; border-radius: 9px; background: rgba(255, 255, 255, 0.13); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); color: var(--texto); font: 700 15px/1.1 var(--cond); }
+html.dM .maq-pts { grid-column: 1 / -1; grid-row: 2; justify-self: end; display: block; color: var(--texto-2); font: 600 12.5px/1 'Barlow', sans-serif; white-space: nowrap; }
+html.dM.sin-pts .maq-pts { display: none; }
+html.dM.est-corta .sup-liga { min-width: 0; }
+html.dM.est-corta #supEstado { min-width: 0; max-width: 100%; }
+html.dM.est-corta #supEstado > .sup-tx { flex: 0 1 auto; overflow: hidden; }
+html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -8px -8px -8px -58px; }
+html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -4px -6px -4px -4px; }
+html.dM .sup .sup-beta { bottom: -3px; }
+/* en los móviles más estrechos (320 px), todo un poco más junto para que «Actualizando…» quepa entero */
+@media (max-width: 340px) { html.dM .sup { gap: 8px; padding-left: 8px; padding-right: 8px; } html.dM .sup-liga { margin-right: 4px; column-gap: 6px; } html.dM #supEstado { font-size: 12.5px; }
+  html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -8px -6px -8px -52px; } html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -4px -4px -4px -2px; } }
 /* (probado y quitado el 27 nov, 13:21, Carlos: «lo veo una gilipollez») la cápsula de los botones NO se recoge al bajar:
    Invitar, Pregunta y Ajustes llevan siempre su nombre */
 /* el botón de la pantalla abierta (Pregunta, Ajustes), con la misma lente que la pestaña activa de abajo */
 html.dM .sup .b-ico.activo { background: var(--gota); box-shadow: var(--gota-canto); }
-/* «Invitar dentro de Ajustes» (html.inv-aj, para comparar): fuera de la cápsula; en Ajustes ya tiene su fila */
-html.inv-aj .sup #bInvitar { display: none; }
+/* Invitar, dentro de Ajustes pero arriba del todo y a la vista (Carlos, 27 nov, 13:31: «bien a la vista, no dentro de
+   ningún submenú»): fuera de la cápsula de la cabecera y, en Ajustes, una tarjeta dorada encima del buscador (.maq-inv,
+   que pone el guion: en la liga de ejemplo Ajustes no trae su fila de invitar). html.inv-aj; sin ella, como antes */
+html.dM.inv-aj .sup #bInvitar { display: none; }
+.maq-inv { display: none; }
+html.dM.inv-aj .maq-inv { display: flex; align-items: center; gap: 12px; width: 100%; margin: 2px 0 12px; padding: 12px 12px 12px 14px; border-radius: 22px; text-align: left; color: var(--texto);
+  background: linear-gradient(135deg, rgba(255, 197, 71, 0.20), rgba(255, 197, 71, 0.05) 70%); box-shadow: inset 0 0 0 1px rgba(255, 197, 71, 0.38), inset 1px 1px 0 rgba(255, 230, 165, 0.35); transition: transform var(--toque); }
+html.dM.inv-aj .maq-inv:active { transform: scale(0.98); }
+.maq-inv-ic { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 197, 71, 0.16); color: #ffc547; }
+.maq-inv-ic svg { width: 22px; height: 22px; }
+.maq-inv-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.maq-inv-tx b { font: 700 16px/1.2 'Barlow', sans-serif; color: #ffd676; }
+.maq-inv-tx small { font: 500 13px/1.3 'Barlow', sans-serif; color: var(--texto-2); }
+.maq-inv-ir { flex: none; padding: 9px 14px; border-radius: 16px; background: #ffc547; color: #1a1420; font: 700 14px/1 'Barlow', sans-serif; }
 html.dM .sup .b-ico, html.dM .sup .b-ico:not(.b-inv):not(.b-preg) { background: none; box-shadow: none; border-radius: 20px; }
 html.dM .sup-toca, html.dM .sup-tx { color: var(--texto-2); } /* «Al día» sobre el cristal: con el gris de antes se quedaba en 3,7:1 */
 html.dM .sup .sup-beta { box-shadow: 0 0 0 2px rgba(26, 18, 22, 0.92); }

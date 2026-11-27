@@ -36,8 +36,9 @@ async function dentro() {
     };
   }
   if (Q.get('tx')) texto(Q.get('tx'));
-  if (Q.get('inv') === '1') html.classList.add('inv-aj'); // Invitar, fuera de la cabecera (dentro de Ajustes)
-  if (Q.get('tc') === '1') html.classList.add('tit-c'); // la mezcla, con los títulos condensados de C
+  // (Carlos, 27 nov, 13:31) la mezcla va con Invitar dentro de Ajustes y con los títulos condensados de C; ?inv=0 y ?tc=0 lo quitan
+  if (Q.get('inv') !== '0') html.classList.add('inv-aj');
+  if (Q.get('tc') !== '0') html.classList.add('tit-c');
   // ?bl=12: probar con menos desenfoque (para las medidas)
   if (Q.get('bl')) { const st = document.createElement('style'); st.textContent = `html.dL { --cristal-desenfoque: blur(${+Q.get('bl')}px) saturate(170%) !important; }`; document.head.append(st); }
   if (Q.get('cap') === '1') { html.classList.add('maq-captura'); const g = document.createElement('div'); g.id = 'maq-sup-cristal'; document.body.append(g); } // el cristal, como lo pinta un móvil, en un Chromium sin tarjeta gráfica
@@ -255,12 +256,43 @@ function movimiento() {
     const caja = (el, r) => { const c = getComputedStyle(el, '::before'), n = (v) => parseFloat(v) || 0; return [r.left + n(c.left), r.top + n(c.top), r.right - n(c.right), r.bottom - n(c.bottom)]; };
     [caja(liga, a), caja(btns, b)].forEach(([x0, y0, x1, y1], i) => {
       const iz = Math.min(60, Math.max(0, x0)), de = Math.min(60, Math.max(0, W - x1)), ar = Math.min(60, Math.max(0, y0)), ab = 60;
-      capsulas[i].style.cssText = `left:${x0 - iz}px;top:${y0 - ar}px;width:${x1 - x0 + iz + de}px;height:${y1 - y0 + ar + ab}px;clip-path:inset(${ar}px ${de}px ${ab}px ${iz}px round 25px)`;
+      capsulas[i].style.cssText = `left:${x0 - iz}px;top:${y0 - ar}px;width:${x1 - x0 + iz + de}px;height:${y1 - y0 + ar + ab}px;clip-path:inset(${ar}px ${de}px ${ab}px ${iz}px round 28px)`;
     });
   };
 
+  // 8. (la mezcla) en la cápsula de la liga, tu puesto (al lado del nombre) y tus puntos (al lado del estado); al tocarlos,
+  //    la clasificación. El estado manda: si los puntos no caben a su lado se quitan, y solo si ni solo cabe, se acorta
+  let cabeAntes = '';
+  const aRivales = () => { const r = document.querySelector('.nav [data-ir="rivales"]'); if (r) r.click(); };
+  const infoLiga = () => {
+    const liga = document.querySelector('.sup-liga'), sup = document.querySelector('.sup'); if (!liga || !sup) return;
+    const S = window.S, yo = S && S.M && S.M.yo, n = S && S.D && S.D.clasif && S.D.clasif.length;
+    let pos = liga.querySelector(':scope > .maq-pos'), pts = liga.querySelector(':scope > .maq-pts');
+    if (!html.classList.contains('dM') || !yo || !yo.pos) { if (pos) pos.remove(); if (pts) pts.remove(); return; }
+    if (!pos) { pos = document.createElement('button'); pos.className = 'maq-pos'; pos.addEventListener('click', aRivales); liga.append(pos); }
+    if (!pts) { pts = document.createElement('span'); pts.className = 'maq-pts'; pts.addEventListener('click', aRivales); liga.append(pts); }
+    const p = String(Math.round(yo.puntos || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'), h = `${yo.pos}º|${p} pts`;
+    if (pos.dataset.h !== h) { pos.dataset.h = h; pos.textContent = `${yo.pos}º`; pts.textContent = `${p} pts`; pos.setAttribute('aria-label', `Vas ${yo.pos}º${n ? ` de ${n}` : ''} con ${p} puntos: ver la clasificación`); }
+    const est = liga.querySelector('#supEstado'), clave = `${window.innerWidth}|${est ? est.textContent : ''}|${h}|${html.classList.contains('tit-c')}|${html.classList.contains('inv-aj')}`;
+    if (clave === cabeAntes) return; cabeAntes = clave;
+    html.classList.remove('sin-pts', 'est-corta');
+    if (est && est.getBoundingClientRect().right + 10 > pts.getBoundingClientRect().left) html.classList.add('sin-pts');
+    if (sup.scrollWidth > sup.clientWidth + 1 || (est && est.getBoundingClientRect().right > liga.getBoundingClientRect().right + 1)) html.classList.add('est-corta');
+  };
+  // 9. (la mezcla, con Invitar dentro de Ajustes) la tarjeta de invitar, arriba del todo de Ajustes, encima del buscador
+  const invitarEnAjustes = () => {
+    const aj = document.querySelector('.hoja > .aj-busca'), ya = document.querySelector('.maq-inv');
+    if (!aj) { if (ya) ya.remove(); return; }
+    if (ya && ya.nextElementSibling === aj) return;
+    if (ya) ya.remove();
+    const ic = document.querySelector('#bInvitar svg'), b = document.createElement('button');
+    b.className = 'maq-inv'; b.dataset.accion = 'invitarAmigo';
+    b.innerHTML = `<span class="maq-inv-ic">${ic ? ic.outerHTML : ''}</span><span class="maq-inv-tx"><b>Invita a un amigo</b><small>Por cada amigo que entra, el dinero de 2 rivales</small></span><span class="maq-inv-ir">Invitar</span>`;
+    aj.before(b);
+  };
+
   let pte = false;
-  const todo = () => { pte = false; pildoras(); hojas(); vigilarNav(); mapa(); capsulasCaptura(); };
+  const todo = () => { pte = false; pildoras(); hojas(); vigilarNav(); mapa(); infoLiga(); invitarEnAjustes(); capsulasCaptura(); };
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('maq-capa', () => { pedir(); barra(); });
@@ -272,9 +304,9 @@ function movimiento() {
    ===================================================================================================================== */
 function fuera() {
   let dir = (Q.get('d') || 'M').toUpperCase(), pant = Q.get('p') || 'hoy', y = Q.get('y') === '1';
-  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '', tc: Q.get('tc') === '1', inv: Q.get('inv') === '1' };
+  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '', tc: Q.get('tc') !== '0', inv: Q.get('inv') !== '0' };
   const marco = document.getElementById('marco');
-  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.inv ? '&inv=1' : ''}`;
+  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '' : '&tc=0'}${op.inv ? '' : '&inv=0'}`;
   marco.innerHTML = `
     <div class="mq-movil"><div class="mq-pant"><iframe id="mq-app" title="La app con la dirección elegida" src="maqueta-liquid.html${dirDe()}"></iframe>
       <div class="mq-teclado" aria-hidden="true">${teclado()}</div></div></div>
@@ -286,10 +318,10 @@ function fuera() {
     document.getElementById('mq-sel').innerHTML = `
       <div class="mq-fila"><b>Dirección</b>${DIRS.map(([k, t]) => b('d', k, t, dir === k)).join('')}</div>
       <div class="mq-fila"><b>Pantalla</b>${PANTS.map(([k, t]) => b('p', k, t, pant === k)).join('')}</div>
-      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'inv', 'Invitar dentro de Ajustes', op.inv)}${b('o', 'tc', 'Títulos condensados (mezcla)', op.tc)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
+      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'inv', 'Invitar dentro de Ajustes', op.inv)}${b('o', 'tc', 'Títulos condensados', op.tc)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
         <span class="mq-anchos">${['320', '360', '', '430'].map((w) => b('w', w, w || '390', op.w === w)).join('')}</span>
         <a class="mq-entera" href="maqueta-liquid.html${dirDe()}">Pantalla completa ↗</a></div>`;
-    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.inv ? '&inv=1' : ''}${op.w ? `&w=${op.w}` : ''}`);
+    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '' : '&tc=0'}${op.inv ? '' : '&inv=0'}${op.w ? `&w=${op.w}` : ''}`);
     marco.classList.toggle('con-teclado', pant === 'pregunta');
     marco.style.setProperty('--mq-w', `${op.w || 390}px`);
     marco.dataset.w = op.w || '390';
