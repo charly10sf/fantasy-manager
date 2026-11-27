@@ -4702,7 +4702,6 @@
  "liga": {
   "vistas": {
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
@@ -9840,13 +9839,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6891,
+   "ok": 6892,
    "fallos": 0,
-   "ejecuciones": 5633,
+   "ejecuciones": 5634,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T07:46:13.879Z"
+   "ultima": "2026-11-27T07:51:20.709Z"
   }
  },
  "ptsDirecto": {},
@@ -9863,15 +9862,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:46:27.088Z"
+   "ultimaBien": "2026-11-27T07:51:30.371Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:46:27.088Z"
+   "ultimaBien": "2026-11-27T07:51:30.371Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:46:27.088Z"
+   "ultimaBien": "2026-11-27T07:51:30.371Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9879,11 +9878,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:46:27.088Z"
+   "ultimaBien": "2026-11-27T07:51:30.371Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:46:27.088Z"
+   "ultimaBien": "2026-11-27T07:51:30.371Z"
   }
  },
  "avisos": [
