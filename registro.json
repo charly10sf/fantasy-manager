@@ -2434,7 +2434,7 @@
   "2326": "ok",
   "2329": "ok",
   "2331": "out_of_league",
-  "2332": "ok",
+  "2332": "injured",
   "2334": "out_of_league",
   "2335": "ok",
   "2336": "ok",
@@ -3217,13 +3217,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/": 1795473761000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254507/desgaste-lamine-cifras.html": 1795499700000,
-   "SPORT|136775645": 1795494646000,
-   "SPORT|136774955": 1795471241000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/mas-palos-que-futbol-en-el-empate-entre-el-elche-y-el-levante-radio-elche/": 1795476847000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/24/alvaro-benito-senala-el-gran-dilema-de-mourinho-tras-la-recuperacion-de-vinicius-el-equipo-tiene-dos-caras-cadena-ser/": 1795502068000,
-   "SPORT|136767501": 1795500022000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
    "SPORT|136779676": 1795502755000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
@@ -3403,21 +3397,14 @@
    "SPORT|136880190": 1795722404000,
    "SPORT|136894748": 1795723203000,
    "SPORT|136901059": 1795724253000,
-   "Diario Sur|https://www.diariosur.es/malagacf/rival-malaga-athletic-rendimiento-figuras-20261126223317-nt.html": 1795728798000
+   "Diario Sur|https://www.diariosur.es/malagacf/rival-malaga-athletic-rendimiento-figuras-20261126223317-nt.html": 1795728798000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261127/1004256045/xabi-alonso-da-toque-jugador-polemica-entrevista.html": 1795734546000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261126/1004256039/aperribay-estalla-arbitraje-real-baja-cesped-quejarse.html": 1795732051000,
+   "SPORT|136903769": 1795731479000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-sentencia-debate-9_0_2008594734.html": 1795755643000,
+   "El Correo|https://www.elcorreo.com/athletic/malaga-aferra-goles-nino-principal-amenaza-athletic-20261126004439-nt.html": 1795736680000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/",
-    "medio": "AS",
-    "t": 1795473761000,
-    "id": "3182",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lemar se lesiona de nuevo tras reaparecer ante el Levante",
-    "motivo": "rotura en el isquiotibial",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html",
     "medio": "MARCA",
@@ -3847,8 +3834,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-26",
-   "n": 45
+   "dia": "2026-11-27",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4713,9 +4700,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254688/aplazado-choque-rubi-salir-volando-cristalera.html": 1795500000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254685/barceloneta-juega-77-faf-hospitalet.html": 1795500000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
    "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
@@ -4766,26 +4750,28 @@
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-26",
-   "n": 16,
+   "dia": "2026-11-27",
+   "n": 0,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795759273282
+  }
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 6268,
-  "salida": 232,
+  "entrada": 9145,
+  "salida": 695,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.053184,
+  "dolares": 0.053703,
   "reservado": 0
  },
  "recientes": {
@@ -9854,13 +9840,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6869,
+   "ok": 6870,
    "fallos": 0,
-   "ejecuciones": 5611,
+   "ejecuciones": 5612,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T05:56:18.805Z"
+   "ultima": "2026-11-27T06:01:13.282Z"
   }
  },
  "ptsDirecto": {},
@@ -9877,15 +9863,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T05:56:19.218Z"
+   "ultimaBien": "2026-11-27T06:01:30.108Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T05:56:19.218Z"
+   "ultimaBien": "2026-11-27T06:01:30.108Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T05:56:19.218Z"
+   "ultimaBien": "2026-11-27T06:01:30.108Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9893,11 +9879,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T22:56:26.931Z"
+   "ultimaBien": "2026-11-27T06:01:30.108Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:56:18.479Z"
+   "ultimaBien": "2026-11-27T06:01:30.108Z"
   }
  },
  "avisos": [
