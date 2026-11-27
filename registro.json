@@ -3238,7 +3238,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000,
    "Cadena SER|https://cadenaser.com/asturias/2026/11/24/no-descarto-que-raul-dimita-antes-de-que-le-echen-sanedrin-del-real-oviedo-radio-asturias/": 1795533671000,
    "AS|https://as.com/futbol/condenan-a-casi-16-anos-de-carcel-a-un-exojeador-de-osasuna-por-abusar-de-menores-f202611-n/": 1795534730000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
@@ -9895,13 +9894,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6973,
+   "ok": 6974,
    "fallos": 0,
-   "ejecuciones": 5715,
+   "ejecuciones": 5716,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T14:31:15.101Z"
+   "ultima": "2026-11-27T14:36:13.390Z"
   }
  },
  "ptsDirecto": {},
@@ -9918,15 +9917,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:31:28.031Z"
+   "ultimaBien": "2026-11-27T14:36:22.819Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:31:28.031Z"
+   "ultimaBien": "2026-11-27T14:36:22.819Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:31:28.031Z"
+   "ultimaBien": "2026-11-27T14:36:22.819Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9934,11 +9933,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:31:28.031Z"
+   "ultimaBien": "2026-11-27T14:36:22.819Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:31:28.031Z"
+   "ultimaBien": "2026-11-27T14:36:22.819Z"
   }
  },
  "avisos": [
