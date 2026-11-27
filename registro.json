@@ -3436,7 +3436,8 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/gerard-garrido-el-proxim-repte-sera-amb-manolo-aixo-segurissim-sercat/": 1795786372000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/27/arbeloa-vuelve-pescar-madrid.html": 1795786635000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-podra-contar-vivian-imga-maroan-prefiere-20261127145306-nt.html": 1795787587000,
-   "AS|https://as.com/futbol/primera/blanco-leschuk-fichaje-de-relumbron-del-juventud-de-torremolinos-f202611-n/": 1795787932000
+   "AS|https://as.com/futbol/primera/blanco-leschuk-fichaje-de-relumbron-del-juventud-de-torremolinos-f202611-n/": 1795787932000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-necesitaba-salir-casa-volver-vida-intentando-volver-normalidad-20261127_3483952.html": 1795789684000
   },
   "hechos": [
    {
@@ -3895,7 +3896,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -4815,17 +4816,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 104440,
-  "salida": 18141,
+  "entrada": 106490,
+  "salida": 18517,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.208737,
+  "dolares": 0.20913,
   "reservado": 0
  },
  "recientes": {
@@ -9894,13 +9895,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6972,
+   "ok": 6973,
    "fallos": 0,
-   "ejecuciones": 5714,
+   "ejecuciones": 5715,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T14:26:11.155Z"
+   "ultima": "2026-11-27T14:31:15.101Z"
   }
  },
  "ptsDirecto": {},
@@ -9917,15 +9918,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:26:22.653Z"
+   "ultimaBien": "2026-11-27T14:31:28.031Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:26:22.653Z"
+   "ultimaBien": "2026-11-27T14:31:28.031Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:26:22.653Z"
+   "ultimaBien": "2026-11-27T14:31:28.031Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9933,11 +9934,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:26:22.653Z"
+   "ultimaBien": "2026-11-27T14:31:28.031Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:26:22.653Z"
+   "ultimaBien": "2026-11-27T14:31:28.031Z"
   }
  },
  "avisos": [
