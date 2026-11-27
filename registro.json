@@ -2439,7 +2439,7 @@
   "2316": "ok",
   "2317": "out_of_league",
   "2318": "ok",
-  "2319": "doubtful",
+  "2319": "injured",
   "2321": "ok",
   "2322": "ok",
   "2323": "out_of_league",
@@ -3232,7 +3232,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
    "SPORT|136797133": 1795524053000,
@@ -9839,13 +9838,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6949,
+   "ok": 6950,
    "fallos": 0,
-   "ejecuciones": 5691,
+   "ejecuciones": 5692,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:31:11.466Z"
+   "ultima": "2026-11-27T12:36:16.753Z"
   }
  },
  "ptsDirecto": {},
@@ -9862,15 +9861,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:31:26.504Z"
+   "ultimaBien": "2026-11-27T12:36:31.711Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:31:26.504Z"
+   "ultimaBien": "2026-11-27T12:36:31.711Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:31:26.504Z"
+   "ultimaBien": "2026-11-27T12:36:31.711Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9878,11 +9877,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:31:26.504Z"
+   "ultimaBien": "2026-11-27T12:36:31.711Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:31:26.504Z"
+   "ultimaBien": "2026-11-27T12:36:31.711Z"
   }
  },
  "avisos": [
