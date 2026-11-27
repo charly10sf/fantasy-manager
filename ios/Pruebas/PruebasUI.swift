@@ -127,6 +127,20 @@ final class PruebasUI: XCTestCase {
         Thread.sleep(forTimeInterval: 1.5)
     }
 
+    /// Saca la app al inicio y comprueba que ha salido: en el simulador de iOS 27 el botón de inicio a veces se pierde, así
+    /// que se repite y, si tampoco, se hace el gesto de subir desde abajo
+    private func salir() {
+        for intento in 0..<3 {
+            if intento < 2 { XCUIDevice.shared.press(.home) } else { desbloquear() }
+            let fin = Date().addingTimeInterval(5)
+            while Date() < fin {
+                if app.state != .runningForeground { return }
+                Thread.sleep(forTimeInterval: 0.3)
+            }
+            print("=== salir === la app sigue a la vista: otra vez")
+        }
+    }
+
     /// En iOS 27 un aviso tocado en la pantalla bloqueada (o en la lista de avisos, que se le parece) no abre la app hasta
     /// deslizar desde abajo: es lo que hace una persona
     private func desbloquear() {
@@ -389,7 +403,7 @@ final class PruebasUI: XCTestCase {
     func test6AvisoDelServidor() {
         abrirHaciendo("pregunta")
         var s = esperar("la pregunta en marcha", 20) { self.pasos($0).contains("en marcha") }
-        XCUIDevice.shared.press(.home)
+        salir()
         let visto = tocarAviso("director deportivo", 50, captura: "10-aviso-respuesta") { ($0["hash"] as? String) == "#ia" }
         s = sonda()
         apuntar("10-respuesta", s)
@@ -401,7 +415,7 @@ final class PruebasUI: XCTestCase {
         // el aviso del servidor: con la app abierta no se enseña (ya está en pantalla); con la app fuera, sí
         Thread.sleep(forTimeInterval: 8)
         captura("10-abierta-sin-aviso")
-        XCUIDevice.shared.press(.home)
+        salir()
         let servidor = tocarAviso("Tu plan de hoy está listo", 50, captura: "10-aviso-servidor") { ($0["hash"] as? String) == "#hoy" }
         apuntar("10-servidor", sonda())
         XCTAssertTrue(servidor, "con la app fuera, el aviso del servidor tiene que verse y, al tocarlo, abrirse Hoy")
