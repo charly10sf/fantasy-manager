@@ -3238,8 +3238,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/condenan-a-casi-16-anos-de-carcel-a-un-exojeador-de-osasuna-por-abusar-de-menores-f202611-n/": 1795534730000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255007/flick-actualiza-cubasi-habla-sobre-sustituto-lamine.html": 1795537999000,
@@ -9891,13 +9889,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6986,
+   "ok": 6987,
    "fallos": 0,
-   "ejecuciones": 5728,
+   "ejecuciones": 5729,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T15:36:15.916Z"
+   "ultima": "2026-11-27T15:41:13.012Z"
   }
  },
  "ptsDirecto": {},
@@ -9914,15 +9912,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:36:30.143Z"
+   "ultimaBien": "2026-11-27T15:41:20.824Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:36:30.143Z"
+   "ultimaBien": "2026-11-27T15:41:20.824Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:36:30.143Z"
+   "ultimaBien": "2026-11-27T15:41:20.824Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9930,11 +9928,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:36:30.143Z"
+   "ultimaBien": "2026-11-27T15:41:20.824Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:36:30.143Z"
+   "ultimaBien": "2026-11-27T15:41:20.824Z"
   }
  },
  "avisos": [
