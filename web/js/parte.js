@@ -293,7 +293,8 @@ export function fichaRival(M, h, enVenta = [], ahora = Date.now()) {
     hechos.push({ k: 'clausula', ic: 'candado', pid: c.pid, txt: c.abierta ? `Cláusula abierta de ${c.j.nombre}: ${eur(c.clausula)}${mas}` : `Cláusula de ${c.j.nombre} ${cuandoAbre}: ${eur(c.clausula)}${mas}` });
   }
   // lo que vende: primero lo que te mejora el once (lo mismo que mira «en negativo»), con lo que te da por jornada
-  const venta = enVenta.filter((m) => m.j).map((m) => ({ m, g: M.mejora ? M.mejora(m.j) : 0 })).sort((a, b) => b.g - a.g || num(b.m.j.valor) - num(a.m.j.valor)).map((x) => ({ ...x.m, gana: x.g }));
+  // (lo que el plan descarta, al final: nunca se enseña como lo primero que vende)
+  const venta = enVenta.filter((m) => m.j).map((m) => ({ m, g: M.mejora ? M.mejora(m.j) : 0, no: planNo(m.pid) })).sort((a, b) => a.no - b.no || b.g - a.g || num(b.m.j.valor) - num(a.m.j.valor)).map((x) => ({ ...x.m, gana: x.g }));
   if (venta.length) {
     const v = venta[0], buena = v.gana >= 0.5 && !planNo(v.pid);
     hechos.push({ k: 'venta', ic: 'euro', pid: v.pid, txt: `Vende a ${v.j.nombre}${buena ? ` (+${d1(v.gana)} pts por jornada)` : ''}${venta.length > 1 ? ` y ${venta.length - 1} más` : ''}` });
