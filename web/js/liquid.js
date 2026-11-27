@@ -3,7 +3,7 @@
 //   · al desplazarse: html.desplazada (el apagado de detrás de la cabecera), html.nav-min (la barra de abajo se encoge al
 //     bajar y vuelve al subir, arriba del todo o al tocarla) y html.tabs-pegada (el selector, pegado bajo la cabecera)
 //   · html.escribiendo: el teclado abierto en Pregunta (la barra se aparta y la caja baja hasta el teclado)
-//   · la píldora que se desliza en los selectores de sección (.tabs-in.con-pil, --px y --pw)
+//   · la píldora que se desliza en los selectores de sección al cambiar de pestaña dentro de uno (.tabs-in.con-pil)
 //   · las hojas: .hoja-media (flota con margen, de cristal) o .hoja-entera (opaca, pegada a los bordes) y .hoja-baja
 //   · la barra de abajo cuando una etiqueta no cabe (html.nav-justa: la etiqueta, solo en la pestaña activa)
 //   · la cápsula de la liga: si tus puntos, o tu puesto, no caben al lado del estado, se quitan (el estado manda)
@@ -78,28 +78,32 @@ export function iniciarLiquid() {
     } catch (x) { /* sin animación de pseudoelementos: la transición del CSS */ }
   }, true);
 
-  // ---- 4. la píldora de los selectores: la app repinta la pestaña entera, así que se recuerda dónde estaba la de cada
-  //         selector y se lleva desde ahí hasta la nueva ----
-  const donde = new Map();
+  // ---- 4. la píldora de los selectores. La pestaña activa ya lleva su lente con el CSS; la píldora (.con-pil) solo
+  //         hace falta para deslizarse cuando cambias de pestaña DENTRO de un selector: la app repinta la vista entera,
+  //         así que se recuerda cuál era la activa de cada selector y la píldora va desde su sitio hasta el de la nueva.
+  //         Así, al cambiar de pestaña de abajo (lo más corriente) no se mide nada ----
+  const activa = new Map();
+  const idDe = (b) => b.dataset.seg || b.dataset.filtro || b.textContent.trim();
   const pildoras = () => {
     for (const t of document.querySelectorAll('.tabs-in')) {
       const act = t.querySelector('button.activo');
-      if (!act) { t.classList.remove('con-pil'); continue; }
-      const clave = `${(act.dataset.seg || act.dataset.filtro || '').split(':')[0]}|${t.children.length}|${t.closest('.hoja') ? 'h' : 'v'}`;
-      const a = { x: act.offsetLeft, w: act.offsetWidth, oro: act.classList.contains('tab-oro') };
-      const antes = donde.get(clave);
-      if (t.dataset.pil && t.dataset.pil === `${a.x}|${a.w}|${a.oro}`) continue;
-      t.classList.toggle('pil-oro', a.oro);
-      if (antes && (antes.x !== a.x || antes.w !== a.w) && !t.dataset.pil && !quieto()) {
-        t.style.setProperty('--px', `${antes.x}px`); t.style.setProperty('--pw', `${antes.w}px`);
-        t.classList.add('con-pil', 'pil-quieta'); void t.offsetWidth; t.classList.remove('pil-quieta');
-      }
-      t.dataset.pil = `${a.x}|${a.w}|${a.oro}`;
-      t.style.setProperty('--px', `${a.x}px`); t.style.setProperty('--pw', `${a.w}px`);
-      t.classList.add('con-pil');
-      donde.set(clave, a);
+      if (!act) continue;
+      const id = idDe(act), clave = `${id.split(':')[0]}|${t.children.length}|${t.closest('.hoja') ? 'h' : 'v'}`;
+      const antes = activa.get(clave);
+      activa.set(clave, id);
+      if (t.dataset.pil === id) continue;
+      t.dataset.pil = id;
+      if (!antes || antes === id || quieto()) { t.classList.remove('con-pil'); continue; }
+      const de = [...t.children].find((b) => idDe(b) === antes);
+      if (!de) { t.classList.remove('con-pil'); continue; }
+      t.classList.toggle('pil-oro', act.classList.contains('tab-oro'));
+      t.style.setProperty('--px', `${de.offsetLeft}px`); t.style.setProperty('--pw', `${de.offsetWidth}px`);
+      t.classList.add('con-pil', 'pil-quieta'); void t.offsetWidth; t.classList.remove('pil-quieta');
+      t.style.setProperty('--px', `${act.offsetLeft}px`); t.style.setProperty('--pw', `${act.offsetWidth}px`);
     }
   };
+  // si cambia el ancho o llega la letra, la píldora medida ya no vale: vuelve la lente del CSS
+  const sinPildoras = () => { for (const t of document.querySelectorAll('.tabs-in.con-pil')) t.classList.remove('con-pil'); };
 
   // ---- 5. las hojas ----
   const clasificar = (h) => {
@@ -143,11 +147,19 @@ export function iniciarLiquid() {
     html.classList.toggle('nav-justa', mayor > hueco - 4);
     gota();
   };
+  // qué pestaña es la activa: la gota se coloca con --i (y data-i, para que sin pestaña activa, en Pregunta, no se vea)
+  const indice = () => {
+    const nav = navVista; if (!nav) return;
+    const i = [...nav.children].findIndex((b) => b.classList.contains('activo'));
+    if (i < 0) { if (nav.dataset.i != null) delete nav.dataset.i; return; }
+    if (nav.dataset.i !== String(i)) { nav.dataset.i = String(i); nav.style.setProperty('--i', String(i)); }
+  };
   const vigilarNav = () => {
     const nav = document.querySelector('.nav-in');
     if (!nav || nav === navVista) return;
     navVista = nav;
-    new MutationObserver(() => requestAnimationFrame(() => { gota(); setTimeout(gota, 60); })).observe(nav, { attributes: true, attributeFilter: ['class'], subtree: true });
+    new MutationObserver(() => { indice(); requestAnimationFrame(() => { gota(); setTimeout(gota, 60); }); }).observe(nav, { attributes: true, attributeFilter: ['class'], subtree: true });
+    indice();
     barra();
   };
 
@@ -159,7 +171,8 @@ export function iniciarLiquid() {
     const liga = document.querySelector('.sup-liga'), sup = document.querySelector('.sup');
     if (!liga || !sup || !movil()) { if (cabeAntes) { cabeAntes = ''; html.classList.remove('sin-pts', 'sin-pos', 'est-corta'); } return; }
     const pos = liga.querySelector('.sup-pos:not([hidden])'), pts = liga.querySelector('.sup-pts:not([hidden])'), est = liga.querySelector('#supEstado');
-    const clave = `${window.innerWidth}|${sup.clientWidth}|${est ? est.textContent : ''}|${pos ? pos.textContent : ''}|${pts ? pts.textContent : ''}|${liga.querySelector('#supLiga') ? liga.querySelector('#supLiga').textContent : ''}|${getComputedStyle(liga).fontSize}`;
+    // (la clave no lee medidas: si no ha cambiado el texto ni el ancho, no se mide nada)
+    const clave = `${window.innerWidth}|${est ? est.textContent : ''}|${pos ? pos.textContent : ''}|${pts ? pts.textContent : ''}|${liga.querySelector('#supLiga') ? liga.querySelector('#supLiga').textContent : ''}`;
     if (clave === cabeAntes) return;
     cabeAntes = clave;
     html.classList.remove('sin-pts', 'sin-pos', 'est-corta');
@@ -174,7 +187,8 @@ export function iniciarLiquid() {
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true, characterData: true });
   new MutationObserver(() => { gota(); setTimeout(gota, 440); pedir(); }).observe(html, { attributes: true, attributeFilter: ['class', 'style'] });
-  window.addEventListener('resize', () => { for (const t of document.querySelectorAll('.tabs-in')) delete t.dataset.pil; pedir(); barra(); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { for (const t of document.querySelectorAll('.tabs-in')) delete t.dataset.pil; pedir(); barra(); }).catch(() => {});
+  const otraVez = () => { sinPildoras(); cabeAntes = ''; pedir(); barra(); };
+  window.addEventListener('resize', otraVez);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(otraVez).catch(() => {});
   pedir();
 }

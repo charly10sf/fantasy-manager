@@ -4157,7 +4157,8 @@ html.lq {
   --barra-h: 62px; --barra-r: calc(var(--barra-h) / 2); --barra-m: 4px; --barra-ri: calc(var(--barra-r) - var(--barra-m));
   --r-hoja: 30px; --hoja-m: 8px; --r-hoja-in: calc(var(--r-hoja) - 12px);
   --r-tarj: 22px; --r-ctl: 14px;
-  /* movimiento: 150 ms al tocar y un muelle corto, con algo de rebote, para la gota y las hojas */
+  /* movimiento: 150 ms al tocar y un muelle corto, con algo de rebote, para la gota y las hojas. Solo se anima transform
+     (lo compone la tarjeta gráfica): animar colores obligaba a recalcular estilos en cada fotograma del cambio de pestaña */
   --toque: 150ms; --muelle-ms: 440ms; --muelle: cubic-bezier(0.25, 1.15, 0.45, 1);
   /* la luz de fondo, a toda la pantalla: sobre el negro plano el cristal no se ve */
   --luz: radial-gradient(80% 46% at 14% 0%, rgba(238, 28, 60, 0.34), transparent 72%), radial-gradient(60% 34% at 98% 5%, rgba(255, 120, 70, 0.15), transparent 72%), radial-gradient(90% 40% at 88% 100%, rgba(238, 28, 60, 0.13), transparent 72%);
@@ -4176,20 +4177,18 @@ html.lq:not(.escritorio) .nav-in { position: relative; z-index: 0; pointer-event
   transition: max-width var(--muelle-ms) var(--muelle), height var(--muelle-ms) var(--muelle); }
 /* el cristal va en un pseudoelemento (así el borde, el brillo y la sombra quedan fuera del recorte de las capturas, abajo) */
 html.lq:not(.escritorio) .nav-in::after { content: ''; position: absolute; z-index: -1; inset: -1px; border-radius: inherit; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
-html.lq:not(.escritorio) .nav button { z-index: 1; min-height: 0; height: 100%; padding: 0; justify-content: center; gap: 2px; border-radius: var(--barra-ri); font: 600 11px/1.1 'Barlow'; letter-spacing: 0; color: rgba(244, 242, 243, 0.80); white-space: nowrap; transition: transform var(--toque), font-size var(--muelle-ms) var(--muelle), color var(--toque); }
+html.lq:not(.escritorio) .nav button { z-index: 1; min-height: 0; height: 100%; padding: 0; justify-content: center; gap: 2px; border-radius: var(--barra-ri); font: 600 11px/1.1 'Barlow'; letter-spacing: 0; color: rgba(244, 242, 243, 0.80); white-space: nowrap; transition: transform var(--toque), font-size var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio) .nav button:active { transform: scale(0.94); }
-html.lq:not(.escritorio) .nav button .ic { width: 23px; height: 23px; stroke-width: 1.75; transition: color var(--toque); }
+html.lq:not(.escritorio) .nav button .ic { width: 23px; height: 23px; stroke-width: 1.75; }
 html.lq:not(.escritorio) .nav button.activo { color: #fff; font-weight: 600; }
 html.lq:not(.escritorio) .nav button.activo .ic { color: var(--rojo-texto); fill: rgba(255, 82, 105, 0.22); }
 html.lq:not(.escritorio) .nav .gl { top: 4px; left: calc(50% + 5px); }
 html.lq:not(.escritorio) .nav .gl.punto-v { top: 7px; box-shadow: 0 0 0 2px rgba(22, 22, 27, 0.9); }
-/* la gota: se desliza con transform (no cuesta); --i lo pone el propio CSS con :has, sin JS */
+/* la gota: se desliza con transform (no cuesta); --i (qué pestaña es la activa) lo pone liquid.js en .nav-in, con data-i:
+   con :has() el navegador tenía que volver a mirar la barra entera en cada cambio */
 html.lq:not(.escritorio) .nav-in::before { content: ''; position: absolute; z-index: 0; top: var(--barra-m); bottom: var(--barra-m); left: var(--barra-m); width: calc((100% - var(--barra-m) * 2) / 6); border-radius: var(--barra-ri);
   background: var(--gota); box-shadow: var(--gota-canto); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform var(--muelle-ms) var(--muelle); }
-html.lq:not(.escritorio) .nav-in:has(> button:nth-child(1).activo) { --i: 0; } html.lq:not(.escritorio) .nav-in:has(> button:nth-child(2).activo) { --i: 1; }
-html.lq:not(.escritorio) .nav-in:has(> button:nth-child(3).activo) { --i: 2; } html.lq:not(.escritorio) .nav-in:has(> button:nth-child(4).activo) { --i: 3; }
-html.lq:not(.escritorio) .nav-in:has(> button:nth-child(5).activo) { --i: 4; } html.lq:not(.escritorio) .nav-in:has(> button:nth-child(6).activo) { --i: 5; }
-html.lq:not(.escritorio) .nav-in:not(:has(> button.activo))::before { opacity: 0; }
+html.lq:not(.escritorio) .nav-in:not([data-i])::before { opacity: 0; }
 /* encogida al bajar por una lista: solo iconos; vuelve al subir, arriba del todo o al tocarla */
 html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav-in { max-width: 268px; height: 46px; --barra-h: 46px; }
 html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav button { font-size: 0; gap: 0; }
@@ -4209,7 +4208,7 @@ html.lq:not(.escritorio) main { padding-bottom: calc(var(--barra-h) + var(--flot
 
 /* ---- la cabecera: sin banda; dos cápsulas de cristal que flotan (abajo, «la cabecera») ---- */
 html.lq:not(.escritorio) .sup { background: transparent; border-bottom: 0; box-shadow: none; }
-html.lq:not(.escritorio) .sup .b-ico { background: none; box-shadow: none; border-radius: 20px; transition: transform var(--toque), background var(--toque); }
+html.lq:not(.escritorio) .sup .b-ico { background: none; box-shadow: none; border-radius: 20px; transition: transform var(--toque); }
 html.lq:not(.escritorio) .sup .b-ico:active { transform: scale(0.95); }
 
 /* ---- los selectores de sección: cápsula de cristal con la píldora que se desliza ----
@@ -4219,7 +4218,7 @@ html.lq .tabs { background: transparent; padding: 6px 12px 8px; }
 html.lq .tabs::before { content: ''; position: absolute; z-index: -1; inset: 6px 12px 8px; border-radius: 26px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
 html.lq .tabs::after { content: ''; position: absolute; z-index: -1; inset: 6px 12px 8px; border-radius: 26px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 6px 18px rgba(0, 0, 0, 0.35); pointer-events: none; }
 html.lq .tabs-in { position: relative; padding: 4px; border-radius: 26px; background: none; border: 1px solid transparent; }
-html.lq .tabs button { z-index: 1; border-radius: 22px; transition: color var(--toque), transform var(--toque); }
+html.lq .tabs button { z-index: 1; border-radius: 22px; transition: transform var(--toque); }
 html.lq .tabs button:active { transform: scale(0.96); }
 html.lq .tabs-in.con-pil::before { content: ''; position: absolute; z-index: 0; left: 0; top: 4px; height: calc(100% - 8px); width: var(--pw, 0); border-radius: 22px; background: rgba(255, 255, 255, 0.11); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
   transform: translateX(var(--px, 0)); transition: transform var(--muelle-ms) var(--muelle), width var(--muelle-ms) var(--muelle), background var(--toque); }
@@ -4259,7 +4258,7 @@ html.lq:not(.escritorio).escribiendo .escribe { bottom: calc(var(--flota) + env(
 
 /* ---- avisos de abajo y botones ---- */
 html.lq:not(.escritorio) .tostada { bottom: calc(var(--barra-h) + var(--flota) * 2 + 6px + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); border-radius: 22px; background: var(--cristal-grueso); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), var(--cristal-sombra); }
-html.lq .btn { transition: transform var(--toque), background var(--toque); }
+html.lq .btn { transition: transform var(--toque); }
 html.lq .btn:active { transform: scale(0.97); }
 html.lq #tiron { background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); border-color: var(--cristal-borde); }
 html.lq :is(.pleg, .eq2-t, .eq2-at, .radar, .club-card, .fav-btn, .busca-j, .chat [data-sugerencia]) { border-color: transparent; }
@@ -4269,8 +4268,9 @@ html.lq .sec { margin-top: var(--e6); }
 html.lq .plan { margin-top: 28px; }
 html.lq .fase { margin-top: 22px; }
 html.lq #vista .fila { padding-top: 16px; padding-bottom: 16px; }
-/* el aviso de la liga de ejemplo y las bandas, sin caja: una línea */
-html.lq .banda { background: none; padding: 2px 2px 6px; }
+/* el aviso de la liga de ejemplo y las bandas que solo informan, sin caja: una línea. Las que avisan de algo (el
+   almacenamiento lleno, la versión nueva, el plan que ha cambiado, invitar) conservan su caja y su color */
+html.lq .banda:not(.mal):not(.banda-play):not(.plan-cambio):not(.banda-actualizar):not(.banda-inv) { background: none; padding: 2px 2px 6px; }
 /* los pasos del plan: la raya de color ya dice qué es; fuera el segundo recuadro */
 html.lq .paso2 { border-radius: var(--r-ctl); }
 html.lq .op-pie { border-top-color: transparent; }
@@ -4390,7 +4390,7 @@ html.lq.escritorio .sup { top: 12px; left: 12px; bottom: 12px; width: calc(var(-
   background: var(--cristal); box-shadow: var(--cristal-brillo), var(--cristal-sombra); }
 html.lq.escritorio .sup-liga { border-bottom-color: rgba(255, 255, 255, 0.08); }
 html.lq.escritorio .sup-toca, html.lq.escritorio .sup-tx { color: var(--texto-2); }
-html.lq.escritorio .nav button, html.lq.escritorio .sup .b-ico, html.lq.escritorio .sup-preg .b-preg { border-radius: 16px; transition: transform var(--toque), background var(--toque), color var(--toque); }
+html.lq.escritorio .nav button, html.lq.escritorio .sup .b-ico, html.lq.escritorio .sup-preg .b-preg { border-radius: 16px; transition: transform var(--toque); }
 html.lq.escritorio .nav button:active, html.lq.escritorio .sup .b-ico:active { transform: scale(0.98); }
 html.lq.escritorio .nav button.activo { background: var(--gota); box-shadow: var(--gota-canto); color: #fff; }
 html.lq.escritorio .nav button.activo .ic { color: var(--rojo-texto); fill: rgba(255, 82, 105, 0.22); }
@@ -4408,3 +4408,32 @@ html.lq.escritorio .escribe textarea { background: transparent; border-color: tr
 html.lq.escritorio .escribe button { border-radius: 50%; }
 html.lq.escritorio .escribe button.micro, html.lq.escritorio .escribe button.foto { background: rgba(255, 255, 255, 0.08); }
 html.lq.escritorio .tostada { border-radius: 22px; background: var(--cristal-grueso); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), var(--cristal-sombra); }
+
+/* ---- lo demás que se apoya en la barra de abajo: con la barra flotando, va por encima de ella con su margen ---- */
+html.lq:not(.escritorio) .aw-movil { left: var(--flota); right: var(--flota); bottom: calc(var(--barra-h) + var(--flota) * 2 + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); padding: 6px 0 8px; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 18px; background: #0d0d10; }
+html.lq:not(.escritorio) body.con-aw-movil main { padding-bottom: 232px; }
+html.lq:not(.escritorio) body.con-aw-movil .tostada { bottom: calc(var(--barra-h) + var(--flota) * 2 + 98px + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); }
+
+/* ---- los filos de color: con las esquinas de 14-22 px un filo pegado al borde sale curvo; va una barra recta por dentro ---- */
+html.lq .paso2 { position: relative; box-shadow: none; }
+html.lq .paso2::before { content: ''; position: absolute; left: 0; top: 13px; bottom: 13px; width: 3px; border-radius: 0 3px 3px 0; background: var(--s3); pointer-events: none; }
+html.lq .paso2.vender::before { background: var(--sube); }
+html.lq .paso2:is(.clausular, .pujar, .comprar)::before { background: var(--rojo); }
+html.lq .eq2-t::before { top: 13px; bottom: 13px; width: 3px; border-radius: 0 3px 3px 0; }
+html.lq .eq2-at { position: relative; border: 0; padding-left: 12px; }
+html.lq .eq2-at::before { content: ''; position: absolute; left: 0; top: 13px; bottom: 13px; width: 3px; border-radius: 0 3px 3px 0; background: var(--oro); }
+html.lq .eq2-at.mal::before { background: var(--baja); }
+
+/* ---- fallos que ya estaban y se veían con la letra del móvil grande (130-160 %) o siempre ---- */
+/* el marcador de Hoy: «puedes quedarte en −61,38 M» se montaba sobre «−1,1 M hoy» */
+html.lq .marcador .m-c .d { white-space: normal; overflow-wrap: anywhere; }
+html.lq .marcador .m-c .d b { white-space: nowrap; }
+/* «PLAN DE HOY» se partía en tres líneas: no se parte, y lo de su derecha baja a otra línea si no cabe */
+html.lq .plan-cab { flex-wrap: wrap; row-gap: 8px; }
+html.lq .plan-cab .eti { white-space: nowrap; }
+/* la cabecera del campo (formación, puntos y el selector Puntos/Valor/Forma) se salía de lado */
+html.lq .campo-cab { flex-wrap: wrap; row-gap: 8px; }
+/* el plazo de un paso («antes de mañana a las 14:00») salía cortado a media letra */
+html.lq .pp-l2s .pp-cu, html.lq .pp-l2s .pp-est { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+/* en los móviles más estrechos (320 px), las cinco pestañas de Equipo van de igual ancho y justas: un punto menos de letra */
+@media (max-width: 340px) { html.lq .tabs.llenas button { font-size: 12.5px; letter-spacing: -0.2px; } }

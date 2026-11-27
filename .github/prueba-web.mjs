@@ -1370,7 +1370,8 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
         document.querySelectorAll('.tour').forEach((e) => e.remove());
         const abierta = !!document.querySelector(corta ? '.nvt' : '.nv-cap');
         const entera = !!document.querySelector('.nv-cap');
-        const boton = document.querySelector(corta ? '[data-nvt="ir"]' : '[data-nv-ir]');
+        // (0.9) una tarjeta sin `ir` solo lleva «Vale», que la cierra
+        const boton = document.querySelector(corta ? '[data-nvt="ir"], .nvt-no' : '[data-nv-ir]');
         if (boton) { boton.click(); await new Promise((ok) => setTimeout(ok, 1200)); }
         return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, vista: `${window.S.vista}:${(window.S.seg || {})[window.S.vista] || ''}`, sigue: !!document.querySelector('.nvt') };
       }, !!nw.aviso);
