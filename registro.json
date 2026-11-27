@@ -3430,7 +3430,9 @@
    "El Correo|https://www.elcorreo.com/athletic/terzic-podra-contar-vivian-imga-maroan-prefiere-20261127145306-nt.html": 1795787587000,
    "AS|https://as.com/futbol/primera/blanco-leschuk-fichaje-de-relumbron-del-juventud-de-torremolinos-f202611-n/": 1795787932000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-necesitaba-salir-casa-volver-vida-intentando-volver-normalidad-20261127_3483952.html": 1795789684000,
-   "SPORT|136932552": 1795788839000
+   "SPORT|136932552": 1795788839000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261127/1004256307/rosier-aimar-oroz-regresan-titulares.html": 1795794923000,
+   "SPORT|136915398": 1795791490000
   },
   "hechos": [
    {
@@ -3885,11 +3887,35 @@
     "nums": [
      17
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261127/1004256307/rosier-aimar-oroz-regresan-titulares.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795794923000,
+    "id": "2559",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261127/1004256307/rosier-aimar-oroz-regresan-titulares.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795794923000,
+    "id": "2338",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -4808,17 +4834,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 108575,
-  "salida": 18609,
+  "entrada": 110859,
+  "salida": 19802,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.209384,
+  "dolares": 0.210209,
   "reservado": 0
  },
  "recientes": {
@@ -9887,13 +9913,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6990,
+   "ok": 6991,
    "fallos": 0,
-   "ejecuciones": 5732,
+   "ejecuciones": 5733,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T15:56:12.704Z"
+   "ultima": "2026-11-27T16:01:12.441Z"
   }
  },
  "ptsDirecto": {},
@@ -9910,15 +9936,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:56:22.196Z"
+   "ultimaBien": "2026-11-27T16:01:30.563Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:56:22.196Z"
+   "ultimaBien": "2026-11-27T16:01:30.563Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:56:22.196Z"
+   "ultimaBien": "2026-11-27T16:01:30.563Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9926,11 +9952,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:56:22.196Z"
+   "ultimaBien": "2026-11-27T16:01:30.563Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:56:22.196Z"
+   "ultimaBien": "2026-11-27T16:01:30.563Z"
   }
  },
  "avisos": [
