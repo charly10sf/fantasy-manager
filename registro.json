@@ -3438,7 +3438,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256339/terzic-convoca-todos-disponibles-visitar-manana-malaga.html": 1795800212000,
    "AS|https://as.com/futbol/terzic-se-lleva-a-todos-los-disponibles-a-malaga-f202611-n/": 1795800933000,
    "SPORT|136938642": 1795799520000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000,
+   "SPORT|136260402": 1795800660000
   },
   "hechos": [
    {
@@ -3961,7 +3962,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -4880,17 +4881,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 123205,
-  "salida": 23537,
+  "entrada": 125255,
+  "salida": 23651,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.213311,
+  "dolares": 0.213573,
   "reservado": 0
  },
  "recientes": {
@@ -9959,13 +9960,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7022,
+   "ok": 7023,
    "fallos": 0,
-   "ejecuciones": 5764,
+   "ejecuciones": 5765,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:31:11.492Z"
+   "ultima": "2026-11-27T18:36:12.145Z"
   }
  },
  "ptsDirecto": {},
@@ -9982,15 +9983,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:31:25.301Z"
+   "ultimaBien": "2026-11-27T18:36:21.237Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:31:25.301Z"
+   "ultimaBien": "2026-11-27T18:36:21.237Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:31:25.301Z"
+   "ultimaBien": "2026-11-27T18:36:21.237Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9998,11 +9999,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:31:25.301Z"
+   "ultimaBien": "2026-11-27T18:36:21.237Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:31:25.301Z"
+   "ultimaBien": "2026-11-27T18:36:21.237Z"
   }
  },
  "avisos": [
