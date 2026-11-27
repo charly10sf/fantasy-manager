@@ -78,7 +78,7 @@ function esDe(yo) {
    15 nov, 02:08: «TODO un solo anuncio salvo ver el dinero del rival durante 5 minutos, que serán 2»):
    - El dinero de un rival (dineroRivales), POR RIVAL: 2 anuncios seguidos lo abren 5 MINUTOS; como mucho 2 veces por
      jornada. «top» en limites.json: { "rivales": 2, "anuncios": 2, "minutos": 5 }.
-   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 5 HORAS («horasQuien»: 5). Sin tope.
+   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 12 HORAS («horasQuien»: 12; Carlos, 27 nov: «durante 12 horas en vez de durante 5»). Sin tope.
    - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
      hasta las 00:00 de Madrid.
    Antes (0.6.3a-0.7.11f) las de los rivales iban por función: 2 anuncios, 2 veces por jornada y 1 hora, y a un amigo
@@ -96,7 +96,7 @@ const porJornada = (clave) => POR_JORNADA.includes(clave);
 const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
 const cfgTop = () => {
   const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {};
-  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5), parteAnuncios: Math.min(3, Math.floor(num0(t.parteAnuncios, 2))) };
+  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 12), parteAnuncios: Math.min(3, Math.floor(num0(t.parteAnuncios, 2))) };
 };
 /** cuántos anuncios pide cada vez (los del dinero de un rival, todos seguidos) */
 export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : clave === 'parteRivales' ? cfgTop().parteAnuncios : 1);
@@ -111,14 +111,19 @@ let jornadaB = 0, inicioB = 0;
 export function fijarJornada(n, ini = 0) { if (Number(n) > 0) jornadaB = Number(n); inicioB = Number(ini) > 0 ? Number(ini) : 0; }
 /* el parte de los rivales (26 nov): { hasta, n, t } (n: los anuncios ya vistos de los que pide; t: cuándo se vio el último,
    para que uno visto hace días no cuente). Se abre hasta que empieza la próxima jornada (sin saberla, 24 h) */
-// (0.8.5; Carlos, 26 nov, 23:07: «2 anuncios para que se desbloquee durante 24h») abierto 24 h; más que eso, lo guardado no vale
-const PARTE_H = 24 * 3600e3, PARTE_MAX = PARTE_H + 60e3;
+// (0.8.5; Carlos, 26 nov, 23:07: «2 anuncios para que se desbloquee durante 24h») abierto 24 h.
+// (0.8.5a; Carlos, 27 nov, 01:5x, con la propuesta: «sí, hazlo así») ABIERTO HASTA QUE EMPIECE LA JORNADA: el parte solo existe los 4
+// días antes, y con 24 h quien lo quería seguir necesitaba hasta 8 anuncios y los avisos se cortaban. Sin saber cuándo empieza, 24 h.
+// Más de 5 días guardados no valen (un valor raro no lo deja abierto para siempre)
+const PARTE_H = 24 * 3600e3, PARTE_TOPE = 5 * 24 * 3600e3, PARTE_MAX = PARTE_TOPE + 60e3;
 const parteG = () => { const g = LS.get('top-parte', null); return g && typeof g === 'object' ? g : {}; };
 const parteHasta = () => { const h = Number(parteG().hasta), t = Date.now(); return Number.isFinite(h) && h > t && h - t <= PARTE_MAX ? h : 0; };
 const parteVistos = () => { const g = parteG(), n = Math.floor(Number(g.n)); return Number(g.t) > 0 && Date.now() - g.t < 12 * 3600e3 && n > 0 ? Math.min(n, cfgTop().parteAnuncios - 1) : 0; };
-const abrirParte = (ms = 0) => { const t = Date.now(); LS.set('top-parte', { hasta: ms ? t + ms : t + PARTE_H, n: ms ? parteVistos() : 0, t: ms ? Number(parteG().t) || t : t }); };
+const abrirParte = (ms = 0) => { const t = Date.now(), fin = parteFin(); LS.set('top-parte', { hasta: ms ? t + ms : fin || t + PARTE_H, n: ms ? parteVistos() : 0, t: ms ? Number(parteG().t) || t : t }); };
 /** cuándo empieza la próxima jornada (0 si no se sabe): hasta entonces queda abierto el parte */
 export const inicioJornada = () => (inicioB > Date.now() ? inicioB : 0);
+/** (0.8.5a) hasta cuándo lo abrirían los anuncios ahora: el inicio de la jornada si se sabe y está a 5 días o menos; si no, 0 (24 h) */
+export const parteFin = () => { const i = inicioJornada(); return i && i - Date.now() <= PARTE_TOPE ? i : 0; };
 
 /* lo de hoy (para cuándo gira): cuántos anuncios has visto y, si no había anuncio, hasta cuándo va abierta gratis */
 function hoyTop() {

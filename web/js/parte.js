@@ -25,7 +25,7 @@
    que ya vende la decisión (`M.decision`).
 
    LO MEDIDO con la liga de Carlos (J4-J13) decide qué líneas salen y cuándo: está encima de LINEAS y en claude/nota-parte.md. */
-import { num, eur, antesDe, DIA } from './util.js';
+import { num, eur, antesDe, DIA, horaDe, diaDe } from './util.js';
 import { esClausulable } from './motor.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
@@ -255,10 +255,98 @@ export function parte(M, D, opc = {}) {
       }
     }
 
-    if (lineas.length) out.push({ tid, nombre, e: r.e, lleno: h.lleno, lineas });
+    // (27 nov) DE CADA RIVAL, SU FICHA, tenga o no algo que hacer: los hechos de hoy (Carlos, 27 nov, 00:42: «una persona que va
+    // a ver 2 anuncios, darle una cosa así tan pobre… puede generar una mala impresión»)
+    // (lo que ya nombra una línea no se repite en los hechos)
+    const nombrados = new Set(lineas.flatMap((l) => [l.pid, ...(l.pids || [])]).filter((x) => x != null).map(String));
+    const ficha = fichaRival(M, h, enVenta, ahora, nombrados);
+    if (lineas.some((l) => l.tipo === 'blindajes')) ficha.estado = ficha.estado.filter((e) => e.k !== 'escudos');
+    out.push({ tid, nombre, e: r.e, lleno: h.lleno, lineas, ficha });
   }
   return { ...vacio, rivales: out };
 }
+
+const POS_C = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+/**
+ * (27 nov) LA FICHA de un rival: lo que es verdad HOY, sacado de lo que ya baja la app. No predice nada (por eso no necesita
+ * medida) y no decide nada (las cifras de comprar o vender son las de Mercado y el plan, en las líneas). Poco texto:
+ *   estado   las pastillas de una línea: su saldo (`datoDinero`: solo con SU dinero abierto; lo quita `visibles`; si está en
+ *            negativo seguro no sale, que ya lo dice su línea), sus blindajes (solo si le quedan 1 o 0), su plantilla (n de
+ *            24) y los puestos en los que va corto. Lo que ya nombra una línea (`nombrados`) no se repite en los hechos
+ *   hechos   como mucho tres líneas cortas: lo suyo que te llega por cláusula (abierta o en menos de 48 h, con TU dinero),
+ *            lo que tiene a la venta y sus bajas en el once
+ *   firma    lo mismo, en corto, para ver qué ha cambiado desde la última vez que lo miraste (`novedades`); sin cifras de su dinero
+ */
+export function fichaRival(M, h, enVenta = [], ahora = Date.now(), nombrados = new Set()) {
+  const tid = h.tid, estado = [], hechos = [];
+  // (en negativo ya lo dice su línea, la primera: aquí no se repite)
+  if (!h.rojo && h.cap && h.cap.v != null) estado.push({ k: 'saldo', txt: `${eur(h.cap.v, { dec: 1 })}${h.cap.exacto ? '' : ' aprox.'}`, tono: num(h.cap.v) < 0 ? 'rojo' : '', datoDinero: true });
+  // (Carlos, 27 nov: con todo, «sería muy tocho») los blindajes, solo si ha gastado alguno
+  if (h.escudos && h.escudos.quedan != null && h.escudos.quedan < 2) estado.push({ k: 'escudos', quedan: h.escudos.quedan, txt: `${h.escudos.quedan} de 2 blindajes`, tono: h.escudos.quedan === 0 ? 'azul' : '' });
+  estado.push({ k: 'plantilla', txt: h.lleno ? `Llena · ${h.n}` : `${h.n} de ${M.TOPE || 24}`, tono: h.lleno ? 'oro' : '' });
+  const corto = [1, 2, 3, 4].filter((p) => h.falta[p] || h.faltaDuda[p]);
+  if (corto.length) estado.push({ k: 'corto', pos: corto, txt: `Corto en ${corto.map((p) => POS_C[p]).join(' y ')}`, tono: 'oro' });
+
+  // lo suyo que te llega por cláusula: el mismo filtro que «Te llegan» de Cláusulas (abierta o en menos de 48 h)
+  // (el que más te interesa primero, con el mismo `interes` de Cláusulas; nunca lo que el plan descarta)
+  const planNo = (pid) => { const d = M.decisionFichar ? M.decisionFichar(pid) : null; return !!(d && d.accion === 'no'); };
+  const cls = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.meLlega && (x.abierta || num(x.abreEn) < 2 * DIA) && x.j && !planNo(x.pid) && !nombrados.has(String(x.pid)))
+    .sort((a, b) => (b.abierta - a.abierta) || num(b.interes) - num(a.interes) || num(b.j.valor) - num(a.j.valor));
+  const enVentaPid = new Set(enVenta.map((m) => String(m.pid)));
+  if (cls.length) {
+    const c = cls[0], mas = cls.length > 1 ? ` (y ${cls.length - 1} más)` : '';
+    // con la veda de las 24 h antes de la jornada se abren todas a la vez, al empezar: se dice la hora
+    const abre = ahora + num(c.abreEn), cuandoAbre = diaDe(abre) === diaDe(ahora) ? `a las ${horaDe(abre)}` : num(c.abreEn) < DIA ? `mañana a las ${horaDe(abre)}` : `en ${durCorta(num(c.abreEn))}`;
+    // (si además lo vende, en la misma línea: no se nombra dos veces)
+    const tb = enVentaPid.has(String(c.pid)) ? ' · también lo vende' : '';
+    hechos.push({ k: 'clausula', ic: 'candado', pid: c.pid, txt: c.abierta ? `Cláusula abierta de ${c.j.nombre}: ${eur(c.clausula)}${tb}${mas}` : `Cláusula de ${c.j.nombre} ${cuandoAbre}: ${eur(c.clausula)}${tb}${mas}` });
+  }
+  const yaNombrado = cls.length ? String(cls[0].pid) : null;
+  // lo que vende: primero lo que te mejora el once (lo mismo que mira «en negativo»), con lo que te da por jornada
+  // (lo que el plan descarta, al final: nunca se enseña como lo primero que vende)
+  const venta = enVenta.filter((m) => m.j && String(m.pid) !== yaNombrado && !nombrados.has(String(m.pid))).map((m) => ({ m, g: M.mejora ? M.mejora(m.j) : 0, no: planNo(m.pid) })).sort((a, b) => a.no - b.no || b.g - a.g || num(b.m.j.valor) - num(a.m.j.valor)).map((x) => ({ ...x.m, gana: x.g }));
+  if (venta.length) {
+    const v = venta[0], buena = v.gana >= 0.5 && !planNo(v.pid);
+    hechos.push({ k: 'venta', ic: 'euro', pid: v.pid, txt: `Vende a ${v.j.nombre}${buena ? ` (+${d1(v.gana)} pts por jornada)` : ''}${venta.length > 1 ? ` y ${venta.length - 1} más` : ''}` });
+  }
+  // sus bajas en el once: de sus 11 mejores (sanos o no), los que no le juegan seguro
+  const top = h.fichas.filter((x) => x.j.pos >= 1 && x.j.pos <= 4).map((x) => x.j).sort((a, b) => M.ppEsperado(b) - M.ppEsperado(a)).slice(0, 11);
+  const fuera = top.filter((j) => h.estado(j) !== 'ok');
+  if (fuera.length) {
+    const et = { baja: '', duda: ' (duda)', 'sin-partido': ' (sin partido)' };
+    hechos.push({ k: 'bajas', ic: 'lesion', txt: `Bajas en su once: ${enLista(fuera.slice(0, 3).map((j) => `${j.nombre}${et[h.estado(j)] || ''}`))}${fuera.length > 3 ? ` y ${fuera.length - 3} más` : ''}` });
+  }
+  const firma = { rojo: !!h.rojo, quedan: h.escudos ? h.escudos.quedan : null, lleno: !!h.lleno, corto,
+    venta: Object.fromEntries(enVenta.filter((m) => m.j).map((m) => [m.pid, m.j.nombre])), abiertas: Object.fromEntries(cls.filter((x) => x.abierta).map((x) => [x.pid, x.j.nombre])) };
+  return { estado, hechos, firma };
+}
+const durCorta = (ms) => (ms >= DIA ? `${Math.round(ms / 3600e3)} h` : ms >= 3600e3 ? `${Math.floor(ms / 3600e3)} h` : `${Math.max(1, Math.round(ms / 60e3))} min`);
+
+/**
+ * (27 nov) Lo que ha cambiado de cada rival desde la última vez que miraste el parte (`antes`: { jornada, s: { tid: firma } }).
+ * Solo lo que te importa: pasa a estar en negativo, gasta un blindaje, llena la plantilla, se queda corto de un puesto, pone a
+ * alguien a la venta o se le abre una cláusula que te llega. [{ tid, k, txt }]
+ */
+export function novedades(antes, rivales, jornada) {
+  if (!antes || !antes.s || antes.jornada !== jornada) return [];
+  const out = [];
+  for (const x of rivales || []) {
+    const a = antes.s[x.tid], b = x.ficha && x.ficha.firma;
+    if (!a || !b) continue;
+    if (b.rojo && !a.rojo) out.push({ tid: x.tid, k: 'rojo', txt: 'en negativo' });
+    if (b.quedan != null && a.quedan != null && b.quedan < a.quedan) out.push({ tid: x.tid, k: 'escudos', txt: b.quedan === 0 ? 'sin blindajes' : 'ha gastado un blindaje' });
+    if (b.lleno && !a.lleno) out.push({ tid: x.tid, k: 'plantilla', txt: 'plantilla llena' });
+    const nc = (b.corto || []).filter((p) => !(a.corto || []).includes(p));
+    if (nc.length) out.push({ tid: x.tid, k: 'corto', txt: `corto en ${nc.map((p) => POS_C[p]).join(' y ')}` });
+    const nv = Object.entries(b.venta || {}).filter(([pid]) => !(a.venta || {})[pid]).map(([, n]) => n);
+    if (nv.length) out.push({ tid: x.tid, k: 'venta', txt: `vende a ${enLista(nv.slice(0, 2))}` });
+    const na = Object.entries(b.abiertas || {}).filter(([pid]) => !(a.abiertas || {})[pid]).map(([, n]) => n);
+    if (na.length) out.push({ tid: x.tid, k: 'clausula', txt: `cláusula abierta de ${enLista(na.slice(0, 2))}` });
+  }
+  return out;
+}
+/** lo que se guarda para comparar la próxima vez */
+export const firmaParte = (jornada, rivales) => ({ jornada, t: Date.now(), s: Object.fromEntries((rivales || []).filter((x) => x.ficha).map((x) => [x.tid, x.ficha.firma])) });
 
 /**
  * Lo que se puede enseñar del parte con las llaves de ahora: SOLO esto se pinta o se cuenta. `abierto`: la llave del parte;
@@ -271,9 +359,42 @@ export function parte(M, D, opc = {}) {
  */
 export function visibles(P, { abierto = false, dineroAbierto = () => false } = {}) {
   if (!P || !abierto) return [];
+  // (27 nov) cada rival sale con su ficha aunque no tenga nada que hacer; su saldo (`datoDinero`), solo con su dinero abierto
+  const sacar = (x) => (x.ficha ? (x.ficha.hechos.some((f) => f.k === 'clausula' && /abierta/.test(f.txt)) ? 2 : 0) + (x.ficha.hechos.some((f) => f.k === 'venta') ? 1 : 0) : 0);
+  const prim = (x) => (x.lineas.length ? x.lineas[0].orden : 9);
   return P.rivales.map((x) => {
     const ab = !!dineroAbierto(x.tid);
-    return { ...x, lineas: x.lineas.filter((l) => (l.llave !== 'dinero' || ab) && !(ab && l.sinDinero)).map((l) => (l.datoDinero && !ab ? { ...l, dato: '', sinCifra: true } : l)).sort((a, b) => a.orden - b.orden) };
-  }).filter((x) => x.lineas.length)
-    .sort((a, b) => a.lineas[0].orden - b.lineas[0].orden || b.lineas.length - a.lineas.length || num(a.e && a.e.pos) - num(b.e && b.e.pos) || String(a.tid).localeCompare(String(b.tid)));
+    const ficha = x.ficha ? { ...x.ficha, estado: x.ficha.estado.filter((f) => !f.datoDinero || ab) } : null;
+    return { ...x, ficha, lineas: x.lineas.filter((l) => (l.llave !== 'dinero' || ab) && !(ab && l.sinDinero)).map((l) => (l.datoDinero && !ab ? { ...l, dato: '', sinCifra: true } : l)).sort((a, b) => a.orden - b.orden) };
+  }).filter((x) => x.lineas.length || x.ficha)
+    // primero a quien le puedes sacar más: lo que tiene una línea que hacer, después lo suyo que te llega por cláusula y lo que vende
+    .sort((a, b) => prim(a) - prim(b) || b.lineas.length - a.lineas.length || sacar(b) - sacar(a) || num(a.e && a.e.pos) - num(b.e && b.e.pos) || String(a.tid).localeCompare(String(b.tid)));
+}
+
+/* (27 nov) LOS AVISOS DEL PARTE con la app cerrada (Carlos: «que incluso mande algún tipo de notificación… "oye, tal se ha
+   quedado en negativo"»; eligió con una pasada cada hora). Solo con el parte abierto y desde lo que se ve (`visibles`): pasa a
+   estar en negativo seguro, gasta su último blindaje o le sale «le falta» (que ya solo sale si te toca). NUNCA UNA CIFRA DE
+   SU DINERO: el texto es la acción de la línea, que con su dinero cerrado no la lleva, o una frase fija. Lo que ya se ha
+   visto en la app o avisado no se vuelve a avisar (`firmaAvisos`, guardada por quien llama). Tope al día: `TOPE_AVISOS`. */
+export const TOPE_AVISOS = 3;
+/** lo que se compara de una vez a otra: { jornada, s: { tid: { rojo, quedan, falta } } } */
+export const firmaAvisos = (jornada, PV) => ({ jornada, s: Object.fromEntries((PV || []).map((x) => [x.tid, {
+  rojo: x.lineas.some((l) => l.tipo === 'rojo'), quedan: x.ficha && x.ficha.firma ? x.ficha.firma.quedan : null, falta: x.lineas.some((l) => l.tipo === 'falta') }])) });
+/** los avisos que tocan entre lo guardado (`antes`) y lo de ahora (`PV`, de `visibles`): [{ k, titulo, texto, hash }] */
+export function avisosParte(antes, PV, jornada) {
+  if (!antes || !antes.s || antes.jornada !== jornada) return [];
+  const out = [];
+  for (const x of PV || []) {
+    const a = antes.s[x.tid];
+    if (!a) continue;
+    const nom = x.e && (x.e.manager || x.e.nombre) || x.nombre || 'Un rival';
+    const linea = (t) => x.lineas.find((l) => l.tipo === t);
+    const r = linea('rojo');
+    if (r && !a.rojo) out.push({ k: `parte-rojo:${jornada}:${x.tid}`, titulo: `${nom} está en negativo`, texto: r.accion, hash: 'rivales' });
+    const q = x.ficha && x.ficha.firma ? x.ficha.firma.quedan : null;
+    if (q === 0 && a.quedan != null && a.quedan > 0) { const b = linea('blindajes'); out.push({ k: `parte-blind:${jornada}:${x.tid}`, titulo: `${nom} ha gastado sus 2 blindajes`, texto: b ? b.accion : 'No puede proteger a nadie más hasta que acabe la jornada.', hash: 'rivales' }); }
+    const f = linea('falta');
+    if (f && !a.falta) out.push({ k: `parte-falta:${jornada}:${x.tid}`, titulo: `A ${nom} ${f.txt.charAt(0).toLowerCase()}${f.txt.slice(1)}`, texto: f.accion, hash: 'rivales' });
+  }
+  return out;
 }

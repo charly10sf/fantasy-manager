@@ -4089,13 +4089,30 @@ button.parte-l { cursor: pointer; }
 .parte-pie { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.35; }
 .parte-pie .pill { flex: none; }
 
-/* (0.8.5; Carlos, 26 nov, 23:13) el parte de los rivales: un botón dorado a la derecha del título de Rivales, como función top */
-.riv-tit .parte-top { margin-left: auto; }
-.parte-top { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px 6px 10px; border-radius: 99px; border: 1px solid rgba(255, 197, 71, 0.45); background: linear-gradient(135deg, rgba(255, 197, 71, 0.16), rgba(255, 197, 71, 0.06)); color: #ffc547; font: 700 15px 'Barlow'; letter-spacing: 0.2px; text-transform: none; cursor: pointer; }
-.parte-top .ic { width: 16px; height: 16px; }
-.parte-top small { padding: 1px 6px; border-radius: 99px; background: #ffc547; color: #1a1420; font: 800 10px/1.5 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; }
-.parte-top .tab-n { margin-left: 2px; }
-.parte-top.activo { background: #ffc547; color: #1a1420; border-color: #ffc547; }
-.parte-top.activo small { background: #1a1420; color: #ffc547; }
-.parte-top .tab-n { background: #ffc547; color: #1a1420; }
-.parte-top.activo .tab-n { background: #1a1420; color: #ffc547; }
+/* (27 nov, 02:51; Carlos) el parte de los rivales: la tercera pestaña de Rivales, donde iba Cláusulas, en dorado */
+.tabs button.tab-oro { color: #ffc547; background: linear-gradient(135deg, rgba(255, 197, 71, 0.18), rgba(255, 197, 71, 0.06)); box-shadow: inset 0 0 0 1px rgba(255, 197, 71, 0.4); }
+.tabs button.tab-oro .ic { width: 15px; height: 15px; }
+.tabs button.tab-oro.activo { background: #ffc547; color: #1a1420; box-shadow: none; }
+.tabs .tab-n.oro { background: #ffc547; color: #1a1420; }
+.tabs button.tab-oro.activo .tab-n.oro { background: #1a1420; color: #ffc547; }
+/* (27 nov) el parte: la ficha de cada rival (su estado en pastillas y hasta tres hechos) y lo nuevo desde la última vez */
+.parte-r > .fila .parte-nv { margin-left: auto; }
+.parte-r > .fila .posn { margin-left: 8px; color: var(--texto2); }
+.parte-r > .fila .parte-nv + .posn { margin-left: 8px; }
+.parte-r > .fila .fila-c + .posn { margin-left: auto; }
+.parte-est { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 6px; }
+.parte-esc2 { gap: 2px; }
+.parte-esc2 i { display: inline-flex; color: var(--azul); opacity: 0.3; }
+.parte-esc2 i.si { opacity: 1; }
+.parte-esc2 b { margin-left: 3px; color: var(--texto); }
+.parte-esc2.cero { box-shadow: inset 0 0 0 1px var(--azul); }
+.parte-h { display: flex; gap: 8px; align-items: flex-start; width: 100%; padding: 3px 0; border: 0; background: none; color: var(--texto2); font: inherit; font-size: var(--t-sec2); line-height: 1.35; text-align: left; }
+button.parte-h { cursor: pointer; }
+.parte-h .ic { flex: none; width: 14px; height: 14px; margin-top: 1px; opacity: 0.8; }
+.parte-nv { background: #ffc547; color: #1a1420; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; font-size: 10px; padding: 2px 7px; }
+.parte-nuevo { display: flex; gap: 10px; align-items: baseline; margin: 0 0 14px; padding: 10px 12px; border-radius: 12px; background: linear-gradient(135deg, rgba(255, 197, 71, 0.12), rgba(255, 197, 71, 0.03)); box-shadow: inset 0 0 0 1px rgba(255, 197, 71, 0.35); font-size: var(--t-sec2); line-height: 1.4; }
+.parte-nuevo .pill { flex: none; }
+/* (0.8.5a) el adelanto del parte cerrado */
+.parte-adelanto { margin: 0 0 10px; }
+.parte-adelanto .t2 { display: block; margin: 0 0 6px; }
+.parte-adelanto .parte-res { margin: 0; }

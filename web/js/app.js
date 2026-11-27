@@ -2,11 +2,12 @@
 import { esc, norm, icono, botonPlay, PLAY_URL, APP_STORE_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, guardarTexto, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, enIPhone, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras, cambiosLigeros } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, rematarAuto, efectoTras, comoVenia } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
+import { ventanaParte, parte as parteDe, visibles as parteVisibles, avisosParte, firmaAvisos, TOPE_AVISOS } from './parte.js';
 import * as Hj from './hojas.js';
 import { ponerApodo, sincronizarApodos } from './apodos.js';
 import { iniciarSinc, sincronizar, sincAntes, pararSinc } from './sinc.js';
@@ -32,7 +33,7 @@ import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, parteFin, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -1388,6 +1389,8 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
       return;
     }
+    // (27 nov) con el parte recién abierto, las pasadas de cada hora con la app cerrada empiezan ya
+    if (abierta && clave === 'parteRivales') { try { programarFondo(); } catch (e) { /* nada */ } }
     if (abierta) {
       const volver = S.anuncio && S.anuncio.volver;
       S.anuncio = null;
@@ -1397,7 +1400,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const deRival = rid != null && POR_JORNADA.includes(clave);
       const hasta = abiertaHasta(clave, rid);
-      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto 24 horas' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
+      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? `El parte, abierto ${parteFin() ? 'hasta que empiece la jornada' : '24 horas'}` : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -1461,6 +1464,8 @@ function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
   if (S.vista !== vista) nativo.toque();
+  // (27 nov) al dejar Rivales, lo visto del parte se guarda para marcar lo nuevo la próxima vez
+  if (S.vista === 'rivales' && vista !== 'rivales') V.guardarParteVisto();
   S.vista = vista;
   if (location.hash !== '#' + vista) history.replaceState(null, '', '#' + vista);
   pintar({ arriba });
@@ -1535,6 +1540,11 @@ function programarFondo() {
   // y unos 50 y 20 minutos antes de cada partido en que juega alguno de tu once, para el once confirmado
   const tOnce = (S.D ? pasadasOnce(S.D) : LS.get('fondo-onces', [])).find((x) => x > Date.now() + MIN);
   if (tOnce && (!prox || prox < Date.now() || tOnce < prox)) prox = tOnce;
+  // (27 nov) con el parte abierto y su aviso encendido, una pasada cada hora de 8:00 a 23:30 (de noche, nada)
+  if (parteVivo()) {
+    const t = Date.now() + 60 * MIN;
+    if (!callado(new Date(t)) && t < abiertaHasta('parteRivales') + 5 * MIN && (!prox || prox < Date.now() || t < prox)) prox = t;
+  }
   // (0.7.13l) y a la hora del próximo plan que sale solo (un minuto después, para que ya le toque)
   const pt = planIASolo(enDemo()) ? proximoTurno(S.M || { cierreMercado: cierre }) : null;
   if (pt && (!prox || prox < Date.now() || pt.t + MIN < prox)) prox = pt.t + MIN;
@@ -1668,6 +1678,27 @@ async function avisosInvitarFondo() {
     return [{ k: `inv:${r.est.entran}`, titulo: r.nuevos > 1 ? `${r.nuevos} amigos tuyos han entrado` : 'Tu amigo ya ha entrado', texto: `Elige ${c.rivales} rivales y mira su dinero: tienes ${c.horas} h. Está en Ajustes → Invita a un amigo`, hash: 'hoy' }];
   } catch (e) { return []; }
 }
+/* (27 nov) EL PARTE CON LA APP CERRADA (solo Android, como el parte): con el parte abierto (su llave: hasta que empiece la jornada) y su aviso
+   encendido en Ajustes, una pasada cada hora de 8:00 a 23:30 (`programarFondo`, y la liga se lee entera aunque se leyera
+   hace menos de 2 h y media) y un aviso cuando un rival pasa a estar en negativo seguro, gasta su último blindaje o le
+   sale «le falta» (que ya solo sale si te toca). Como mucho TOPE_AVISOS al día. Lo que se ve en la app no se avisa después
+   (vistas.js guarda lo visto en «parte-avisado», igual que aquí lo avisado). */
+const parteVivo = () => enApp && !enDemo() && abiertaHasta('parteRivales') > Date.now() && cfgAvisos().on && cfgAvisos().parte !== false;
+function avisosDelParte() {
+  if (!parteVivo() || !S.M || !S.D) return [];
+  const P = parteDe(S.M, S.D);
+  if (!P.toca) return [];
+  const PV = parteVisibles(P, { abierto: !bloqueada('parteRivales'), dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) });
+  const antes = LS.get(K('parte-avisado'), null);
+  LS.set(K('parte-avisado'), firmaAvisos(P.jornada, PV));
+  const lista = avisosParte(antes, PV, P.jornada);
+  const hoy = diaDe(), g = LS.get('parte-avisos-dia', null), n = g && g.d === hoy ? Number(g.n) || 0 : 0;
+  const van = lista.slice(0, Math.max(0, TOPE_AVISOS - n));
+  if (van.length) LS.set('parte-avisos-dia', { d: hoy, n: n + van.length });
+  return van;
+}
+window.__fmAvisosParte = avisosDelParte;
+
 /**
  * La pasada en segundo plano (Android abre la web sin pantalla con ?fondo=1): pone la liga al día, rehace el plan
  * con la IA si toca y avisa con notificaciones de lo nuevo. Al acabar se lo dice a la app, pase lo que pase.
@@ -1691,7 +1722,8 @@ async function trabajoFondo() {
     const fallos = callado() ? [] : [...(await avisosDeFallos()), ...(await avisosInvitarFondo())];
     if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo o de amigos`);
     const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
-    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre && !(planIASolo(enDemo()) && turnoF())) {
+    // (27 nov) con el parte abierto y su aviso encendido, la liga se lee entera cada hora (si no, cada 2 h y media)
+    if (completo && Date.now() - completo < (parteVivo() ? 55 : 150) * MIN && Date.now() < cierre && !(planIASolo(enDemo()) && turnoF())) {
       const lista = [...fallos];
       // con un partido de los tuyos a punto de empezar, el once confirmado (con la liga guardada: está al día)
       const g = foto();
@@ -1715,6 +1747,7 @@ async function trabajoFondo() {
     try { const det = await completar(S.D, S.M); if (det) S.det = { ...S.det, ...det }; } catch (e) { if (e.sesion) throw e; paso(`fichas: ${e.message}`); }
     rehacer();
     const lista = [...fallos, ...avisosNuevos(antes, S.D, S.M)];
+    try { const ap = callado() ? [] : avisosDelParte(); if (ap.length) { lista.push(...ap); paso(`parte: ${ap.length} aviso${ap.length > 1 ? 's' : ''}`); } } catch (e) { paso(`parte: ${e.message}`); }
     try {
       const o = await avisosOnce(S.D, S.M, S.fuentes && S.fuentes.alineaciones);
       if (o.length) { lista.unshift(...o); paso('once confirmado: alguno de los tuyos no es titular'); }
@@ -3499,7 +3532,7 @@ function bloqHTML(arg) {
   const [clave, como] = String(arg || '').split('|');
   const [t, x] = BLOQUEO[como] || BLOQUEO[clave] || ['Función top', ''];
   return `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <span class="bloq-grande">${icono('corona')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>${esc(dondeTop(clave).trim())}</p>
         ${enApp || enIPhone ? '' : botonPlay()}
         ${Hj.botonInvitarTop(clave)}
@@ -3696,6 +3729,27 @@ setInterval(() => {
   recargaMercadoT = ahora;
   cargar({ silencio: true });
 }, 30e3);
+
+/* (27 nov) EL PARTE AL DÍA MIENTRAS LO MIRAS (Carlos: «que durante las 24 horas que esté abierto se actualice»; eligió la
+   lectura ligera cada 10 min). Con Rivales → Parte a la vista, abierto y en su ventana, cada 10 min una mirada ligera (la
+   primera página de la actividad y el mercado: 2 peticiones, `cambiosLigeros` de datos.js) y, solo si ha pasado algo, la
+   lectura entera de siempre, como mucho una cada 20 min. Lo nuevo sale marcado en el parte (`novedades`). */
+const PARTE_MIRA = 10 * MIN, PARTE_ENTERA = 20 * MIN;
+const parteRelee = { t: 0, ligeras: 0, enteras: 0, enMarcha: false };
+window.__fmParte = parteRelee;
+async function parteAlDia() {
+  if (!S.D || !S.M || S.cargando || document.hidden || enDemo() || !sesionVale() || parteRelee.enMarcha) return;
+  if (S.vista !== 'rivales' || (S.seg.rivales || '') !== 'parte' || bloqueada('parteRivales') || !ventanaParte(S.M).toca) return;
+  const ahora = Date.now();
+  if (ahora - parteRelee.t < PARTE_MIRA || ahora - S.D.t < PARTE_MIRA) return;
+  parteRelee.t = ahora; parteRelee.enMarcha = true;
+  try {
+    const c = await cambiosLigeros(S.D);
+    parteRelee.ligeras++;
+    if (c && (c.act || c.merc) && Date.now() - S.D.t >= PARTE_ENTERA && !S.cargando) { parteRelee.enteras++; await cargar({ silencio: true }); }
+  } catch (e) { /* la mirada ligera no avisa de nada: la lectura de siempre ya lo hará */ } finally { parteRelee.enMarcha = false; }
+}
+setInterval(parteAlDia, 30e3);
 
 /* ---------------- la ficha de un jugador: puntos por jornada ---------------- */
 async function cargarDetalle(pid) {
