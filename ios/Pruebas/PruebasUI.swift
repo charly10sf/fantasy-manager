@@ -134,6 +134,8 @@ final class PruebasUI: XCTestCase {
         Thread.sleep(forTimeInterval: 2)
         XCUIDevice.shared.press(.home)
         Thread.sleep(forTimeInterval: 1)
+        // el simulador de iOS 27 vuelve a la pantalla bloqueada al salir de la app: se desbloquea (en el inicio no hace nada)
+        desbloquear()
     }
 
     /// En iOS 27 un aviso tocado en la pantalla bloqueada (o en la lista de avisos, que se le parece) no abre la app hasta
@@ -160,9 +162,9 @@ final class PruebasUI: XCTestCase {
                     // por su sitio: si la tira se va justo entre mirarla y tocarla, el toque no hace fallar la prueba
                     let marco = aviso.frame
                     sistema.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: marco.midX, dy: marco.midY)).tap()
-                    if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
-                    if aviso.exists {
-                        // sigue ahí: se ha quedado en la pantalla bloqueada (iOS 27), que pide deslizar para abrir
+                    if llega(esperar("la app tras tocar el aviso", 10, falla: false, llega)) { return true }
+                    do {
+                        // en la pantalla bloqueada (iOS 27) el toque se queda esperando a que se deslice para abrir
                         desbloquear()
                         if llega(esperar("la app tras tocar el aviso y desbloquear", 8, falla: false, llega)) { return true }
                     }
