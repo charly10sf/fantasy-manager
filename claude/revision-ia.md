@@ -77,6 +77,12 @@ Comprobadas con Carlos (las cuatro primeras, el 13 nov; el resto, de antes):
 14. Al vender, el dinero entra en el momento (Carlos, 13 nov, 23:37).
 15. Los dos blindajes de cada jornada se ponen cuando uno quiera dentro de ella, también en las 24 h de cierre (Carlos,
     13 nov, 23:37; lo de «solo con la cláusula ya abierta» es de antes, del 7 nov, y sigue valiendo).
+    COMPROBADO el 27 nov: Carlos blindó a El Hilali a las 20:27 con la jornada a las 21:00 (LaLiga enseña «Blindar
+    durante 24h» en pleno cierre). Las dos reglas juntas: lo que impide el blindaje son los 14 días del fichaje (o un
+    blindaje que aún dura), no el cierre. En el motor, `soloVeda` (solo la cierra la jornada) y `escudoYa`; a ese se le
+    blinda ANTES de que empiece la jornada, que es cuando se reabren todas (`M.paraEscudo` lo lleva el día en que se
+    reabren). Hasta ese día la app daba por cerradas las dos igual y en el cierre no proponía ningún blindaje.
+
 
 16. Cada punto de la jornada son 100.000 €: con 64 puntos, LaLiga paga 6,4 M al acabarla (Carlos, 14 nov, 10:58).
 17. Con 25 jugadores no se puede pujar por nadie más (Carlos, 14 nov).
