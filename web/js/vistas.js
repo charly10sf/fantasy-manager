@@ -18,7 +18,7 @@ import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos, origenFichaje } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
-import { parte, visibles, novedades, firmaParte } from './parte.js';
+import { parte, visibles, novedades, firmaParte, firmaAvisos } from './parte.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -1405,7 +1405,14 @@ export function parteVisto(S) {
     const rivales = visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) });
     // (27 nov) lo nuevo desde la última vez que miraste el parte: se compara con lo guardado al salir de él
     let nuevo = [], visto = null;
-    if (abierto && P.toca) { visto = LS.get(K('parte-visto'), null); nuevo = novedades(visto, rivales, P.jornada); parteFirma = firmaParte(P.jornada, rivales); }
+    if (abierto && P.toca) {
+      visto = LS.get(K('parte-visto'), null); nuevo = novedades(visto, rivales, P.jornada); parteFirma = firmaParte(P.jornada, rivales);
+      // lo que ya ves aquí no se avisa después con la app cerrada (los avisos del parte, en app.js)
+      if (S.vista === 'rivales' && S.seg && S.seg.rivales === 'parte') {
+        const fa = firmaAvisos(P.jornada, rivales), ya = LS.get(K('parte-avisado'), null);
+        if (JSON.stringify(ya) !== JSON.stringify(fa)) LS.set(K('parte-avisado'), fa);
+      }
+    }
     return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales, nuevo, vistoT: visto && visto.t };
   } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
 }

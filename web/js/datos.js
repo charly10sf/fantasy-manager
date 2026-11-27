@@ -141,6 +141,21 @@ export const pasosCarga = PASOS;
  * Si falla algo imprescindible (la cuenta, la liga, la clasificación) lanza el error; lo demás se apunta
  * en D.avisos y la app sigue con lo que tenga.
  */
+/** (27 nov, el parte de los rivales; Carlos eligió «una lectura ligera cada 10 min») LA MIRADA LIGERA: la primera página de
+    la actividad y el mercado, 2 peticiones (una lectura entera son unas 46). Dice si hay algo que la foto D no tiene: un
+    movimiento nuevo (compra, venta, cláusula, blindaje, traspaso) o algo que un mánager pone o quita de la venta. Si lo hay,
+    quien la llama lee la liga entera por el camino de siempre (así no hay una foto a medias). { act, merc } o null */
+export async function cambiosLigeros(D) {
+  if (!D || D.demo || !D.liga || !D.liga.id) return null;
+  const [ra, rm] = await Promise.all([api.actividad(D.liga.id, 0), api.mercado(D.liga.id)]);
+  const conocidos = new Set((D.actividad || []).map(claveAct));
+  const desde = num(D.t) - 7 * DIA;
+  const act = N.actividad(ra).filter((a) => a && !conocidos.has(claveAct(a)) && num(a.t) > desde).length;
+  const firma = (l) => (l || []).filter((m) => m && m.tipo === 'manager').map((m) => `${m.pid}|${m.vendedorTeamId}`).sort().join();
+  const merc = firma(N.mercado(rm, D.equipos || [])) !== firma(D.mercado);
+  return { act, merc };
+}
+
 export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
   const cancelada = () => { if (carga.cancelada) throw Object.assign(new Error('carga cancelada: se usa lo guardado'), { cancelada: true }); };
   if (enDemo()) {

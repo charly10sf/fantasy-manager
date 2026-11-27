@@ -200,6 +200,27 @@ try {
         ficha: (abierta.match(/class="parte-est"/g) || []).length === G.M.rivales.length, nuevo: /parte-nuevo/.test(conNuevo) && /en negativo/.test(conNuevo.slice(conNuevo.indexOf('parte-nuevo'))) && !/parte-nuevo/.test(otraJornada) && !/parte-nuevo/.test(abierta) };
     }
 
+    /* ---- (27 nov) los avisos del parte con la app cerrada ---- */
+    {
+      const G = window.__G, PG = parteDe(G);
+      const cerr = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ab = Pa.visibles(PG, { abierto: true, dineroAbierto: () => true });
+      const f0 = Pa.firmaAvisos(PG.jornada, cerr), antes = JSON.parse(JSON.stringify(f0));
+      if (antes.s[tid]) antes.s[tid].rojo = false;
+      const av = Pa.avisosParte(antes, cerr, PG.jornada);
+      const rojoAb = (ab.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((l) => l.tipo === 'rojo');
+      const sintetico = (lineas, quedan) => [{ tid, e: { manager: 'Fulano' }, lineas, ficha: { firma: { quedan } } }];
+      const ant = (o) => ({ jornada: 9, s: { [tid]: { rojo: false, quedan: 1, falta: false, ...o } } });
+      const lf = { tipo: 'falta', txt: 'Le falta un defensa', accion: 'Puede pujar contra ti por X.' };
+      out.avisos = {
+        rojo: av.length === 1 && /está en negativo$/.test(av[0].titulo) && av[0].hash === 'rivales' && !!av[0].texto,
+        sinCifra: !!rojoAb && !!rojoAb.dato && !JSON.stringify(av).includes(rojoAb.dato) && !/[-−]30,0|estimado/.test(JSON.stringify(av)),
+        nadaIgual: Pa.avisosParte(f0, cerr, PG.jornada).length === 0 && Pa.avisosParte(null, cerr, PG.jornada).length === 0 && Pa.avisosParte({ ...antes, jornada: -1 }, cerr, PG.jornada).length === 0,
+        blind: Pa.avisosParte(ant({ quedan: 1 }), sintetico([], 0), 9).map((x) => x.k.split(':')[0]).join() === 'parte-blind' && Pa.avisosParte(ant({ quedan: 0 }), sintetico([], 0), 9).length === 0,
+        falta: (() => { const a = Pa.avisosParte(ant({}), sintetico([lf], 1), 9); return a.length === 1 && a[0].titulo === 'A Fulano le falta un defensa' && a[0].texto === lf.accion && Pa.avisosParte(ant({ falta: true }), sintetico([lf], 1), 9).length === 0; })(),
+        tope: Pa.TOPE_AVISOS === 3,
+      };
+    }
+
     /* ---- (27 nov) la ficha de cada rival: los hechos de hoy ---- */
     {
       const A = base, P0 = parteDe(A);
@@ -277,6 +298,12 @@ try {
   ok(r.pantalla.pieSiempre, 'con la cifra a la vista, el candado del pie ya no sale');
   ok(r.pantalla.ficha, '(27 nov) abierto, cada rival sale con su ficha');
   ok(r.pantalla.nuevo, 'lo nuevo desde la última vez sale marcado (y no con lo guardado de otra jornada ni sin nada guardado)');
+  ok(r.avisos.rojo, 'aviso con la app cerrada: el que pasa a estar en negativo');
+  ok(r.avisos.sinCifra, 'el aviso no lleva ninguna cifra de su dinero');
+  ok(r.avisos.nadaIgual, 'sin cambios, sin nada guardado o con otra jornada: ningún aviso');
+  ok(r.avisos.blind, 'aviso cuando gasta su último blindaje (y no si ya los tenía gastados)');
+  ok(r.avisos.falta, 'aviso cuando le sale «le falta» (y no si ya le salía)');
+  ok(r.avisos.tope, 'como mucho 3 avisos del parte al día');
   ok(r.ficha.todos, 'la ficha: todos los rivales, cada uno con su plantilla');
   ok(r.ficha.sinSaldo, 'con su dinero cerrado, ni su saldo ni ninguna cifra de su dinero en la ficha');
   ok(r.ficha.conSaldo, 'con su dinero abierto, su saldo');

@@ -1134,6 +1134,8 @@ export function ajustes(S) {
       // (25 nov) en la app de iOS no hay pasadas con la app cerrada: se miran al abrirla
       c2 += tipo('pujas', 'Pujas que ganas o pierdes', nativo.hayFondo() ? 'Al cambiar el mercado' : 'Al abrir la app tras el cambio de mercado', 'mercado pujas ganada perdida', false);
       c2 += tipo('enMercado', 'Te interesan y salen al mercado', nativo.hayFondo() ? 'Tus favoritos y los de interés alto' : 'Tus favoritos y los de interés alto, al abrir la app', 'mercado favoritos interes sale venta', false);
+      // (27 nov) el parte de los rivales con la app cerrada: solo donde la app trabaja cerrada (Android)
+      if (nativo.hayFondo()) c2 += tipo('parte', 'Parte de los rivales', 'Con el parte abierto: quién se queda en negativo o sin blindajes', 'parte rivales negativo blindajes corto', false);
       c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
       c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
       // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo

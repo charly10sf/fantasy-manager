@@ -365,3 +365,31 @@ export function visibles(P, { abierto = false, dineroAbierto = () => false } = {
     // primero a quien le puedes sacar más: lo que tiene una línea que hacer, después lo suyo que te llega por cláusula y lo que vende
     .sort((a, b) => prim(a) - prim(b) || b.lineas.length - a.lineas.length || sacar(b) - sacar(a) || num(a.e && a.e.pos) - num(b.e && b.e.pos) || String(a.tid).localeCompare(String(b.tid)));
 }
+
+/* (27 nov) LOS AVISOS DEL PARTE con la app cerrada (Carlos: «que incluso mande algún tipo de notificación… "oye, tal se ha
+   quedado en negativo"»; eligió con una pasada cada hora). Solo con el parte abierto y desde lo que se ve (`visibles`): pasa a
+   estar en negativo seguro, gasta su último blindaje o le sale «le falta» (que ya solo sale si te toca). NUNCA UNA CIFRA DE
+   SU DINERO: el texto es la acción de la línea, que con su dinero cerrado no la lleva, o una frase fija. Lo que ya se ha
+   visto en la app o avisado no se vuelve a avisar (`firmaAvisos`, guardada por quien llama). Tope al día: `TOPE_AVISOS`. */
+export const TOPE_AVISOS = 3;
+/** lo que se compara de una vez a otra: { jornada, s: { tid: { rojo, quedan, falta } } } */
+export const firmaAvisos = (jornada, PV) => ({ jornada, s: Object.fromEntries((PV || []).map((x) => [x.tid, {
+  rojo: x.lineas.some((l) => l.tipo === 'rojo'), quedan: x.ficha && x.ficha.firma ? x.ficha.firma.quedan : null, falta: x.lineas.some((l) => l.tipo === 'falta') }])) });
+/** los avisos que tocan entre lo guardado (`antes`) y lo de ahora (`PV`, de `visibles`): [{ k, titulo, texto, hash }] */
+export function avisosParte(antes, PV, jornada) {
+  if (!antes || !antes.s || antes.jornada !== jornada) return [];
+  const out = [];
+  for (const x of PV || []) {
+    const a = antes.s[x.tid];
+    if (!a) continue;
+    const nom = x.e && (x.e.manager || x.e.nombre) || x.nombre || 'Un rival';
+    const linea = (t) => x.lineas.find((l) => l.tipo === t);
+    const r = linea('rojo');
+    if (r && !a.rojo) out.push({ k: `parte-rojo:${jornada}:${x.tid}`, titulo: `${nom} está en negativo`, texto: r.accion, hash: 'rivales' });
+    const q = x.ficha && x.ficha.firma ? x.ficha.firma.quedan : null;
+    if (q === 0 && a.quedan != null && a.quedan > 0) { const b = linea('blindajes'); out.push({ k: `parte-blind:${jornada}:${x.tid}`, titulo: `${nom} ha gastado sus 2 blindajes`, texto: b ? b.accion : 'No puede proteger a nadie más hasta que acabe la jornada.', hash: 'rivales' }); }
+    const f = linea('falta');
+    if (f && !a.falta) out.push({ k: `parte-falta:${jornada}:${x.tid}`, titulo: `A ${nom} ${f.txt.charAt(0).toLowerCase()}${f.txt.slice(1)}`, texto: f.accion, hash: 'rivales' });
+  }
+  return out;
+}
