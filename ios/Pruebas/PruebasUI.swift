@@ -127,18 +127,13 @@ final class PruebasUI: XCTestCase {
         Thread.sleep(forTimeInterval: 1.5)
     }
 
-    /// Saca la app al inicio y comprueba que ha salido: en el simulador de iOS 27 el botón de inicio a veces se pierde, así
-    /// que se repite y, si tampoco, se hace el gesto de subir desde abajo
+    /// Saca la app al inicio. En el simulador de iOS 27 el botón de inicio a veces se pierde y `app.state` dice siempre
+    /// «a la vista», así que no se puede comprobar: se pulsa dos veces (la segunda, ya en el inicio, no hace nada)
     private func salir() {
-        for intento in 0..<3 {
-            if intento < 2 { XCUIDevice.shared.press(.home) } else { desbloquear() }
-            let fin = Date().addingTimeInterval(5)
-            while Date() < fin {
-                if app.state != .runningForeground { return }
-                Thread.sleep(forTimeInterval: 0.3)
-            }
-            print("=== salir === la app sigue a la vista: otra vez")
-        }
+        XCUIDevice.shared.press(.home)
+        Thread.sleep(forTimeInterval: 2)
+        XCUIDevice.shared.press(.home)
+        Thread.sleep(forTimeInterval: 1)
     }
 
     /// En iOS 27 un aviso tocado en la pantalla bloqueada (o en la lista de avisos, que se le parece) no abre la app hasta
@@ -162,7 +157,8 @@ final class PruebasUI: XCTestCase {
                 if aviso.exists && aviso.isHittable {
                     aviso.tap()
                     if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
-                    if app.state != .runningForeground {
+                    if aviso.exists {
+                        // sigue ahí: se ha quedado en la pantalla bloqueada (iOS 27), que pide deslizar para abrir
                         desbloquear()
                         if llega(esperar("la app tras tocar el aviso y desbloquear", 8, falla: false, llega)) { return true }
                     }
