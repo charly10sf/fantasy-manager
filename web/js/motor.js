@@ -26,6 +26,8 @@ const CAL_MIN = 8;
 const RECUPERA_PUJA = 10;
 // (27 nov) «puja como mucho X» para revender, solo si con esa se gana como poco 7 de cada 10 (Carlos: «unas 7-8 de cada 10»)
 const PISO_REVENDER = 0.7;
+// (27 nov) en la curva de cada liga (`M.calGana`), una compra de hace estos días pesa la mitad que una de hoy
+const CAL_MEDIA_VIDA = 21;
 
 const EFECTO_PARTIDO = {
   sube: { b1: [-0.032, -0.101, -0.023, -0.08], b4: [-0.01, -0.026, -0.002, -0.005], b7: [0.027, 0.091, 0.027, 0.09], b9: [0.038, 0.114, 0.034, 0.104], b10: [0.072, 0.203, 0.052, 0.156] },
@@ -1187,7 +1189,7 @@ export function analizar(D, H, c, extra = {}) {
       }).filter(Boolean);
       M.pujasLiga = {
         n: pujas.length, p25: cuantil(ss, 0.25), med: cuantil(ss, 0.5), p75: cuantil(ss, 0.75), p90: cuantil(ss, 0.9), tramos,
-        todas: pujas.map((x) => ({ s: x.s, v: x.v, r: x.r, top: x.top })),
+        todas: pujas.map((x) => ({ s: x.s, v: x.v, r: x.r, top: x.top, t: x.t })),
         porEquipo: Object.fromEntries(Object.entries(porEquipo).map(([tid, l]) => [tid, { n: l.length, med: cuantil(l, 0.5), max: Math.max(...l) }])),
         ult: pujas.sort((a, b) => b.t - a.t).slice(0, 10),
       };
@@ -1223,17 +1225,15 @@ export function analizar(D, H, c, extra = {}) {
     };
     const ln25 = Math.log(2.5), SUBE_PASO = 0.01;
     const cachePaga = new Map();
-    M.pagaLiga = (v, x) => {
-      if (!(v > 0)) return null;
-      const pf = x == null ? {} : typeof x === 'object' ? x : M.perfilPuja(x);
+    /** lo que se paga por uno de valor `v` y perfil `pf` según una lista de compras (`todas`: { s, v, r, top }), mezclado con lo
+        de todas las ligas si hay pocas parecidas; null sin nada. Lo usan `pagaLiga` (con las de tu liga) y la curva de tu liga
+        (`calGana`: con las de antes de cada compra) */
+    const pagaDe = (todas, v, pf) => {
       const conPerfil = pf.r != null || pf.top != null;
-      const k = `${Math.round(Math.log(v) * 40)}|${pf.r == null ? 'x' : Math.round(pf.r * 400)}|${pf.top == null ? 'x' : pf.top ? 1 : 0}`;
-      if (cachePaga.has(k)) return cachePaga.get(k);
-      const PL = M.pujasLiga;
       let L = null;
-      if (PL && !PL.poco && PL.todas) {
+      if (todas && todas.length >= 4) {
         const lv = Math.log(v);
-        const cerca = PL.todas.map((y) => {
+        const cerca = todas.map((y) => {
           const dv = Math.abs(Math.log(y.v) - lv) / ln25;
           const dr = pf.r == null ? 0 : y.r == null ? 0.6 : Math.abs(y.r - pf.r) / SUBE_PASO;
           const dt = pf.top == null ? 0 : !!y.top !== !!pf.top ? 0.5 : 0;
@@ -1258,16 +1258,46 @@ export function analizar(D, H, c, extra = {}) {
         }
       }
       const G = M.pagaTodos(v, pf);
-      let r = null;
-      if (L || G) {
-        const wL = !L ? 0 : !G ? 1 : clamp((L.nCerca + 0.4 * (L.n - L.nCerca)) / 12, 0.2, 1);
-        const q = (p) => (L ? wL * L.q(p) : 0) + (G && wL < 1 ? (1 - wL) * G.q(p) : 0);
-        const f = (s) => (L ? wL * L.f(s) : 0) + (G && wL < 1 ? (1 - wL) * G.f(s) : 0);
-        r = { n: L ? L.n : 0, nCerca: L ? L.nCerca : 0, todos: G && wL < 1 ? G.n : 0, wL, p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9), q, f,
-          desde: L ? L.desde : null, hasta: L ? L.hasta : null, sube: L ? L.sube : 0, pf };
-      }
+      if (!L && !G) return null;
+      const wL = !L ? 0 : !G ? 1 : clamp((L.nCerca + 0.4 * (L.n - L.nCerca)) / 12, 0.2, 1);
+      const q = (p) => (L ? wL * L.q(p) : 0) + (G && wL < 1 ? (1 - wL) * G.q(p) : 0);
+      const f = (s) => (L ? wL * L.f(s) : 0) + (G && wL < 1 ? (1 - wL) * G.f(s) : 0);
+      return { n: L ? L.n : 0, nCerca: L ? L.nCerca : 0, todos: G && wL < 1 ? G.n : 0, wL, p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9), q, f,
+        desde: L ? L.desde : null, hasta: L ? L.hasta : null, sube: L ? L.sube : 0, pf };
+    };
+    M.pagaLiga = (v, x) => {
+      if (!(v > 0)) return null;
+      const pf = x == null ? {} : typeof x === 'object' ? x : M.perfilPuja(x);
+      const k = `${Math.round(Math.log(v) * 40)}|${pf.r == null ? 'x' : Math.round(pf.r * 400)}|${pf.top == null ? 'x' : pf.top ? 1 : 0}`;
+      if (cachePaga.has(k)) return cachePaga.get(k);
+      const PL = M.pujasLiga;
+      const r = pagaDe(PL && !PL.poco && PL.todas ? PL.todas : null, v, pf);
       cachePaga.set(k, r);
       return r;
+    };
+    /* (27 nov, Carlos: «que dependa de la liga de cada uno el tema de las pujas») LA CURVA DE TU LIGA: cuántas veces se gana de
+       verdad pujando lo que `pagaLiga` da por bueno, medido con las compras de TU liga. Para cada compra al mercado de los
+       últimos 45 días, lo que habría dicho `pagaLiga` solo con las de antes (y lo de todas las ligas) de pagar lo que se pagó
+       (`f`): si la liga paga como dice el modelo, esas f se reparten igual entre 0 y 1; si paga más, se amontonan arriba. La
+       parte que queda por debajo de cada p es lo que se gana pujando el cuantil p. Aparte los top y los demás (en la liga de
+       Carlos, con los top el modelo se quedaba corto y con los demás no). Con pocas compras pesa la curva medida en la liga de
+       Carlos (`CURVA_GANA`): con 30 compras (15 de top) va la mitad de cada una. { no: [f…], top: [f…] } */
+    let calGanaM = null;
+    M.calGana = () => {
+      if (calGanaM) return calGanaM;
+      const out = { no: [], top: [] };
+      const l = [...(M.comprasLiga || [])].filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
+      for (let i = 0; i < l.length; i++) {
+        const x = l[i];
+        const antes = l.slice(0, i).filter((y) => y.t < x.t - HORA);
+        const P = pagaDe(antes.length >= 4 ? antes : null, x.v, { r: x.r, top: x.top });
+        // (las de hace semanas pesan menos: una liga va pagando distinto según avanza la temporada; en la de Carlos, de un
+        // +19 % de mediana en agosto a un +5 % en noviembre. La mitad cada `CAL_MEDIA_VIDA` días)
+        if (P) out[x.top ? 'top' : 'no'].push([P.f(x.s - 1e-9), Math.pow(0.5, Math.max(0, ahora - x.t) / (CAL_MEDIA_VIDA * DIA))]);
+      }
+      for (const k of ['no', 'top']) out[k].sort((a, b) => a[0] - b[0]);
+      calGanaM = out;
+      return out;
     };
     /** de dónde sale lo de `pagaLiga`, en palabras: «por los 14 más parecidos de tu liga (de 20 M a 90 M)» */
     M.pagaTxt = (P) => {
@@ -1316,12 +1346,34 @@ export function analizar(D, H, c, extra = {}) {
     no: [[0, 0], [0.3, 0.29], [0.5, 0.55], [0.6, 0.66], [0.7, 0.73], [0.8, 0.83], [0.9, 0.93], [1, 0.98]],
     top: [[0, 0], [0.5, 0.25], [0.7, 0.48], [0.8, 0.64], [0.9, 0.8], [0.95, 0.9], [1, 0.97]],
   };
-  M.ganaReal = (f, top) => {
-    if (f == null) return null;
-    const pts = CURVA_GANA[top ? 'top' : 'no'], x = clamp(f, 0, 1);
+  /** (27 nov) lo de verdad: la curva de TU liga (`M.calGana`, lo que se ha ganado allí pujando lo que daba el modelo) mezclada
+      con la medida en la de Carlos según cuántas compras tenga la tuya (`CAL_PESO`: con 30 de los demás o 15 de top, mitad y
+      mitad). Una liga sin compras va con la de Carlos */
+  const CAL_PESO = { no: 30, top: 15 };
+  const curvaBase = (k, x) => {
+    const pts = CURVA_GANA[k];
     for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); }
     return pts[pts.length - 1][1];
   };
+  M.ganaReal = (f, top) => {
+    if (f == null) return null;
+    const k = top ? 'top' : 'no', x = clamp(f, 0, 1);
+    const base = curvaBase(k, x);
+    const fs = M.calGana ? M.calGana()[k] : [];
+    if (!fs.length) return base;
+    // (la parte de tu liga, con su peso, que se pagó por debajo de lo que dice x, sin escalones entre una compra y la
+    // siguiente: cada compra cuenta en su punto medio; como poco 0,02 y como mucho 0,98: con pocas compras, «nunca» o
+    // «siempre» no se sabe)
+    const W = fs.reduce((a, y) => a + y[1], 0);
+    let acc = 0;
+    const pts = [[0, 0], ...fs.map(([f, w]) => { const c = (acc + w / 2) / W; acc += w; return [f, c]; }), [1, 1]];
+    let h = 1;
+    for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const a = pts[i - 1], b = pts[i]; h = b[0] > a[0] ? a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]) : b[1]; break; }
+    const liga = clamp(h, 0.02, 0.98);
+    const w = W / (W + CAL_PESO[k]);
+    return w * liga + (1 - w) * base;
+  };
+  M.calGanaTxt = () => { const c = M.calGana ? M.calGana() : { no: [], top: [] }; return `${c.no.length} compras de tu liga (${c.top.length} de los top)`; };
   M.OBJ_PUJA = 0.77;
   M.PISO_PUJA = 0.5;
   M.objetivoPuja = (pid, pujas = 0) => clamp(M.OBJ_PUJA + Math.min(num(pujas), 3) * 0.025 + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.7, 0.9);
@@ -3440,7 +3492,8 @@ export function malPartidoTxt(M, pid) {
 
 export function noRevenderTxt(M, nr) {
   const P = M.pagaLiga ? M.pagaLiga(nr.j.valor, nr.pid) : null;
-  const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
+  // (27 nov) por debajo de 7 de cada 10 no se propone: la cifra, redondeada hacia abajo (si no, «7 de cada 10» con 0,66)
+  const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así solo te lo llevas ${Math.max(1, Math.floor(nr.pTope * 10))} de cada 10 veces` : '';
   const te = nr.tener, ag = nr.aguantar;
   const antes = `Para revender antes de la jornada no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${malPartidoTxt(M, nr.pid) ? ` ${malPartidoTxt(M, nr.pid)}` : ''}`;
   // (24 nov, aviso de Domy) aguantándolo sí sale: el plan lo propone si se paga con el saldo. Si está aquí es porque hoy no

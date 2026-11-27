@@ -146,6 +146,9 @@ export const ESCENAS = {
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
   // martes, con una noticia de prensa de Fran García (uno que el motor manda vender): la IA puede quitarlo por ella
   'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Fran García'); return { noticias: { lista: [{ titulo: 'Fran García será titular el sábado: el técnico lo confirma en rueda de prensa tras la lesión de su compañero', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
+  // (27 nov) la de la noticia sin las pujas ya puestas: con la puja que gana 7-8 de cada 10, en «m-noticia» el plan ya lleva a
+  // Terrats y no queda ninguna alternativa
+  'm-noticia-limpio': { hora: '2026-11-03T10:00:00+01:00', prep: 'for (const m of S.D.mercado) m.miPuja = null;', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Fran García'); return { noticias: { lista: [{ titulo: 'Fran García será titular el sábado: el técnico lo confirma en rueda de prensa tras la lesión de su compañero', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
   /* --- segunda vuelta del motor (Carlos, 14 nov). `serie(nombre, sube, baja)`: su valor de las últimas semanas, subiendo
      hasta hace `baja` días y bajando un 1,5 % al día desde entonces (y sin el histórico de LaLiga, que manda) --- */
   // martes: Catena (titular, sin otro defensa que puntúe como él) baja todos los días
