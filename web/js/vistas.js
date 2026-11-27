@@ -786,9 +786,10 @@ function planHTML(S) {
   if (!P) return h + '</div>';
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${conIA && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
-  // (Carlos, 14 nov) mientras la IA piensa, si falla o si no te quedan planes con la IA, se sigue viendo el último suyo de hoy,
-  // diciendo de cuándo es y que puede no estar al día
-  else if (esIA && !cambios && (E.cargando || E.error || E.cupo || Date.now() - P.t > 3 * 3600e3)) h += `<div class="banda plan-cambio">${icono('reloj')}<span>Es el último plan de la IA, de ${cuando(P.t)}: puede que no esté al día.${E.cargando ? ' El nuevo llega en un momento.' : ''}</span></div>`;
+  // (Carlos, 14 nov) mientras la IA piensa, si falla o si no te quedan planes con la IA, se sigue viendo el último suyo de hoy.
+  // (27 nov, Carlos: «que solo salga si han pasado 13 h desde el último plan, ya que la app da dos planes gratis al día») el
+  // aviso de «puede que no esté al día» solo sale con 13 h o más; antes salía también con la IA pensando, con un fallo, sin cupo o a las 3 h
+  else if (esIA && !cambios && Date.now() - P.t >= 13 * 3600e3) h += `<div class="banda plan-cambio">${icono('reloj')}<span>Es el último plan de la IA, de ${cuando(P.t)}: puede que no esté al día.${E.cargando ? ' El nuevo llega en un momento.' : ''}</span></div>`;
   else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${conIA ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
   // (22 nov) le has contado algo que manda después del último plan de la IA: ese ya no vale y sale el de la app con eso contado
   const UP = ultimoPlan();
