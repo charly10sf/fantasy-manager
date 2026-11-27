@@ -49,28 +49,39 @@ final class Tienda: XCTestCase {
         return app.webViews.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", rotulo)).firstMatch
     }
 
-    /// el mensaje de Google del rastreo y la pregunta del iPhone, si salen: se dice que no (como en PruebasUI)
-    private func sinRastreo(_ segundos: TimeInterval) {
+    /// (iOS 5, 27 nov) Hasta que la liga de ejemplo está cargada: quita el mensaje de Google del rastreo y la pregunta del
+    /// iPhone cada vez que salen y vuelve a tocar «Ver con una liga de ejemplo» si sigue en la pantalla de entrar. Antes se
+    /// esperaba el mensaje 20 s y se tocaba el botón una vez: en el 6,9" (26 nov, 00:28) el mensaje salió más tarde, el toque
+    /// cayó debajo de él y la prueba se quedó en la pantalla de entrar («No ha llegado: la liga de ejemplo cargada»).
+    private func hastaLaLiga(_ segundos: TimeInterval) {
         let rastreo = ["Pedir a la app que no rastree", "Ask App Not to Track"]
         let seguir = app.webViews.buttons.matching(NSPredicate(format: "label IN %@", ["Continue", "Continuar"])).firstMatch
         let fin = Date().addingTimeInterval(segundos)
-        var tocado = false
-        repeat {
-            // (una sola vez: mientras se va, el botón sigue un momento en el árbol y tocarlo otra vez falla)
-            if !tocado && seguir.exists && seguir.isHittable { seguir.tap(); tocado = true }
-            for r in rastreo where sistema.buttons[r].exists { sistema.buttons[r].tap(); return }
+        var ultimoSeguir = Date.distantPast, ultimoEjemplo = Date.distantPast
+        while Date() < fin {
+            let s = sonda()
+            if si(s["liga"]) { return }
+            var tapa = false
+            for r in rastreo where sistema.buttons[r].exists { sistema.buttons[r].tap(); tapa = true }
+            // (mientras se va, el botón sigue un momento en el árbol: no se vuelve a tocar en 3 s)
+            if seguir.exists && seguir.isHittable {
+                tapa = true
+                if Date().timeIntervalSince(ultimoSeguir) > 3 { seguir.tap(); ultimoSeguir = Date() }
+            }
+            if !tapa && si(s["noVuelto"]) {
+                let ahora = boton("Ahora no"); if ahora.exists && ahora.isHittable { ahora.tap() }
+            } else if !tapa && si(s["entrar"]) && Date().timeIntervalSince(ultimoEjemplo) > 12 {
+                let ej = boton("Ver con una liga de ejemplo")
+                if ej.exists && ej.isHittable { ej.tap(); ultimoEjemplo = Date() }
+            }
             Thread.sleep(forTimeInterval: 0.5)
-        } while Date() < fin
+        }
     }
 
     func testCapturas() {
         app.launch()
         esperar("la app abierta", 90) { self.si($0["entrar"]) || self.si($0["noVuelto"]) || self.si($0["liga"]) }
-        sinRastreo(20)
-        if si(sonda()["noVuelto"]) { boton("Ahora no").tap() }
-        if !si(sonda()["liga"]) {
-            boton("Ver con una liga de ejemplo").tap()
-        }
+        hastaLaLiga(150)
         let s = esperar("la liga de ejemplo cargada", 120) { self.si($0["liga"]) && ($0["nav"] as? Int) == 6 && !self.si($0["cargando"]) && ($0["texto"] as? Int ?? 0) > 50 }
         let abajo = ((s["s"] as? [String: Any])?["margenAbajo"] as? Double) ?? 34
         let ventana = app.windows.firstMatch.frame
