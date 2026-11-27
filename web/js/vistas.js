@@ -143,7 +143,10 @@ function tiemposHTML(S, { dentro = false } = {}) {
   const c = [];
   if (M.cierreMercado) c.push(['mercado', 'Mercado nuevo', `en ${cuenta(M.cierreMercado)}`, 'mercado']);
   const prot = M.mias.filter((x) => !x.abierta && x.abreEn < 3 * DIA && x.riesgo !== 'ninguno').sort((a, b) => a.abreEn - b.abreEn)[0];
-  if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${cuenta(prot.protegidoHasta)}`, `j:${prot.pid}`]);
+  // (27 nov, El Hilali) si es de los que hay que blindar antes de que empiece la jornada, el contador lo dice
+  const blinda = (M.paraEscudo || []).map((pid) => M.mias.find((x) => x.pid === pid)).filter((x) => x && x.soloVeda).sort((a, b) => a.abreEn - b.abreEn)[0];
+  if (blinda) c.push(['escudo', `Blinda a ${blinda.j.nombre}`, `en ${cuenta(blinda.protegidoHasta)}`, `j:${blinda.pid}`]);
+  else if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${cuenta(prot.protegidoHasta)}`, `j:${prot.pid}`]);
   const cl = M.clausulas.filter((x) => !x.abierta && x.abreEn < 2 * DIA && x.interes >= 60 && esClausulable(M, x, ahora)).sort((a, b) => a.abreEn - b.abreEn)[0];
   if (cl) c.push(['diana', `Cláusula de ${cl.j.nombre}`, `en ${cuenta(cl.protegidoHasta)}`, `j:${cl.pid}`]);
   if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${cuenta(M.paron.ini)}`, 'accion:paron']);

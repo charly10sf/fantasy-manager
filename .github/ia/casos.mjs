@@ -401,5 +401,6 @@ export const CASOS = [
   { id: 'motor-oferta-sube-alta-se-acepta', tipo: 'motor', escena: 'm-oferta-sube-alta', de: 'Carlos, 17 nov: la de un 12 % por encima, aunque suba un 1 % al día, sí',
     debe: ['^OP: Aceptar oferta Álex Baena'] },
   { id: 'motor-blinda-al-arrancar', tipo: 'motor', escena: 'm-blinda-arranque', de: 'Carlos, 14 nov (punto 9): cuando empieza la jornada se reabren las cláusulas; si te queda un blindaje y tienes un titular a tiro, se dice',
-    debe: ['^DIAS [^\\n]*se reabren las cláusulas[^\\n]*Ionut Radu'] },
+    // (27 nov, El Hilali) se dice «antes de»: a la hora en que se reabren ya lo puede pagar cualquiera
+    debe: ['^DIAS [^\\n]*antes de las [^\\n]*blinda gratis a [^\\n]*Ionut Radu[^\\n]*se reabren las cláusulas'] },
 ];

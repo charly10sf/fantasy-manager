@@ -705,9 +705,12 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     if (!x) continue;
     escudos++;
     const quien = x.pagan ? [...x.pagan.seguro, ...x.pagan.quiza].length : 0;
-    ops.push({ accion: 'blindar', ref: `B-${x.pid}`, objetivo: 'proteger', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: 'ahora', confianza: 'media', _k: `B-${x.pid}`,
-      motivo: `Su cláusula (${eur(x.clausula)}) está abierta y ${quien ? `le llega a ${quien} rival${quien > 1 ? 'es' : ''}` : 'algún rival la puede pagar'}; ${x.pierde >= 0.5 ? `te da ${d1(x.pierde)} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada). Si no, te lo pueden quitar pagando la cláusula.`,
-      datos: { porque: `cláusula abierta a tiro de ${quien || 'algún'} rival${quien === 1 ? '' : 'es'}`, cuanto: 'gratis (un anuncio)', cuando: 'ahora', siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
+    // (27 nov, El Hilali) el que solo cierra la jornada se blinda ANTES de que empiece: a esa hora se reabren todas las
+    // cláusulas a la vez. Y cuanto más cerca de esa hora, mejor: el blindaje dura M.ESCUDO_H desde que se pone
+    const antes = x.abierta ? null : x.protegidoHasta, plazo = antes ? antesDe(antes) : 'ahora', hh = antes ? cuando(antes).split(' ').pop() : '';
+    ops.push({ accion: 'blindar', ref: `B-${x.pid}`, objetivo: 'proteger', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: plazo, confianza: 'media', _k: `B-${x.pid}`,
+      motivo: `Su cláusula (${eur(x.clausula)}) ${antes ? `se reabre a las ${hh}, al empezar la jornada,` : 'está abierta'} y ${quien ? `le llega a ${quien} rival${quien > 1 ? 'es' : ''}` : 'algún rival la puede pagar'}; ${x.pierde >= 0.5 ? `te da ${d1(x.pierde)} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. ${antes ? `Ponle el blindaje antes de las ${hh}, cuanto más cerca de esa hora mejor: dura ${M.ESCUDO_H} h desde que lo pones` : `El blindaje la protege ${M.ESCUDO_H} h sin gastar nada`} (te quedan ${(M.escudosMios || {}).quedan} esta jornada). Si no, te lo pueden quitar pagando la cláusula${antes ? ` desde las ${hh}` : ''}.`,
+      datos: { porque: antes ? `su cláusula se reabre a las ${hh} a tiro de ${quien || 'algún'} rival${quien === 1 ? '' : 'es'}` : `cláusula abierta a tiro de ${quien || 'algún'} rival${quien === 1 ? '' : 'es'}`, cuanto: 'gratis (un anuncio)', cuando: plazo, siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
   }
   let cajaB = cu.caja, jorB = cu.jornada, margenB = cu.margen != null ? cu.margen : num(D.dinero) + M.deuda - num(M.misPujas);
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !y.noBlindar && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale)) && !y.ventaInercia && !vetados.has(`S-${y.pid}`)).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
@@ -829,8 +832,12 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const E = M.escudosMios || {};
     const usadosHoy = ops.filter((o) => o.accion === 'blindar' && !o.importe).length;
     const quedan = E.hasta && inicio > E.hasta ? 2 : Math.max(0, (E.quedan || 0) - usadosHoy);
-    const aTiro = M.mias.filter((y) => !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
-    if (quedan > 0 && aTiro.length) add(inicio, 98, `${hora(inicio)} se reabren las cláusulas: si te queda un blindaje gratis, úsalo en ${aTiro.slice(0, quedan).map((y) => y.j.nombre).join(' y ')} (su cláusula está casi en su valor)`);
+    // (27 nov) el que ya va en el plan de hoy con el blindaje de antes de la jornada no se repite aquí (el que se blinda
+    // hoy con la cláusula abierta, sí: ese blindaje se le acaba antes); y se dice «antes de»: a esa hora ya los puede
+    // pagar cualquiera
+    const yaHoy = new Set(ops.filter((o) => o.accion === 'blindar' && !o.importe && (M.mias.find((y) => y.pid === o.pid) || {}).soloVeda).map((o) => o.pid));
+    const aTiro = M.mias.filter((y) => !yaHoy.has(y.pid) && !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
+    if (quedan > 0 && aTiro.length) add(inicio, 98, `antes de las ${hora(inicio)}, blinda gratis a ${aTiro.slice(0, quedan).map((y) => y.j.nombre).join(' y ')}: a esa hora se reabren las cláusulas y la suya está casi en su valor`);
   }
   if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
   const aRevender = [...lista.filter((o) => o.rev).map((o) => ({ pid: o.pid, nombre: o.j.nombre })), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => ({ pid: x.pid, nombre: x.j.nombre }))];

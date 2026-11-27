@@ -502,7 +502,9 @@ export function arbitro(R, D, M, eur) {
       if (imp && x.j && x.j.valor && imp > x.j.valor * 0.05 + 1) mal.push(`rC: subir la cláusula de ${q} cuesta ${eur(imp)}, más de un 5 % de su valor (${eur(x.j.valor)})`);
       if (imp && ['frena', 'giro', 'baja', 'parado'].includes(fase(o.pid))) mal.push(`rC: subir la cláusula de ${q}, que ${fase(o.pid) === 'frena' ? 'se frena' : fase(o.pid) === 'parado' ? 'se ha parado' : 'baja'}`);
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
-      else { escudos++; if (hoy && !x.abierta) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
+      // (27 nov) r15: en el cierre de la jornada sí se blinda al que ya no tiene los 14 días (ni otro blindaje); por su
+      // cuenta, sin fiarse de las marcas del motor
+      else { escudos++; const enCierre = !!x.veda && (!x.protLiga || x.protLiga <= Date.now()); if (hoy && !x.abierta && !enCierre) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
     } else if (o.retira) pujado -= +o.retira;   // una puja retirada deja de contar (se puede retirar cuando se quiera)
     else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
   }

@@ -70,9 +70,11 @@ export function acciones(D, M, c) {
   paraEscudo.forEach((x, k) => {
     const quien = [...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ');
     add({
-      tipo: 'escudo', prio: 84 - k, icono: 'escudo', pid: x.pid, cuando: 'Ahora',
+      tipo: 'escudo', prio: 84 - k, icono: 'escudo', pid: x.pid, cuando: x.soloVeda ? `Antes de las ${cuando(x.protegidoHasta).split(' ').pop()}` : 'Ahora',
       titulo: `Blinda a ${x.j.nombre} (gratis)`,
-      texto: `Su cláusula (${eur(x.clausula)}) está abierta y le llega a ${quien}. Con el blindaje de LaLiga (viendo un anuncio) queda protegida ${M.ESCUDO_H} h, hasta ${cuando(ahora + M.ESCUDO_H * HORA)}. Te quedan ${ES.quedan} esta jornada.`,
+      // (27 nov, El Hilali) cerrada solo por la jornada: se blinda antes de que se reabra, y mejor cerca de esa hora
+      texto: x.soloVeda ? `Su cláusula (${eur(x.clausula)}) se reabre ${cuando(x.protegidoHasta)}, al empezar la jornada, y le llega a ${quien}. Ponle antes el blindaje de LaLiga (viendo un anuncio): dura ${M.ESCUDO_H} h desde que lo pones, así que mejor cerca de esa hora. Te quedan ${ES.quedan} esta jornada.`
+        : `Su cláusula (${eur(x.clausula)}) está abierta y le llega a ${quien}. Con el blindaje de LaLiga (viendo un anuncio) queda protegida ${M.ESCUDO_H} h, hasta ${cuando(ahora + M.ESCUDO_H * HORA)}. Te quedan ${ES.quedan} esta jornada.`,
     });
   });
 

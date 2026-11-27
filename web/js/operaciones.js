@@ -148,7 +148,7 @@ export function catalogo(D, M, notas = []) {
     // (22 nov) «a este no lo vendo», dicho en Pregunta: venderlo no está entre lo que se puede hacer hoy
     if (!(M.noVender && M.noVender.has(x.pid))) add({ ref: `V-${x.pid}`, tipo: 'vender', pid: x.pid, j: x.j, precio: x.j.valor, compra: x.compra || null, ganado: x.ganado });
     // (sin riesgo, ni se ofrece: con la cláusula lejos de su valor no hace falta blindarlo; lo vio Carlos el 30 oct)
-    if (x.clausula && x.riesgo !== 'ninguno' && !x.noBlindar && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: x.abierta && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
+    if (x.clausula && x.riesgo !== 'ninguno' && !x.noBlindar && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, soloVeda: !!x.soloVeda, escudoYa: !!x.escudoYa, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: !!x.escudoYa && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
   }
   // P: libres de la liga
   for (const m of M.mercado) {
@@ -273,8 +273,8 @@ export function textoOp(o, M = null) {
       const quien = p && bloqueada('quienPaga') ? (p.seguro.length ? '; a algún rival le sobra el dinero para pagarla' : p.quiza.length ? '; a algún rival le llega justo' : p.hayDatos ? '; no le llega a ningún rival' : '')
         : p && (p.seguro.length || p.quiza.length || p.hayDatos) ? `; le llega a ${p.seguro.length ? p.seguro.map((x) => x.nombre).join(', ') : 'nadie seguro'}${p.quiza.length ? ` (quizá a ${p.quiza.map((x) => x.nombre).join(', ')})` : ''}${p.sinSaber.length ? ` (de ${p.sinSaber.length} no se sabe el dinero)` : ''}` : '';
       const justo = b ? (b.yaVale ? '; ya está por encima de lo que se suele pagar en esta liga por una cláusula: no hace falta subirla' : b.caro ? `; dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa${b.parcial ? `; subirla a ${eur(b.parcial.objetivo)} (${eur(b.parcial.coste)}) deja fuera a ${bloqueada('quienPaga') ? 'casi todos' : `todos menos a ${b.parcial.quedan.join(', ')}`}` : ''}` : `; subida justa: subirla a ${eur(b.objetivo)} cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar aquí por una cláusula' : 'no le llegaría a nadie'}`) : '';
-      const gratis = o.escudo ? '; YA BLINDADO con el escudo' : o.escudoGratis ? `; se puede BLINDAR GRATIS con el escudo de LaLiga (anuncio, ${(M && M.ESCUDO_H) || 24} h)${o.sugerido ? ': CONVIENE HOY' : ''}` : '';
-      return `PROTEGER ${j.nombre}: su cláusula (${eur(o.clausula)}) ${o.abierta ? 'está ABIERTA' : `se abre ${cuando(o.abre)}`}, riesgo de cláusula ${o.riesgo || '?'}${quien}${gratis}${justo.replace('subida justa: subirla', 'o pagando: subirla')}`;
+      const gratis = o.escudo ? '; YA BLINDADO con el escudo' : o.escudoGratis ? `; se puede BLINDAR GRATIS con el escudo de LaLiga (anuncio, ${(M && M.ESCUDO_H) || 24} h${o.soloVeda ? ' desde que se pone' : ''})${o.soloVeda ? `, y tiene que ser ANTES de ${cuando(o.abre)}` : ''}${o.sugerido ? ': CONVIENE HOY' : ''}` : '';
+      return `PROTEGER ${j.nombre}: su cláusula (${eur(o.clausula)}) ${o.abierta ? 'está ABIERTA' : o.soloVeda ? `está cerrada solo por el cierre de la jornada y se reabre ${cuando(o.abre)}` : `se abre ${cuando(o.abre)}`}, riesgo de cláusula ${o.riesgo || '?'}${quien}${gratis}${justo.replace('subida justa: subirla', 'o pagando: subirla')}`;
     }
     default: return '';
   }

@@ -110,7 +110,9 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
     // (24 nov, repaso) qué hacer lo dice la app igual que en Hoy y en la ficha: blindar gratis solo a los que protegería (en
     // riesgo, sin `noBlindar` y que no se venden) y si quedan blindajes; si no, la alarma solo avisa
     const protege = (x) => ['alto', 'medio'].includes(x.riesgo) && !x.noBlindar && ((M.decision ? M.decision(x.pid) : null) || {}).accion !== 'vender';
-    const protTxt = (xs) => { const p = xs.filter(protege), q = M.escudosMios ? M.escudosMios.quedan : 0; return !p.length ? '' : q ? ` ${p.length === xs.length ? (p.length > 1 ? 'Si no quieres perderlos, blíndalos gratis a esa hora.' : 'Si no quieres perderlo, blíndalo gratis a esa hora.') : `Blinda gratis a ${p.map((y) => y.j.nombre).join(' y ')}.`}` : ' No te quedan blindajes gratis esta jornada.'; };
+    // (27 nov, El Hilali) al que solo cierra la jornada se le blinda ANTES de esa hora (a esa hora ya lo pueden pagar);
+    // al que le quedan los 14 días, LaLiga no deja hasta que se abre
+    const protTxt = (xs) => { const p = xs.filter(protege), q = M.escudosMios ? M.escudosMios.quedan : 0, antes = p.length && p.every((y) => y.veda && (!y.protLiga || y.protLiga <= y.veda.abre)) ? 'antes de esa hora' : 'a esa hora'; return !p.length ? '' : q ? ` ${p.length === xs.length ? (p.length > 1 ? `Si no quieres perderlos, blíndalos gratis ${antes}.` : `Si no quieres perderlo, blíndalo gratis ${antes}.`) : `Blinda gratis a ${p.map((y) => y.j.nombre).join(' y ')}${antes === 'antes de esa hora' ? ` ${antes}` : ''}.`}` : ' No te quedan blindajes gratis esta jornada.'; };
     // las que están baratas (ratio < 1,6) o, si lo eliges, todas
     const am = A.mias * MIN;
     const expuestos = M.mias.filter((x) => !x.abierta && x.abreEn < 7 * DIA && (c.miasTodas || (x.ratio != null && x.ratio < 1.6)));

@@ -1509,8 +1509,13 @@ export function analizar(D, H, c, extra = {}) {
     const veda = M.vedaDe(protLiga);
     const prot = veda ? veda.abre : protLiga;
     const abierta = !prot || prot <= ahora;
+    // (27 nov, Carlos con El Hilali: «se le abre en 30 minutos y el plan no me dice que lo blinde») el blindaje también se
+    // pone en las 24 h de cierre (regla 15 de claude/revision-ia.md); lo único que lo impide son los 14 días del fichaje
+    // o un blindaje que aún dura. `soloVeda`: LaLiga ya no la protege y solo espera a que empiece la jornada: se blinda
+    // ANTES de esa hora (a esa hora ya la puede pagar cualquiera). `escudoYa`: se le puede poner el blindaje ahora
+    const soloVeda = !abierta && !!veda && (!protLiga || protLiga <= ahora);
     return {
-      ...f, j, teamId: tid, tend: t, abierta, protegidoHasta: prot, protLiga, veda, escudo: esc && esc >= (f.protegidoHasta || 0) ? esc : null,
+      ...f, j, teamId: tid, tend: t, abierta, soloVeda, escudoYa: abierta || soloVeda, protegidoHasta: prot, protLiga, veda, escudo: esc && esc >= (f.protegidoHasta || 0) ? esc : null,
       abreEn: abierta ? 0 : prot - ahora,
       ratio: j.valor ? f.clausula / j.valor : null,
       sobre: f.clausula - j.valor,
@@ -1749,7 +1754,7 @@ export function analizar(D, H, c, extra = {}) {
     if (veredicto === 'proteger') {
       const ES = M.escudosMios || { quedan: 0 };
       if (x.escudo) proteger = { como: 'ya' };
-      else if (ES.quedan && x.abierta) proteger = { como: 'escudo' };
+      else if (ES.quedan && x.escudoYa) proteger = x.abierta ? { como: 'escudo' } : { como: 'escudo', antes: x.protegidoHasta };
       else if (x.blindaje && !x.blindaje.yaVale && x.blindaje.coste > 0 && x.blindaje.coste <= Math.max(0, p14 || 0) / 2) proteger = { como: 'subir', objetivo: x.blindaje.objetivo, coste: x.blindaje.coste };
       else if (ES.quedan && !x.abierta) proteger = { como: 'escudo-al-abrir' };
       else proteger = { como: 'caro', coste: x.blindaje && x.blindaje.coste ? x.blindaje.coste : null };
@@ -3236,7 +3241,10 @@ export function analizar(D, H, c, extra = {}) {
   // que la puede pagar; antes que gastar en subirla. Lo usan el plan, Hoy y la ficha
   {
     const ES = M.escudosMios || { quedan: 0 };
-    M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
+    // (27 nov, El Hilali) y los que solo cierra la jornada, el día en que se reabren (o a 12 h o menos): el blindaje dura
+    // M.ESCUDO_H desde que se pone, así que puesto la víspera se gastaría casi entero con las cláusulas aún cerradas
+    const aTiempo = (x) => x.abierta || (x.soloVeda && (diaDe(x.protegidoHasta) === diaDe(ahora) || x.abreEn <= 12 * HORA) && ahora + M.ESCUDO_H * HORA > x.protegidoHasta);
+    M.paraEscudo = ES.quedan ? M.mias.filter((x) => aTiempo(x) && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
   }
   /* ---------- el cambio: vender a un titular que baja y fichar su recambio (24 nov, Carlos con Alti) ----------
      «puedo tener un jugador en el 11 titular porque no tengo otro… este jugador hay que venderlo aunque no tienes todavía
@@ -3736,8 +3744,8 @@ export function planAuto(D, M, c) {
   for (const pid of (M.paraEscudo || []).filter((p) => !vendidos.has(p))) {
     const x = M.mias.find((y) => y.pid === pid);
     if (!x) continue;
-    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: 'ahora',
-      motivo: `Su cláusula (${eur(x.clausula)}) está abierta y algún rival la puede pagar; ${x.pierde >= 0.5 ? `te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
+    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: x.abierta ? 'ahora' : antesDe(x.protegidoHasta),
+      motivo: `Su cláusula (${eur(x.clausula)}) ${x.abierta ? 'está abierta' : `se reabre ${cuando(x.protegidoHasta)}, al empezar la jornada,`} y algún rival la puede pagar; ${x.pierde >= 0.5 ? `te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
   }
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !y.noBlindar && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;
