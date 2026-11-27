@@ -3217,7 +3217,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
    "SPORT|136783558": 1795512757000,
@@ -9826,13 +9825,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6908,
+   "ok": 6909,
    "fallos": 0,
-   "ejecuciones": 5650,
+   "ejecuciones": 5651,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T09:06:15.142Z"
+   "ultima": "2026-11-27T09:11:15.988Z"
   }
  },
  "ptsDirecto": {},
@@ -9849,15 +9848,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:06:28.760Z"
+   "ultimaBien": "2026-11-27T09:11:27.121Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:06:28.760Z"
+   "ultimaBien": "2026-11-27T09:11:27.121Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:06:28.760Z"
+   "ultimaBien": "2026-11-27T09:11:27.121Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9865,11 +9864,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:06:28.760Z"
+   "ultimaBien": "2026-11-27T09:11:27.121Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:06:28.760Z"
+   "ultimaBien": "2026-11-27T09:11:27.121Z"
   }
  },
  "avisos": [
