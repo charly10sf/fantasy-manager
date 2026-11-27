@@ -2563,7 +2563,7 @@
   "2542": "out_of_league",
   "2543": "ok",
   "2545": "out_of_league",
-  "2546": "ok",
+  "2546": "doubtful",
   "2548": "ok",
   "2549": "ok",
   "2550": "injured",
@@ -4724,32 +4724,31 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000
+   "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795776392000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795777571765
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 5,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 55778,
-  "salida": 8462,
+  "entrada": 57591,
+  "salida": 9062,
   "cacheLee": 30720,
   "cacheEscribe": 19822,
-  "dolares": 0.1447,
+  "dolares": 0.145181,
   "reservado": 0
  },
  "recientes": {
@@ -9818,13 +9817,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6935,
+   "ok": 6936,
    "fallos": 0,
-   "ejecuciones": 5677,
+   "ejecuciones": 5678,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:21:13.502Z"
+   "ultima": "2026-11-27T11:26:11.794Z"
   }
  },
  "ptsDirecto": {},
@@ -9841,15 +9840,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:21:23.330Z"
+   "ultimaBien": "2026-11-27T11:26:25.947Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:21:23.330Z"
+   "ultimaBien": "2026-11-27T11:26:25.947Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:21:23.330Z"
+   "ultimaBien": "2026-11-27T11:26:25.947Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9857,11 +9856,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:21:23.330Z"
+   "ultimaBien": "2026-11-27T11:26:25.947Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:21:23.330Z"
+   "ultimaBien": "2026-11-27T11:26:25.947Z"
   }
  },
  "avisos": [
