@@ -3401,7 +3401,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-sentencia-debate-9_0_2008594734.html": 1795755643000,
    "El Correo|https://www.elcorreo.com/athletic/malaga-aferra-goles-nino-principal-amenaza-athletic-20261126004439-nt.html": 1795736680000,
    "SPORT|136908943": 1795755664000,
-   "SPORT|136890387": 1795757416000
+   "SPORT|136890387": 1795757416000,
+   "MARCA|https://www.marca.com/radio/2026/11/27/adria-altimira-reivindica-depor-recibir-barca-merecemos-primera-demostrar.html": 1795763665000,
+   "MARCA|https://www.marca.com/radio/2026/11/27/jugador-alaves-defiende-vinicius-visitar-bernabeu-dudar-jugador-talento-me-parece-poco-loco.html": 1795763683000
   },
   "hechos": [
    {
@@ -3834,7 +3836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4759,17 +4761,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 15100,
-  "salida": 1839,
+  "entrada": 17283,
+  "salida": 2013,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.05487,
+  "dolares": 0.055175,
   "reservado": 0
  },
  "recientes": {
@@ -9838,13 +9840,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6885,
+   "ok": 6886,
    "fallos": 0,
-   "ejecuciones": 5627,
+   "ejecuciones": 5628,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T07:16:15.188Z"
+   "ultima": "2026-11-27T07:21:11.561Z"
   }
  },
  "ptsDirecto": {},
@@ -9861,15 +9863,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:16:24.793Z"
+   "ultimaBien": "2026-11-27T07:21:25.362Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:16:24.793Z"
+   "ultimaBien": "2026-11-27T07:21:25.362Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:16:24.793Z"
+   "ultimaBien": "2026-11-27T07:21:25.362Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9877,11 +9879,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:16:24.793Z"
+   "ultimaBien": "2026-11-27T07:21:25.362Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T07:16:24.793Z"
+   "ultimaBien": "2026-11-27T07:21:25.362Z"
   }
  },
  "avisos": [
