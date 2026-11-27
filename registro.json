@@ -3165,7 +3165,7 @@
   "3261": "ok",
   "3262": "ok",
   "3263": "ok",
-  "3264": "injured",
+  "3264": "doubtful",
   "3265": "ok",
   "3266": "ok",
   "3267": "ok",
@@ -3217,7 +3217,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
    "SPORT|136790672": 1795518790000,
@@ -3403,7 +3402,8 @@
    "SPORT|136916910": 1795771450000,
    "Europa Press|https://www.europapress.es/deportes/motociclismo-00311/noticia-marc-marquez-anuncia-retirada-20261127105434.html": 1795773274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256150/owono-intentando-volver-normalidad-decir-asi.html": 1795774761000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/juega-betis-tabla-partido-rayo_0_2008596882.html": 1795776167000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/juega-betis-tabla-partido-rayo_0_2008596882.html": 1795776167000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/": 1795776541000
   },
   "hechos": [
    {
@@ -3808,11 +3808,23 @@
     "motivo": "molestias físicas por carga de trabajo acumulada",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/",
+    "medio": "Cadena SER",
+    "t": 1795776541000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a entrenar con el grupo del Barça",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4648,8 +4660,8 @@
     "t": 0
    },
    "3264": {
-    "e": "injured",
-    "t": 1795172472721
+    "e": "doubtful",
+    "t": 1795776674670
    },
    "3265": {
     "e": "ok",
@@ -4735,17 +4747,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 35469,
-  "salida": 5481,
+  "entrada": 37367,
+  "salida": 5821,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.058728,
+  "dolares": 0.059088,
   "reservado": 0
  },
  "recientes": {
@@ -9814,13 +9826,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6928,
+   "ok": 6929,
    "fallos": 0,
-   "ejecuciones": 5670,
+   "ejecuciones": 5671,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:46:13.038Z"
+   "ultima": "2026-11-27T10:51:14.670Z"
   }
  },
  "ptsDirecto": {},
@@ -9837,15 +9849,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:46:27.000Z"
+   "ultimaBien": "2026-11-27T10:51:30.049Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:46:27.000Z"
+   "ultimaBien": "2026-11-27T10:51:30.049Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:46:27.000Z"
+   "ultimaBien": "2026-11-27T10:51:30.049Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9853,11 +9865,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:46:27.000Z"
+   "ultimaBien": "2026-11-27T10:51:30.049Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:46:27.000Z"
+   "ultimaBien": "2026-11-27T10:51:30.049Z"
   }
  },
  "avisos": [
