@@ -2,7 +2,7 @@
 import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
 import { enApp, enIPhone } from './puente.js';
 import { mini } from './graficos.js';
-import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien } from './limite.js';
+import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien, parteFin } from './limite.js';
 import { esFav } from './favoritos.js';
 import { aviso } from './avisos-ficha.js';
 
@@ -379,7 +379,7 @@ export const BLOQUEO = {
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
   quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
-  parteRivales: ['Parte de la jornada', 'Qué le falta a cada rival y qué puedes hacer tú con eso.'],
+  parteRivales: ['Parte de la jornada', 'La ficha de cada rival, lo que ha cambiado y qué puedes hacer tú.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
@@ -388,14 +388,15 @@ export const BLOQUEO = {
 /* ---------- lo que tiene en venta cada rival (función top «ventasRivales») ---------- */
 /** sus jugadores en el mercado, con lo que pide y lo que suele dar LaLiga */
 export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(tid));
-/** (0.8a, Carlos 17 nov) el sello dorado de las funciones top */
+/** (0.8a, Carlos 17 nov) el sello dorado de las funciones top. (27 nov, 03:29) Ya no se pinta: las funciones top llevan solo la
+    corona (opción A de Carlos); se queda por si alguna web vieja lo importa */
 export const selloTop = () => `<i class="top-b">${icono('corona')}TOP</i>`;
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave, { como = null, rid = null } = {}) {
   // «como»: otra cara para la misma llave (el radar se abre con la de la inercia); «rid»: el rival (las de los rivales)
   const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', ''];
   // en la de Google Play se abre viendo anuncios (las de los rivales, por rival); en la web y la de la liga, no
-  return `<button class="bloq dorado" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null ? ` data-rival="${esc(rid)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${selloTop()}${esc(t)}</b><span>${esc(x)}${colaCandado(clave, rid)}</span></span></button>`;
+  return `<button class="bloq dorado" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null ? ` data-rival="${esc(rid)}"` : ''}><span class="bloq-ic">${icono('corona')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave, rid)}</span></span></button>`;
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
     que sale al tocarlas, nunca en las cajas */
@@ -411,7 +412,7 @@ export function colaCandado(clave, rid = null) {
 export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
-  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo 24 horas con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
+  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo ${parteFin() ? 'hasta que empiece la jornada' : '24 horas'} con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
   if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;
@@ -420,7 +421,9 @@ export function colaCandadoLarga(clave, rid = null) {
 /** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  return `<button type="button" class="pill bloq-p dorado" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${esc(texto || t)}</button>`;
+  // (27 nov, 03:29; Carlos: «si pone top, que ponga top en todas… la misma corona en todas», y eligió la opción A: solo la
+  // corona, sin candado ni «TOP») la corona de todas las funciones top
+  return `<button type="button" class="pill bloq-p dorado" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('corona')}${esc(texto || t)}</button>`;
 }
 /**
  * los candados de una misma pantalla, juntos en una tarjeta (al final): [clave] o [clave, como]. Con uno solo, su caja
@@ -431,6 +434,6 @@ export function candadosJuntos(lista, { rid = null } = {}) {
   if (!cs.length) return '';
   if (cs.length === 1) return candado(cs[0][0], { como: cs[0][1] || null, rid: POR_JORNADA.includes(cs[0][0]) ? rid : null });
   const cola = '';
-  return `<div class="bloq-g dorado"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${selloTop()}${cs.length} funciones top</b>${cola ? `<span>${cola}</span>` : ''}</span></div>
+  return `<div class="bloq-g dorado"><div class="bloq-g-cab"><span class="bloq-ic">${icono('corona')}</span><span class="bloq-c"><b>${cs.length} funciones top</b>${cola ? `<span>${cola}</span>` : ''}</span></div>
     ${cs.map(([clave, como]) => { const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', '']; return `<button class="bloq-i" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null && POR_JORNADA.includes(clave) ? ` data-rival="${esc(rid)}"` : ''}><b>${esc(t)}</b><span>${esc(x)}</span></button>`; }).join('')}</div>`;
 }

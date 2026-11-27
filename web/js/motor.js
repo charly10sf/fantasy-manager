@@ -10,6 +10,7 @@ import { textoInercia } from './inercia-texto.js';
 import { correcciones, dichoTxt } from './dicho.js';
 import { crearQuienPuja } from './quien-puja.js';
 import { ajenasDe } from './pujas-vistas.js';
+import { pujaLinea } from './puja-txt.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj, TOPE_PLANTILLA } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -21,6 +22,12 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const TRAMOS_PUJA = [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, Infinity]];
 // (0.7.13) lo que apunta la gente del dinero de los rivales (calDinero del servidor): desde cuántos apuntes cuenta, en total o en un tramo
 const CAL_MIN = 8;
+// (27 nov) lo pagado de más por la puja que gana, si se recupera teniéndolo en estos días o menos, compensa (lo de antes)
+const RECUPERA_PUJA = 10;
+// (27 nov) «puja como mucho X» para revender, solo si con esa se gana como poco 7 de cada 10 (Carlos: «unas 7-8 de cada 10»)
+const PISO_REVENDER = 0.7;
+// (27 nov) en la curva de cada liga (`M.calGana`), una compra de hace estos días pesa la mitad que una de hoy
+const CAL_MEDIA_VIDA = 21;
 
 const EFECTO_PARTIDO = {
   sube: { b1: [-0.032, -0.101, -0.023, -0.08], b4: [-0.01, -0.026, -0.002, -0.005], b7: [0.027, 0.091, 0.027, 0.09], b9: [0.038, 0.114, 0.034, 0.104], b10: [0.072, 0.203, 0.052, 0.156] },
@@ -191,12 +198,17 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- forma reciente (de la ficha de cada jugador, si se ha bajado) ---------- */
   const det = extra.det || {};
+  // (27 nov) lo que valían los que se han comprado en el mercado sin ficha ni histórico de aquí (la app los pide a LaLiga,
+  // `valorComprasSiToca` de app.js): sin eso, una liga con el histórico corto no veía casi ninguna compra suya (en el Chrome
+  // de Carlos, 44 de 157 en 45 días) y la puja salía de lo que se paga en las demás ligas, que es menos
+  const VC = extra.valorCompras || {};
   /** lo que valía un jugador en un momento (de su ficha si se ha bajado; si no, de lo que se ha ido guardando) */
   const valorEn = (pid, t) => {
     const dv = det[pid] && det[pid].valores;
     let v = null;
     if (dv && dv.length) for (const [tt, vv] of dv) { if (tt <= t) v = vv; else break; }
     if (v == null) { const d = diaDe(t); for (const [dd, vv] of (H.v && H.v[pid]) || []) { if (dd <= d) v = vv; else break; } }
+    if (v == null && VC[pid] && Array.isArray(VC[pid].v)) for (const [tt, vv] of VC[pid].v) { if (tt <= t) v = vv; else break; }
     if (v == null && ahora - t < 2 * DIA) v = J(pid).valor;
     return v;
   };
@@ -1146,13 +1158,13 @@ export function analizar(D, H, c, extra = {}) {
   {
     const clausulasAhora = new Set();
     for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulasAhora.add(`${f.pid}|${f.clausula}`);
-    const pujas = [];
+    const pujas = [], sinValor = new Set();
     for (const a of AH.lista) {
       if (a.clase !== 'compra' || a.otroId || a.otro || !a.pid || !a.importe || !a.t || ahora - a.t > 45 * DIA) continue;
       const imp = Math.abs(num(a.importe));
       if (clausulasAhora.has(`${a.pid}|${imp}`)) continue;
       const v = valorEn(a.pid, a.t - 3 * HORA);
-      if (!v) continue;
+      if (!v) { sinValor.add(String(a.pid)); continue; }
       const s = imp / v - 1;
       // (los baratos se pagan muy por encima en porcentaje: uno de 600 mil por 1,5 M es normal; Carlos, 30 oct. Antes
       // se tiraba todo lo de más de un +100 % y la liga parecía pagar por ellos mucho menos de lo que paga. Solo se tira
@@ -1162,6 +1174,7 @@ export function analizar(D, H, c, extra = {}) {
       pujas.push({ s, tid: M.teamDeUsuario(a.quienId, a.quien), v, imp, t: a.t, pid: a.pid, r: M.subidaEn(a.pid, a.t - 3 * HORA), top: v >= M.corteTop });
     }
     M.comprasLiga = pujas;
+    M.comprasSinValor = [...sinValor];
     const cuantil = (l, q) => { const o = [...l].sort((a, b) => a - b); const i = (o.length - 1) * q, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
     if (pujas.length >= 4) {
       const ss = pujas.map((x) => x.s);
@@ -1176,7 +1189,7 @@ export function analizar(D, H, c, extra = {}) {
       }).filter(Boolean);
       M.pujasLiga = {
         n: pujas.length, p25: cuantil(ss, 0.25), med: cuantil(ss, 0.5), p75: cuantil(ss, 0.75), p90: cuantil(ss, 0.9), tramos,
-        todas: pujas.map((x) => ({ s: x.s, v: x.v, r: x.r, top: x.top })),
+        todas: pujas.map((x) => ({ s: x.s, v: x.v, r: x.r, top: x.top, t: x.t })),
         porEquipo: Object.fromEntries(Object.entries(porEquipo).map(([tid, l]) => [tid, { n: l.length, med: cuantil(l, 0.5), max: Math.max(...l) }])),
         ult: pujas.sort((a, b) => b.t - a.t).slice(0, 10),
       };
@@ -1212,17 +1225,15 @@ export function analizar(D, H, c, extra = {}) {
     };
     const ln25 = Math.log(2.5), SUBE_PASO = 0.01;
     const cachePaga = new Map();
-    M.pagaLiga = (v, x) => {
-      if (!(v > 0)) return null;
-      const pf = x == null ? {} : typeof x === 'object' ? x : M.perfilPuja(x);
+    /** lo que se paga por uno de valor `v` y perfil `pf` según una lista de compras (`todas`: { s, v, r, top }), mezclado con lo
+        de todas las ligas si hay pocas parecidas; null sin nada. Lo usan `pagaLiga` (con las de tu liga) y la curva de tu liga
+        (`calGana`: con las de antes de cada compra) */
+    const pagaDe = (todas, v, pf) => {
       const conPerfil = pf.r != null || pf.top != null;
-      const k = `${Math.round(Math.log(v) * 40)}|${pf.r == null ? 'x' : Math.round(pf.r * 400)}|${pf.top == null ? 'x' : pf.top ? 1 : 0}`;
-      if (cachePaga.has(k)) return cachePaga.get(k);
-      const PL = M.pujasLiga;
       let L = null;
-      if (PL && !PL.poco && PL.todas) {
+      if (todas && todas.length >= 4) {
         const lv = Math.log(v);
-        const cerca = PL.todas.map((y) => {
+        const cerca = todas.map((y) => {
           const dv = Math.abs(Math.log(y.v) - lv) / ln25;
           const dr = pf.r == null ? 0 : y.r == null ? 0.6 : Math.abs(y.r - pf.r) / SUBE_PASO;
           const dt = pf.top == null ? 0 : !!y.top !== !!pf.top ? 0.5 : 0;
@@ -1238,21 +1249,55 @@ export function analizar(D, H, c, extra = {}) {
           const pts = o.map((y) => { const c2 = (acc + y.w / 2) / W; acc += y.w; return [c2, y.s]; });
           const ss = o.map((y) => y.s), vs = sel.map((y) => y.v);
           const q = conPerfil ? (p) => interp(pts, p) : (p) => cuantil(ss, p);
-          const f = (s) => o.reduce((s2, y) => s2 + (y.s <= s + 1e-9 ? y.w : 0), 0) / W;
+          // (27 nov) la parte que se pagó por s o menos, sin escalones entre una compra y la siguiente (con pocas compras, el
+          // escalón hacía saltar la puja de 7 a 9 de cada 10 por unos euros); por debajo de la más barata, 0, y desde la más
+          // cara, todas
+          const inv = pts.map(([c, x]) => [x, c]);
+          const f = (s) => (s < inv[0][0] ? 0 : s >= inv[inv.length - 1][0] ? 1 : interp(inv, s));
           L = { n: sel.length, nCerca: sel.filter((y) => y.d <= 1).length, q, f, desde: Math.min(...vs), hasta: Math.max(...vs), sube: sel.filter((y) => y.r != null && y.r > 0.008).length };
         }
       }
       const G = M.pagaTodos(v, pf);
-      let r = null;
-      if (L || G) {
-        const wL = !L ? 0 : !G ? 1 : clamp((L.nCerca + 0.4 * (L.n - L.nCerca)) / 12, 0.2, 1);
-        const q = (p) => (L ? wL * L.q(p) : 0) + (G && wL < 1 ? (1 - wL) * G.q(p) : 0);
-        const f = (s) => (L ? wL * L.f(s) : 0) + (G && wL < 1 ? (1 - wL) * G.f(s) : 0);
-        r = { n: L ? L.n : 0, nCerca: L ? L.nCerca : 0, todos: G && wL < 1 ? G.n : 0, wL, p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9), q, f,
-          desde: L ? L.desde : null, hasta: L ? L.hasta : null, sube: L ? L.sube : 0, pf };
-      }
+      if (!L && !G) return null;
+      const wL = !L ? 0 : !G ? 1 : clamp((L.nCerca + 0.4 * (L.n - L.nCerca)) / 12, 0.2, 1);
+      const q = (p) => (L ? wL * L.q(p) : 0) + (G && wL < 1 ? (1 - wL) * G.q(p) : 0);
+      const f = (s) => (L ? wL * L.f(s) : 0) + (G && wL < 1 ? (1 - wL) * G.f(s) : 0);
+      return { n: L ? L.n : 0, nCerca: L ? L.nCerca : 0, todos: G && wL < 1 ? G.n : 0, wL, p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9), q, f,
+        desde: L ? L.desde : null, hasta: L ? L.hasta : null, sube: L ? L.sube : 0, pf };
+    };
+    M.pagaLiga = (v, x) => {
+      if (!(v > 0)) return null;
+      const pf = x == null ? {} : typeof x === 'object' ? x : M.perfilPuja(x);
+      const k = `${Math.round(Math.log(v) * 40)}|${pf.r == null ? 'x' : Math.round(pf.r * 400)}|${pf.top == null ? 'x' : pf.top ? 1 : 0}`;
+      if (cachePaga.has(k)) return cachePaga.get(k);
+      const PL = M.pujasLiga;
+      const r = pagaDe(PL && !PL.poco && PL.todas ? PL.todas : null, v, pf);
       cachePaga.set(k, r);
       return r;
+    };
+    /* (27 nov, Carlos: «que dependa de la liga de cada uno el tema de las pujas») LA CURVA DE TU LIGA: cuántas veces se gana de
+       verdad pujando lo que `pagaLiga` da por bueno, medido con las compras de TU liga. Para cada compra al mercado de los
+       últimos 45 días, lo que habría dicho `pagaLiga` solo con las de antes (y lo de todas las ligas) de pagar lo que se pagó
+       (`f`): si la liga paga como dice el modelo, esas f se reparten igual entre 0 y 1; si paga más, se amontonan arriba. La
+       parte que queda por debajo de cada p es lo que se gana pujando el cuantil p. Aparte los top y los demás (en la liga de
+       Carlos, con los top el modelo se quedaba corto y con los demás no). Con pocas compras pesa la curva medida en la liga de
+       Carlos (`CURVA_GANA`): con 30 compras (15 de top) va la mitad de cada una. { no: [f…], top: [f…] } */
+    let calGanaM = null;
+    M.calGana = () => {
+      if (calGanaM) return calGanaM;
+      const out = { no: [], top: [] };
+      const l = [...(M.comprasLiga || [])].filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
+      for (let i = 0; i < l.length; i++) {
+        const x = l[i];
+        const antes = l.slice(0, i).filter((y) => y.t < x.t - HORA);
+        const P = pagaDe(antes.length >= 4 ? antes : null, x.v, { r: x.r, top: x.top });
+        // (las de hace semanas pesan menos: una liga va pagando distinto según avanza la temporada; en la de Carlos, de un
+        // +19 % de mediana en agosto a un +5 % en noviembre. La mitad cada `CAL_MEDIA_VIDA` días)
+        if (P) out[x.top ? 'top' : 'no'].push([P.f(x.s - 1e-9), Math.pow(0.5, Math.max(0, ahora - x.t) / (CAL_MEDIA_VIDA * DIA))]);
+      }
+      for (const k of ['no', 'top']) out[k].sort((a, b) => a[0] - b[0]);
+      calGanaM = out;
+      return out;
     };
     /** de dónde sale lo de `pagaLiga`, en palabras: «por los 14 más parecidos de tu liga (de 20 M a 90 M)» */
     M.pagaTxt = (P) => {
@@ -1290,6 +1335,64 @@ export function analizar(D, H, c, extra = {}) {
      el de 6 de cada 10 ganaba 4 de cada 10 (los de más de 30 M se pagan cada vez más por encima de las compras de antes),
      y hace falta el de 7 de cada 10 y pico; con los demás, 6 de cada 10 ganaba ~6 */
   M.qPujaGana = (pid) => clamp(0.6 + (M.perfilPuja(pid).top ? 0.12 : 0) + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.5, 0.85);
+  /* (27 nov, Carlos: «recomienda pujas muy a la baja… no tiene sentido recomendar una puja que pierde») LA PUJA QUE SE
+     RECOMIENDA GANA UNAS 7-8 DE CADA 10 VECES, NUNCA MENOS DE LA MITAD. Medido con la liga de Carlos (390 compras al mercado
+     del 16 ago al 26 nov, el motor rehecho 3 h antes de cada cierre y solo con lo de antes; .github/ia/medir-puja.mjs y
+     claude/medida-puja-27nov.md del proyecto): la puja de antes (según el interés, del cuantil 0,25 al 0,75, y recortada por
+     lo que aporta al once) ganaba el 54 % desde octubre y el 44 % con los top; lo que da `pagaLiga` casa con lo que pasa en
+     los que no son top, y con los top se queda corto (con lo que «gana 7 de cada 10» se ganaba 5). `ganaReal` es lo de
+     verdad: la curva medida (con los top, más baja). Las pujas que se ven de otros suben el objetivo */
+  const CURVA_GANA = {
+    no: [[0, 0], [0.3, 0.29], [0.5, 0.55], [0.6, 0.66], [0.7, 0.73], [0.8, 0.83], [0.9, 0.93], [1, 0.98]],
+    top: [[0, 0], [0.5, 0.25], [0.7, 0.48], [0.8, 0.64], [0.9, 0.8], [0.95, 0.9], [1, 0.97]],
+  };
+  /** (27 nov) lo de verdad: la curva de TU liga (`M.calGana`, lo que se ha ganado allí pujando lo que daba el modelo) mezclada
+      con la medida en la de Carlos según cuántas compras tenga la tuya (`CAL_PESO`: con 30 de los demás o 15 de top, mitad y
+      mitad). Una liga sin compras va con la de Carlos */
+  const CAL_PESO = { no: 30, top: 15 };
+  const curvaBase = (k, x) => {
+    const pts = CURVA_GANA[k];
+    for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); }
+    return pts[pts.length - 1][1];
+  };
+  M.ganaReal = (f, top) => {
+    if (f == null) return null;
+    const k = top ? 'top' : 'no', x = clamp(f, 0, 1);
+    const base = curvaBase(k, x);
+    const fs = M.calGana ? M.calGana()[k] : [];
+    if (!fs.length) return base;
+    // (la parte de tu liga, con su peso, que se pagó por debajo de lo que dice x, sin escalones entre una compra y la
+    // siguiente: cada compra cuenta en su punto medio; como poco 0,02 y como mucho 0,98: con pocas compras, «nunca» o
+    // «siempre» no se sabe)
+    const W = fs.reduce((a, y) => a + y[1], 0);
+    let acc = 0;
+    const pts = [[0, 0], ...fs.map(([f, w]) => { const c = (acc + w / 2) / W; acc += w; return [f, c]; }), [1, 1]];
+    let h = 1;
+    for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const a = pts[i - 1], b = pts[i]; h = b[0] > a[0] ? a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]) : b[1]; break; }
+    const liga = clamp(h, 0.02, 0.98);
+    const w = W / (W + CAL_PESO[k]);
+    return w * liga + (1 - w) * base;
+  };
+  M.calGanaTxt = () => { const c = M.calGana ? M.calGana() : { no: [], top: [] }; return `${c.no.length} compras de tu liga (${c.top.length} de los top)`; };
+  M.OBJ_PUJA = 0.77;
+  M.PISO_PUJA = 0.5;
+  M.objetivoPuja = (pid, pujas = 0) => clamp(M.OBJ_PUJA + Math.min(num(pujas), 3) * 0.025 + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.7, 0.9);
+  /** la puja más baja (desde `precio`, de 10 mil en 10 mil) con la que se gana `obj` de las veces según lo que se paga
+      por los parecidos (`PV` de `pagaLiga`), o null sin datos. { puja, p } */
+  M.pujaPara = (PV, v, precio, obj, top) => {
+    if (!PV || !(v > 0)) return null;
+    const p = (b) => M.ganaReal(PV.f(b / v - 1), top);
+    const r10 = (x) => Math.ceil(x / 10000) * 10000;
+    let lo = r10(Math.max(precio || 0, 1)), hi = r10(v * 4);
+    if (p(lo) >= obj) return { puja: lo, p: p(lo) };
+    // (si con lo que se sabe no se llega al objetivo, como lo de todas las ligas, que solo llega al cuantil 0,9: la más baja
+    // con la que se llega a lo más que se puede saber, no cuatro veces su valor)
+    const pMax = p(hi);
+    if (pMax < obj) obj = pMax - 1e-6;
+    if (!(obj > p(lo))) return { puja: lo, p: p(lo) };
+    for (let k = 0; k < 40 && hi - lo > 10000; k++) { const mid = r10((lo + hi) / 2); if (p(mid) >= obj) hi = mid; else lo = mid; }
+    return { puja: hi, p: p(hi) };
+  };
   // lo que es normal pagar de más, en porcentaje, por uno de ese valor en tu liga: lo que pagan 3 de cada 4 por los de
   // su valor, y como poco un 10 % (lo de antes para todos). A partir de ahí el porcentaje empieza a contar como sobrecoste
   M.sobreNormal = (v) => { const P = M.pagaLiga(v); return P ? Math.max(0.1, P.p75) : 0.1; };
@@ -2370,38 +2473,34 @@ export function analizar(D, H, c, extra = {}) {
     // cuantas más pujas lleva (cada una, 5 puntos más de cuantil, hasta el 90 %)
     // (0.7.13u) con los que venían como él (su subida y si es de los top), no solo los de su valor, y un cuantil más
     // arriba o abajo según las pujas tuyas que se han perdido o ganado (`M.misPujasRes`)
+    // (27 nov) la puja es UNA: la que gana unas 7-8 de cada 10 veces en tu liga (`M.pujaPara`, con lo que se paga por los
+    // parecidos y la curva medida `M.ganaReal`). Ya no baja por el interés ni se recorta por lo que aporta a tu once: si
+    // esa puja no compensa, no se rebaja a una que pierde, se dice (`noCompensa`) y el plan no la propone
     const PV = m.tipo !== 'manager' && j.valor ? M.pagaLiga(j.valor, m.pid) : null;
-    let pujaLiga = null;
-    if (PV) {
-      const nivel = clamp((i.n >= 75 ? 0.75 : i.n >= 55 ? 0.5 : 0.25) + Math.min(m.pujas, 5) * 0.05 + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.15, 0.85);
-      pujaLiga = Math.max(0, PV.q(nivel));
-      // (los cuantiles van sobre el valor; el margen, sobre la puja mínima)
-      const enPrecio = m.precio > 0 ? (j.valor * (1 + pujaLiga)) / m.precio - 1 : pujaLiga;
-      const w = PV.n >= 8 || PV.todos >= 30 ? 0.8 : 0.65;
-      margen = (1 - w) * margen + w * enPrecio;
+    const topP = m.tipo !== 'manager' && M.perfilPuja(m.pid).top;
+    const ganaCon = (p) => (PV && j.valor ? M.ganaReal(PV.f(p / j.valor - 1), topP) : null);
+    let pujaLiga = null, puja;
+    if (m.tipo === 'manager') puja = Math.ceil(m.precio / 10000) * 10000;
+    else {
+      const pp = PV ? M.pujaPara(PV, j.valor, m.precio, M.objetivoPuja(m.pid, m.pujas), topP) : null;
+      // sin compras parecidas ni de tu liga ni de las demás, una regla prudente: un 12 % sobre lo que vale (lo que pagaban 3
+      // de cada 4 en la liga de Carlos desde octubre), más por cada puja que lleva y si sube
+      puja = pp ? pp.puja : Math.ceil(Math.max(m.precio, j.valor || 0) * (1 + Math.max(0.12, margen)) / 10000) * 10000;
+      if (j.valor) pujaLiga = puja / j.valor - 1;
     }
-    if (m.tipo === 'manager') margen = 0;
-    let puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
     if (ofertaMin) puja = i.n >= 70 ? ofertaAlta : ofertaMin;
-    // la que hace falta en tu liga para llevárselo de verdad (la de 6 de cada 10 compras parecidas, o más si la app ya pujaba
-    // más), antes de los recortes por lo que aporta a tu once: para revender cuenta esta
-    const pujaGana = m.tipo === 'manager' ? null : PV && j.valor ? Math.max(puja, Math.ceil(j.valor * (1 + Math.max(0, PV.q(M.qPujaGana(m.pid)))) / 10000) * 10000) : puja;
-    // sin pasar de lo que se aguanta pagar por lo que aporta a tu once
-    let recortada = false;
-    if (m.tipo !== 'manager') {
-      const tope = M.tolerancia(j) - 15;
-      for (let k = 0; k < 60 && puja > m.precio && M.sobrecoste(j, puja, t).indice > tope; k++) { puja = Math.max(m.precio, puja - Math.max(10000, Math.round(puja * 0.01 / 10000) * 10000)); recortada = true; }
-    }
-    // con un calendario de riesgo alto, como mucho `calR.maxSobre` sobre su valor (y solo de parche)
+    const pujaGana = m.tipo === 'manager' ? null : puja;
+    // ¿compensa? Sí si lo que pagas de más se aguanta por lo que aporta a tu once (`M.tolerancia`) o lo recuperas teniéndolo
+    // en `RECUPERA_PUJA` días o menos (sube fuerte). Con un calendario de riesgo alto, como mucho `calR.maxSobre` sobre su
+    // valor (antes la puja se bajaba a eso; ahora, si para llevárselo hace falta más, no compensa)
+    // (lo de recuperarlo se mira más abajo, cuando ya está `M.tener`)
+    let noCompensa = null;
     const calR = j.pos < 5 ? M.calendarioRiesgo(j) : null;
-    let topeCal = null;
-    if (calR && calR.riesgo === 'alto' && m.tipo !== 'manager' && j.valor) {
-      const tope = Math.max(m.precio, Math.floor(j.valor * (1 + calR.maxSobre) / 10000) * 10000);
-      if (puja > tope) { puja = tope; topeCal = tope; }
+    if (m.tipo !== 'manager' && j.valor && puja > j.valor && calR && calR.riesgo === 'alto') {
+      const topeCal = Math.max(m.precio, Math.floor(j.valor * (1 + calR.maxSobre) / 10000) * 10000);
+      if (puja > topeCal) noCompensa = { motivo: 'calendario', tope: topeCal };
     }
-    // con cuánto se gana: la parte de las compras parecidas que se pagaron por lo mismo o menos
-    const ganaCon = (p) => (PV && j.valor ? PV.f(p / j.valor - 1) : null);
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, noVende, veredicto, meLlega: precioReal - num(m.miPuja) <= M.pujaMax, puja, pujaLiga, recortada, topeCal, pujaGana, pGana: ganaCon(puja), pGanaLiga: pujaGana ? ganaCon(pujaGana) : null, ofertaLiga, ofertaMin, ofertaAlta, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, noVende, veredicto, meLlega: precioReal - num(m.miPuja) <= M.pujaMax, puja, pujaLiga, recortada: false, topeCal: null, noCompensa, pujaGana, pGana: ganaCon(puja), pGanaLiga: pujaGana ? ganaCon(pujaGana) : null, ofertaLiga, ofertaMin, ofertaAlta, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   {
     // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager
@@ -2943,12 +3042,17 @@ export function analizar(D, H, c, extra = {}) {
     const p = proyectar(j, t || M.tend(j.id), AGUANTA_DIAS, vuelve(j));
     return p.r > 0.004 ? Math.max(0, p.v - num(j.valor)) : 0;
   };
-  // (0.7.13u) si la puja que gana en tu liga se recorta por lo que aporta a tu once, pero lo pagado de más se recupera
-  // teniéndolo en 10 días o menos (sube fuerte), se puja la que gana: con la recortada casi nunca te lo llevas
+  // (27 nov) ¿compensa la puja que gana? Sí si lo que pagas de más se aguanta por lo que aporta a tu once (`M.tolerancia`,
+  // lo de antes para recortarla) o lo recuperas teniéndolo en `RECUPERA_PUJA` días o menos (sube fuerte; lo de antes para
+  // no recortarla). Si no, `noCompensa` y el plan no la propone. `m.tener`: lo pagado de más y en cuántos días se recupera
   for (const m of M.mercado) {
-    if (m.tipo !== 'liga' || !m.recortada || !(m.pujaGana > m.puja) || m.topeCal) continue;
-    const te = M.tener(m.j, m.tend, m.pujaGana);
-    if (te.dias != null && te.dias <= 10) { m.puja = m.pujaGana; m.pGana = m.pGanaLiga; m.recortada = false; m.porTener = te.dias; }
+    if (m.tipo !== 'liga' || !m.j || !m.j.valor) continue;
+    const te = M.tener(m.j, m.tend, m.puja);
+    m.tener = te;
+    if (m.noCompensa || !(m.puja > m.j.valor)) continue;
+    const recupera = te.dias != null && te.dias <= RECUPERA_PUJA;
+    if (recupera) m.porTener = te.dias;
+    else if (M.sobrecoste(m.j, m.puja, m.tend).indice > M.tolerancia(m.j) - 15) m.noCompensa = { motivo: 'caro', dias: te.dias };
   }
   M.noRevender = {};
   M.especular = [];
@@ -2974,8 +3078,9 @@ export function analizar(D, H, c, extra = {}) {
       let pujaJusta = false, pGana = extraInfo && extraInfo.pGana != null ? extraInfo.pGana : null;
       if (origen === 'mercado' && extraInfo && extraInfo.precioMercado && r > 0.004 && beneficio < Math.max(250000, precio * 0.025)) {
         const tope = Math.floor(Math.min(v / 1.025, v - 250000) / 10000) * 10000;
-        const PVt = M.pagaLiga(j.valor, j.id), pT = PVt ? PVt.f(tope / j.valor - 1) : null;
-        if (tope >= extraInfo.precioMercado && tope < precio && pT != null && pT >= 0.5) {
+        // (27 nov) con lo de verdad (`M.ganaReal`) y como poco 7 de cada 10 (`PISO_REVENDER`): antes la mitad
+        const PVt = M.pagaLiga(j.valor, j.id), pT = PVt ? M.ganaReal(PVt.f(tope / j.valor - 1), M.perfilPuja(j.id).top) : null;
+        if (tope >= extraInfo.precioMercado && tope < precio && pT != null && pT >= PISO_REVENDER) {
           extraInfo = { ...extraInfo, puja: tope, pujaLiga: precio }; precio = tope; beneficio = v - tope; pujaJusta = true; pGana = pT;
         } else {
           const te = M.tener(j, t, precio, vu);
@@ -3387,7 +3492,8 @@ export function malPartidoTxt(M, pid) {
 
 export function noRevenderTxt(M, nr) {
   const P = M.pagaLiga ? M.pagaLiga(nr.j.valor, nr.pid) : null;
-  const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
+  // (27 nov) por debajo de 7 de cada 10 no se propone: la cifra, redondeada hacia abajo (si no, «7 de cada 10» con 0,66)
+  const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así solo te lo llevas ${Math.max(1, Math.floor(nr.pTope * 10))} de cada 10 veces` : '';
   const te = nr.tener, ag = nr.aguantar;
   const antes = `Para revender antes de la jornada no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${malPartidoTxt(M, nr.pid) ? ` ${malPartidoTxt(M, nr.pid)}` : ''}`;
   // (24 nov, aviso de Domy) aguantándolo sí sale: el plan lo propone si se paga con el saldo. Si está aquí es porque hoy no
@@ -3437,7 +3543,6 @@ export function pujaOnceTxt(M, m) {
   const P = M.pagaLiga ? M.pagaLiga(m.j.valor, m.pid) : null, pf = (P && P.pf) || {};
   const L = [];
   if (P && (pf.top || (pf.r != null && pf.r > 0.008))) L.push(`En tu liga, a los que ${pf.top ? 'son de los top' : 'valen como él'}${pf.r != null && pf.r > 0.008 ? ' y suben así' : ''} se los llevan con un ${pct(P.med * 100)} sobre su valor de mediana.`);
-  if (m.recortada && m.pujaGana > m.puja) L.push(`La dejo en ${eur(m.puja)} por lo que aporta a tu once; para llevártelo casi seguro harían falta unos ${eur(m.pujaGana)}.`);
   if (m.pGana != null && P) L.push(`Con ${eur(m.puja)}, ${vecesTxt(m.pGana)}.`);
   const te = M.tener ? M.tener(m.j, m.tend, m.puja) : null;
   if (te && te.deMas > 2e5) L.push(te.dias && te.dias <= 10 ? `Pagas ${eur(te.deMas)} más de lo que vale; si sigue subiendo así, lo recuperas en ${te.dias} día${te.dias === 1 ? '' : 's'}: tenerlo sale a cuenta.` : te.dias ? `Pagas ${eur(te.deMas)} más de lo que vale y tarda ${te.dias} días en recuperarse si sigue subiendo así: es para tu once, no para ganar dinero.` : `Pagas ${eur(te.deMas)} más de lo que vale y, al ritmo de ahora, no lo recuperas en un mes: es para tu once, no para ganar dinero.`);
@@ -3545,7 +3650,8 @@ export function planAuto(D, M, c) {
   let pujas = 0;
   // (19) en el parón, para el once nada del mercado que no sea un chollo claro: lo que sube va por «especular»
   // (0.7.13p, aviso de Domy) ni lo que sube hasta la vuelta y se paga a buen precio: en el parón es dinero y llega al once
-  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && ((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio) || subeHastaVuelta(M, y.j, y.puja || y.precio) || aSuValorParon(M, y, y.puja || y.precio, Math.min(saldo, caja)))
+  // (27 nov) sin las que no compensan a la puja que gana (`noCompensa`)
+  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && !y.noCompensa && ((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio) || subeHastaVuelta(M, y.j, y.puja || y.precio) || aSuValorParon(M, y, y.puja || y.precio, Math.min(saldo, caja)))
     // (0.7.13p) en el parón, con dinero de sobra, también el que está a su valor aunque la app no lo vea chollo (ni frenando)
     || (paron && ['normal', 'frena'].includes(y.veredicto) && aSuValorParon(M, y, y.puja || y.precio, Math.min(saldo, caja)))))) {
     // (0.7.13p) en el parón, el que entra por estar a su valor se paga con el saldo que queda, sin deuda; con eso, hasta 3
@@ -3556,7 +3662,7 @@ export function planAuto(D, M, c) {
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
     op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
-      motivo: `${porValor ? 'En el parón, pero sale a su valor, no baja y lo pagas con tu saldo, sin deuda: con dinero de sobra, tenerlo ya no cuesta nada. ' : ''}Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}${pujaOnceTxt(M, m)}` });
+      motivo: `${porValor ? 'En el parón, a su valor y con tu saldo: tenerlo ya no cuesta nada. ' : ''}Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada. ${pujaLinea(m)}.${cm.txt ? ` ${cm.txt}` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
   // lo mejor que no te llega todavía, para que sepas cuánto te falta

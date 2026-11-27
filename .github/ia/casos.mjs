@@ -295,9 +295,9 @@ export const CASOS = [
   { id: 'corto-ids-inventados', tipo: 'corto', escena: 'martes', de: 'cosas que se inventa: pasos y alternativas que la app no le ha dado',
     ia: (q) => JSON.stringify({ pasos: [{ id: 'p77', frase: 'Ficha a Mbappé.' }, ...pasosDe(q).map((id) => ({ id, frase: 'Vale.' }))], quita: [{ id: 'p99', motivo: 'porque sí' }], mete: [{ id: 'a9', frase: 'Clausula a Mbappé.' }, { id: 'C-1089', frase: 'Y a Lamine.' }], titular: 'Plan de hoy' }),
     debe: ['^OP: clausular Niño', '^CAMBIOS: quita \\[\\]; mete \\[\\]', '^REGLAS: ok'], nunca: ['Mbappé', 'Lamine', '^DESCARTADA:'] },
-  { id: 'corto-mete-para-cubrir', tipo: 'corto', escena: 'm-noticia', de: 'la IA quita un paso por una noticia y mete una alternativa de las que la app le pasa para cubrirlo: entra con las cuentas rehechas por el motor',
+  { id: 'corto-mete-para-cubrir', tipo: 'corto', escena: 'm-noticia-limpio', de: 'la IA quita un paso por una noticia y mete una alternativa de las que la app le pasa para cubrirlo: entra con las cuentas rehechas por el motor (27 nov: con la puja que gana 7-8 de cada 10, la alternativa, Terrats, ya no cabe sin la venta que se quita: el motor rehace las cuentas y no la mete, y el plan sigue cuadrando)',
     ia: (q) => C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Va a ser titular el sábado.' }], mete: [{ id: altsDe(q)[0], frase: 'Entra para cubrir lo que quitamos.' }] }),
-    debe: ['^CAMBIOS: quita \\[Fran García\\]; mete \\[[^\\]]+\\]', '^FRASE [^:\\n]+: Entra para cubrir', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: vender Fran García'] },
+    debe: ['^CAMBIOS: quita \\[Fran García\\]; mete \\[\\]; no aplicado \\[meter [^\\]]+\\]', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: vender Fran García', '^JORNADA: −'] },
   { id: 'corto-mete-sin-motivo', tipo: 'corto', escena: 'martes', de: 'medido con el modelo ligero (14 nov): metía alternativas sin noticia. Los números ya los ha mirado el motor: sin noticia ni nada que cubrir, no entra',
     ia: (q) => C(q, { mete: altsDe(q).map((id) => ({ id, frase: 'Me gusta para revender.' })) }),
     debe: ['^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
@@ -312,7 +312,9 @@ export const CASOS = [
     nunca: ['Gemini', 'Comuniate', 'Jornada Perfecta', 'SofaScore', 'modelo de lenguaje'], debe: ['^OP: vender Fran García'] },
   { id: 'corto-orden-que-no-cuadra', tipo: 'corto', escena: 'm-negativo', de: 'el orden es de la IA dentro de cada clase, pero el dinero manda: lo que se paga con las ventas (las pujas) no va antes que ellas (desde el 17 nov, Cubarsí ya no va para revender: con el tope solo se gana 4 de cada 10; desde el 19 nov, con la titularidad nueva, Rodri ya no se vende hoy: la venta de hoy es solo Fran García)',
     ia: (q) => C(q, { orden: [...pasosDe(q)].reverse() }),
-    debe: ['^OP: vender Fran García[^\\n]*\\(hoy\\)[\\s\\S]*^OP: pujar ', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+    // (27 nov) con la puja que gana 7-8 de cada 10 veces, en esta escena el plan ya no lleva pujas: lo que se mira es que
+    // ninguna puja vaya antes de la venta que la paga
+    debe: ['^OP: vender Fran García[^\\n]*\\(hoy\\)', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: pujar [\\s\\S]*^OP: vender Fran García'] },
   { id: 'corto-respuesta-sin-formato', tipo: 'corto', escena: 'martes', de: 'la IA contesta sin el formato: se dice y se queda el plan de la app',
     ia: 'Claro, te cuento: yo vendería a Raphinha y poco más. ¡Suerte!', error: 'sin el formato del plan' },
   { id: 'corto-quita-por-busqueda', tipo: 'corto', escena: 'martes', de: 'Carlos, 14 nov (punto 14): una noticia de la búsqueda en Google, con su fuente, vale para quitar un paso aunque la app no tenga prensa de ese jugador',
@@ -325,7 +327,9 @@ export const CASOS = [
     ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Según Futbolfantasy, se ha lesionado.', fuente: MARCA }], noticias: [{ jugador: 'Fran García', texto: 'Lesionado, lo cuenta Futbolfantasy.', efecto: 'baja', fuente: FFW }] }), [[MARCA, 'Marca: Fran García, lesionado'], [FFW, 'Futbolfantasy: onces probables']]),
     debe: ['^CAMBIOS: quita \\[Fran García\\]', '^FUENTE Marca'], nunca: ['futbolfantasy', 'Futbolfantasy', '^OP: vender Fran García'] },
   { id: 'corto-paron', tipo: 'corto', escena: 'paron', de: 'Domy, 9 nov: en el parón, dinero antes que once (el plan corto sale del motor)',
-    ia: (q) => C(q, { titular: 'Parón: toca mover el dinero' }), debe: ['^OP: [^\\n]*Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+    // (27 nov) a la puja que gana en esta liga (+34 % por los que suben), Cubarsí ya no sale para revender (perdería 7 M): el
+    // dinero del parón va a El Hilali, que aguantándolo sí sale
+    ia: (q) => C(q, { titular: 'Parón: toca mover el dinero' }), debe: ['^OP: pujar El Hilali', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: [^\\n]*Cubarsí'] },
   { id: 'corto-en-juego', tipo: 'corto', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego, ni alinear ni once',
     ia: (q) => C(q), debe: ['^REGLAS: ok'], nunca: ['^OP: alinear', '^ONCE:', '^DESCARTADA:'] },
 
@@ -342,7 +346,9 @@ export const CASOS = [
   { id: 'motor-martes-una-verdad', tipo: 'motor', escena: 'martes', de: 'Hoy, las alarmas y el plan no se contradicen (11 nov): la cláusula que Hoy enseña y me llega va en el plan',
     debe: ['^OP: clausular Niño[^\\n]*\\[titular\\]'] },
   { id: 'motor-especular-con-deuda', tipo: 'motor', escena: 'm-limpio', de: 'Carlos: entre semana tiro de deuda para comprar lo que sube y lo vendo antes de la jornada',
-    debe: ['^OP: pujar (Cubarsí|El Hilali)[^\\n]*\\[revender\\][^\\n]*vender el'] },
+    // (27 nov) a la puja que gana 7-8 de cada 10 veces en esta liga, revenderlos antes de la jornada pierde dinero: no se
+    // propone y sale en «Mirados» con la cuenta (antes se pujaba «como mucho X» ganando 5 o 6 de cada 10)
+    debe: ['^MIRADO Cubarsí: [^\\n]*Para revender antes de la jornada no sale'], nunca: ['^OP: pujar (Cubarsí|El Hilali)[^\\n]*\\[revender\\]'] },
   { id: 'motor-negativo-vuelve-a-positivo', tipo: 'motor', escena: 'm-negativo', de: 'regla 10 y Carlos, 3 nov: en negativo entre semana hay que llegar en positivo a la jornada, sin malvender hoy',
     debe: ['^JORNADA: \\d'], nunca: ['^OP: (vender|Aceptar oferta) Julián[^\\n]*\\((hoy|ahora)\\)', '^VENDE_POR_CAJA'] },
   { id: 'motor-holgado-no-hace-caja', tipo: 'motor', escena: 'm-holgado', de: 'Fornals (Carlos, 13 nov) y Carlos, 14 nov: no vendo a un suplente solo por hacer caja, y lo que sube no se vende',

@@ -13,6 +13,7 @@
       jornada) o subiéndole la cláusula */
 import { eur, pct, cuando, POS, DIA, HORA, num, dura } from './util.js';
 import { bloqueada } from './limite.js';
+import { vecesCorto, noCompensaTxt } from './puja-txt.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const nombreDe = (M, tid) => { const e = tid && M.equipo[tid]; return (e && (e.manager || e.nombre)) || 'un rival'; };
@@ -111,9 +112,9 @@ export function subeHastaVuelta(M, j, precio) {
   if (precio > j.valor + euros * Math.max(1, dias * 0.6)) return null;
   return { futuro: null, txt: `sube cada día (${eur(Math.round(j.valor * t.p1 / 100), { signo: true })} hoy)` };
 }
-/** (0.7.13u) la puja con la que se mira si algo es chollo o dinero en el parón: la de la app o, si con esa casi nunca se gana
-    en tu liga, la que gana (si no, uno de 86 M que sale a 83,7 M parecía un chollo con una puja que no se lleva nunca) */
-export const pujaReal = (o) => (o.pGana != null && o.pGana < 0.25 && o.pujaGana > (o.puja || 0) ? o.pujaGana : o.puja || o.precio);
+/** (0.7.13u) la puja con la que se mira si algo es chollo o dinero en el parón. (27 nov) Desde que la puja de la app es la
+    que gana unas 7-8 de cada 10 veces (`M.pujaPara`), es esa; antes, si con la de la app casi nunca se ganaba, la que ganaba */
+export const pujaReal = (o) => Math.max(num(o.puja), num(o.pujaGana)) || o.precio;
 /** lo que el catálogo le dice a la IA de cada cláusula o puja en el parón: chollo para el once, solo para revender o nada */
 function paronC(M, o, precio = o.precio, dinero = null) {
   if (!paronLejos(M) || !o.j) return '';
@@ -151,7 +152,7 @@ export function catalogo(D, M, notas = []) {
   }
   // P: libres de la liga
   for (const m of M.mercado) {
-    if (m.tipo === 'liga') add({ ref: `P-${m.pid}`, tipo: 'pujar', pid: m.pid, j: m.j, precio: m.precio, puja: m.puja, pujaLiga: m.pujaLiga, recortada: m.recortada, pujaGana: m.pujaGana, pGana: m.pGana, pujas: m.pujas, miPuja: m.miPuja, cierra: m.cierra, interes: m.interes, sobre: m.sobre, saldo: num(D.dinero) - num(M.misPujas) });
+    if (m.tipo === 'liga') add({ ref: `P-${m.pid}`, tipo: 'pujar', pid: m.pid, j: m.j, precio: m.precio, puja: m.puja, pujaLiga: m.pujaLiga, noCompensa: m.noCompensa, tener: m.tener, pujaGana: m.pujaGana, pGana: m.pGana, pujas: m.pujas, miPuja: m.miPuja, cierra: m.cierra, interes: m.interes, sobre: m.sobre, saldo: num(D.dinero) - num(M.misPujas) });
   }
   // (26 nov) P de entrenador: en una liga premium que los tiene y sin ninguno, el libre que la app ficharía
   // (`M.ficharEntrenador`: los entrenadores no van en `M.mercado`). Se paga con saldo y no ocupa sitio en la plantilla
@@ -231,7 +232,8 @@ export function textoOp(o, M = null) {
       const enE = (s) => eur(j.valor * (1 + s));
       // (0.7.13u) por los que venían como él (subida y top), con lo de todas las ligas si en esta hay pocos
       const pvTxt = PV ? `; por ${M.pagaTxt(PV)} se paga de mediana un ${pct(PV.med * 100)} (para él, ${enE(PV.med)}), 3 de cada 4 hasta ${pct(PV.p75 * 100)} (${enE(PV.p75)}) y el 90 % hasta ${pct(PV.p90 * 100)} (${enE(PV.p90)})` : '';
-      const ganaTxt = o.pGana != null ? `; con la puja de la app, ${Math.round(o.pGana * 10) <= 0 ? 'casi nunca se gana' : `se gana ${Math.round(o.pGana * 10)} de cada 10 veces`} en esta liga` : '';
+      // (27 nov) la puja de la app es la que gana unas 7-8 de cada 10 veces: con menos, lo normal es perderlo
+      const ganaTxt = o.pGana != null ? `; con esa puja se gana ${vecesCorto(o.pGana)} en esta liga (con menos, lo normal es perderlo: NO propongas pujar menos)` : '; sin compras parecidas en esta liga: es una puja prudente';
       const nr = M && M.noRevender && M.noRevender[o.pid], te = M && M.tener && j ? M.tener(j, null, o.puja) : null;
       const cuentaTxt = `${nr ? `; PARA REVENDER NO SALE con la puja que gana aquí (${eur(nr.puja)}: valdría ${eur(nr.valorFuturo)}, ${eur(nr.beneficio, { signo: true })})` : ''}${te && te.deMas > 2e5 ? `; TENERLO: lo pagado de más (${eur(te.deMas)}) ${te.dias ? `se recupera en ${te.dias} días si sigue subiendo así` : 'no se recupera en un mes al ritmo de ahora'}` : ''}${nr && nr.aguantar ? `; AGUANTÁNDOLO SÍ SALE (para revender más adelante, no antes de la jornada): pujando ${eur(nr.puja)} y PAGÁNDOLO CON SALDO, sin deuda, en ${nr.aguantar.dias} días valdría unos ${eur(nr.aguantar.valorFuturo)} (${eur(nr.aguantar.beneficio, { signo: true })}); tiene 14 días la cláusula cerrada y se vende cuando deje de subir` : ''}`;
       // (19 nov, Carlos: «manda la del plan») si para revenderlo la puja es otra, se dice aquí: el plan va con esa y el chat
@@ -242,9 +244,11 @@ export function textoOp(o, M = null) {
       // tu liga), no «la app pujaría 39,45 M»: eran dos pujas del motor y al chat le llegaban las dos (Xavi Espart)
       const df = M && M.decisionFichar ? M.decisionFichar(o.pid) : null;
       const gana = (nr && nr.puja) || (o.pujaGana > (o.puja || 0) ? o.pujaGana : null);
-      const pujaTxt = df && df.accion === 'no' && !df.retira && gana
+      const pujaTxt = o.noCompensa && !espP && !(nr && nr.aguantar)
+        ? `; NO COMPENSA PARA EL ONCE: ${noCompensaTxt(o, { porque: true })} (${pct((o.puja / num(j.valor) - 1) * 100)} sobre su valor${te && te.deMas > 0 ? `, ${eur(te.deMas)} de más que ${te.dias ? `tarda ${te.dias} días en recuperarse` : 'no se recupera subiendo'}` : ''}); con menos lo normal es perderlo: la app no pujaría`
+        : df && df.accion === 'no' && !df.retira && gana
         ? `; para ganarlo en tu liga se paga a unos ${eur(gana)} (${pct((gana / o.precio - 1) * 100)})`
-        : `; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}`;
+        : `; la app pujaría ${eur(o.puja)} (${pct((o.puja / num(j.valor) - 1) * 100)} sobre su valor)${ganaTxt}`;
       return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}${pujaTxt}${cuentaTxt}${revTxt}`;
     }
     case 'M': {

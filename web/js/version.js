@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5';
+export const VERSION = '0.8.5b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,42 @@ export const VERSION = '0.8.5';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (27 nov, Carlos: «recomienda pujas muy a la baja… no tiene sentido recomendar una puja que pierde»; la medida, en
+    // claude/medida-puja-27nov.md del proyecto) la puja de un libre es la que gana unas 7-8 de cada 10 veces (motor.js,
+    // `M.pujaPara` y la curva medida `M.ganaReal`); si no compensa, `noCompensa` y el plan no la propone; las pujas del plan,
+    // en dos líneas sin desplegable (vistas.js, `pasoPuja`; los textos en puja-txt.js); sin «Sale a»; y la app pide a LaLiga
+    // lo que valían los comprados que no sabía (app.js, `valorComprasSiToca`). (Va con letra b: la 0.8.5a es la del parte,
+    // en su rama)
+    v: '0.8.5b', f: '2026-11-27', h: '05:03', t: 'Pujas que ganan',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'balanza', t: 'Pujas que ganan', x: 'La puja que te propone la app es la que se lleva al jugador unas 8 de cada 10 veces en tu liga, según lo que se ha pagado de verdad por jugadores parecidos. Si para llevártelo casi seguro hay que pagar demasiado, te lo dice y no te propone pujar.' },
+      { para: 'dueño', tipo: 'mejora', d: 'plan', t: 'Cada puja, en dos líneas', x: 'En el plan, cada puja dice cuánto pujar, cuántas veces de cada 10 ganas, cuánto pagas sobre su valor y en cuántos días lo recuperas. Sin desplegables.' },
+      { para: 'dueño', tipo: 'mejora', d: 'botiquin', t: 'Bajas por club', x: 'En las bajas de la jornada, cada apartado va por club y, dentro de cada club, del que más puntos lleva al que menos. Los clubes se pliegan con un toque.' },
+    ],
+  },
+  {
+    // (27 nov, claude/prompt-parte-ideas.md del proyecto; Carlos: «una persona que va a ver 2 anuncios, darle una cosa así tan
+    // pobre… puede generar una mala impresión») EL PARTE, MÁS COMPLETO: la ficha de cada rival (`fichaRival` en parte.js,
+    // `parteFicha` en vistas.js), lo nuevo desde la última vez (`novedades`), al día mientras lo miras (`cambiosLigeros` de
+    // datos.js y `parteAlDia` de app.js) y los avisos con la app cerrada (`avisosParte`, `avisosDelParte`, el interruptor
+    // `parte` de los avisos), la llave hasta que empieza la jornada (`parteFin` de limite.js) y el adelanto del candado (`parteAdelanto`). Las tres predicciones medidas no pasan (.github/ia/medir-predicciones.mjs). La hora, al publicar.
+    // (02:51, Carlos: «lo del parte, mételo en Rivales, donde iría lo de cláusulas, en dorado» y «Cláusulas a tiro, quítalo o quita
+    // Todas») la pestaña Cláusulas de Rivales se quita (cada rival tiene la suya en su ficha), el parte pasa a ser la tercera
+    // pestaña, en dorado (`tab-oro`), y «Cláusulas a tiro» del ordenador se quita (repetía el plan). (03:29) Las funciones top,
+    // solo con la corona (opción A de Carlos: ni candado ni «TOP»), y quién paga, 12 h con un anuncio (`horasQuien`). (04:35) La inercia, gratis (fuera de `BLOQUEADAS` y de
+    // «bloqueadas» de limites.json)
+    v: '0.8.5a', f: '2026-11-27', h: '05:03', t: 'El parte, más completo',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'El parte de los rivales, más completo', x: 'Ahora sale cada rival con su ficha: su plantilla, dónde va corto, sus blindajes si ha gastado alguno, lo suyo que te llega por cláusula, lo que vende y sus bajas. Su saldo, solo si tienes su dinero abierto. Lo que ha cambiado desde la última vez que lo miraste sale marcado como nuevo.' },
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'Abierto hasta la jornada', x: 'Con los dos anuncios, el parte queda abierto hasta que empieza la jornada, no solo un día. Y antes de abrirlo ya ves cuántos rivales hay en negativo, sin blindajes o cortos de un puesto.' },
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'Al día mientras lo miras', x: 'Con el parte abierto en pantalla, la app mira cada 10 minutos si ha pasado algo en tu liga y, si es así, lo pone al día.' },
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', menor: true, t: 'El parte, en las pestañas de Rivales', x: 'El parte pasa a ser la tercera pestaña de Rivales, en dorado, donde estaba Cláusulas. Las cláusulas de cada rival siguen en su ficha y el plan te dice a quién clausular.' },
+      { para: 'dueño', tipo: 'mejora', d: 'corona', menor: true, t: 'Las funciones top, con su corona', x: 'Todo lo que se abre viendo anuncios lleva ahora la misma corona dorada, sin candado ni más etiquetas. Y «Quién puede pagar tu cláusula» queda abierto 12 horas con un anuncio, en vez de 5.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Cuándo vender, gratis', x: 'Que un jugador tuyo ha dejado de subir o ha girado, y cuándo venderlo, ya no se abre con anuncios: sale para todos, igual que el radar de los que más van a subir.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'Avisos del parte', x: 'Con el parte abierto, la app te avisa aunque esté cerrada cuando un rival se queda en negativo, gasta su último blindaje o se queda corto de un puesto que te afecta. Tres avisos al día como mucho; se quitan en Ajustes → Avisos.' },
+    ],
+  },
   {
     // (26 nov, Carlos: «vamos a hacer lo de las funciones del fantasy premium despacito…»; claude/nota-premium.md del proyecto)
     // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad

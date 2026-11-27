@@ -111,7 +111,7 @@ try {
       const PG = parteDe(G), PE = parteDe(G0);
       const vg = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ve = Pa.visibles(PE, { abierto: true, dineroAbierto: () => false });
       const va = Pa.visibles(PG, { abierto: true, dineroAbierto: (t) => t === tid });
-      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: (() => { const l = (vg.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && l.dato === '' && l.sinCifra === true && !/30,0|estimado/.test(JSON.stringify(vg)); })(), ordenIgual: !JSON.stringify(ve).includes('"rojo"'), primero: va[0].tid === tid && vg[0].tid === tid,
+      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: (() => { const l = (vg.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && l.dato === '' && l.sinCifra === true && !/30,0|estimado/.test(JSON.stringify(vg)); })(), ordenIgual: !ve.some((x) => x.lineas.some((l) => l.tipo === 'rojo') || (x.ficha && (x.ficha.firma.rojo || x.ficha.estado.some((e) => e.k === 'rojo' || e.k === 'saldo')))) && JSON.stringify(ve.map((x) => x.tid)) === JSON.stringify(Pa.visibles(PE, { abierto: true, dineroAbierto: () => false }).map((x) => x.tid)), primero: va[0].tid === tid && vg[0].tid === tid,
         abierto: (() => { const l = (va.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && /^[-−]30/.test(l.dato) && !l.sinCifra; })() };
       window.__G = G; window.__G0 = G0;
     }
@@ -157,7 +157,8 @@ try {
       const antes = Li.bloqueada('parteRivales'), f0 = Li.faltanAnuncios('parteRivales');
       const a1 = Li.anuncioTopVisto('parteRivales'), medio = Li.bloqueada('parteRivales'), f1 = Li.faltanAnuncios('parteRivales');
       const a2 = Li.anuncioTopVisto('parteRivales'), despues = Li.bloqueada('parteRivales');
-      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Math.abs(Li.abiertaHasta('parteRivales') - Date.now() - 24 * 3600e3) < 5000, cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= Date.now() + 24 * 3600e3 + 5000, dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
+      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Math.abs(Li.abiertaHasta('parteRivales') - (Li.parteFin() || Date.now() + 24 * 3600e3)) < 5000 && (!Li.parteFin() || Li.parteFin() - Date.now() <= 5 * DIA), cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= (Li.parteFin() || Date.now() + 24 * 3600e3) + 5000,
+        hastaJornada: (() => { const ant = Li.inicioJornada(); Li.fijarJornada(9, Date.now() + 2 * DIA); const a = Li.parteFin(); Li.fijarJornada(9, Date.now() + 9 * DIA); const b = Li.parteFin(); Li.fijarJornada(9, ant); return Math.abs(a - Date.now() - 2 * DIA) < 5000 && b === 0; })(), dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
       const raro = (v) => { U.LS.set('top-parte', v); return Li.bloqueada('parteRivales') && Li.faltanAnuncios('parteRivales') >= 1 && Li.faltanAnuncios('parteRivales') <= 2 && Li.abiertaHasta('parteRivales') === 0; };
       out.llave.raros = raro({ hasta: 'Infinity', n: -5, t: Date.now() }) && raro({ hasta: 1e300, n: 99, t: Date.now() }) && raro({ hasta: Date.now() + 40 * DIA }) && raro('x') && raro([1]);
       U.LS.set('top-parte', { hasta: 0, n: 1, t: Date.now() }); Li.abrirTopGratis('parteRivales');
@@ -176,18 +177,82 @@ try {
       S.D = G.D; S.M = G.M; S.seg.rivales = 'parte';
       const fuera = Vi.rivales(S); // a la hora de verdad de la escena (martes por la mañana): aún no toca
       const cerrada = pinta(G);
+      // sin nada que solo dé el parte (nadie en negativo, sin blindajes ni corto que te toque): sin adelanto, solo el candado
+      const G00 = montar((D) => {
+        D.dineros = {}; for (const m of D.mercado) m.miPuja = null; D.actividad = (D.actividad || []).filter((a) => a.clase !== 'blindaje');
+        // a todos los rivales, plantilla de sobra en cada puesto (en la liga de ejemplo a todos les falta algo)
+        let k = 0;
+        for (const e of D.clasif) { if (e.teamId === yo) continue; for (const [p, n] of [[1, 2], [2, 5], [3, 5], [4, 3]]) { const mol = Object.values(D.maestro).find((j) => j.pos === p && j.estado === 'ok' && j.valor > 2e6); for (let i = 0; i < n; i++) { const id = `t00-${k++}`; D.maestro[id] = { ...mol, id, nombre: `Relleno ${k}` }; D.plantillas[e.teamId].push({ pid: id, clausula: mol.valor * 3 }); } } }
+      });
+      const P00 = Pa.parte(G00.M, G00.D, { ahora: T }), nadaExcl = !P00.rivales.some((x) => x.lineas.length || (x.ficha && x.ficha.firma.quedan === 0));
+      const cerrada0 = nadaExcl ? pinta(G00) : "parte-adelanto (escena sin nada exclusivo no conseguida)";
       U.LS.set('top-parte', { hasta: T + DIA, n: 0, t: T });
       const abierta = pinta(G), abierta0 = pinta(G0);
+      // (27 nov) lo nuevo desde la última vez: lo guardado dice que ese rival no estaba en negativo
+      const Da = await import('./js/datos.js'), PG2 = parteDe(G);
+      const fir = Pa.firmaParte(PG2.jornada, Pa.visibles(PG2, { abierto: true }));
+      if (fir.s[tid]) fir.s[tid] = { ...fir.s[tid], rojo: false };
+      U.LS.set(Da.K('parte-visto'), fir);
+      const conNuevo = pinta(G);
+      U.LS.set(Da.K('parte-visto'), { ...fir, jornada: -1 });
+      const otraJornada = pinta(G);
+      U.LS.del(Da.K('parte-visto'));
       U.LS.set('top-rivales', { j: null, usos: 1, abiertos: { [tid]: T + 5 * 60e3 }, uno: null });
       const conDinero = pinta(G);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d/;
+      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d|parte-est|parte-h|parte-nuevo/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
-        cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
+        cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada.replace(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/, ''))),
+        adelanto: (() => { const m = cerrada.match(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/); if (!m) return false; const nombres = G.D.clasif.flatMap((e) => [e.nombre, e.manager]).filter((x) => x && x.length > 2); return /<b>1<\/b> en negativo/.test(m[0]) && !/cláusula|vende/.test(m[0]) && !nombres.some((x) => m[0].includes(x)) && !/M<|\d,\d+ M/.test(m[0]); })() && !/parte-adelanto/.test(cerrada0), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
         igualCerrado: !/>En negativo<|en negativo<|parte-pie/.test(abierta0),
-        conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero) };
+        conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero),
+        ficha: (abierta.match(/class="parte-est"/g) || []).length === G.M.rivales.length, nuevo: /parte-nuevo/.test(conNuevo) && /en negativo/.test(conNuevo.slice(conNuevo.indexOf('parte-nuevo'))) && !/parte-nuevo/.test(otraJornada) && !/parte-nuevo/.test(abierta) };
+    }
+
+    /* ---- (27 nov) los avisos del parte con la app cerrada ---- */
+    {
+      const G = window.__G, PG = parteDe(G);
+      const cerr = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ab = Pa.visibles(PG, { abierto: true, dineroAbierto: () => true });
+      const f0 = Pa.firmaAvisos(PG.jornada, cerr), antes = JSON.parse(JSON.stringify(f0));
+      if (antes.s[tid]) antes.s[tid].rojo = false;
+      const av = Pa.avisosParte(antes, cerr, PG.jornada);
+      const rojoAb = (ab.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((l) => l.tipo === 'rojo');
+      const sintetico = (lineas, quedan) => [{ tid, e: { manager: 'Fulano' }, lineas, ficha: { firma: { quedan } } }];
+      const ant = (o) => ({ jornada: 9, s: { [tid]: { rojo: false, quedan: 1, falta: false, ...o } } });
+      const lf = { tipo: 'falta', txt: 'Le falta un defensa', accion: 'Puede pujar contra ti por X.' };
+      out.avisos = {
+        rojo: av.length === 1 && /está en negativo$/.test(av[0].titulo) && av[0].hash === 'rivales' && !!av[0].texto,
+        sinCifra: !!rojoAb && !!rojoAb.dato && !JSON.stringify(av).includes(rojoAb.dato) && !/[-−]30,0|estimado/.test(JSON.stringify(av)),
+        nadaIgual: Pa.avisosParte(f0, cerr, PG.jornada).length === 0 && Pa.avisosParte(null, cerr, PG.jornada).length === 0 && Pa.avisosParte({ ...antes, jornada: -1 }, cerr, PG.jornada).length === 0,
+        blind: Pa.avisosParte(ant({ quedan: 1 }), sintetico([], 0), 9).map((x) => x.k.split(':')[0]).join() === 'parte-blind' && Pa.avisosParte(ant({ quedan: 0 }), sintetico([], 0), 9).length === 0,
+        falta: (() => { const a = Pa.avisosParte(ant({}), sintetico([lf], 1), 9); return a.length === 1 && a[0].titulo === 'A Fulano le falta un defensa' && a[0].texto === lf.accion && Pa.avisosParte(ant({ falta: true }), sintetico([lf], 1), 9).length === 0; })(),
+        tope: Pa.TOPE_AVISOS === 3,
+      };
+    }
+
+    /* ---- (27 nov) la ficha de cada rival: los hechos de hoy ---- */
+    {
+      const A = base, P0 = parteDe(A);
+      const cerr = Pa.visibles(P0, { abierto: true, dineroAbierto: () => false }), ab = Pa.visibles(P0, { abierto: true, dineroAbierto: () => true });
+      const r0 = A.M.rivales.find((x) => x.e.teamId === tid), h0 = Pa.hechosRival(A.M, r0, T);
+      const conEsc = (q) => Pa.fichaRival(A.M, { ...h0, escudos: { quedan: q, usados: 2 - q, completo: true } }, [], T);
+      const firma = (o) => ({ rojo: false, quedan: 2, lleno: false, corto: [], venta: {}, abiertas: {}, ...o });
+      const riv = (o) => [{ tid, ficha: { firma: firma(o) } }];
+      const nov = (a, b, j = 5) => Pa.novedades({ jornada: 5, s: { [tid]: firma(a) } }, riv(b), j).map((x) => x.k);
+      out.ficha = {
+        todos: cerr.length === A.M.rivales.length && cerr.every((x) => x.ficha && x.ficha.estado.some((e) => e.k === 'plantilla')),
+        sinSaldo: cerr.every((x) => !x.ficha.estado.some((e) => e.k === 'saldo' || e.datoDinero)) && !/aprox\.|[-−]?\d+,\d M/.test(JSON.stringify(cerr.map((x) => x.ficha.estado))),
+        conSaldo: ab.some((x) => x.ficha.estado.some((e) => e.k === 'saldo')),
+        mismoOrden: JSON.stringify(cerr.map((x) => x.tid)) === JSON.stringify(ab.map((x) => x.tid)),
+        escudos: !conEsc(2).estado.some((e) => e.k === 'escudos') && conEsc(1).estado.some((e) => e.k === 'escudos' && e.quedan === 1) && conEsc(0).estado.some((e) => e.k === 'escudos' && e.quedan === 0),
+        hechosCortos: cerr.every((x) => x.ficha.hechos.length <= 3 && x.ficha.hechos.every((f) => f.txt.length <= 90)),
+        sinRepetir: (() => { const vg = Pa.visibles(parteDe(window.__G), { abierto: true }); return vg.every((x) => { const ps = new Set(x.lineas.flatMap((l) => [l.pid, ...(l.pids || [])]).filter(Boolean).map(String)); return x.ficha.hechos.every((f) => !f.pid || !ps.has(String(f.pid))) && !(x.lineas.some((l) => l.tipo === 'rojo') && x.ficha.estado.some((e) => /negativo/i.test(e.txt))) && !(x.lineas.some((l) => l.tipo === 'blindajes') && x.ficha.estado.some((e) => e.k === 'escudos')); }); })(),
+        nov: nov({}, { rojo: true }).join() === 'rojo' && nov({ quedan: 2 }, { quedan: 1 }).join() === 'escudos' && nov({}, { lleno: true }).join() === 'plantilla' && nov({}, { corto: [2] }).join() === 'corto'
+          && nov({}, { venta: { 9: 'X' } }).join() === 'venta' && nov({}, { abiertas: { 9: 'X' } }).join() === 'clausula' && nov({}, {}).length === 0 && nov({}, { rojo: true }, 6).length === 0
+          && nov({ rojo: true }, { rojo: false }).length === 0 && Pa.novedades(null, riv({ rojo: true }), 5).length === 0,
+      };
     }
     return out;
   });
@@ -230,19 +295,37 @@ try {
   ok(r.llave.antes && r.llave.f0 === 2, 'el parte está cerrado y pide 2 anuncios');
   ok(r.llave.a1 === false && r.llave.medio && r.llave.f1 === 1, 'con el primer anuncio sigue cerrado y falta 1');
   ok(r.llave.a2 === true && !r.llave.despues, 'con el segundo se abre');
-  ok(r.llave.hasta && r.llave.cierre, 'abierto 24 horas');
+  ok(r.llave.hasta && r.llave.cierre, '(0.8.5a) abierto hasta que empiece la jornada (sin saberla, 24 horas)');
+  ok(r.llave.hastaJornada, 'con la jornada a 2 días, hasta su inicio; a más de 5 días, 24 horas');
   ok(r.llave.dineroSigue && r.llave.pagaSigue, 'abrir el parte no abre el dinero de los rivales ni quién paga');
   ok(r.llave.raros, 'con valores raros en lo guardado sigue cerrado y pide 1 o 2 anuncios');
   ok(r.llave.gratis, 'si no hay anuncio se abre media hora');
   ok(r.llave.cerradaOtraVez, 'sin lo guardado, cerrado otra vez');
   ok(r.pantalla.pestaña, 'Rivales tiene el botón dorado del Parte');
   ok(r.pantalla.fuera, 'antes de los 4 días dice cuándo sale, sin candado y sin nada de dentro');
-  ok(r.pantalla.cerrada, 'cerrado: el candado y ni una palabra de lo de dentro');
+  ok(r.pantalla.cerrada, 'cerrado: el candado y, fuera del adelanto, ni una palabra de lo de dentro');
+  ok(r.pantalla.adelanto, '(0.8.5a) cerrado, el adelanto: cuántos hay de cada cosa, sin nombres ni cifras');
   ok(r.pantalla.sinNumero, 'cerrado, el botón no lleva número');
   ok(r.pantalla.igualCerrado, 'con ese rival en positivo, ni «En negativo» ni el candado del dinero al pie');
   ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: «En negativo» sin cifra y el candado del dinero al pie');
   ok(r.pantalla.conDinero, 'con el dinero de ese rival abierto: «En negativo» con su cifra y la oferta por lo que vende');
   ok(r.pantalla.pieSiempre, 'con la cifra a la vista, el candado del pie ya no sale');
+  ok(r.pantalla.ficha, '(27 nov) abierto, cada rival sale con su ficha');
+  ok(r.pantalla.nuevo, 'lo nuevo desde la última vez sale marcado (y no con lo guardado de otra jornada ni sin nada guardado)');
+  ok(r.avisos.rojo, 'aviso con la app cerrada: el que pasa a estar en negativo');
+  ok(r.avisos.sinCifra, 'el aviso no lleva ninguna cifra de su dinero');
+  ok(r.avisos.nadaIgual, 'sin cambios, sin nada guardado o con otra jornada: ningún aviso');
+  ok(r.avisos.blind, 'aviso cuando gasta su último blindaje (y no si ya los tenía gastados)');
+  ok(r.avisos.falta, 'aviso cuando le sale «le falta» (y no si ya le salía)');
+  ok(r.avisos.tope, 'como mucho 3 avisos del parte al día');
+  ok(r.ficha.todos, 'la ficha: todos los rivales, cada uno con su plantilla');
+  ok(r.ficha.sinSaldo, 'con su dinero cerrado, ni su saldo ni ninguna cifra de su dinero en la ficha');
+  ok(r.ficha.conSaldo, 'con su dinero abierto, su saldo');
+  ok(r.ficha.mismoOrden, 'el orden no cambia con el dinero abierto o cerrado');
+  ok(r.ficha.escudos, 'los blindajes solo salen si ha gastado alguno (1 o 0)');
+  ok(r.ficha.hechosCortos, 'como mucho tres hechos por rival, cortos');
+  ok(r.ficha.sinRepetir, 'lo que ya dice una línea (en negativo, el jugador que nombra) no se repite en la ficha');
+  ok(r.ficha.nov, 'lo nuevo: negativo, blindaje, plantilla llena, corto, en venta y cláusula abierta; nada con otra jornada ni si no ha cambiado');
 } finally { await cerrar(); }
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');
 process.exit(mal ? 1 : 0);

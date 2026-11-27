@@ -458,11 +458,12 @@ for (const [nombre, init, conLista] of [['web', '', true], ['app', "window.Fanta
     const D2 = { ...S.D, dinero: 0, mercado: [...(S.D.mercado || [])] };
     const b = P.cuentasParon({ ...S, M: M2, D: D2 });
     const vend = b.espNo.filter((e) => e.vendiendo);
-    const okVenta = b.venta === rico.j.valor && vend.every((e) => e.falta <= b.venta) && b.espNo.filter((e) => !e.vendiendo).every((e) => e.falta > b.venta);
+    // (27 nov) con la inercia gratis, lo que sacas vendiendo suma también lo que está en lo alto (`altos`), no solo lo de revender
+    const okVenta = b.ventas.some((x) => x.pid === rico.pid) && b.venta === b.ventas.reduce((t, x) => t + x.j.valor, 0) && vend.every((e) => e.falta <= b.venta) && b.espNo.filter((e) => !e.vendiendo).every((e) => e.falta > b.venta);
     // la plantilla llena: «Puedes ganar» con lo que cabe (aquí, solo el hueco que hace la venta)
     for (let i = 0; i < P.PLANTILLA_MAX; i++) D2.mercado.push({ id: `f${i}`, pid: `x${i}`, tipo: 'liga', miPuja: 1 });
     const c = P.cuentasParon({ ...S, M: M2, D: D2 });
-    const okLlena = c.plazas === 0 && c.caben === 1 && c.gana === (c.esp[0] ? c.esp[0].beneficio : 0);
+    const okLlena = c.plazas === 0 && c.caben === c.ventas.length && c.gana === c.esp.slice(0, Math.min(3, c.caben)).reduce((t, e) => t + e.beneficio, 0);
     return { base, okVenta, okLlena, n: [a.tengo, b.espNo.length, vend.length] };
   });
   await page.evaluate(() => { const S = window.S; for (let i = 0; i < 25; i++) S.D.mercado.push({ id: `g${i}`, pid: `y${i}`, tipo: 'liga', miPuja: 1 }); document.querySelector('.nav button[data-ir="directo"]').click(); });
@@ -949,12 +950,18 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const esp0 = (antes.esp || []).filter((x) => x.pid !== j.id);
     // (sin saldo, para que no entre por estar a su valor)
     const dOrig = D.dinero; D.dinero = 0;
-    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: j.valor * 1.2, r: 0.025, beneficio: j.valor * 0.12 }]);
+    // (27 nov) que suba hasta la vuelta por encima de la puja que gana en la liga (ahora la de 7-8 de cada 10, más alta)
+    const vf = Math.max(j.valor * 1.2, (m.puja || 0) * 1.1);
+    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: vf, r: 0.025, beneficio: vf - precio }]);
     const quieto = una(esp0);
     D.dinero = dOrig;
     // (0.7.13p) uno a su valor, bueno y sin bajar, que se paga con el saldo: vale para el once aunque no sea chollo; si no
     // te llega con el saldo, no
     const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02 && !(antes.esp || []).some((e) => String(e.pid) === String(x.j.id))) || null;
+    // (27 nov) que la puja que gana le compense (con un calendario de riesgo alto, `noCompensa`, ya no se puja): aquí se
+    // mira lo del parón, no eso
+    const nc0 = m2 ? m2.noCompensa : null;
+    if (m2) { m2.noCompensa = null; M._cat = null; }
     let aValor = null, sinSaldo = null;
     if (m2) {
       m2.interes = Math.max(m2.interes || 0, 60);
@@ -965,7 +972,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
       const prueba = () => { const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: m2.j.nombre, pid: m2.j.id, importe: imp, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(m2.j.id)); return o ? !!o.descartada : null; };
       D.dinero = imp * 2 + (M.misPujas || 0); aValor = prueba();
       D.dinero = Math.round(imp / 2) + (M.misPujas || 0); sinSaldo = prueba();
-      D.dinero = d0; M.inercia = ine0; M.tend = tend0;
+      D.dinero = d0; M.inercia = ine0; M.tend = tend0; m2.noCompensa = nc0; M._cat = null;
     }
     M.paron = antes.paron; M.enParon = antes.enParon; if (M.proxima) M.proxima.ini = antes.ini; M.especular = antes.esp;
     return { sube, quieto, aValor, sinSaldo };
@@ -1016,7 +1023,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 }
 
 // 16b: (0.7.12, Carlos 15 nov) todo con 1 anuncio salvo el dinero de un rival: 2 anuncios seguidos, ese rival 5
-// minutos, 2 veces por jornada; quién paga, 1 anuncio y 5 horas (todos los rivales); jornada nueva, a cero
+// minutos, 2 veces por jornada; quién paga, 1 anuncio y 12 horas (27 nov; antes 5) (todos los rivales); jornada nueva, a cero
 {
   const { ctx, page, errores } = await pagina();
   await page.goto(`${BASE}/index.html`);
@@ -1057,12 +1064,12 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else bien('dinero por rival: con 2 anuncios, ese rival 5 minutos (los demás y quién paga, cerrados); queda 1 vez');
   if (!r.pasado) mal('dinero por rival: pasados los 5 minutos sigue abierto');
   else bien('dinero por rival: pasados los 5 minutos se cierra');
-  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 5 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
-  else bien('quién paga: 1 anuncio, todos los rivales, 5 horas (y no gasta las veces del dinero)');
+  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 12 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
+  else bien('quién paga: 1 anuncio, todos los rivales, 12 horas (y no gasta las veces del dinero)');
   if (r.tope.quedan !== 0 || !r.tope.tercero || !/Ya has visto el dinero de un rival las 2 veces/.test(r.hojaLlena)) mal(`dinero por rival: el tope de 2: ${JSON.stringify(r.tope)} / ${r.hojaLlena.slice(0, 160)}`);
   else bien('dinero por rival: 2 veces por jornada y la tercera ya no');
-  if (!/5 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
-  else bien('quién paga: la hoja dice un anuncio y 5 horas');
+  if (!/12 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
+  else bien('quién paga: la hoja dice un anuncio y 12 horas');
   if ((r.elegir.match(/data-rival="/g) || []).length) mal('dinero por rival: con el tope gastado, la elección deja abrir otro');
   else bien('dinero por rival: sin rival se elige de la lista (con el tope gastado, ninguno se puede abrir)');
   if (r.nueva.quedan !== 2) mal(`dinero por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
@@ -1538,11 +1545,12 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           if (enDirecto) mal('Por jornada sigue en Directo');
           await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
           await page.waitForTimeout(600);
-          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
-          // (0.8.5) el parte de los rivales ya no es una pestaña: es el botón dorado junto al título
-          const parteBtn = await page.evaluate(() => !!document.querySelector('h1 .parte-top[data-seg="rivales:parte"]'));
-          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas' || !parteBtn) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas con el botón del Parte al lado del título: ${orden.join(' · ')}${parteBtn ? '' : ' (sin el botón)'}`);
-          else bien('Rivales: Clasificación · Por jornada · Cláusulas y el botón dorado del Parte junto al título');
+          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+|TOP/g, '').trim()));
+          // (27 nov) la pestaña Cláusulas se quita y el parte va en su sitio, en dorado; «Cláusulas a tiro» ya no está
+          const parteOro = await page.evaluate(() => !!document.querySelector('.tabs button.tab-oro[data-seg="rivales:parte"]'));
+          const aTiro = await page.evaluate(() => /Cláusulas a tiro/.test(document.body.innerText) || !!document.querySelector('[data-seg="rivales:clausulas"]'));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Parte' || !parteOro || aTiro) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Parte (dorada), o queda algo de Cláusulas: ${orden.join(' · ')}${parteOro ? '' : ' (sin la dorada)'}${aTiro ? ' (queda Cláusulas)' : ''}`);
+          else bien('Rivales: Clasificación · Por jornada · Parte, en dorado, y nada de la pestaña Cláusulas');
           await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
           await page.waitForTimeout(600);
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
@@ -1661,7 +1669,7 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
       }
     }
     const malos = Object.entries(vistos).filter(([k, x]) => !x || x.play || /Google Play/.test(x.t) || (k === 'dineroRivales' ? !/se abre invitando a un amigo/.test(x.t) : /invitando/.test(x.t) || !/de momento, no se puede abrir/.test(x.t)));
-    if (!vistos.dineroRivales || Object.keys(vistos).length < 2 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
+    if (!vistos.dineroRivales || Object.keys(vistos).length < 1 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
     else bien(`iPhone, los candados dicen la verdad: ${Object.keys(vistos).join(', ')} (invitando, solo el dinero; sin Google Play)`);
     if (errores.length) mal(`iPhone, los candados: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   } catch (e) { mal(`iPhone, los candados: ${e.message.split('\n')[0]}`); }

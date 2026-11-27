@@ -7,6 +7,7 @@ import { cfgAvisos } from './avisos.js';
 import { esFav } from './favoritos.js';
 import { ventasInercia } from './acciones.js';
 import { nuevasEn } from './pujas-vistas.js';
+import { noCompensaTxt, vecesCorto } from './puja-txt.js';
 
 export const EN_FONDO = /[?&]fondo=1\b/.test(location.search);
 export const cfgFondo = () => ({ on: true, ...LS.get('cfg-fondo', {}) });
@@ -154,7 +155,9 @@ export function pujasNuevas(M, c = cfgAvisos()) {
       cuenta = p != null && p >= 0.65 ? ` Con tu puja de ${eur(m.miPuja)} lo normal es que te lo lleves igual.`
         : hace && hace > m.miPuja ? ` Tu puja es de ${eur(m.miPuja)}: para llevártelo casi seguro harían falta unos ${eur(hace)}.` : ` Tu puja es de ${eur(m.miPuja)}.`;
     // (0.8.3) «la app pujaría» solo si la app lo ficharía hoy: lo que el plan descarta o no se puede no lleva puja (decide.js)
-    } else if (m.puja && !(M.decisionFichar && M.decisionFichar(m.pid).accion === 'no')) cuenta = ` La app pujaría ${eur(m.puja)}.`;
+    // (27 nov) la puja de la app gana unas 7-8 de cada 10 veces; si no compensa, se dice así
+    } else if (m.noCompensa) cuenta = ` ${noCompensaTxt(m)}.`;
+    else if (m.puja && !(M.decisionFichar && M.decisionFichar(m.pid).accion === 'no')) cuenta = ` La app pujaría ${eur(m.puja)}${m.pGana != null ? ` (ganas ${vecesCorto(m.pGana)})` : ''}.`;
     const quien = top && !cerrada && q.conf !== 'baja' ? ` Lo más probable es que sea de ${top.nombre}.` : '';
     out.push({ k: `puja-nueva:${m.id}:${m.ajenas}`, titulo: k > 1 ? `${k} pujas nuevas por ${m.j.nombre}` : `Nueva puja por ${m.j.nombre}`,
       texto: `Ya ${m.ajenas === 1 ? 'hay 1 puja' : `hay ${m.ajenas} pujas`} de otros.${cuenta}${quien}`, hash: 'mercado' });
@@ -178,7 +181,7 @@ export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
     return xs.map((m) => ({
       k: `en-mercado:${m.pid}:${diaDe()}`,
       titulo: `${m.j.nombre}, en el mercado`,
-      texto: `${esFav(m.pid) || noF(m) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' && !noF(m) ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
+      texto: `${esFav(m.pid) || noF(m) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: vale ${eur(m.j.valor)}${de(m)}.${m.puja && m.tipo !== 'manager' && !noF(m) ? (m.noCompensa ? ` ${noCompensaTxt(m)}.` : ` La app pujaría ${eur(m.puja)}${m.pGana != null ? ` (ganas ${vecesCorto(m.pGana)})` : ''}.`) : ''}`,
       hash: 'mercado',
     }));
   }
