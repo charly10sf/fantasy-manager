@@ -93,12 +93,22 @@ async function dentro() {
     for (let i = 1; i <= 6; i++) { el.scrollTo(0, Math.round((y * i) / 6)); await espera(40); }
   }
   window.maq = { ver, desplazar, dir: poner, S };
+  let quiero = (Q.get('d') || 'M').toUpperCase();
   function poner(d) {
-    html.classList.remove('dA', 'dB', 'dC', 'dD', 'dM', 'd0', 'dL');
+    quiero = d;
+    html.classList.remove('dA', 'dB', 'dC', 'dD', 'dM', 'd0', 'dL', 'maq-pc');
     html.classList.add(`d${d}`); if ('ABCM'.includes(d)) html.classList.add('dL');
     window.dispatchEvent(new Event('resize')); // la app vuelve a medir la cabecera y la barra (--sup-h, --nav-h)
     requestAnimationFrame(() => window.dispatchEvent(new Event('maq-capa')));
   }
+  // en el ordenador (html.escritorio: la app pasa a su diseño ancho, con el menú a la izquierda) el rediseño no está hecho
+  // y la capa lo descolocaba todo: ahí se quita, se ve la app de hoy y un aviso lo dice; al estrechar la ventana, vuelve
+  const capa = () => {
+    const pc = html.classList.contains('escritorio');
+    if (pc && quiero !== '0' && !html.classList.contains('maq-pc')) { html.classList.remove('dA', 'dB', 'dC', 'dD', 'dM', 'dL'); html.classList.add('d0', 'maq-pc'); window.dispatchEvent(new Event('resize')); }
+    else if (!pc && html.classList.contains('maq-pc')) poner(quiero);
+  };
+  new MutationObserver(capa).observe(html, { attributes: true, attributeFilter: ['class'] }); capa();
   window.addEventListener('message', (e) => {
     const m = e.data || {};
     if (m.maq === 'dir') poner(m.d);
@@ -270,14 +280,16 @@ function movimiento() {
     let pos = liga.querySelector(':scope > .maq-pos'), pts = liga.querySelector(':scope > .maq-pts');
     if (!html.classList.contains('dM') || !yo || !yo.pos) { if (pos) pos.remove(); if (pts) pts.remove(); return; }
     if (!pos) { pos = document.createElement('button'); pos.className = 'maq-pos'; pos.addEventListener('click', aRivales); liga.append(pos); }
-    if (!pts) { pts = document.createElement('span'); pts.className = 'maq-pts'; pts.addEventListener('click', aRivales); liga.append(pts); }
+    if (!pts) { pts = document.createElement('span'); pts.className = 'maq-pts'; pts.setAttribute('aria-hidden', 'true'); pts.addEventListener('click', aRivales); liga.append(pts); }
     const p = String(Math.round(yo.puntos || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'), h = `${yo.pos}º|${p} pts`;
     if (pos.dataset.h !== h) { pos.dataset.h = h; pos.textContent = `${yo.pos}º`; pts.textContent = `${p} pts`; pos.setAttribute('aria-label', `Vas ${yo.pos}º${n ? ` de ${n}` : ''} con ${p} puntos: ver la clasificación`); }
-    const est = liga.querySelector('#supEstado'), clave = `${window.innerWidth}|${est ? est.textContent : ''}|${h}|${html.classList.contains('tit-c')}|${html.classList.contains('inv-aj')}`;
+    const est = liga.querySelector('#supEstado'), clave = `${window.innerWidth}|${liga.clientWidth}|${est ? est.textContent : ''}|${h}|${html.classList.contains('maq-tx')}|${html.classList.contains('tit-c')}|${html.classList.contains('inv-aj')}`;
     if (clave === cabeAntes) return; cabeAntes = clave;
-    html.classList.remove('sin-pts', 'est-corta');
-    if (est && est.getBoundingClientRect().right + 10 > pts.getBoundingClientRect().left) html.classList.add('sin-pts');
+    html.classList.remove('sin-pts', 'sin-pos', 'est-corta');
+    if (est && est.getBoundingClientRect().right + 8 > pts.getBoundingClientRect().left) html.classList.add('sin-pts');
     if (sup.scrollWidth > sup.clientWidth + 1 || (est && est.getBoundingClientRect().right > liga.getBoundingClientRect().right + 1)) html.classList.add('est-corta');
+    // con la letra del sistema muy grande el nombre se quedaba en «LIGA …»: ahí el puesto le deja su sitio
+    const nom = liga.querySelector('#supLiga b'); if (nom && nom.clientWidth < nom.scrollWidth * 0.6) html.classList.add('sin-pos');
   };
   // 9. (la mezcla, con Invitar dentro de Ajustes) la tarjeta de invitar, arriba del todo de Ajustes, encima del buscador
   const invitarEnAjustes = () => {
