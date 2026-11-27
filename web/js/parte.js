@@ -276,7 +276,8 @@ export function fichaRival(M, h, enVenta = [], ahora = Date.now()) {
   const tid = h.tid, estado = [], hechos = [];
   if (h.rojo) estado.push({ k: 'rojo', txt: 'En negativo', tono: 'rojo' });
   else if (h.cap && h.cap.v != null) estado.push({ k: 'saldo', txt: `${eur(h.cap.v, { dec: 1 })}${h.cap.exacto ? '' : ' aprox.'}`, tono: num(h.cap.v) < 0 ? 'rojo' : '', datoDinero: true });
-  if (h.escudos && h.escudos.quedan != null) estado.push({ k: 'escudos', quedan: h.escudos.quedan, txt: `${h.escudos.quedan} de 2 blindajes`, tono: h.escudos.quedan === 0 ? 'azul' : '' });
+  // (Carlos, 27 nov: con todo, «sería muy tocho») los blindajes, solo si ha gastado alguno
+  if (h.escudos && h.escudos.quedan != null && h.escudos.quedan < 2) estado.push({ k: 'escudos', quedan: h.escudos.quedan, txt: `${h.escudos.quedan} de 2 blindajes`, tono: h.escudos.quedan === 0 ? 'azul' : '' });
   estado.push({ k: 'plantilla', txt: h.lleno ? `Llena · ${h.n}` : `${h.n} de ${M.TOPE || 24}`, tono: h.lleno ? 'oro' : '' });
   const corto = [1, 2, 3, 4].filter((p) => h.falta[p] || h.faltaDuda[p]);
   if (corto.length) estado.push({ k: 'corto', pos: corto, txt: `Corto en ${corto.map((p) => POS_C[p]).join(' y ')}`, tono: 'oro' });

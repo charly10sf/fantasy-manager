@@ -178,16 +178,48 @@ try {
       const cerrada = pinta(G);
       U.LS.set('top-parte', { hasta: T + DIA, n: 0, t: T });
       const abierta = pinta(G), abierta0 = pinta(G0);
+      // (27 nov) lo nuevo desde la última vez: lo guardado dice que ese rival no estaba en negativo
+      const Da = await import('./js/datos.js'), PG2 = parteDe(G);
+      const fir = Pa.firmaParte(PG2.jornada, Pa.visibles(PG2, { abierto: true }));
+      if (fir.s[tid]) fir.s[tid] = { ...fir.s[tid], rojo: false };
+      U.LS.set(Da.K('parte-visto'), fir);
+      const conNuevo = pinta(G);
+      U.LS.set(Da.K('parte-visto'), { ...fir, jornada: -1 });
+      const otraJornada = pinta(G);
+      U.LS.del(Da.K('parte-visto'));
       U.LS.set('top-rivales', { j: null, usos: 1, abiertos: { [tid]: T + 5 * 60e3 }, uno: null });
       const conDinero = pinta(G);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d/;
+      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d|parte-est|parte-h|parte-nuevo/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
         cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
         igualCerrado: !/>En negativo<|en negativo<|parte-pie/.test(abierta0),
-        conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero) };
+        conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero),
+        ficha: (abierta.match(/class="parte-est"/g) || []).length === G.M.rivales.length, nuevo: /parte-nuevo/.test(conNuevo) && /en negativo/.test(conNuevo.slice(conNuevo.indexOf('parte-nuevo'))) && !/parte-nuevo/.test(otraJornada) && !/parte-nuevo/.test(abierta) };
+    }
+
+    /* ---- (27 nov) la ficha de cada rival: los hechos de hoy ---- */
+    {
+      const A = base, P0 = parteDe(A);
+      const cerr = Pa.visibles(P0, { abierto: true, dineroAbierto: () => false }), ab = Pa.visibles(P0, { abierto: true, dineroAbierto: () => true });
+      const r0 = A.M.rivales.find((x) => x.e.teamId === tid), h0 = Pa.hechosRival(A.M, r0, T);
+      const conEsc = (q) => Pa.fichaRival(A.M, { ...h0, escudos: { quedan: q, usados: 2 - q, completo: true } }, [], T);
+      const firma = (o) => ({ rojo: false, quedan: 2, lleno: false, corto: [], venta: {}, abiertas: {}, ...o });
+      const riv = (o) => [{ tid, ficha: { firma: firma(o) } }];
+      const nov = (a, b, j = 5) => Pa.novedades({ jornada: 5, s: { [tid]: firma(a) } }, riv(b), j).map((x) => x.k);
+      out.ficha = {
+        todos: cerr.length === A.M.rivales.length && cerr.every((x) => x.ficha && x.ficha.estado.some((e) => e.k === 'plantilla')),
+        sinSaldo: cerr.every((x) => !x.ficha.estado.some((e) => e.k === 'saldo' || e.datoDinero)) && !/aprox\.|[-−]?\d+,\d M/.test(JSON.stringify(cerr.map((x) => x.ficha.estado))),
+        conSaldo: ab.some((x) => x.ficha.estado.some((e) => e.k === 'saldo')),
+        mismoOrden: JSON.stringify(cerr.map((x) => x.tid)) === JSON.stringify(ab.map((x) => x.tid)),
+        escudos: !conEsc(2).estado.some((e) => e.k === 'escudos') && conEsc(1).estado.some((e) => e.k === 'escudos' && e.quedan === 1) && conEsc(0).estado.some((e) => e.k === 'escudos' && e.quedan === 0),
+        hechosCortos: cerr.every((x) => x.ficha.hechos.length <= 3 && x.ficha.hechos.every((f) => f.txt.length <= 90)),
+        nov: nov({}, { rojo: true }).join() === 'rojo' && nov({ quedan: 2 }, { quedan: 1 }).join() === 'escudos' && nov({}, { lleno: true }).join() === 'plantilla' && nov({}, { corto: [2] }).join() === 'corto'
+          && nov({}, { venta: { 9: 'X' } }).join() === 'venta' && nov({}, { abiertas: { 9: 'X' } }).join() === 'clausula' && nov({}, {}).length === 0 && nov({}, { rojo: true }, 6).length === 0
+          && nov({ rojo: true }, { rojo: false }).length === 0 && Pa.novedades(null, riv({ rojo: true }), 5).length === 0,
+      };
     }
     return out;
   });
@@ -243,6 +275,15 @@ try {
   ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: «En negativo» sin cifra y el candado del dinero al pie');
   ok(r.pantalla.conDinero, 'con el dinero de ese rival abierto: «En negativo» con su cifra y la oferta por lo que vende');
   ok(r.pantalla.pieSiempre, 'con la cifra a la vista, el candado del pie ya no sale');
+  ok(r.pantalla.ficha, '(27 nov) abierto, cada rival sale con su ficha');
+  ok(r.pantalla.nuevo, 'lo nuevo desde la última vez sale marcado (y no con lo guardado de otra jornada ni sin nada guardado)');
+  ok(r.ficha.todos, 'la ficha: todos los rivales, cada uno con su plantilla');
+  ok(r.ficha.sinSaldo, 'con su dinero cerrado, ni su saldo ni ninguna cifra de su dinero en la ficha');
+  ok(r.ficha.conSaldo, 'con su dinero abierto, su saldo');
+  ok(r.ficha.mismoOrden, 'el orden no cambia con el dinero abierto o cerrado');
+  ok(r.ficha.escudos, 'los blindajes solo salen si ha gastado alguno (1 o 0)');
+  ok(r.ficha.hechosCortos, 'como mucho tres hechos por rival, cortos');
+  ok(r.ficha.nov, 'lo nuevo: negativo, blindaje, plantilla llena, corto, en venta y cláusula abierta; nada con otra jornada ni si no ha cambiado');
 } finally { await cerrar(); }
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');
 process.exit(mal ? 1 : 0);
