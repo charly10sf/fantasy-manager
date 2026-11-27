@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4n';
+export const VERSION = '0.8.5';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,119 @@ export const VERSION = '0.8.4n';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, Carlos: «vamos a hacer lo de las funciones del fantasy premium despacito…»; claude/nota-premium.md del proyecto)
+    // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad
+    // (`premium`, `config.premiumFeatures`: normalizar.js `premiumDe`, motor `M.premium`); el entrenador, que en premium puntúa
+    // 5/2/0, ya no se manda vender (decide.js regla 2, plan.js, `planAuto`, la ficha, lo que lee la IA) y va en el once
+    // (`mejorOnce`); no cuenta en el tope de 24 (`M.nPlantilla`, `M.llena`); recompensa diaria de 200 mil; la alineación de
+    // LaLiga con capitán, banquillo y entrenador leída aparte (`alineacionDe` en vivo.js; `idsOnce` ya no puede colar un id
+    // que no es de jugador); las reglas de lo encendido, a la IA (`premiumTxt`); y la línea «Premium» del Diagnóstico.
+    // La ficha de un entrenador, sin ningún cartel (Carlos, 13:50: «No quiero nada de ese cartel. En ningún lado»).
+    // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
+    // (15:02, Carlos: «sí, el máximo son 24») El tope de la plantilla es 24, no 25, en toda la app: `TOPE_PLANTILLA` de
+    // util.js, del que lo leen el motor (`M.TOPE`), quién puja (`ctx.tope`), el plan, decide.js, el parón, la IA y el chat.
+    // (26 nov, el encargo 3) EL PARTE DE LOS RIVALES: Rivales → Parte (parte.js, `parteHTML` en vistas.js; función top
+    // «parteRivales», 2 anuncios y 24 h). Lo medido y las reglas, en claude/nota-parte.md del proyecto.
+    // (26 nov, tarde) LA PARTE B: que ayude a jugarla, medido antes con J4-J13 (claude/nota-premium-parte-b.md del proyecto;
+    // .github/ia/medir-premium.js y medir-entrenador.mjs). Las 5 formaciones de más en el mejor once (`M.formaciones`,
+    // `M.formacionVale`; `formaOnce` lee un 4-6-0); el capitán y el banquillo que propone el motor (`M.capitanDe`,
+    // `M.banquilloDe`, `M.premiumPropuesta`) en Equipo (`premiumOnce` en vistas.js), la ficha, el paso de
+    // alinear del plan (`M.premiumAlinTxt`) y lo que lee la IA (`premiumTxt`); de dos entrenadores, el de mejor partido
+    // (`M.ppEntrenador`); los del mercado, aparte (`M.entrenadoresMercado`, `M.ficharEntrenador`).
+    // (26 nov, 12:37, Carlos: «la demanda de otras ligas y lo que se paga en otras ligas por un jugador se puede hacer todo en
+    // uno»; claude/prompts-26nov-premium-ligas-parte.md del proyecto, encargo 2; la nota, claude/nota-otras-ligas.md) LO QUE
+    // SOLO SE VE JUNTANDO TODAS LAS LIGAS, la recogida: otras-ligas.js y, en el servidor, worker/src/ligas.js («ligas|todos»).
+    // Con «Ayudar a mejorar la IA»: las compras van con el id del jugador (las de 45 días atrás, otra vez, una sola vez), los
+    // libres del mercado con sus pujas (como mucho cada media hora) y las cláusulas que se abren con si se pagaron en 24 h.
+    // Sin liga, sin mánager, sin cuenta: de la liga, una huella que el servidor vuelve a cifrar con una sal que no sale de él.
+    // Una cuenta, 2 ligas en 7 días, y el Worker comprueba con LaLiga que la liga es de quien la manda (revisión de fuera).
+    // LO QUE SE VE, HECHO Y APAGADO («otrasLigas» de limites.json: false, 'dueño' o true): en la ficha de un libre, UNA
+    // línea dentro de la tarjeta «Libre en el mercado de la liga» («En otras ligas: +11 % sobre su valor (hasta +19 %) ·
+    // demanda alta»; 3 ligas o más, sin la tuya; Carlos, 18:53: «textos más reducidos… tampoco 60 pestañas», y 19:31:
+    // «lo dejaría gratis, y mejor integrado»: sin tarjeta propia ni candado). No toca la puja ni le llega a la IA.
+    // La medida, preparada: .github/ia/medir-otras-ligas.mjs. Pruebas: .github/ia/caso-otras-ligas.mjs y worker/prueba/datos.mjs
+    // (26 nov, 22:19, Carlos: «poner un pequeño pop-up de las novedades que hay») ESTA VERSIÓN SE CUENTA A TODOS (todos: true;
+    // excepción que pide él a la regla del 20 nov), con la tarjeta pequeña (aviso, como la de invitar: tarjetaNovedad), nunca
+    // la presentación entera. Una vez por dispositivo (LS «avisos-nov»), con la liga cargada y sin pisar la bienvenida, el
+    // tutorial ni la del iPhone. `lista`: una línea por cosa; `solo` la enseña solo donde se nota ('pc': el ordenador ancho;
+    // 'premium': una liga premium). Lo de otras ligas (apagado), las dos ligas y los avisos terminados no se cuentan
+    v: '0.8.5', f: '2026-11-26', h: '23:35', t: 'El parte de los rivales', todos: true,
+    aviso: {
+      d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
+      lista: [
+        { ico: 'parte', t: 'Parte de los rivales', tag: 'Función top', x: 'Las debilidades de cada rival: quién va en negativo, a quién le falta un puesto y quién no puede blindar. De momento, solo en Android.' },
+        { ico: 'premium', t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
+        { ico: 'origen', t: 'De dónde sale cada fichaje', x: 'En el plan: mercado, en venta o cláusula.' },
+        { ico: 'ordenador', t: 'Más ancha en el ordenador', x: 'Equipo y Clubes usan toda la pantalla.', solo: 'pc' },
+      ],
+      ir: { v: 'rivales', seg: 'rivales:parte', txt: 'Ver el parte' },
+    },
+    cosas: [
+      // (26 nov, 20:01, Carlos) «Dar por terminado» en los avisos de fallo: claude/nota-avisos-terminar.md del proyecto
+      { para: 'dueño', tipo: 'mejora', d: 'chat', menor: true, t: 'Dar un aviso por terminado', x: 'En un aviso que espera respuesta hay un botón para darlo por terminado sin contestar (un «gracias», algo ya hablado): deja de salir como sin contestar. Si vuelve a escribir, sale otra vez.' },
+      // (26 nov, aviso de «como comiendo lomo»: «No son mis jugadores») con dos ligas, al cambiar de una a otra la
+      // sincronización de esos segundos y el plan o la pregunta que se recogen después ponían lo de una liga en la otra
+      // (sinc.js `pararSinc`/`ligaBien`, `ligaActiva` de datos.js, `liga` en plan-rid y preg-rid; caso-sinc (i))
+      { para: 'dueño', tipo: 'arreglo', d: 'ia', menor: true, t: 'Con dos ligas, cada una lo suyo', x: 'Si juegas en dos ligas, al cambiar de una a otra ya no se cuelan el plan, las preguntas ni lo que le has contado a la IA de la otra liga.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
+      { tipo: 'nuevo', d: 'campo', t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, el plan lleva la puja por el que conviene fichar, con su dinero contado. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
+      // (26 nov, 20:26, idea de IsmaelMartín; claude/prompt-origen-fichajes.md del proyecto) `origenFichaje` en operaciones.js,
+      // pintado al lado del nombre en los pasos de fichar del plan y en «Antes de nada» (vistas.js); prueba: caso-origen.mjs
+      { tipo: 'mejora', d: 'plan', t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
+      { tipo: 'arreglo', d: 'candado', t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
+      { tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre 24 horas con dos anuncios.' },
+      // (26 nov, 20:41-21:55, Carlos: «hay mucho espacio a la derecha») Equipo como Hoy y Clubes a todo lo ancho (vistas.js, clubes.js, app.css)
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'Más ancha en el ordenador', x: 'En el ordenador, Equipo pone tu once a lo ancho, como Hoy, y Clubes enseña tus clubes arriba (se pliegan) y la clasificación entera, con casa, fuera y más datos.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', menor: true, t: 'Lo que se paga y se puja en todas las ligas', x: 'La app empieza a juntar, sin nombres ni ligas, lo que se paga por cada jugador, cuántas pujas lleva cada libre y qué cláusulas se pagan en todas las ligas que la usan. Todavía no se ve nada: hacen falta unas semanas de datos y comprobar que acierta. Después, la ficha de un libre del mercado dirá lo que se ha pagado por él en otras ligas.', ir: { v: 'mercado' } },
+    ],
+  },
+  {
+    // (26 nov, 04:47, Carlos: «¿por qué cada vez que publico una versión que no es de la Play Store sale un aviso para que la
+    // actualice? ¿No se podría hacer de forma automática?»; claude/prompt-actualizar-solo.md del proyecto) la versión nueva se
+    // pone sola, sin la ventana: `nuevaSola`, `intentarSola` y `aMedias` en app.js (en la web, recargarWeb; en la app de Play
+    // y de iOS, AlDia con nativo.buscarWeb). Espera si hay algo a medias (pregunta o plan de la IA, escribiendo, una hoja
+    // para apuntar, un anuncio, el tutorial) o a que la app se vaya a segundo plano; la ventana de siempre, de reserva: tras 2
+    // intentos que no cambian la versión (LS «nueva-sola»), si AlDia falla o tras ESPERA_SOLA (3 h) esperando. Vuelve a la
+    // misma pestaña, ficha y scroll (LS «tras-recarga»). Las webs de antes enseñan la ventana una última vez (es la que pone
+    // esta). Pruebas: el bloque 13 de .github/prueba-web.mjs y el 5 de .github/prueba-ios.mjs
+    v: '0.8.4r', f: '2026-11-26', h: '06:28', t: 'Las versiones nuevas, solas',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'versiones', menor: true, t: 'Las versiones nuevas se ponen solas', x: 'Cuando sale una versión nueva ya no sale la ventana de «Hay una versión nueva»: se pone sola en un momento en que no estés haciendo nada (o al salir de la app) y vuelves a la misma pantalla. Si estás preguntando a la IA, escribiendo o apuntando algo, espera a que acabes. Si no se puede poner sola, sale la ventana de siempre.' },
+    ],
+  },
+  {
+    // (26 nov, 04:18, Carlos: «solo salen 10 ligas y 2 jugadores en todas… uno ha invitado a 2 amigos, tendrían que salir
+    // mínimo 3») cada cuenta mandaba solo la liga que tenía abierta, y quien está en varias salía en otra (el que invitó a dos:
+    // 018307127, un amigo ahí y el otro con 018133782 abierta). Ahora /hola manda todas (`ligas`, 10 como mucho; quien.js las
+    // guarda limpias y al momento si cambian) y «Quién usa la app» junta por la liga que más cuentas comparten (`ligasDe`,
+    // `cuentasQ` en hojas.js). Las fichas de antes se completan solas cuando cada uno vuelve a abrir la app.
+    v: '0.8.4q', f: '2026-11-26', h: '04:47', t: 'Quién usa la app',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'grafica', menor: true, t: 'Las ligas, bien contadas', x: 'Quien está en varias ligas ya no sale solo en la que tenía abierta: las cuentas de una misma liga salen juntas aunque cada uno tenga otra abierta. Se va completando a medida que cada uno abre la app.' },
+    ],
+  },
+  {
+    // (26 nov, 03:34-03:35, Carlos: «el popup… da a entender que los cálculos de la app son malos» y «pon algo como que para
+    // ayudar a afinar aún más el dinero que tiene cada rival… que lo pongan»; a quien ya vio la de antes no le sale otra vez)
+    // los textos de apuntar el dinero de un rival, sin «aprende a calcular mejor»: la novedad, la ventana al guardar, el pie de
+    // la ficha y la línea de la 0.8.4o (dinero-dicho.js y version.js)
+    v: '0.8.4p', f: '2026-11-26', h: '03:53', t: 'Retoques de textos',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'dinero', menor: true, t: 'El dinero apuntado, más claro', x: 'La ventana de la novedad ya no sale: lo cuenta un aviso corto en Rivales, que se quita con su ×. A quien ya vio la ventana no le sale. Los textos dicen que la app ya calcula el dinero exacto a falta de las recompensas diarias y que lo apuntado lo afina.' },
+    ],
+  },
+  {
+    // (26 nov, claude/prompt-dinero-rivales.md del proyecto) apuntar lo que te ha dicho un rival que tiene, también con su
+    // dinero cerrado (dinero-dicho.js): la hoja (ficha y Rivales), la ficha ya apuntada, las tostadas, la pastilla y el aviso
+    // de Rivales, la ventana «Quién y cuánto», la novedad una vez por cuenta (LS «nov-dinero» y /hola nd del Worker) y la
+    // tarjeta de Pregunta (tipo «dinero» en las notas del chat, `dineroDeNota`). Con el dinero cerrado el motor no recibe la
+    // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
+    v: '0.8.4o', f: '2026-11-26', h: '02:50', t: 'Apunta el dinero de tus rivales',
+    cosas: [
+      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú. La app ya calcula su dinero exacto a falta de las recompensas diarias que coja: con lo que apuntas, la app y la IA lo afinan aún más.' },
+    ],
+  },
   {
     // (25 nov, claude/prompt-tandas-b.md: las tandas B-5, B-1, B-2 y B-3 de claude/auditoria-fallos-25nov-b.md) B-5: con
     // «quién paga» cerrado al chat no le llega a quién le llega una cláusula (`paganTxt`, `blindajeTxt` con chat), la pregunta
@@ -915,7 +1028,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'plan', t: 'Los titulares que bajan', x: 'El plan solo pone a la venta a un titular cuando baja todos los días, y mira también lo más alto y lo más bajo que ha valido esta temporada. Si no tienes a otro en su puesto que puntúe, no te lo vende: te avisa en «Mirados y descartados» de que antes hace falta un sustituto.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'especular', t: 'Revender a más de una jornada', x: 'Lo que compras para revender ya no hay que venderlo siempre antes de la jornada. Si sigue subiendo, empiezas la jornada en positivo sin venderlo y aún está protegido, el plan te dice que lo puedes aguantar. Se vende cuando deja de subir o antes de que se le acabe la protección.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'escudo', t: 'Blindajes al empezar la jornada', x: 'En «Los próximos días» sale cuándo se reabren las cláusulas al empezar la jornada y, si te queda un blindaje gratis, en quién usarlo.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 25 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
+      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 24 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
       { tipo: 'mejora', d: 'reloj', t: 'El plan de la IA dice de cuándo es', x: 'Cuando ves el último plan hecho con la IA, sale la hora a la que se hizo y, si puede no estar al día (está preparando otro, ha fallado o ya tiene unas horas), te lo avisa.', menor: true },
     ],
   },

@@ -37,7 +37,8 @@
  *                             días (segDias: { 'AAAA-MM-DD': seg }, solo los días con algo). Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
  *                             que han entrado alguna vez (r:<uid>, sin nombre ni equipo; se borra a los 400 días sin abrir la app), para contar
  *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
- *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
+ *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver; nd, lo mismo con la
+ *                             novedad de apuntar el dinero de un rival, 0.8.4o).
  *
  *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra, rid }: el plan del día con la IA de Carlos (Claude), con
  *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
@@ -52,6 +53,23 @@
  *   POST /pujas               { c: [{ k, d, s, v, r, top }] } las compras de una liga, SIN NOMBRES NI IDS (compraLimpia), con la
  *                             sesión de LaLiga solo para frenar. Como mucho 80 por vez y 4 veces al día por cuenta.
  *   GET  /pujas/cal           lo pagado sobre el valor por tramo de valor y de subida (calPujas), rehecho cada 6 h. Sin sesión.
+ *
+ *   Lo que solo se ve juntando todas las ligas (26 nov; worker/src/ligas.js): lo pagado por cada jugador, la demanda (cuántas
+ *   pujas lleva cada libre) y las cláusulas que se abren y se pagan. Sin liga, sin mánager y sin cuenta: de la liga solo
+ *   llega una huella (`l`), que el objeto vuelve a cifrar con una sal que no sale de él.
+ *   POST /pujas               (lo de arriba) desde el 26 nov cada compra puede traer `p` (el id del jugador, que es público) y el
+ *                             cuerpo, `l` (y `t`, el tipo de liga): con las dos cosas se apunta además lo pagado por ese jugador.
+ *   POST /ligas               { l, t, m: [[id del jugador, pujas]], a: [{ k, d, v, cs, r, pos, tit, ida, bl, hp }] }: los libres
+ *                             del mercado de tu liga con sus pujas y las cláusulas que se abrieron hace más de 24 h. Con la
+ *                             sesión de LaLiga para frenar (una cuenta, 2 ligas distintas en 7 días) y para comprobar, la
+ *                             primera vez y cada 30 días, que esa liga es de esa cuenta (`escribirLigas`). Contesta { ok }
+ *                             sin decir cuánto era nuevo; 429 con `tope` («dia», «ligas» o «ajena») si no puede mandar hoy.
+ *   POST /ligas/ver           { l, t, ids } → { p: { [id]: { n, med, max } }, d: { [id]: [hoy, ayer] } }: lo pagado en las DEMÁS
+ *                             ligas de su tipo (`t`: privada o pública, su clase y si es Premium) en 3 días y el nivel de demanda (1 a 3). Solo lo que esté encendido en «otrasLigas» de
+ *                             limites.json (apagado: vacío). Con sesión, y solo con una liga de la que esa cuenta
+ *                             ha mandado algo en 7 días (si no, vacío y `falta`). `n` va por tramos (3, 5, 10) y med y max en
+ *                             puntos enteros.
+ *   GET  /ligas/medida        (el dueño) lo guardado entre dos días, para medir si sirve (.github/ia/medir-otras-ligas.mjs).
  *
  *   El semáforo de LaLiga y la entrada paso a paso (0.7.13i; Carlos, 15 nov: con 27 clics en la campaña de X no se veía
  *   a nadie entrar, y lo que pasa antes de entrar con la cuenta no llegaba al servidor):
@@ -72,6 +90,7 @@ import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
 import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
 import { fallosObjeto, MAX_CAPTURAS } from './fallos.js';
+import { ligasObjeto, huellaOk, pidOk } from './ligas.js';
 import { pushArmar, pushQuitar, pushAlAcabar, pushesDebidos, apnsObjeto, tokenDe } from './push.js';
 import { busqObjeto, busqRelevantes, bloqueBusq, vistasBusq, BUSQ_HORAS, BUSQ_REPITE_H } from './busquedas.js';
 export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
@@ -278,6 +297,9 @@ export const FRENOS = {
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
   // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
   pujas: { min: 6, dia: 30 }, pujasCal: { min: 20 },
+  // (26 nov) lo de todas las ligas: por IP y minuto nada más, y holgado (detrás de una misma IP de móvil hay mucha gente); sin
+  // tope por día por IP, que sería otra petición a otro objeto en cada envío: el de cada cuenta lo lleva «ligas|todos»
+  ligas: { min: 20 }, ligasVer: { min: 20 },
   // (0.7.13i) los pasos antes de entrar y el semáforo de LaLiga, sin sesión: por IP
   embudo: { min: 20, dia: 120 }, estado: { min: 30 },
 };
@@ -387,6 +409,9 @@ export class Emparejar {
     if (ruta === '/fallos') return new Response(JSON.stringify(fallosObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
     // (25 nov, la app de iOS) los avisos push por APNs, todos por «apns|todos» (worker/src/push.js); nunca pone alarma
     if (ruta === '/apns') return new Response(JSON.stringify(await apnsObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
+    // (26 nov) lo de todas las ligas (lo pagado por jugador, la demanda y las cláusulas que se abren), en «ligas|todos» con
+    // SQLite (worker/src/ligas.js); nunca pone alarma
+    if (ruta === '/ligas') return new Response(JSON.stringify(await ligasObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
     if (ruta === '/quien') {
       const x = await quienObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo);
       return new Response(typeof x === 'string' ? x : JSON.stringify(x), { status: 200 });
@@ -648,6 +673,7 @@ async function capturaDe(env, b) {
  *                              que Domy pueda responder fallos también igual que yo») AÑADE un mensaje de Fantasy Manager,
  *                              con la cuenta y el nombre de quien lo escribe (solo lo ven ellos dos). Lo usan también las webs
  *                              de antes del dueño
+ * POST /fallos/terminar       { id }: (el dueño y quien ayuda; 26 nov) lo da por terminado → { ok, cer }
  * POST /fallos/accion          (la Action «Fallos», con la llave x-fallos-clave) { op: leer | captura | contestar }
  */
 async function fallos(req, env, c, ruta) {
@@ -693,6 +719,11 @@ async function fallos(req, env, c, ruta) {
     if (!r.ok) return fueraDe(r, c);
     const { ok, ...h } = r;
     return json(h, 200, c);
+  }
+  if (ruta === '/fallos/terminar' && req.method === 'POST') {
+    // (26 nov) darlo por terminado: deja de contar como sin contestar hasta que quien lo mandó vuelva a escribir
+    const r = await pedirFallos(env, { op: 'terminar', id: cuerpo.id });
+    return r.ok ? json({ ok: true, cer: r.cer }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/responder' && req.method === 'POST') {
     // (firma siempre «Fantasy Manager»: quien lo mandó no sabe quién de los dos contesta)
@@ -1513,12 +1544,27 @@ async function pujasApunte(req, env, c) {
   const lista = b && Array.isArray(b.c) ? b.c.slice(0, PUJAS_POR_VEZ) : null;
   if (!lista || !lista.length) return json({ e: 'Nada que apuntar' }, 400, c);
   const xs = {};
-  for (const y of lista) { const x = compraLimpia(y); if (x) xs[`c|${y.d}|${y.k}`] = x; }
+  // (26 nov) las que traen su jugador (`p`), además, para lo pagado por cada jugador en todas las ligas (ligas.js)
+  const conJug = [];
+  for (const y of lista) {
+    const x = compraLimpia(y);
+    if (!x) continue;
+    xs[`c|${y.d}|${y.k}`] = x;
+    const p = pidOk(y.p);
+    if (p != null) conJug.push({ k: y.k, d: y.d, p, ...x });
+  }
   if (!Object.keys(xs).length) return json({ e: 'Compras no válidas' }, 400, c);
   if (!(await cabeHoy(env, `pujas|${u.uid}`, PUJAS_CUENTA_DIA))) return demasiadas(c, 'mañana');
   if (!(await cabeHoy(env, 'pujas|todos', PUJAS_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
   const r = await objPujas(env).fetch('https://pujas/pujas/poner', { method: 'POST', body: JSON.stringify({ xs }) });
-  return r.status === 200 ? json({ ok: true, n: Object.keys(xs).length }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+  if (r.status !== 200) return json({ e: 'No se ha podido guardar' }, 503, c);
+  // (si esto falla, lo de siempre ya está guardado: no se le dice a la app que repita)
+  // (`jug`: que este servidor mira el jugador y ha podido apuntarlo; no dice cuántas eran nuevas. Sin él, la app las
+  // vuelve a mandar otro día, salvo que venga `sinJug`: esa cuenta no puede mandar de esa liga (ya manda de las que caben,
+  // o no es suya) y no hace falta insistir)
+  let jug = false, sinJug = '';
+  if (conJug.length && huellaOk(b.l)) { const x = await escribirLigas(env, req, { op: 'pago', l: b.l, t: b.t, uid: u.uid, xs: conJug }); jug = !!(x && x.ok); sinJug = (x && x.tope) || ''; }
+  return json({ ok: true, n: Object.keys(xs).length, ...(jug ? { jug: 1 } : {}), ...(sinJug ? { sinJug } : {}) }, 200, c);
 }
 let PUJAS_MEM = { t: 0, cal: null };
 async function pujasCal(env, c) {
@@ -1529,6 +1575,110 @@ async function pujasCal(env, c) {
     PUJAS_MEM = { t: Date.now(), cal: await r.json() };
   }
   return json(PUJAS_MEM.cal, 200, c);
+}
+
+/* ---------- lo que solo se ve juntando todas las ligas (26 nov; worker/src/ligas.js) ---------- */
+const objLigas = (env) => env.QR.get(env.QR.idFromName('ligas|todos'));
+/** una llamada al objeto «ligas|todos»; null si no contesta */
+async function pedirLigas(env, b) {
+  try {
+    const r = await objLigas(env).fetch('https://freno/ligas', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+    return r.status === 200 ? await r.json() : null;
+  } catch (e) { return null; }
+}
+/**
+ * Las huellas (como las hace la app, `huellaLiga`: SHA-256 de «fm-liga|id», 24 hex) de las ligas en las que juega quien
+ * llama, preguntadas a LaLiga con su sesión (la misma lista que pide la app al entrar: /v1/competition/1/leagues); null si
+ * LaLiga no contesta. Los ids se ven aquí un momento y no se guardan: solo sus huellas, media hora en memoria.
+ * → { hs, deAntes (eran las de la memoria) }
+ */
+const MIS_LIGAS = new Map();
+const sha24 = async (texto) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto)))].slice(0, 12).map((b) => b.toString(16).padStart(2, '0')).join('');
+/** `guardadas`: valen las de la memoria; con false se pregunta otra vez (por si acaba de entrar en una liga) */
+async function huellasDeMisLigas(req, guardadas = true) {
+  const tk = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (tk.length < 20) return null;
+  const k = await sha24(`sesion|${tk}`), g = MIS_LIGAS.get(k);
+  if (guardadas && g && Date.now() - g.t < 30 * 60e3) return { hs: g.hs, deAntes: true };
+  let r;
+  try {
+    r = await fetch('https://fantasy-api.llt-services.com/api/v1/competition/1/leagues?x-lang=es', { headers: { Authorization: `Bearer ${tk}`, 'x-app': '2', 'x-lang': 'es', Accept: 'application/json', 'user-agent': UA } });
+  } catch (e) { return null; }
+  if (!r.ok) return null;
+  let j = null;
+  try { j = await r.json(); } catch (e) { return null; }
+  const l = Array.isArray(j) ? j : (j && (Array.isArray(j.data) ? j.data : Array.isArray(j.elements) ? j.elements : null));
+  if (!l) return null;
+  const ids = [...new Set(l.map((e) => String((e && e.id) ?? '')).filter((x) => /^[\w-]{1,40}$/.test(x)))].slice(0, 60);
+  const hs = [];
+  for (const id of ids) hs.push(await sha24(`fm-liga|${id}`));
+  if (MIS_LIGAS.size > 2000) MIS_LIGAS.clear();
+  MIS_LIGAS.set(k, { t: Date.now(), hs });
+  return { hs, deAntes: false };
+}
+/**
+ * Escribir en «ligas|todos» (compras con jugador, demanda, cláusulas), comprobando que la liga es de quien la manda: si el
+ * objeto contesta `verificar` (la primera vez de esa cuenta con esa liga, y cada 30 días), se pregunta a LaLiga y, si `l`
+ * es la huella de una de sus ligas, se repite con `verificada`. { ok } | { tope: 'ligas' | 'dia' | 'ajena' } |
+ * { e: 'sin-comprobar' } (LaLiga no contesta: otra vez será) | null
+ */
+async function escribirLigas(env, req, b) {
+  const x = await pedirLigas(env, b);
+  if (!x || !x.verificar) return x;
+  let mias = await huellasDeMisLigas(req);
+  // (si no sale entre las que se tenían de hace un rato, se pregunta otra vez: puede haber entrado en la liga hace poco)
+  if (mias && mias.deAntes && !mias.hs.includes(b.l)) mias = await huellasDeMisLigas(req, false);
+  if (!mias) return { ok: false, e: 'sin-comprobar' };
+  if (!mias.hs.includes(b.l)) return { ok: false, tope: 'ajena' };
+  return pedirLigas(env, { ...b, verificada: true });
+}
+/** «otrasLigas» de limites.json: qué se enseña de lo de las demás ligas y a quién. Cada cosa: false (a nadie; lo de por
+    defecto), 'dueño' (solo a Carlos, para verlo con datos de verdad antes de abrirlo) o true (a todos) */
+export async function cfgOtrasLigas(env, uid, lim = null) {
+  const o = ((lim || (await limitesJson())).otrasLigas) || {};
+  const soy = papelDe(env, uid) === 'dueño';
+  const on = (x) => x === true || ((x === 'dueño' || x === 'dueno') && soy);
+  return { pagado: on(o.pagado), demanda: on(o.demanda) };
+}
+/** POST /ligas: los libres del mercado de una liga con sus pujas y las cláusulas que se abrieron, sin nombres */
+async function ligasApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `ligas|${u.uid}`, 3))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  if (!b || !huellaOk(b.l) || (!Array.isArray(b.m) && !Array.isArray(b.a))) return json({ e: 'Apunte no válido' }, 400, c);
+  const x = await escribirLigas(env, req, { op: 'apunte', l: b.l, t: b.t, uid: u.uid, m: Array.isArray(b.m) ? b.m.slice(0, 200) : [], a: Array.isArray(b.a) ? b.a.slice(0, 80) : [] });
+  if (!x || x.e === 'sin-comprobar') return json({ e: 'No se ha podido guardar' }, 503, c);
+  // (el tope de envíos del día, esa cuenta ya ha mandado de las ligas que caben, o la liga no es suya: la app no insiste
+  // hasta mañana)
+  if (x.tope) return json({ e: 'Por hoy ya está', tope: x.tope }, 429, c);
+  if (!x.ok) return json({ e: 'Apunte no válido' }, 400, c);
+  return json({ ok: true }, 200, c);
+}
+/** POST /ligas/ver: lo pagado en las demás ligas y la demanda de esos jugadores; apagado en limites.json, vacío */
+async function ligasVer(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_LEER', `ligasver|${u.uid}`, 10))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  if (!b || !huellaOk(b.l) || !Array.isArray(b.ids)) return json({ e: 'Pedido no válido' }, 400, c);
+  const on = await cfgOtrasLigas(env, u.uid);
+  if (!on.pagado && !on.demanda) return json({ ok: true, on, p: {}, d: {} }, 200, c);
+  const x = await pedirLigas(env, { op: 'ver', l: b.l, t: b.t, uid: u.uid, ids: b.ids.slice(0, 200), pagado: on.pagado, demanda: on.demanda });
+  if (!x || !x.ok) return json({ e: 'No se ha podido leer' }, 503, c);
+  // (`falta`: esa cuenta aún no ha mandado nada de esa liga estos días; la app lo pide otra vez más tarde)
+  return json({ ok: true, on, p: x.p || {}, d: x.d || {}, ...(x.falta ? { falta: true } : {}) }, 200, c);
+}
+/** GET /ligas/medida?desde=&hasta= (el dueño): lo guardado, para medir si lo de las demás ligas sirve */
+async function ligasMedida(req, env, c, url) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (papelDe(env, u.uid) !== 'dueño') return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  const x = await pedirLigas(env, { op: 'medida', desde: url.searchParams.get('desde') || '', hasta: url.searchParams.get('hasta') || '' });
+  return x && x.ok ? json(x, 200, c) : json({ e: 'No se ha podido leer' }, 503, c);
 }
 
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
@@ -1741,7 +1891,7 @@ async function apodos(req, env, c) {
  * Antes iba en el KV (p:, r:, u:) y era casi todo lo que gastaba de sus topes gratis.
  */
 // lo que se queda de lo que manda la app (el objeto lo corta y lo limpia igual)
-const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'disp'];
+const HOLA_CAMPOS = ['equipo', 'liga', 'ligas', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'nd', 'disp'];
 async function hola(req, env, c, ruta) {
   if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
@@ -1757,7 +1907,7 @@ async function hola(req, env, c, ruta) {
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo; ve: también a
     // quien ayuda, 0.8.4)
     const papel = papelDe(env, u.uid);
-    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
+    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}), ...(r.nd ? { nd: r.nd } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
@@ -2046,6 +2196,7 @@ const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
   'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
   'POST /pujas': 'pujas', 'GET /pujas/cal': 'pujasCal',
+  'POST /ligas': 'ligas', 'POST /ligas/ver': 'ligasVer', 'GET /ligas/medida': 'ligasVer',
   'POST /embudo': 'embudo', 'GET /estado': 'estado',
 };
 
@@ -2114,6 +2265,9 @@ export default {
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
       if (url.pathname === '/pujas' && req.method === 'POST') return await pujasApunte(req, env, c);
       if (url.pathname === '/pujas/cal' && req.method === 'GET') return await pujasCal(env, c);
+      if (url.pathname === '/ligas' && req.method === 'POST') return await ligasApunte(req, env, c);
+      if (url.pathname === '/ligas/ver' && req.method === 'POST') return await ligasVer(req, env, c);
+      if (url.pathname === '/ligas/medida' && req.method === 'GET') return await ligasMedida(req, env, c, url);
       if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
       if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);

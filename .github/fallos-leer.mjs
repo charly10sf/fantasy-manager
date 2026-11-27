@@ -38,9 +38,9 @@ if (que === 'llave') {
   const j = JSON.parse(Buffer.concat([dc.update(Buffer.from(d, 'base64')), dc.final()]).toString('utf8'));
   const hilos = j.hilos || (j.avisos || []).map(comoHilo);
   const f = (x) => (x ? new Date(x).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) : '');
-  console.log(`Avisos a ${f(j.t)}: ${hilos.length} (${hilos.filter((h) => h.de === 'u').length} esperando respuesta)\n`);
+  console.log(`Avisos a ${f(j.t)}: ${hilos.length} (${hilos.filter((h) => h.de === 'u' && !h.cer).length} esperando respuesta)\n`);
   for (const h of hilos) {
-    console.log(`## ${h.id} · ${f(h.t)} · ${h.equipo || ''}${h.quien ? ` (${h.quien})` : ''} · ${h.app || ''}${h.de === 'u' ? ' · ESPERANDO RESPUESTA' : ''}`);
+    console.log(`## ${h.id} · ${f(h.t)} · ${h.equipo || ''}${h.quien ? ` (${h.quien})` : ''} · ${h.app || ''}${h.de === 'u' ? (h.cer ? ' · DADO POR TERMINADO' : ' · ESPERANDO RESPUESTA') : ''}`);
     const ultD = [...(h.msgs || [])].reverse().find((m) => m.de === 'd');
     for (const m of h.msgs || []) {
       // (0.8.4c) lo contestado desde la app lleva quién lo escribió (el dueño o quien ayuda); lo de la Action, no

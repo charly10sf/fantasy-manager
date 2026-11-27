@@ -7,7 +7,7 @@
 import { limitarDatos, apuntarTexto, MEDIA } from './datos-jugador.mjs';
 import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES, SE_VA_MARCADOR } from './texto.mjs';
 import { validar } from './validar.mjs';
-import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS } from './ia.mjs';
+import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS, ttlCache } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
 import { EMOJIS_ARRIBA as EMOJIS_GUIA, conEmojis, erroresEmojis, ajustarArriba } from './emojis.mjs';
@@ -610,7 +610,12 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
 
 const ESQUEMA = { type: 'OBJECT', required: ['texto'], properties: { texto: { type: 'STRING' }, cronicas: { type: 'ARRAY', items: { type: 'INTEGER' } } } };
 
-export const sistemaDe = (tipo) => `${GUIA}\n\nEJEMPLOS (jugadores inventados: sirven por la forma; no copies frases ni datos):\n\n${ejemplosPara(tipo)}`;
+// Las instrucciones van en dos bloques de `system` (26 nov, la caché de 1 hora): primero la guía, igual para todos los tipos, y luego
+// los ejemplos del tipo, cada uno con su marca de caché, así un final lee la guía que dejó un directo. Juntos son el mismo texto de
+// siempre, carácter a carácter (el «\n\n» de en medio va al principio del segundo). Nada que cambie entre llamadas (fechas, cifras,
+// orden) puede ir aquí: rompería la caché; eso va en el mensaje (`prompt`). `ejemplosPara(tipo)` da siempre lo mismo para un tipo.
+export const sistemaBloques = (tipo) => [GUIA, `\n\nEJEMPLOS (jugadores inventados: sirven por la forma; no copies frases ni datos):\n\n${ejemplosPara(tipo)}`];
+export const sistemaDe = (tipo) => sistemaBloques(tipo).join('');
 
 export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '', gastadas = [], delPartido = [] }) {
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
@@ -677,9 +682,10 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   if (!forzar && !(registro && registro.fichero)) { for (const t of xs) t.redaccion = 'sin-ia'; log(`  (redactar) sin registro guardado (simulacro): ${tipo} sale con la plantilla, sin gastar IA`); return 0; }
   // (los apodos que son palabras corrientes no cuentan como nombre: Blanco, del Alavés, y «el Madrid, el equipo blanco»)
   const todos = nombresDe(jugadores, equipos).filter((n) => !COMUNES.has(n));
-  const sistema = sistemaDe(tipo);
-  // la caché solo compensa si hay más de una pregunta con el mismo sistema en esta ejecución (lib/claude.mjs)
-  const cache = xs.length > 1 || cfg.cacheSiempre === true;
+  const sistema = sistemaBloques(tipo);
+  // con la caché de 1 hora (`ia.cacheTTL`, la de por defecto), siempre, también con un solo tuit: la lee la ejecución siguiente. Con la
+  // de 5 min, como antes: solo si hay más de una pregunta con el mismo sistema en esta ejecución. `redactar.cacheSiempre` manda si está.
+  const cache = xs.length > 1 || (cfg.cacheSiempre ?? ttlCache(config) === '1h') === true;
   const recientes = recientesDe(registro, tipo);
   const conRevisor = !(cfg.sinRevisor || []).includes(tipo) && (config.revisor || {}).activo !== false;
   let hechos = 0;
@@ -705,8 +711,8 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     // ¿queda cupo para redactar Y para la segunda lectura? Sin ella no sale, así que no se gasta en redactar (A10)
     if (conRevisor && pedir === preguntar && conClaude(config)) {
       const json = JSON.stringify(t.hechos, sinFecha);
-      const estimado = estimarCoste({ modelo: MODELOS.redactar, prompt: json, sistema, uso: 'redactar', config })
-        + estimarCoste({ modelo: MODELOS.revisar, prompt: json + ' '.repeat(900), sistema: SISTEMA_REVISOR, uso: 'revisar', config });
+      const estimado = estimarCoste({ modelo: MODELOS.redactar, prompt: json, sistema, uso: 'redactar', config, cache })
+        + estimarCoste({ modelo: MODELOS.revisar, prompt: json + ' '.repeat(900), sistema: SISTEMA_REVISOR, uso: 'revisar', config, cache: true });
       const motivo = sinCupo('revisar', { registro, config, tipo, estimado });
       if (motivo) { t.redaccion = 'sin-ia'; log(`  (redactar) ${t.clave}: sin cupo para redactar y revisar (${motivo}): sale con la plantilla`); continue; }
     }

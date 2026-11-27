@@ -210,7 +210,7 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
  */
 // (en la ficha de un partido: tag es la etiqueta de arriba a la izquierda, { txt, cls }, en vez del rival; marca, lo
 // de arriba a la derecha; datoFijo, lo de debajo del nombre, { txt, cls })
-export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false, tag = null, marca: marcaFija = null, datoFijo = null } = {}) {
+export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false, tag = null, marca: marcaFija = null, datoFijo = null, cap = false } = {}) {
   if (!j) return `<button class="cromo vacio-c" data-ir="mercado"><span class="cr-hueco">+</span><span class="cr-nom">Falta</span></button>`;
   const f = M && M.forma ? M.forma(j.id) : null;
   let dato;
@@ -260,7 +260,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   const ape = String(j.nombre || '').split(' ');
   const nom = ape.length > 1 && j.nombre.length > 11 ? ape.slice(1).join(' ') : j.nombre;
   return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">
-    <span class="cr-foto">${ava(j, 'cr')}${rv}${tit}${marca}</span>
+    <span class="cr-foto">${ava(j, 'cr')}${rv}${tit}${marca}${cap ? '<span class="cr-cap" title="Capitán que propone la app" role="img" aria-label="Capitán que propone la app">C</span>' : ''}</span>
     <span class="cr-nom">${ent ? '<i>ENT</i>' : ''}${esc(nom)}</span>
     <span class="cr-dato${datoCls}">${dato}</span></button>`;
 }
@@ -274,7 +274,7 @@ export function campoVivo(M, ids) {
   if (!js.length) return '';
   const lineas = [1, 2, 3, 4].map((p) => js.filter((j) => j.pos === p));
   const ent = js.find((j) => j.pos === 5);
-  const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map((j) => cromo(M, j, { vivo: true })).join('')}</div>`);
+  const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 6 ? ' seis' : lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map((j) => cromo(M, j, { vivo: true })).join('')}</div>`);
   const forma = lineas.slice(1).map((l) => l.length).join('-');
   return `<div class="cancha cancha-vivo"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     <span class="cv-forma">${esc(forma)}</span>${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, vivo: true })}</div>` : ''}</div>`;
@@ -379,6 +379,7 @@ export const BLOQUEO = {
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
   quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
+  parteRivales: ['Parte de la jornada', 'Qué le falta a cada rival y qué puedes hacer tú con eso.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
@@ -401,7 +402,7 @@ export function candado(clave, { como = null, rid = null } = {}) {
 // (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play. (25 nov, auditoría, hallazgo 10) invitando a un amigo
 // solo se abre el dinero de los rivales (2 por amigo): las demás, en el iPhone, de momento no se abren (sin prometer la app
 // de la App Store: Carlos, 25 nov)
-export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : ' Se abre gratis en la app de Google Play, con un anuncio.');
+export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : clave === 'parteRivales' && anunciosPorVez(clave) > 1 ? ` Se abre gratis en la app de Google Play, con ${anunciosPorVez(clave) === 2 ? 'dos' : anunciosPorVez(clave)} anuncios.` : ' Se abre gratis en la app de Google Play, con un anuncio.');
 /** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
     ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
@@ -410,6 +411,7 @@ export function colaCandado(clave, rid = null) {
 export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
+  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo 24 horas con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
   if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;

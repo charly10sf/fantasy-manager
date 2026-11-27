@@ -2,7 +2,7 @@
    su once probable en el campo, las bajas, sus partidos, su plantilla con lo que vale cada jugador y de quién es en
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
-import { esc, eur, icono, cuando, dura, cuenta, num, POS_PLURAL, norm, horaDe, pct, clase } from './util.js';
+import { esc, eur, icono, cuando, dura, cuenta, num, POS_PLURAL, norm, horaDe, pct, clase, LS } from './util.js';
 import { ava, posTag, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
 import { cruzHTML } from './bajas.js';
@@ -76,7 +76,13 @@ function tusClubesHTML(S, ids, mios) {
       ${p ? `<span class="cc-prox">${p.rivalId ? escudo(D, p.rivalId) : ''}<span>${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span></span>` : ''}
     </button>`;
   };
-  return `<div class="sec"><h2>Tus clubes</h2><span class="sub">${xs.length} con jugadores tuyos</span></div><div class="carril club-carril">${xs.map(tarjeta).join('')}</div>`;
+  const cab = `<h2>Tus clubes</h2><span class="sub">${xs.length} con jugadores tuyos</span>`;
+  const tarjetas = `<div class="carril club-carril">${xs.map(tarjeta).join('')}</div>`;
+  // (26 nov, Carlos: «que tus clubes sea un desplegable que se pueda plegar en pc») en el ordenador se pliega; se recuerda
+  // en este dispositivo (LS «tus-clubes-plegado», lo apunta el «toggle» de app.js). En el móvil, el carril de siempre.
+  const pc = typeof matchMedia === 'function' && matchMedia('(min-width: 1100px)').matches;
+  if (pc) return `<details class="tus-cl" id="tusClubes"${LS.get('tus-clubes-plegado', false) ? '' : ' open'}><summary class="sec">${cab}${icono('flecha')}</summary>${tarjetas}</details>`;
+  return `<div class="sec">${cab}</div>${tarjetas}`;
 }
 
 export function clubes(S) {
@@ -90,13 +96,16 @@ export function clubes(S) {
   // (22 nov) a la derecha del título, la cruz de las bajas de la jornada (bajas.js)
   let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><div class="tit-fila"><h1 class="titulo">Clubes</h1>${cruzHTML(S)}</div>`;
   if (!n) return h + nada('Aún no tengo los equipos de LaLiga. Dale a Actualizar.');
-  h += tusClubesHTML(S, ids, mios);
+  const tus = tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {
     const e = D.equipos[id], t = M.equipoLiga(id);
     const eu = europaDe(e.nombre);
     const desc = hayTabla && t && n >= 18 && t.pos > n - 3;
     const dg = t ? t.gf - t.gc : null;
     const r = gep(t);
+    // (26 nov) en el ordenador, los puntos en casa y fuera (de sus partidos jugados)
+    const ptsDe = (casa) => (t && t.ult ? t.ult.filter((u) => u.casa === casa).reduce((s2, u) => s2 + (u.r === 'V' ? 3 : u.r === 'E' ? 1 : 0), 0) : null);
+    const gepDe = (casa) => { const o = { V: 0, E: 0, D: 0 }; for (const u of (t && t.ult) || []) if (u.casa === casa) o[u.r]++; return `${o.V}-${o.E}-${o.D}`; };
     const caras = (mios[id] || []).sort((a, b) => b.valor - a.valor);
     const carasH = caras.length ? `<span class="cf-caras" title="${esc(caras.map((j) => j.nombre).join(', '))}">${caras.slice(0, 3).map((j) => ava(j, 'm')).join('')}${caras.length > 3 ? `<b>+${caras.length - 3}</b>` : ''}</span>` : '';
     const prox = proxTxt(S, id);
@@ -108,14 +117,17 @@ export function clubes(S) {
       <span class="cf-esc">${escudo(D, id)}</span>
       <span class="cf-n"><span class="nom">${esc(e.nombre)}</span>${carasH}</span>
       <span class="cf-forma">${rachaHTML(M.racha(id, 5), e.nombre)}</span>
-      <span class="cf-d cf-pj">${t ? t.pj : ''}</span><span class="cf-d cf-gep">${t ? `${r.V}-${r.E}-${r.D}` : ''}</span><span class="cf-d cf-gol">${t ? `${t.gf}:${t.gc}` : ''}</span><span class="cf-d cf-dg">${dg == null ? '' : dg > 0 ? `+${dg}` : dg}</span><span class="cf-d cf-pts">${t ? t.pts : '–'}</span>
+      <span class="cf-d cf-pj">${t ? t.pj : ''}</span><span class="cf-d cf-gep">${t ? `${r.V}-${r.E}-${r.D}` : ''}</span><span class="cf-d cf-g">${t ? r.V : ''}</span><span class="cf-d cf-e">${t ? r.E : ''}</span><span class="cf-d cf-p">${t ? r.D : ''}</span><span class="cf-d cf-gol">${t ? `${t.gf}:${t.gc}` : ''}</span><span class="cf-d cf-gf">${t ? t.gf : ''}</span><span class="cf-d cf-gc">${t ? t.gc : ''}</span><span class="cf-d cf-dg">${dg == null ? '' : dg > 0 ? `+${dg}` : dg}</span><span class="cf-d cf-casa" title="${t ? `En casa: ${gepDe(true)}` : ''}">${t ? ptsDe(true) : ''}</span><span class="cf-d cf-fuera" title="${t ? `Fuera: ${gepDe(false)}` : ''}">${t ? ptsDe(false) : ''}</span><span class="cf-d cf-ppp" title="Puntos por partido">${t && t.pj ? (t.pts / t.pj).toFixed(2).replace('.', ',') : ''}</span><span class="cf-d cf-cero" title="Partidos sin encajar">${t ? t.ult.filter((u) => u.gc === 0).length : ''}</span><span class="cf-d cf-pts">${t ? t.pts : '–'}</span>
       ${sub ? `<span class="cf-s">${sub}</span>` : ''}
     </button>`;
   }).join('');
-  const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-gol">Goles</span><span class="cf-dg">DG</span><span class="cf-pts">Pts</span></div>';
+  const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-g" title="Ganados">G</span><span class="cf-e" title="Empatados">E</span><span class="cf-p" title="Perdidos">P</span><span class="cf-gol">Goles</span><span class="cf-gf" title="Goles a favor">GF</span><span class="cf-gc" title="Goles en contra">GC</span><span class="cf-dg">DG</span><span class="cf-casa" title="Puntos en casa">Casa</span><span class="cf-fuera" title="Puntos fuera">Fuera</span><span class="cf-ppp" title="Puntos por partido">Pts/P</span><span class="cf-cero" title="Partidos sin encajar">Sin enc.</span><span class="cf-pts">Pts</span></div>';
   // (22 nov, Carlos: «quita todo lo de debajo de la tabla, ya se entiende») Sin leyenda de colores ni su frase: cada fila
   // ya dice «Champions», «Europa League», «Conference» o «Descenso» en su línea de abajo.
-  return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>`;
+  // (26 nov, Carlos: «las tarjetas arriba de 10 en 10 y luego la clasificación a pantalla completa») en el ordenador, «Tus
+  // clubes» en rejilla de hasta 10 por fila y la clasificación debajo a todo lo ancho, con casa y fuera (CSS: .clubes-e)
+  const tabla = `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>`;
+  return h + `<div class="clubes-e${tus ? '' : ' sin-tus'}">${tus ? `<div class="cl-tus">${tus}</div>` : ''}<div class="cl-tabla">${tabla}</div></div>`;
 }
 
 /* ================= LA FICHA DE UN CLUB ================= */

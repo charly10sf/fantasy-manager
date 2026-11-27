@@ -9,16 +9,16 @@ import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { ponerApodo, sincronizarApodos } from './apodos.js';
-import { iniciarSinc, sincronizar, sincAntes } from './sinc.js';
+import { iniciarSinc, sincronizar, sincAntes, pararSinc } from './sinc.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Bj from './bajas.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, guardarChat, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
 import { pedirPermisoIA } from './permiso-ia.js';
-import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
+import { ultimaVersion, api, apuntarRegistro, nuevaCarga, forma as formaDatos } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
@@ -26,23 +26,25 @@ import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop, selloTop } from './comunes
 import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
-import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
+import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, alineacionDe, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
 import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, terminarAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas, huellaLiga, huellaApertura, mandarLigas, verOtrasLigas } from './soporte.js';
+import * as DD from './dinero-dicho.js';
 import { presentarNovedades, tarjetaNovedad, tarjetaIphone, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { registrarPujas } from './pujas-vistas.js';
+import * as OL from './otras-ligas.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
+import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca, estadoIntersticial } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML, tiraPortada } from './portada.js';
 import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
@@ -57,6 +59,8 @@ const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado
 window.S = S;
 // (22 nov) para las pruebas: el análisis otra vez, como tras apuntar algo que le cuentas a la IA
 window.__fmRehacer = () => { if (S.D) rehacer(); };
+// (26 nov) lo que se manda y se lee de lo de todas las ligas, para probarlo de punta a punta (.github/ia/caso-otras-ligas.mjs)
+window.__fmLigas = { compras: () => comprasSiToca(), ligas: () => ligasSiToca(), otras: () => otrasSiToca() };
 // la app ha arrancado: el aviso de index.html («no ha podido abrirse») ya no sale, y si ya había salido se quita
 window.__fmArranco = true;
 try { const f = document.querySelector('.arranque-fallo'); if (f) f.remove(); } catch (e) { /* nada */ }
@@ -983,7 +987,6 @@ const CONSEJOS = [
   'Lo que pagas por encima del valor de un jugador se pierde: si lo vendes, te dan cerca de su valor.',
   'En el mercado de la liga se puja a ciegas: gana la puja más alta cuando cambia el mercado.',
   'Lo que vende otro manager sigue siendo suyo hasta que acepta tu oferta.',
-  'En la versión gratis no hay entrenador: no gastes en ellos.',
   'Un defensa con poca portería a cero esperada puntúa poco aunque sea titular.',
   'Si un jugador marca menos de lo que dice su xG, lo normal es que acaben llegando los goles.',
   'Antes de un parón los valores se paran: buen momento para vender lo que está arriba.',
@@ -1204,6 +1207,7 @@ const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaI
 function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
+  alDiaDichos();
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
   const escrito = ['pregunta', 'claveIA'].map((id) => { const el = $(`#${id}`); return el && el.value ? [id, el.value, document.activeElement === el ? el.selectionStart : null] : null; }).filter(Boolean);
   // (el buscador del Mercado guarda lo escrito en S.busca; solo hay que devolverle el cursor)
@@ -1287,6 +1291,8 @@ function ponerBanner(si, zona = si) {
   bannerYa = k;
   nativo.zonaAnuncios(z, ic.bloque, inter);
   nativo.aperturaAnuncios(ap, ac.bloque);
+  // (0.8.4r) mientras pueda estar el de apertura en pantalla, la versión nueva no recarga encima
+  aperturaT = ap ? Date.now() : 0;
 }
 window.addEventListener('apertura-vista', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 // (al volver a la app, por si ha cambiado el día y hoy toca otra vez el de apertura)
@@ -1355,7 +1361,7 @@ function cerrarTopA() {
   clearTimeout(topT);
   const hasta = proximoCierreTop();
   if (!hasta) return;
-  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.max(1000, hasta - Date.now() + 500));
+  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.min(2e9, Math.max(1000, hasta - Date.now() + 500)));
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
@@ -1391,7 +1397,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const deRival = rid != null && POR_JORNADA.includes(clave);
       const hasta = abiertaHasta(clave, rid);
-      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
+      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto 24 horas' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -1487,6 +1493,8 @@ function rehacer() {
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
+  // (0.8.4o) quién eres, ya antes del análisis: lo que le llega al motor de lo que te dijeron depende de lo que tienes abierto
+  fijarYo(yoReal(), enDemo());
   S.M = analizar(S.D, S.H, S.c, extraM());
   fijarMotor(S.M);
   apuntarQuien();
@@ -1497,7 +1505,7 @@ function rehacer() {
   fijarLiga(S.D.liga && S.D.liga.id);
   // el cierre del APK de GitHub no va con el dueño: sabido quién es, se quita la ventana si ya no toca
   if (enApkGithub() && !cierreApk().cerrada) { const v = document.getElementById('aviso-play'); if (v && !v.querySelector('[data-accion="cerrarAvisoPlay"]')) v.remove(); }
-  fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n);
+  fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n, S.M && S.M.proxima ? S.M.proxima.ini : 0);
   cerrarTopA();
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
   aprender(S.D, S.M, S.det);
@@ -1546,12 +1554,23 @@ function onceSabido() {
   const v = LS.get(K('vivo'), null);
   return v && Array.isArray(v.once) && v.once.length >= 5 ? v.once : null;
 }
-const apuntarMiOnce = (ids, forma = null) => {
+/** (26 nov) solo en una liga premium: el capitán, el banquillo y el entrenador de tu alineación de LaLiga, y la forma en
+ *  que vienen (nombres de campos, sin datos) para el Diagnóstico, que es como se confirma lo que aún no se ha visto */
+const premiumDeOnce = (D, r) => {
+  if (!(D && D.liga && D.liga.premium === true)) return null;
+  try {
+    const a = alineacionDe(r), d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r, f = (d && d.formation) || {};
+    return { cap: a.capitan, banq: a.banquillo, ent: a.entrenador, hay: a.hay, capF: f.captain == null ? '' : formaDatos(f.captain), banqF: f.bench == null ? '' : formaDatos(f.bench) };
+  } catch (e) { return null; }
+};
+const apuntarMiOnce = (ids, forma = null, mas = null) => {
   if (!ids || ids.length < 5) return;
   // (19 nov) con la formación, para pintar en Hoy y en Equipo el once que tiene puesto en LaLiga
   const g = LS.get(K('mi-once'), null);
   const f = forma || (g && (g.ids || []).join() === ids.map(String).join() ? g.forma : null) || null;
-  LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String), forma: f });
+  // (26 nov) en una liga premium, lo que lleva de más la alineación de LaLiga (capitán, banquillo, entrenador): `mas`
+  const pr = mas || (g && (g.ids || []).join() === ids.map(String).join() ? g.pr : null) || null;
+  LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String), forma: f, ...(pr ? { pr } : {}) });
 };
 /** «Actualizar» vuelve a pedir tu once a LaLiga aunque se mirara hace menos de 10 minutos */
 let forzarOnce = false;
@@ -1744,10 +1763,21 @@ async function trabajoFondo() {
   }
 }
 
+/* (0.8.4o) lo que te han dicho los rivales llega al motor solo de los que tienen su dinero abierto (dinero-dicho.js): al
+   abrirse o cerrarse uno con una cifra apuntada se rehace el análisis (alDiaDichos, al pintar) */
+function dichosMotorF() { S.firmaD = DD.firmaDichos(); return DD.dichosMotor(); }
+function alDiaDichos() {
+  if (!S.D || !S.M || S.firmaD == null || DD.firmaDichos() === S.firmaD) return;
+  const ap = S.M.aprende;
+  S.M = analizar(S.D, S.H, S.c, extraM());
+  S.M.aprende = ap;
+  fijarMotor(S.M);
+  montarPlan();
+}
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
+  return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: dichosMotorF(), calDinero: calDineroGuardada().cal,
     pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal, pujasVistas: apuntarPujasVistas(), quienVisto: S.D && !enDemo() ? LS.get(K('quien-visto'), {}) : {} };
 }
 
@@ -1945,13 +1975,16 @@ function saludarSiToca(por = 'cada10') {
   calDineroSiToca();
   calPujasSiToca();
   comprasSiToca();
+  // (26 nov) lo de todas las ligas: si algo de esto falla, que no pase nada (no es de lo que se ve)
+  // (leer lo de las demás va después de mandar lo de la tuya: el servidor solo contesta a quien ha mandado algo de su liga)
+  ligasSiToca().catch(() => {}).then(() => { try { otrasSiToca(); } catch (e) { /* nada */ } });
   const yo = S.M && S.M.yo;
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
   if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
   // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
-  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }) })
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, ligas: (S.D.ligas || []).map((l) => l.id).filter(Boolean).slice(0, 10).join(','), equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }), ...(LS.get('nov-dinero', 0) ? { nd: true } : {}) })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
     .then(() => invitarSiToca())
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
@@ -2028,21 +2061,119 @@ function calPujasSiToca() {
    usuario deja «Ayudar a mejorar la IA» */
 async function comprasSiToca() {
   if (enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !S.D.liga) return;
-  const hoy = diaDe(), kd = K('pujas-mandadas');
-  const ya = LS.get(kd, { dia: '', c: {} });
-  if (ya.dia === hoy) return;
-  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya.c[`${x.pid}|${x.t}`]).slice(0, 80);
-  if (!nuevas.length) { LS.set(kd, { ...ya, dia: hoy }); return; }
+  const hoy = diaDe(), kd = K('pujas-mandadas'), liga = S.D.liga.id;
+  const g = LS.get(kd, { dia: '', c: {} });
+  if (g.dia === hoy) return;
+  // (26 nov) cada compra va ahora con el id del jugador (el de LaLiga, público), para saber lo que se paga por cada uno en
+  // todas las ligas. Las mandadas antes iban sin él: se mandan otra vez, una sola vez (`jug`: lo apuntado ya es con jugador),
+  // y el servidor las junta con las de entonces por su huella. De más reciente a más antigua, 80 al día.
+  // Si el servidor no las apunta con jugador (es el de antes, o esa cuenta ya manda de las ligas que caben), se apuntan como
+  // siempre y el reenvío de todas se vuelve a probar a la semana (`rj`), no cada día
+  const tl = OL.tipoLiga(S.D.liga), ahora = Date.now();
+  const todas = !g.jug && !!tl && !(g.rj && ahora - g.rj < 7 * DIA);
+  const ya = g.jug || !todas ? g.c || {} : {};
+  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya[`${x.pid}|${x.t}`]).sort((a, b) => b.t - a.t).slice(0, 80);
+  if (!nuevas.length) { LS.set(kd, { ...g, dia: hoy }); return; }
   const c = [];
   for (const x of nuevas) {
-    c.push({ k: await huellaCompra(S.D.liga.id, x.pid, x.t), d: new Date(x.t).toISOString().slice(0, 10), s: Math.round(x.s * 1000) / 1000, v: Math.round(x.v / 1e4) * 1e4,
-      r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top });
+    const p = Number(x.pid);
+    c.push({ k: await huellaCompra(liga, x.pid, x.t), d: new Date(x.t).toISOString().slice(0, 10), s: Math.round(x.s * 1000) / 1000, v: Math.round(x.v / 1e4) * 1e4,
+      r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top, ...(Number.isInteger(p) && p > 0 ? { p } : {}) });
   }
-  if (!(await mandarCompras(c))) return;
-  const ahora = Date.now();
-  for (const x of nuevas) ya.c[`${x.pid}|${x.t}`] = x.t;
-  for (const [k, t] of Object.entries(ya.c)) if (ahora - t > 50 * DIA) delete ya.c[k];
-  LS.set(kd, { dia: hoy, c: ya.c });
+  // (sin saber de qué clase es la liga, van como siempre, sin jugador para lo de todas las ligas: no se mezclan clases)
+  const r = await mandarCompras(c, tl ? await huellaLiga(liga) : '', tl);
+  if (!r) return;
+  // (si mientras tanto se ha cambiado de liga, lo apuntado es de la de antes: `kd` ya lleva su liga)
+  const sabe = !!tl && r.jug === 1;
+  // (ya iban con jugador y esta vez no se han podido apuntar así: si ha sido un fallo, no se dan por mandadas y se prueba
+  // mañana; si es que esta cuenta no puede mandar de esta liga (`sinJug`: ya manda de las que caben), se apuntan como
+  // siempre, que insistir no sirve)
+  if (g.jug && !sabe && !r.sinJug) { LS.set(kd, { ...g, dia: hoy }); return; }
+  // (la primera vez que el servidor las apunta con jugador, lo apuntado empieza de cero: lo de antes iba sin él)
+  const hechas = sabe && !g.jug ? {} : { ...(g.c || {}) };
+  for (const x of nuevas) hechas[`${x.pid}|${x.t}`] = x.t;
+  for (const [k, t] of Object.entries(hechas)) if (Date.now() - t > 50 * DIA) delete hechas[k];
+  LS.set(kd, sabe || g.jug ? { dia: hoy, c: hechas, jug: 1 } : { dia: hoy, c: hechas, ...(todas ? { rj: ahora } : g.rj ? { rj: g.rj } : {}) });
+}
+/* (26 nov) lo que solo se ve juntando todas las ligas (otras-ligas.js): los libres del mercado de tu liga con las pujas que
+   lleva cada uno y las cláusulas que se abrieron hace más de 24 h (cómo era el jugador y si se lo llevaron), sin liga, sin
+   mánager y sin nombres. Como mucho cada media hora y solo si ha cambiado algo; solo con «Ayudar a mejorar la IA» */
+let ligasEnMarcha = false;
+async function ligasSiToca() {
+  if (ligasEnMarcha || enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !S.D.liga || !S.D.t) return;
+  const tl = OL.tipoLiga(S.D.liga);
+  if (!tl) return;
+  const M = S.M, liga = S.D.liga.id, ahora = Date.now(), hoy = diaDe();
+  const ke = K('ligas-env'), ka = K('ligas-aperturas');
+  // las cláusulas a punto de abrirse (las de todos los equipos, también el tuyo), como están en la liga que se ve
+  const fichas = OL.fichasDe(M);
+  const ap = OL.apuntarAperturas(LS.get(ka, {}), fichas, ahora, S.D.t);
+  let reg = ap.reg;
+  if (ap.cambia) LS.set(ka, reg);
+  const AH = actHist(liga);
+  // (lo que valía cada jugador cada día, de lo que guarda la app: por si LaLiga subió sola la cláusula hasta el valor)
+  const valorEl = (pid, t) => { let v = null; const d = diaDe(t); for (const [dd, vv] of (S.H && S.H.v && S.H.v[pid]) || []) { if (dd <= d) v = vv; else break; } return v; };
+  // (solo se resuelve con la actividad guardada sin huecos y leída bien esta vez: si su lectura ha fallado, otra vez será)
+  const actMal = (S.D.avisos || []).some((x) => x && x.paso === 'actividad');
+  const res = actMal ? { listas: [], quitar: [] } : OL.resolverAperturas(reg, AH.lista, { seguido: AH.seguido, hasta: AH.hasta }, S.D.t, valorEl, OL.duenosDe(fichas));
+  // (la demanda, solo con la liga recién leída: con la guardada de hace rato las pujas pueden ser ya otras)
+  const m = ahora - S.D.t <= OL.FOTO_FRESCA ? OL.demandaDe(M.mercado, ahora) : [], firma = OL.firmaDemanda(m);
+  const ya = LS.get(ke, { t: 0, f: '', dia: '', n: 0, mal: 0 });
+  // (el servidor ha dicho que por hoy ya está: los envíos del día, o esa cuenta ya manda de las ligas que caben)
+  const topeHoy = !!ya.tope && ya.dia === hoy;
+  if (topeHoy || !OL.tocaMandar(ya, firma, res.listas.length, ahora, hoy)) {
+    if (res.quitar.length) { reg = { ...reg }; for (const k of res.quitar) delete reg[k]; LS.set(ka, reg); }
+    return;
+  }
+  ligasEnMarcha = true;
+  try {
+    const a = [];
+    for (const x of res.listas.slice(0, 40)) {
+      const e = reg[x.c];
+      a.push({ k: await huellaApertura(liga, e.pid, e.base), d: diaDe(x.abre), v: Math.round(x.v / 1e4) * 1e4, cs: Math.round(x.cs * 1000) / 1000,
+        r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, pos: x.pos, tit: x.tit == null ? null : Math.round(x.tit * 100) / 100, ida: x.ida, bl: x.bl, ...(x.hp == null ? {} : { hp: x.hp }) });
+    }
+    const bien = await mandarLigas({ l: await huellaLiga(liga), t: tl, m, a });
+    // (las claves llevan la liga de cuando se empezó: si se ha cambiado de liga mientras, no se mezclan)
+    const n = (ya.dia === hoy ? Number(ya.n) || 0 : 0) + 1;
+    if (bien && bien.tope) { LS.set(ke, { ...ya, dia: hoy, n: ya.dia === hoy ? Number(ya.n) || 0 : 0, tope: bien.tope }); return; }
+    if (!bien) { LS.set(ke, { ...ya, mal: Date.now() }); return; }
+    LS.set(ke, { t: Date.now(), f: firma, dia: hoy, n, mal: 0 });
+    const queda = { ...LS.get(ka, {}) };
+    for (const x of res.listas.slice(0, 40)) delete queda[x.c];
+    for (const k of res.quitar) delete queda[k];
+    LS.set(ka, queda);
+  } finally { ligasEnMarcha = false; }
+}
+/* (26 nov) lo de las demás ligas para los libres de tu mercado (lo pagado por cada uno en 3 días y su demanda): solo si
+   «otrasLigas» de limites.json lo enciende (apagado, ni se pide) y solo con «Ayudar a mejorar la IA» (quien no manda lo de
+   su liga no pide lo de las demás; y el servidor solo contesta a quien ha mandado algo de esa liga estos días). Se guarda
+   por liga y se pide otra vez cuando cambian los libres, cada 3 h o al cambiar de día. La ficha del jugador lo lee de `S.otras` */
+let otrasEnMarcha = false;
+const otrasGuardadas = () => LS.get(K('otras-ligas'), null);
+function otrasSiToca() {
+  const on = otrasLigasCfg();
+  if ((!on.pagado && !on.demanda) || !mejorarIA()) { if (S.otras) S.otras = null; return; }
+  if (otrasEnMarcha || enDemo() || !haySesion() || !S.D || !S.M || !S.D.liga) return;
+  const liga = S.D.liga.id, ko = K('otras-ligas'), ahora = Date.now(), hoy = diaDe(), tl = OL.tipoLiga(S.D.liga);
+  if (!tl) return;
+  const ids = OL.idsDe(S.M.mercado, ahora), clave = ids.join(',');
+  const ya = otrasGuardadas();
+  // (si el servidor ha dicho hoy que esta cuenta no puede mandar de esta liga, tampoco le va a contestar: no se pide)
+  const env = LS.get(K('ligas-env'), null);
+  if (env && env.dia === hoy && (env.tope === 'ligas' || env.tope === 'ajena')) return;
+  // (lo de otra liga no vale aquí: lo que se pide no trae lo de tu propia liga, y en otra liga tuya eso cambia)
+  if (S.otras && S.otras.liga !== liga) S.otras = null;
+  if (ya && ya.liga === liga && !S.otras) S.otras = ya;
+  if (!OL.tocaVer(ya, clave, ahora, hoy)) return;
+  otrasEnMarcha = true;
+  return huellaLiga(liga).then((l) => verOtrasLigas(l, tl, ids)).then((r) => {
+    // (`falta`: el servidor aún no tiene nada de esta liga mandado por esta cuenta; se prueba otra vez en un rato)
+    if (r && r.falta) { LS.set(ko, { ...(ya || { liga, k: '', t: 0, p: {}, d: {} }), mal: Date.now() }); return; }
+    const x = { liga, k: clave, t: Date.now(), dia: hoy, p: (r && r.p) || {}, d: (r && r.d) || {} };
+    LS.set(ko, x);
+    if (S.D && S.D.liga && S.D.liga.id === liga) S.otras = x;
+  }).catch(() => { LS.set(ko, { ...(ya || { liga, k: '', t: 0, p: {}, d: {} }), mal: Date.now() }); }).finally(() => { otrasEnMarcha = false; });
 }
 /** (0.7.13) lo apuntado de un rival, sin nombres ni ids, para afinar la cuenta de todos (si el usuario lo deja) */
 async function apunteDinero(tid, dicho, cu) {
@@ -2057,6 +2188,102 @@ async function apunteDinero(tid, dicho, cu) {
     h, e: dicho.v - dicho.est, m: cu.margen || 0, r: dicho.r || 0, dl: Math.round(dl), dp: Math.round(dp), mov: cu.n || 0, sub: (cu.cuenta && cu.cuenta.nSubidas) || 0,
     pago: !!(S.D.liga && S.D.liga.premium), val: Math.max(0, Number(eq.valor) || 0), pos: Number(eq.pos) || 0, nr: (S.D.clasif || []).length, est: dicho.est,
   });
+}
+/* (0.8.4o) apuntar lo que te dijo un rival (la hoja, la ventana «Quién y cuánto» y la tarjeta del chat), con el mismo
+   formato de siempre; con su dinero cerrado, el motor no lo recibe (dinero-dicho.js) y la tostada no habla de la cuenta */
+function apuntarDichoDe(tid, v, aprox) {
+  const cu = S.M && (S.M.dineroCuentaBruta || S.M.dineroCuenta) ? (S.M.dineroCuentaBruta || S.M.dineroCuenta)(tid) : null;
+  const todos = DD.dichos();
+  todos[tid] = DD.entradaDicho(v, aprox, cu && cu.v != null ? cu.v : null);
+  LS.set(K('dinero-dicho'), todos);
+  apunteDinero(tid, todos[tid], cu).catch(() => {});
+  DD.quitarAvisoRivales();
+  rehacer();
+  return { d: todos[tid], cu };
+}
+function tostadaDicho(tid, dc, cu) {
+  tostada(!bloqueada('dineroRivales', tid) && cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(dc.v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
+}
+const modoAprox = (f) => !!(f && f.querySelector('[data-accion="ddModo"][data-m="aprox"][aria-pressed="true"]'));
+function notaDichoErr(f, t) { const n = f && f.querySelector('.dd-nota'); if (n) { n.textContent = t; n.classList.add('err'); } }
+/** − y +, los atajos y «Esa cifra / Más o menos»: se cambia lo que hay en pantalla, sin repintar (para no perder lo escrito) */
+function formDicho(el, d) {
+  const f = el.closest('.dd-hoja, #dd-ventana');
+  if (!f) return;
+  const inp = f.querySelector('.dd-in');
+  if (d.accion === 'ddPaso' && inp) { const v = DD.leerCifra(inp.value); inp.value = String(Math.max(0, Math.round((v || 0) / 1e6) + Number(d.n))); }
+  if (d.accion === 'ddAtajo' && inp) inp.value = String(d.v);
+  if (d.accion === 'ddModo') f.querySelectorAll('[data-accion="ddModo"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === d.m)));
+  notaDicho(f);
+}
+function notaDicho(f) {
+  const v = DD.leerCifra((f.querySelector('.dd-in') || {}).value);
+  const n = f.querySelector('.dd-nota');
+  if (n) { n.textContent = DD.notaModo(v, modoAprox(f)); n.classList.remove('err'); }
+  f.querySelectorAll('[data-accion="ddAtajo"]').forEach((b) => b.setAttribute('aria-pressed', String(v === Number(b.dataset.v) * 1e6)));
+  const er = f.querySelector('.dd-err'); if (er) er.remove();
+}
+// el desplegable del rival se cierra al tocar fuera o con Escape
+function cerrarListaRival(foco) { const l = $('#ddLista'); if (!l || l.hidden) return false; l.hidden = true; const b = $('#ddRival'); if (b) { b.setAttribute('aria-expanded', 'false'); if (foco) b.focus({ preventScroll: true }); } return true; }
+document.addEventListener('click', (ev) => { if (!ev.target.closest || !ev.target.closest('.dd-sel-c')) cerrarListaRival(false); }, true);
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && cerrarListaRival(true)) ev.stopPropagation(); }, true);
+document.addEventListener('input', (ev) => {
+  const t = ev.target;
+  if (!t || !t.classList || !t.classList.contains('dd-in')) return;
+  const limpio = t.value.replace(/[^0-9.,]/g, '');
+  if (limpio !== t.value) t.value = limpio;
+  const f = t.closest('.dd-hoja, #dd-ventana');
+  if (f) notaDicho(f);
+});
+/** la ventana «Quién y cuánto» (la abre la novedad): en el centro, como las tarjetas de una vez */
+function ventanaDinero(st = null) {
+  if (!S.D) return;
+  S.ddV = st || { sel: '', v: null, aprox: false, err: '', fase: 'pide' };
+  let capa = $('#dd-capa');
+  if (!capa) {
+    capa = document.createElement('div');
+    capa.id = 'dd-capa'; capa.className = 'nvt-capa dd-capa';
+    capa.innerHTML = '<div class="nvt-velo" data-accion="ddCerrar"></div><div class="nvt dd-ventana" id="dd-ventana" role="dialog" aria-modal="true" aria-labelledby="dd-v-t"></div>';
+    document.body.append(capa);
+  }
+  const v = $('#dd-ventana');
+  v.innerHTML = DD.ventanaDineroHTML(S, S.ddV);
+  const foco = v.querySelector(S.ddV.fase === 'hecho' ? '.dd-v-pri' : S.ddV.err ? '.dd-err' : 'h2');
+  if (foco) { if (!foco.hasAttribute('tabindex')) foco.tabIndex = -1; foco.focus({ preventScroll: true }); }
+}
+function cerrarVentanaDinero() { const c = $('#dd-capa'); if (c) c.remove(); S.ddV = null; }
+/* (0.8.4o; Carlos, 25 nov, 23:51: «que salga un pop up a todos explicando que está la función…») la novedad de apuntar
+   el dinero de un rival: UNA vez por cuenta (LS «nov-dinero» y el Worker con /hola nd), a todos (también en la liga de
+   ejemplo, para probarla) con algún rival, después del tutorial y con la pantalla libre: ni encima de la bienvenida, del
+   tutorial ni de otra tarjeta. Si hoy ya ha salido la de la app para iPhone o la de invitar, mañana; y si sale esta, esas
+   esperan a otro día. Con un navegador manejado por un programa, no (las pruebas) */
+const novDineroHoy = () => { const t = Number(LS.get('nov-dinero', 0)) || 0; return !!t && new Date(t).toDateString() === new Date().toDateString(); };
+const otraHoy = () => { const t = Number(LS.get('tarjeta-inv-t', 0)) || 0; return iphoneHoy() || (!!t && new Date(t).toDateString() === new Date().toDateString()); };
+let novDineroEsperando = false;
+function novDineroEsperar() {
+  if (novDineroEsperando || LS.get('nov-dinero', 0) || navigator.webdriver === true) return;
+  novDineroEsperando = true;
+  const hasta = Date.now() + 10 * 60e3;
+  const mirar = () => {
+    if (LS.get('nov-dinero', 0) || Date.now() > hasta) { novDineroEsperando = false; return; }
+    if (otraHoy()) { novDineroEsperando = false; return; }
+    const libre = S.D && S.M && !S.cargando && !S.hoja && tourVisto() && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente && !iphoneToca();
+    if (!libre || !(S.M.rivales || []).length) { setTimeout(mirar, 1500); return; }
+    novDineroEsperando = false;
+    const capa = document.createElement('div');
+    capa.id = 'nvd-capa'; capa.className = 'nvt-capa';
+    capa.innerHTML = DD.novedadDineroHTML();
+    document.body.append(capa);
+    const b = capa.querySelector('.dd-v-pri'); if (b) b.focus({ preventScroll: true });
+  };
+  // (después del saludo al Worker: si ya la vio en otro dispositivo, el saludo lo dice)
+  setTimeout(mirar, 6000);
+}
+function cerrarNovDinero() {
+  const c = $('#nvd-capa'); if (c) c.remove();
+  const yo = S.D && S.M && S.M.yo;
+  if (enDemo() || !haySesion()) LS.set('nov-dinero', Date.now());
+  else apuntarNovDinero({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: (S.D && S.D.liga && S.D.liga.id) || '', equipo: yo ? yo.nombre : '' });
 }
 // con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
 if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) { comprobarAvisos(); planAHora(); } }, 10 * 60e3 + 5e3);
@@ -2110,8 +2337,8 @@ async function vigilarClausulables(antes) {
   // (21 nov, Carlos: «si un jugador hace muchísimos puntos… y tiene justo la cláusula abierta, que te salga clausúlalo
   // ya») el que acaba de hacer 8 puntos o más, con su partido ya acabado, la cláusula abierta y que te llega: los días
   // siguientes sube bastante más de lo que dice la inercia (medido con su liga, `efectoTras`). Si lo que se espera que
-  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con 25 jugadores no, que no se puede clausular
-  if ((M.mias || []).length < 25) {
+  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con la plantilla llena no, que no se puede clausular
+  if (!M.llena) {
     const acabado = (j) => { const p = (S.D.partidos || []).find((q) => q.jornada === V.n && (q.localId === j.equipoId || q.visitanteId === j.equipoId)); return !!(p && p.fecha && p.fecha + 2 * HORA <= Date.now()); };
     for (const x of M.clausulas || []) {
       const pts = V.puntos[x.pid];
@@ -2373,8 +2600,122 @@ async function mirarWebNueva() {
     const r = await fetch(`paquete.json?t=${Date.now()}`, { cache: 'no-store' });
     if (!r.ok) return;
     const j = await r.json();
-    if (j && j.version && cmpVer(j.version, VERSION) > 0) { const antes = S.webNuevaWeb; S.webNuevaWeb = j; forzarWebNueva(j); if (!antes && S.D && !S.hoja) pintar(); }
+    if (j && j.version && cmpVer(j.version, VERSION) > 0) {
+      const antes = S.webNuevaWeb; S.webNuevaWeb = j;
+      if (!nuevaSola(j.version, 'web')) forzarWebNueva(j);
+      if (!antes && S.D && !S.hoja && !aMedias()) pintar();
+    }
   } catch (e) { /* sin red: ya se mirará */ }
+}
+/*
+ * (0.8.4r, 26 nov; Carlos: «¿por qué cada vez que publico una versión sale un aviso para que la actualice? ¿No se podría
+ * hacer de forma automática?») La versión nueva se pone sola, sin ventana: en la web, recargarWeb; en la app (Play e iOS),
+ * AlDia la baja (nativo.buscarWeb) y la página se recarga con ella. Solo si no tiene nada a medias (`aMedias`); si lo
+ * tiene, espera a que acabe (se mira cada 10 s) o a que la app se vaya a segundo plano (entonces vale con lo que no se
+ * pierde: una ficha abierta, una novedad…). La ventana de siempre queda de reserva: tras 2 intentos que no han cambiado
+ * la versión (LS «nueva-sola», n), si AlDia falla o si lleva ESPERA_SOLA esperando. Lo que se ve (pestaña, ficha,
+ * scroll) vuelve tras recargar (`guardarVuelta`, `volverTrasRecarga`)
+ */
+const ESPERA_SOLA = 3 * HORA;
+// lo que no se recarga ni con la app en segundo plano (se perdería algo o se cortaría a medias)
+const MEDIAS_FUERTES = new Set(['cargando', 'pregunta', 'plan', 'fotos', 'anuncio', 'escribiendo', 'apuntando', 'entrando', 'tutorial']);
+let aperturaT = 0;
+const interEnCurso = () => { try { return !!estadoIntersticial().enCurso; } catch (e) { return false; } };
+window.addEventListener('apertura-vista', () => { aperturaT = 0; });
+function regNueva(v) {
+  const g = LS.get('nueva-sola', null);
+  if (g && g.v === v) return g;
+  const n = { v, n: 0 };
+  LS.set('nueva-sola', n);
+  return n;
+}
+/** qué tiene a medias el usuario ('' si nada): lo que se perdería o se cortaría al recargar */
+function aMedias() {
+  if ($('#limite')) return '';
+  // (al arrancar, antes de pintar nada, no hay nada que perder: es el mejor momento)
+  if (S.cargando && S.D) return 'cargando';
+  if (/[?&]code=/.test(location.search)) return 'entrando';
+  if (S.charlando || S.chatCtl || preguntaPendiente()) return 'pregunta';
+  if (S.planEstado && S.planEstado.cargando) return 'plan';
+  if (S.preparandoFotos) return 'fotos';
+  if (S.anuncio || interEnCurso() || (aperturaT && Date.now() - aperturaT < 45000)) return 'anuncio';
+  if (tourAbierto() || document.body.classList.contains('en-tour')) return 'tutorial';
+  // en la pantalla de entrar, recién abierta no hay nada que perder; después puede estar a mitad de la entrada
+  if (!S.D && !haySesion() && !enDemo() && Date.now() - arranqueT > 20000) return 'entrando';
+  const campos = [...document.querySelectorAll('textarea, input:not([type]), input[type="text"], input[type="number"], input[type="search"], input[type="email"], input[type="url"]')];
+  if (campos.some((e) => e.value && e.value.trim() && !e.closest('#forzar'))) return 'escribiendo';
+  // una hoja o ventana para apuntar algo (lo que te dijo un rival, una oferta, una puja…), aunque aún no haya escrito
+  const formas = [S.hoja, ...document.querySelectorAll('.hoja, [role="dialog"]')].filter(Boolean);
+  if (formas.some((h) => h.querySelector('input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="search"]), textarea, select'))) return 'apuntando';
+  const a = document.activeElement;
+  if (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return 'foco';
+  if ($('.nvt-capa') || $('.nv') || $('#bienvenida') || document.body.classList.contains('con-nv')) return 'novedad';
+  if (S.hoja || $('.visor') || [...document.querySelectorAll('[role="dialog"],[role="alertdialog"]')].some((d) => d.id !== 'forzar')) return 'ventana';
+  return '';
+}
+/** con versión nueva: ¿se pone sola? (false: la ventana de siempre) */
+function nuevaSola(v, modo) {
+  if (EN_FONDO) return true;
+  const g = regNueva(v);
+  if ($('#forzar') || g.n >= 2) return false;
+  // (lo que lleva esperando cuenta con la app abierta: si se cierra a medias, al abrirla otra vez se prueba de nuevo)
+  if (!S.sola || S.sola.v !== v) S.sola = { v, modo, fase: 'espera', t0: Date.now() };
+  intentarSola();
+  return true;
+}
+function ventanaSola() {
+  const s = S.sola;
+  S.sola = null;
+  clearTimeout(forzarT);
+  if (!s) return;
+  if (s.modo === 'web') forzarWebNueva(S.webNuevaWeb);
+  else if (S.appNueva) forzarAppNueva('pide');
+}
+function intentarSola(oculta = false) {
+  const s = S.sola;
+  // (al irse de la página para recargar, el navegador también avisa de que se oculta: eso no es otro intento)
+  if (!s || EN_FONDO || s.fase === 'bajando' || s.fase === 'recargando') return;
+  const m = aMedias();
+  if (m && (!oculta || MEDIAS_FUERTES.has(m))) {
+    s.espera = m;
+    if (Date.now() - s.t0 > ESPERA_SOLA) ventanaSola();
+    return;
+  }
+  // en la app con la web nueva ya bajada, basta con recargar
+  if (s.modo === 'app' && S.webNueva) { s.fase = 'recargando'; ponerWebNueva(); return; }
+  const g = regNueva(s.v);
+  g.n++; g.t = Date.now();
+  LS.set('nueva-sola', g);
+  if (!oculta) tostada('Poniendo la versión nueva…', 4000);
+  guardarVuelta();
+  if (s.modo === 'web') { s.fase = 'recargando'; recargarWeb(); return; }
+  s.fase = 'bajando';
+  if (!nativo.buscarWeb()) { s.fase = 'espera'; ventanaSola(); if (S.appNueva) forzarAppNueva('fallo', 'esta app no sabe descargarla sola'); return; }
+  // si AlDia no contesta en un minuto, la ventana con «Volver a intentarlo»
+  clearTimeout(forzarT);
+  forzarT = setTimeout(() => { if (S.sola && S.sola.fase === 'bajando') { S.sola = null; forzarAppNueva('fallo', 'no ha contestado'); } }, 60000);
+}
+/* lo que se ve, para dejarlo igual tras recargar con la versión nueva (la pestaña también va en la dirección, #hoy…) */
+const FICHAS_VUELTA = new Set(['j', 'r', 'c', 'p']);
+function guardarVuelta() {
+  const th = S.tipoHoja && FICHAS_VUELTA.has(S.tipoHoja[0]) && (typeof S.tipoHoja[1] === 'string' || typeof S.tipoHoja[1] === 'number') ? S.tipoHoja : null;
+  LS.set('tras-recarga', { t: Date.now(), vista: S.vista, seg: S.seg || {}, hoja: th, y: Math.round(window.scrollY || 0) });
+}
+function leerVuelta() {
+  const g = LS.get('tras-recarga', null);
+  if (!g) return;
+  LS.del('tras-recarga');
+  if (Date.now() - g.t > 10 * MIN) return;
+  if (g.vista && VISTAS[g.vista]) { S.vista = g.vista; try { history.replaceState(null, '', location.pathname + location.search + '#' + g.vista); } catch (e) { /* nada */ } }
+  if (g.seg && typeof g.seg === 'object') S.seg = { ...g.seg, ...S.seg };
+  S.vuelta = g;
+}
+function volverTrasRecarga() {
+  const g = S.vuelta;
+  S.vuelta = null;
+  if (!g || !S.D || !S.M || tourAbierto()) return;
+  if (g.y) requestAnimationFrame(() => window.scrollTo(0, g.y));
+  if (g.hoja && !S.hoja) { try { hoja(g.hoja[0], g.hoja[1]); } catch (e) { /* la ficha ya no está (otro día, otra liga) */ } }
 }
 /* Con versión nueva en la web, una ventana en mitad de la pantalla que no se puede cerrar: «Actualizar ahora» y
    nada más (lo pidió Carlos el 25 oct: con solo la banda, Domy se quedaba en una vieja). Si tras dos intentos sigue en
@@ -2383,6 +2724,7 @@ function forzarWebNueva(j) {
   if (enApp || !j || document.getElementById('forzar')) return;
   let intentos = 0;
   try { intentos = Number(sessionStorage.getItem('fm-forzar-' + j.version)) || 0; } catch (e) { /* sin almacenamiento */ }
+  intentos = Math.max(intentos, regNueva(j.version).n);
   const d = document.createElement('div');
   d.id = 'forzar'; d.className = 'forzar'; d.setAttribute('role', 'alertdialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'forzar-t');
   d.innerHTML = `<div class="forzar-c"><span class="forzar-ic">${icono('refrescar')}</span><h2 id="forzar-t">Hay una versión nueva</h2>
@@ -2394,7 +2736,8 @@ function forzarWebNueva(j) {
 }
 async function recargarWeb() {
   const j = S.webNuevaWeb;
-  tostada('Poniendo la versión nueva…', 4000);
+  if (!S.sola) tostada('Poniendo la versión nueva…', 4000);
+  LS.set('web-puesta', { t: Date.now() });
   // primero la página tal como se abrió (puede ser la carpeta, «/», y no «index.html»: el navegador las guarda aparte);
   // index.html ya pide cada módulo con su huella (paquete.py), así que con ella nueva llega todo lo demás nuevo
   const pagina = location.href.split('#')[0];
@@ -2466,6 +2809,8 @@ async function mirarAppNueva() {
   // (0.7.13j: solo el aviso de pasarse a Google Play, nunca una descarga de fuera)
   if (apk) return;
   S.appNueva = { version: j.version, apk, play };
+  // (0.8.4r) se pone sola; la ventana, solo de reserva
+  if (!$('#forzar') && nuevaSola(j.version, 'app')) return;
   forzarAppNueva(apk ? 'apk' : 'pide');
 }
 /* paso: 'pide' (Actualizar ahora), 'bajando', 'apk' (hace falta descargar la app) o 'fallo' (AlDia no ha podido) */
@@ -2506,6 +2851,7 @@ function forzarAppNueva(paso, detalle = '') {
   if (b) b.focus();
 }
 function ponerAppNueva() {
+  S.sola = null;
   // ya bajada antes (no se pudo recargar en su momento): basta con recargar
   if (S.webNueva) { ponerWebNueva(); return; }
   forzarAppNueva('bajando');
@@ -2542,9 +2888,12 @@ async function mirarMiOnce() {
     const r = await api.miOnce(D.yo.teamId);
     const ids = idsOnce(r).map(String), forma = formaOnce(r);
     if (ids.length < 5 || S.D !== D) return;
-    const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join();
-    apuntarMiOnce(ids, forma);
-    if (antes !== ids.join() + '|' + (forma || []).join()) rehacerLuego();
+    // (26 nov, parte B) también si cambia lo de premium (capitán, banquillo, entrenador): Equipo dice «puesto» o «ahora, X»
+    const prTxt = (x) => (x ? `${x.cap || ''}/${JSON.stringify(x.banq || {})}/${x.ent || ''}` : '');
+    const pr = premiumDeOnce(D, r);
+    const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join() + '|' + prTxt(g && g.pr);
+    apuntarMiOnce(ids, forma, pr);
+    if (antes !== ids.join() + '|' + (forma || []).join() + '|' + prTxt(pr)) rehacerLuego();
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }
 async function despues() {
@@ -2553,6 +2902,7 @@ async function despues() {
   const saludo = saludarSiToca('entrar');
   if (S.bienvenidaPendiente) Promise.race([saludo, new Promise((r) => setTimeout(r, 4000))]).then(() => quizaBienvenida(300));
   mirarMiOnce();
+  volverTrasRecarga();
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
   setTimeout(cargarCaras, 3000);
   mirarWebNueva();
@@ -2873,6 +3223,23 @@ async function contestarAviso(id) {
   repintarAvisos();
   pintarNumAvisos();
 }
+/** (26 nov) el dueño o quien ayuda da un aviso por terminado sin contestarle: deja de contar como sin contestar */
+async function darPorTerminado(id) {
+  if (!id || S.av.terminando) return;
+  S.av.terminando = true; repintarAvisos();
+  try {
+    const r = await terminarAviso(id);
+    const cer = (r && r.cer) || Date.now();
+    if (S.av.detalle && S.av.detalle.id === id) S.av.detalle = { ...S.av.detalle, cer };
+    if (avisoCache()[id]) avisoCache()[id] = { ...avisoCache()[id], cer };
+    S.av.todos = (S.av.todos || []).map((x) => (x.id === id ? { ...x, r: x.r || cer, cer } : x));
+    S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
+    tostada('Dado por terminado');
+  } catch (e) { tostada(`No se ha podido: ${e.message}`, 6000); }
+  S.av.terminando = false;
+  repintarAvisos();
+  pintarNumAvisos();
+}
 /** de vez en cuando (al abrir y al volver a la app): ¿hay respuesta a tus avisos o, si eres el dueño, avisos nuevos? */
 async function comprobarAvisos() {
   if (enDemo() || !haySesion() || !hayQueMirar()) return;
@@ -2896,6 +3263,8 @@ function cambiarDeLiga(id) {
   if (trasCargar(() => cambiarDeLiga(id))) return;
   if (S.planCtl) S.planCtl.abort();
   if (S.chatCtl) S.chatCtl.abort();
+  // (26 nov) la sincronización, parada antes de que K apunte a la otra liga (sinc.js, pararSinc)
+  pararSinc();
   guardarCfg({ ligaId: id });
   S.D = null; S.M = null; S.plan = null; S.planEstado = {}; S.det = {}; S.fuentes = null; S.opPorPid = {}; S.errorCarga = null; S.adjuntos = [];
   cargar();
@@ -3106,7 +3475,7 @@ function bloqHTML(arg) {
         ${Hj.botonInvitarTop(clave)}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`;
 }
-const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : tipo === 'dicho' ? DD.hojaDichoHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3114,7 +3483,7 @@ const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'qu
 // (25 nov, aviso de Big Mac Laporta) también la ficha de un rival: al abrir uno de sus jugadores, «‹ Volver» lleva al rival
 // (25 nov, auditoría, hallazgos 12 y 13) y el resumen de tu equipo y el once de una jornada: abrir un jugador desde ahí y
 // volver te deja donde estabas. El candado de una función top ('bloq') vuelve a la ficha desde la que se abrió
-const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r', 'resumen', 'oj', 'bloq']);
+const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r', 'resumen', 'oj', 'bloq', 'dicho']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -3137,7 +3506,7 @@ function cuerpoHoja(tipo, arg, pila = S.pila) {
   const atras = pila && pila.length ? `<button class="volver-h" data-accion="volverHoja">${icono('atras')}<span>${esc(nombreHoja(pila[pila.length - 1]))}</span></button>` : '';
   return atras + htmlHoja(tipo, arg);
 }
-function hoja(tipo, arg, pila = []) { abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
+function hoja(tipo, arg, pila = []) { alDiaDichos(); abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
 /* en la web, el «atrás» del navegador (o el gesto del móvil) cierra la ficha en vez de salir de la app: al abrir una
    ficha se apunta un paso en el historial y, al cerrarla con la X, se quita (revisión del 29 oct). En la app de
    Android lo hace window.atras */
@@ -3241,6 +3610,7 @@ async function pintarTarjeta() {
 }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
+  alDiaDichos();
   const sc = S.hoja.scrollTop;
   const dentro = S.hoja.contains(document.activeElement);
   S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
@@ -3524,6 +3894,8 @@ window.fotosApp = (lista, error) => {
 /* ---------------- la entrada de la web: pegar y volver (0.8l) ---------------- */
 // «Ya tengo la app» del ordenador: el QR se pide al desplegarlo y se deja de esperar al móvil al plegarlo
 document.addEventListener('toggle', (ev) => {
+  // (26 nov) «Tus clubes» plegado o abierto en el ordenador: se recuerda en este dispositivo
+  if (ev.target && ev.target.id === 'tusClubes') { LS.set('tus-clubes-plegado', !ev.target.open); return; }
   if (!ev.target || ev.target.id !== 'detApp') return;
   if (ev.target.open) iniciarQR(); else pararQR();
 }, true);
@@ -3668,14 +4040,28 @@ function sePuedeRecargar(alVolver = false) {
 }
 function ponerWebNueva() {
   LS.set('web-puesta', { t: Date.now() });
+  guardarVuelta();
   location.reload();
 }
 window.webBuscada = (estado) => {
   apuntarAlDia(estado);
   const avisar = S.buscaAvisar && Date.now() - S.buscaAvisar < 120000;
   S.buscaAvisar = 0;
+  // (0.8.4r) la que se está poniendo sola: con la web bajada se recarga en cuanto no haya nada a medias; si AlDia no
+  // puede, la ventana de siempre con lo que ha pasado
+  if (S.sola && S.sola.modo === 'app' && S.sola.fase === 'bajando') {
+    if (estado === 'ocupada') return;
+    clearTimeout(forzarT);
+    S.sola.fase = 'espera';
+    if (estado === 'nueva' || (estado === 'igual' && S.webNueva)) { S.webNueva = true; intentarSola(document.hidden); return; }
+    if (estado === 'parada') { S.sola = null; S.appNueva = null; return; }
+    S.sola = null;
+    if (S.appNueva) forzarAppNueva(estado === 'apk' && !S.appNueva.play ? 'apk' : 'fallo', String(estado).startsWith('error') ? String(estado).slice(7) : estado === 'igual' ? 'la descartó antes' : '');
+    return;
+  }
   if (estado === 'nueva') {
     S.webNueva = true;
+    if (S.sola) { intentarSola(document.hidden); return; }
     if (sePuedeRecargar()) ponerWebNueva();
     else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Hay una versión nueva: toca «Descargar»'); }
     return;
@@ -3693,11 +4079,12 @@ window.webBuscada = (estado) => {
   else if (!S.nueva) tostada('Tienes la última versión');
 };
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { fueraT = Date.now(); return; }
+  // (0.8.4r) al irse a segundo plano, el mejor momento para ponerla: al volver ya está
+  if (document.hidden) { fueraT = Date.now(); if (S.sola) intentarSola(true); return; }
   if (S.webNueva && fueraT && Date.now() - fueraT > 60000 && sePuedeRecargar(true)) ponerWebNueva();
 });
 // por si llegó en mal momento (cargando la liga, la IA trabajando): se vuelve a mirar cada poco
-setInterval(() => { if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
+setInterval(() => { if (S.sola) { if (!document.hidden) intentarSola(); return; } if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
 window.progresoApp = (pct, estado) => {
   if (pct < 0) tostada(`No se ha podido descargar: ${estado}`, 5000);
   else if (estado === 'permiso') tostada('Dale permiso para instalar y vuelve a pulsar Actualizar', 6000);
@@ -4175,6 +4562,7 @@ document.addEventListener('click', async (ev) => {
     case 'permisoPlan': nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
+    case 'terminarAviso': darPorTerminado(d.id); break;
     case 'copiarAvisos': copiarAvisosClaude(); break;
     case 'copiarParaClaude': if (S.av && S.av.paraClaude) copiarY(S.av.paraClaude); break;
     case 'ligas': {
@@ -4226,29 +4614,62 @@ document.addEventListener('click', async (ev) => {
     case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (importantesPara() && hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.D) rehacer(); if (S.hoja) repintarHoja(); else pintar(); break;
-    case 'guardarDicho': {
-      // lo que te ha dicho un rival que tiene (en millones; si escribe en euros, se entiende igual)
-      const leer = (id) => { const x = parseFloat(String(($(id) || {}).value || '').replace(/\s/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.')); return Number.isFinite(x) ? (Math.abs(x) >= 10000 ? x : x * 1e6) : null; };
-      let a = leer('#dichoMin'), b = leer('#dichoMax');
-      if (a == null && b == null) { tostada('Pon cuánto te ha dicho que tiene'); break; }
-      if (a == null) a = b; if (b == null) b = a;
-      if (a > b) [a, b] = [b, a];
-      const cu = S.M && (S.M.dineroCuentaBruta || S.M.dineroCuenta) ? (S.M.dineroCuentaBruta || S.M.dineroCuenta)(d.tid) : null;
-      const todos = LS.get(K('dinero-dicho'), {});
-      todos[d.tid] = { v: Math.round((a + b) / 2), r: Math.round((b - a) / 2), min: Math.round(a), max: Math.round(b), t: Date.now(), est: cu && cu.v != null ? Math.round(cu.v) : null };
-      LS.set(K('dinero-dicho'), todos);
-      apunteDinero(d.tid, todos[d.tid], cu).catch(() => {});
-      rehacer(); repintarHoja(); pintar();
-      tostada(cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(todos[d.tid].v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
+    // (0.8.4o) lo que te ha dicho un rival que tiene: la hoja (desde su ficha o su fila de Rivales), sin repintar al tocar
+    case 'abrirDicho': if (S.D && d.tid) { DD.quitarAvisoRivales(); hoja('dicho', d.tid, pilaDesde(el, 'dicho', d.tid)); } break;
+    case 'ddPaso': case 'ddAtajo': case 'ddModo': formDicho(el, d); break;
+    case 'dichoGuardar': {
+      const f = el.closest('.dd-hoja'), v = f ? DD.leerCifra((f.querySelector('.dd-in') || {}).value) : null;
+      if (v == null) { notaDichoErr(f, 'Pon cuánto te dijo, en millones.'); break; }
+      const { d: dc, cu } = apuntarDichoDe(d.tid, v, modoAprox(f));
+      if (!volverHoja()) cerrarHoja();
+      pintar();
+      tostadaDicho(d.tid, dc, cu);
       break;
     }
     case 'mejorarIA': ponerMejorarIA(!mejorarIA()); repintarHoja(); tostada(mejorarIA() ? 'Gracias: así la IA afina más' : 'Hecho: no se manda nada más'); break;
     case 'borrarDicho': {
-      const todos = LS.get(K('dinero-dicho'), {});
+      const todos = DD.dichos();
       delete todos[d.tid];
       LS.set(K('dinero-dicho'), todos);
       rehacer(); repintarHoja(); pintar();
-      tostada('Olvidado: vuelve a salir de la cuenta');
+      // (0.8.4o) con su dinero cerrado, sin hablar de la cuenta
+      tostada(bloqueada('dineroRivales', d.tid) ? 'Olvidado' : 'Olvidado: vuelve a salir de la cuenta');
+      break;
+    }
+    case 'quitarAvisoDicho': { const y = window.scrollY; DD.quitarAvisoRivales(); pintar(); window.scrollTo(0, y); break; }
+    case 'novDineroSi': cerrarNovDinero(); ventanaDinero(); break;
+    case 'novDineroNo': cerrarNovDinero(); break;
+    case 'ddApuntar': {
+      const v = $('#dd-ventana'); if (!v || !S.ddV) break;
+      const cant = DD.leerCifra((v.querySelector('.dd-in') || {}).value), aprox = modoAprox(v);
+      S.ddV = { ...S.ddV, v: cant, aprox, err: !S.ddV.sel ? 'Elige quién te lo dijo.' : cant == null ? 'Pon cuánto te dijo, en millones.' : '' };
+      if (!S.ddV.err) { apuntarDichoDe(S.ddV.sel, cant, aprox); S.ddV.fase = 'hecho'; pintar(); }
+      ventanaDinero(S.ddV);
+      break;
+    }
+    // (26 nov) el desplegable del rival, con las caras (dinero-dicho.js, botonRival)
+    case 'ddAbrirLista': { const l = $('#ddLista'); if (!l) break; l.hidden = !l.hidden; el.setAttribute('aria-expanded', String(!l.hidden)); if (!l.hidden) { const o = l.querySelector('[aria-selected="true"]') || l.querySelector('.dd-op'); if (o) { o.scrollIntoView({ block: 'nearest' }); o.focus({ preventScroll: true }); } } break; }
+    case 'ddElegir': {
+      const v = $('#dd-ventana'); if (!v || !S.ddV) break;
+      S.ddV.sel = d.tid;
+      const e = (S.D.clasif || []).find((x) => String(x.teamId) === String(d.tid));
+      const b = v.querySelector('#ddRival'); if (b) b.outerHTML = DD.botonRival(e);
+      v.querySelectorAll('.dd-op').forEach((o) => o.setAttribute('aria-selected', String(o.dataset.tid === d.tid)));
+      const l = v.querySelector('#ddLista'); if (l) l.hidden = true;
+      const er = v.querySelector('.dd-err'); if (er) er.remove();
+      const nb = v.querySelector('#ddRival'); if (nb) nb.focus({ preventScroll: true });
+      break;
+    }
+    case 'ddOtro': ventanaDinero(); break;
+    case 'ddCerrar': cerrarVentanaDinero(); break;
+    case 'dichoChat': {
+      // (0.8.4o) la tarjeta de debajo de una respuesta: solo se guarda al tocar
+      const h2 = conversacion(), m = h2[Number(d.i)];
+      if (!m || !m.dr || m.dr.hecho) break;
+      apuntarDichoDe(m.dr.tid, m.dr.v, d.m === 'aprox');
+      m.dr = { ...m.dr, hecho: d.m === 'aprox' ? 'aprox' : 'exacto' };
+      guardarChat(h2);
+      pintar();
       break;
     }
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
@@ -4640,6 +5061,8 @@ function novedades() {
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
   iphoneEsperar();
+  // (26 nov, 03:38, Carlos: «quita lo del popup para todos y haz que solo salga en la sección Rivales») la novedad del
+  // dinero ya no sale: se cuenta en el aviso de Rivales (avisoRivalesHTML). novDineroEsperar se queda sin llamar.
   novAvisoAlArrancar(vista);
   if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
@@ -4715,6 +5138,7 @@ function novAvisoVisto(v) {
   // (la de invitar cuenta también como la última vez que se le recordó)
   g.invT = Date.now();
   LS.set('avisos-nov', g);
+  LS.set('tarjeta-inv-t', Date.now());
 }
 /* (20 nov, Carlos: «que el pop-up de invitar amigos aparezca una vez cada 5 días para quien no ha invitado a ningún amigo;
    si ha invitado a un amigo, que no le salga nunca más») La misma tarjeta de invitar, de recordatorio: a quien no tiene
@@ -4741,10 +5165,21 @@ function novInvRecordar() {
   const n = NOVEDADES.find((x) => x.aviso && x.aviso.ir && x.aviso.ir.accion === 'invitarAmigo');
   return n ? { ...n.aviso, eti: 'Premios por invitar' } : null;
 }
+/* (0.8.4s) la tarjeta de novedades con su lista: cada cosa con `solo` sale solo donde se nota ('pc': en el ordenador;
+   'premium': en una liga premium). Si no queda nada de la lista, se enseña igual con lo que queda */
+function avisoMio(a) {
+  if (!a || !Array.isArray(a.lista)) return a;
+  const pc = document.documentElement.classList.contains('escritorio') && !enApp;
+  // (Carlos, 26 nov, 23:08: «a quien no lo tenga, que no le salga nada relacionado») solo si LaLiga dice que la liga es
+  // premium y está leída con esta versión (`pf`): con lo guardado de antes no se da por premium
+  const prem = !!(S.D && S.D.liga && S.D.liga.premium === true && S.D.liga.pf);
+  return { ...a, lista: a.lista.filter((c) => !c.solo || (c.solo === 'pc' && pc) || (c.solo === 'premium' && prem)) };
+}
 function novInvRecordado() {
   const g = novAvisos() || { visto: [], pend: null };
   g.invT = Date.now();
   LS.set('avisos-nov', g);
+  LS.set('tarjeta-inv-t', Date.now());
 }
 let novAvisoEsperando = false;
 function novAvisoEsperar() {
@@ -4754,15 +5189,18 @@ function novAvisoEsperar() {
   const mirar = () => {
     // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
     if (Date.now() > hasta) { novAvisoEsperando = false; return; }
-    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa'))) { setTimeout(mirar, 1000); return; }
+    // (0.8.4s) ni encima de la bienvenida ni de la presentación de un tema (lo mismo que espera la del iPhone)
+    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente)) { setTimeout(mirar, 1000); return; }
     // (0.8.4e) la de la app para iPhone va antes y, si sale hoy, la de invitar se deja para otro día
     if (iphoneToca()) { setTimeout(mirar, 1500); return; }
     if (iphoneHoy()) { novAvisoEsperando = false; return; }
+    // (0.8.4o) si hoy ha salido la novedad del dinero de los rivales, la de invitar, otro día
+    if (novDineroHoy()) { novAvisoEsperando = false; return; }
     const g = novAvisos();
     const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
     if (n) {
       novAvisoEsperando = false;
-      tarjetaNovedad(n.aviso, { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
+      tarjetaNovedad(avisoMio(n.aviso), { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
       return;
     }
     // sin tarjeta de versión pendiente: el recordatorio de invitar, si toca
@@ -4801,6 +5239,7 @@ function iphoneEsperar() {
   const hasta = Date.now() + 10 * 60e3;
   const mirar = () => {
     if (iphoneNunca() || Date.now() > hasta) { iphoneEsperando = false; return; }
+    if (novDineroHoy()) { iphoneEsperando = false; return; }
     // (en la liga de ejemplo, sin sesión o sin el tutorial visto, se espera: puede entrar con su liga en este rato)
     // (ni encima de la bienvenida ni de la presentación de un tema de evento: lo mismo que espera el tutorial)
     if (!iphoneToca() || !(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente)) { setTimeout(mirar, 1500); return; }
@@ -4884,7 +5323,7 @@ function pasosTour() {
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: `Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están ${enAppIos() ? 'la IA' : 'tu clave de la IA'}, los avisos, abrir la app en otro dispositivo y este tutorial.` },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
-    { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
+    { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones de tu liga.' },
     // (21) en el parón, el mismo sitio es la pestaña Parón
     Pz.hayParon(S.M)
       ? { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Parón', x: 'Mientras dura el parón de selecciones: qué comprar para revender antes de la vuelta, qué vender antes de que baje y desde cuándo pensar en el once. Arriba puedes cambiar a Directo para ver los partidos de la vuelta.' }
@@ -5032,6 +5471,8 @@ async function arrancar() {
   arrancarIntersticiales();
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
+  // (0.8.4r) recién recargada con la versión nueva: la misma pestaña (y luego la ficha y el scroll, en despues)
+  leerVuelta();
   const aFallos = h === 'fallos';
   if (aFallos) history.replaceState(null, '', '#hoy');
   // venía de la web de antes con un código de mudanza

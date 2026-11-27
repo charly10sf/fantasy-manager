@@ -18,7 +18,7 @@
 //      otro): sus ids se pasan a los de ahora por lo que era cada paso (traducirIds). No se rehace y cada frase va con su
 //      jugador. Se cuenta cuántas frases habrían ido a otro jugador sin traducir (lo que pasaba antes).
 // Además, los casos (17 nov): cada uno, una liga removida como las demás y con algo forzado encima, y lo suyo que
-// comprobar (`CASOS`, abajo): parón con dinero de sobra, plantilla de 25, saldo negativo entre semana, cláusula recién
+// comprobar (`CASOS`, abajo): parón con dinero de sobra, plantilla de 24 (llena), saldo negativo entre semana, cláusula recién
 // pagada (14 días protegido), puja ya hecha por el mismo jugador, jornada empezada y rival que acaba de clausularte.
 // Uso: node .github/ia/azar-plan.mjs [vueltas por escenario, 40] [semilla, 1]   (PW_MODULO como en prueba-web.mjs)
 // Sale con 1 si algo falla, y dice la semilla y la vuelta para repetirlo.
@@ -27,11 +27,11 @@ import { pagina, cerrar, arbitro } from './banco.mjs';
 const N = Number(process.argv[2]) || 40, SEMILLA = Number(process.argv[3]) || 1;
 // [escena de banco.mjs, caso] (sin caso: solo el azar)
 const ESCENAS_AZAR = [['martes'], ['veda'], ['enjuego'], ['paron'], ['m-cierre'], ['m-reventa'],
-  ['paron', 'paron-rico'], ['m-limpio', 'lleno-25'], ['martes', 'negativo'], ['martes', 'clausula-pagada'], ['martes', 'puja-hecha'], ['enjuego', 'jornada-empezada'], ['martes', 'rival-clausulo'],
+  ['paron', 'paron-rico'], ['m-limpio', 'lleno-24'], ['martes', 'negativo'], ['martes', 'clausula-pagada'], ['martes', 'puja-hecha'], ['enjuego', 'jornada-empezada'], ['martes', 'rival-clausulo'],
   // (19 nov, tercera parte) el sábado del partido con el cambio de ese mismo día, una liga con el mercado a otra hora, en
   // negativo con un solo cambio por delante, un titular lesionado largo, una cuenta nueva, una liga sin clausulazos y los
   // dos últimos días del parón
-  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado'],
+  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado'], ['m-premium'], ['sabado-premium'], ['m-premium-sin'],
   // (19 nov, sesión larga) sin salida de verdad: el día antes de la jornada (sin cambios de mercado que sirvan para vender),
   // muy en negativo y sin ofertas que aceptar: el plan lo avisa y la IA no puede meter compras encima
   ['veda', 'sin-salida']];
@@ -96,14 +96,15 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         const libres = (n) => { const con = new Set(Object.values(D.plantillas).flat().map((x) => x.pid)), enM = new Set(D.mercado.map((m) => m.pid)); return Object.values(D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, n); };
         const meter = (js) => { for (const j of js) mios.push({ pid: j.id, ptId: `pt${j.id}`, clausula: Math.round(j.valor * 1.6), protegidoHasta: ahora0 + 10 * 864e5, compra: j.valor }); };
         // a veces, la plantilla casi llena
-        if (!caso && az() < 0.15) { meter(libres(uno([8, 9, 10]))); cambios.push(`plantilla ${mios.length}`); }
+        // (26 nov) la plantilla casi llena o llena, sin pasar del tope de LaLiga Fantasy (24)
+        if (!caso && az() < 0.15) { meter(libres(Math.min(uno([7, 8, 9]), Math.max(0, 24 - mios.length)))); cambios.push(`plantilla ${mios.length}`); }
         /* --- el caso: lo forzado y lo que se apunta para comprobarlo después --- */
         const C = {};
         const rivales = Object.keys(D.plantillas).filter((t) => t !== yo);
         const yoC = (D.clasif || []).find((e) => e.teamId === yo) || {};
         // (de sobra: 60 a 150 M libres además de lo que ya tenga pujado)
         if (caso === 'paron-rico') { D.dinero = Math.round((60 + az() * 90) * 1e6) + D.mercado.reduce((t, m) => t + (+m.miPuja || 0), 0); cambios.push(`saldo ${D.dinero}`); }
-        if (caso === 'lleno-25') { for (const m of D.mercado) m.miPuja = null; meter(libres(Math.max(0, 25 - mios.length))); mios.length = Math.min(mios.length, 25); cambios.push(`plantilla ${mios.length}`); }
+        if (caso === 'lleno-24') { for (const m of D.mercado) m.miPuja = null; meter(libres(Math.max(0, 24 - mios.length))); mios.length = Math.min(mios.length, 24); cambios.push(`plantilla ${mios.length}`); }
         if (caso === 'negativo' || caso === 'negativo-ultimo') { D.dinero = -Math.round((0.5 + az() * 29.5) * 1e6); cambios.push(`saldo ${D.dinero}`); }
         if (caso === 'clausula-pagada' || caso === 'rival-clausulo') {
           // el mejor de un rival viene a mí (o uno de mis titulares se va a un rival), pagando su cláusula hace una hora
@@ -176,10 +177,10 @@ for (const [escena, caso] of ESCENAS_AZAR) {
             if (vc.length) falla(`${quien}: con dinero de sobra vende por caja: ${vc.join('; ')}`);
             if (vv.some((o) => o.hace_falta)) falla(`${quien}: con dinero de sobra hay una venta «hace falta»: ${vv.filter((o) => o.hace_falta).map((o) => o.jugador).join(', ')}`);
           }
-          if (caso === 'lleno-25') {
-            if (M.mias.length !== 25) falla(`el caso no ha dejado 25 jugadores (${M.mias.length})`);
+          if (caso === 'lleno-24') {
+            if (M.mias.length !== 24) falla(`el caso no ha dejado 24 jugadores (${M.mias.length})`);
             const ficha = vv.filter((o) => ['pujar', 'comprar', 'clausular'].includes(o.accion) && o.hoy !== false);
-            if (ficha.length && !hoyEntra) falla(`${quien}: con 25 jugadores ficha a ${ficha.map((o) => o.jugador).join(', ')} sin vender antes`);
+            if (ficha.length && !hoyEntra) falla(`${quien}: con 24 jugadores ficha a ${ficha.map((o) => o.jugador).join(', ')} sin vender antes`);
           }
           if (caso === 'negativo') {
             if (X.modo !== 'negativo') falla(`${quien}: en negativo entre semana el plan no va en modo negativo (${X.modo})`);

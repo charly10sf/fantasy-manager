@@ -41,7 +41,7 @@ const COMUN = `
 await probar('martes', `${COMUN}
   return [
     ['el plan de la app', null, base],
-    ['pujar con 25 jugadores', 'r17', null],
+    ['pujar con 24 jugadores', 'r17', null],
     ['pujar por uno que no está en el mercado', 'no está en el mercado', plan([op({ accion: 'pujar', pid: mio.pid, j: mio.j, jugador: mio.j.nombre, importe: 1e6 })])],
     ['«antes de las 20:00» con el mercado a las 00:15', 'rM', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, cuando: 'hoy antes de las 20:00' })])],
     ['pujar «hoy» con el día de otra semana', 'rH', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, cuando: 'el dom 8' })])],
@@ -57,13 +57,13 @@ await probar('martes', `${COMUN}
     ['el titular nombra a uno descartado', 'titular', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, descartada: true })], { titular: 'Hoy, puja por ' + libre.j.nombre })],
   ].map((c) => (c[1] === 'r17' ? null : c)).filter(Boolean);
 `);
-// con 25 jugadores (m-25), pujar sin vender antes
-await probar('m-25', `${COMUN}
+// con 24 jugadores (m-24, la plantilla llena), pujar sin vender antes
+await probar('m-24', `${COMUN}
   return [
-    ['el plan de la app con 25', null, base],
-    ['pujar con 25 jugadores', 'r17', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio })])],
-    // (20 nov, Carlos: «con 25 jugadores tampoco se puede clausular, ya te lo dije»)
-    ...(() => { const c = M.clausulas.find((x) => x.abierta && x.clausula <= D.dinero) || M.clausulas.find((x) => x.abierta); return c ? [['clausular con 25 jugadores', 'r17', plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: c.clausula })])]] : []; })(),
+    ['el plan de la app con 24', null, base],
+    ['pujar con 24 jugadores', 'r17', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio })])],
+    // (20 nov, Carlos: «con la plantilla llena tampoco se puede clausular, ya te lo dije»)
+    ...(() => { const c = M.clausulas.find((x) => x.abierta && x.clausula <= D.dinero) || M.clausulas.find((x) => x.abierta); return c ? [['clausular con 24 jugadores', 'r17', plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: c.clausula })])]] : []; })(),
   ];
 `);
 // en negativo entre semana, con tres cambios de mercado por delante: no se malvende
@@ -101,6 +101,31 @@ await probar('mercado-real', `${COMUN}
     ['comprar por debajo de lo que pide', 'r6', (() => { const v = M.mercado.find((m) => m.tipo === 'manager' && m.vendedorTeamId !== D.yo.teamId); return plan([op({ accion: 'comprar', pid: v.pid, j: v.j, jugador: v.j.nombre, importe: Math.round(v.precio * 0.8) })]); })()],
     ['pujar por uno de verdad del mercado sin dinero para la jornada', 'r10', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio + 60e6 })])],
     ['una cláusula de más del saldo', 'r5', (() => { const c = M.clausulas.find((x) => x.abierta && x.clausula > D.dinero + 1e6) || M.clausulas.find((x) => x.abierta); return plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: Math.max(c.clausula, D.dinero + 5e6) })]); })()],
+  ];
+`);
+// (26 nov, noche) pujar por un entrenador (liga premium): el plan de la app sin entrenador lo lleva y vale; y lo que no se puede
+await probar('m-premium-sin', `${COMUN}
+  const fe = M.ficharEntrenador();
+  const pe = (imp) => op({ accion: 'pujar', objetivo: 'entrenador', pid: fe.pid, j: fe.j, jugador: fe.j.nombre, importe: imp, puja_max: imp });
+  return [
+    ['el plan de la app, con su paso de pujar por el entrenador', null, base],
+    ['(el plan lleva ese paso)', base.ops.some((o) => !o.descartada && o.accion === 'pujar' && String(o.pid) === String(fe.pid) && o.importe === fe.puja) ? null : 'nunca', plan([pe(fe.puja)])],
+    ['pujar por el entrenador más que la app', 'rE: [^·]*más que la puja de la app', plan([pe(fe.puja + 500000)])],
+    ['pujar por el entrenador por debajo de lo que vale', 'rE: [^·]*por debajo', plan([pe(fe.precio - 100000)])],
+    ['pujar por un entrenador que no está libre en el mercado', 'rE: [^·]*no es un entrenador libre', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: 'ent1', j: M.J('ent1'), jugador: 'Míster Uno', importe: 990000 })])],
+  ];
+`);
+await probar('m-premium', `${COMUN}
+  const em = M.entrenadoresMercado[0];
+  return [
+    ['el plan de la app con dos entrenadores (sin puja por otro)', base.ops.some((o) => !o.descartada && o.accion === 'pujar' && o.j && o.j.pos === 5) ? 'nunca' : null, base],
+    ['pujar por un entrenador teniendo ya uno', 'rE: [^·]*ya tiene entrenador', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: em.pid, j: em.j, jugador: em.j.nombre, importe: em.puja })])],
+  ];
+`);
+await probar('martes', `${COMUN}
+  const j = { id: 'entX', pos: 5, nombre: 'Míster Equis', valor: 900000, estado: 'ok' };
+  return [
+    ['pujar por un entrenador en una liga estándar', 'rE: [^·]*en esta liga no puntúan', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: 'entX', j, jugador: j.nombre, importe: 990000 })])],
   ];
 `);
 await cerrar();

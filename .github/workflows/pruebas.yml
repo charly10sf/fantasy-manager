@@ -155,6 +155,16 @@ jobs:
       # (0.8.2) cuándo entra cada puja de otro y quién puede estar detrás: el registro, el motor, la tarjeta y el aviso
       - name: Quién puja
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-quien-puja.mjs
+      # (26 nov) de dónde sale cada fichaje del plan: «Mercado», «En venta · equipo», «Cláusula · equipo»
+      - name: Origen de los fichajes
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-origen.mjs
+      # (26 nov) el parte de los rivales: los hechos de cada rival, las líneas, las llaves y la pestaña de Rivales
+      - name: El parte de los rivales
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-parte.mjs
+      # (26 nov) lo de todas las ligas: lo que se manda (compras con jugador, pujas de cada libre, cláusulas que se abren), el
+      # Worker de verdad detrás, la línea de la ficha apagada y encendida, y la medida
+      - name: Lo de todas las ligas
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-otras-ligas.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs
@@ -167,12 +177,14 @@ jobs:
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-contradicciones.mjs 8 1
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dicho.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dinero.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-dinero-dicho.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-sinc.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-irreal.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-homonimos.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-trato.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-invitar.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-invitado.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-premium.mjs
 
   sin-red:
     runs-on: ubuntu-latest

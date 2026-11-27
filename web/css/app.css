@@ -156,6 +156,12 @@ b, strong { font-weight: 600; color: var(--texto); }
 .msg small { font-size: var(--t-mini); color: var(--apagado); align-self: flex-end; }
 .msg .aviso-capt { margin: 4px 0 2px; }
 .hilo-caja { border-top: 1px solid var(--linea); padding-top: 10px; }
+/* (26 nov) dar un aviso por terminado sin contestar */
+.av-term { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+.av-term .btn { flex: none; }
+.av-term.av-hecho { flex-wrap: nowrap; align-items: flex-start; }
+.av-term.av-hecho span { flex: 1; min-width: 0; }
+.av-term .icono, .av-term svg { flex: none; }
 .hilo-fila { display: flex; gap: 6px; align-items: flex-end; }
 .hilo-fila textarea { flex: 1; min-height: 44px; resize: vertical; font-size: var(--t-cuerpo); line-height: 1.4; margin: 0; }
 .hilo-fila .b-ico { flex: none; width: 44px; height: 44px; }
@@ -551,6 +557,13 @@ h1.titulo { font-weight: 700; }
 .cromo.vacio-c .cr-hueco { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.5); font: 600 var(--t-cifra) var(--cond); color: rgba(255, 255, 255, 0.8); }
 .cromo.vacio-c .cr-nom { background: rgba(238, 28, 60, 0.85); }
 .cr-ent { position: absolute; left: 12px; bottom: 14px; z-index: 1; }
+/* (26 nov, parte B) ligas premium: la «C» del capitán que propone la app (abajo a la derecha de la cara) y su bloque bajo el campo */
+.cr-cap { position: absolute; bottom: -4px; right: -9px; min-width: 18px; height: 18px; border-radius: 50%; background: var(--oro); color: #111; font: 800 var(--t-mini)/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
+.linea-c.cinco .cr-cap, .linea-c.seis .cr-cap { right: -3px; }
+.cambio-once .co-f.pm-f { grid-template-columns: minmax(0, 1fr) auto; }
+.pm-ya { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-mini); color: var(--sube, #3ddc84); white-space: nowrap; }
+.pm-ya .ic { width: 13px; height: 13px; stroke-width: 3; }
+.pm-ya.no { color: var(--apagado); }
 .cromo.chico { flex: none; width: 66px; }
 .cromo.chico .ava.cr { width: 44px; height: 44px; } .cromo.chico .ava .ini { font-size: var(--t-cuerpo); }
 .cromo.chico .cr-nom { font-size: var(--t-mini); }
@@ -634,6 +647,9 @@ h1.titulo { font-weight: 700; }
 .av-t { font-weight: 700; line-height: 1.25; }
 .av-sub { font-weight: 500; color: var(--texto2); }
 .av-l { font-size: var(--t-sec2); line-height: 1.35; color: var(--texto2); }
+/* (26 nov) la segunda línea de una tarjeta: lo de otras ligas, dentro de «Libre en el mercado de la liga» */
+.av-l2 { display: flex; align-items: flex-start; gap: 6px; margin-top: 5px; padding-top: 6px; border-top: 1px solid var(--linea, rgba(255, 255, 255, .08)); color: var(--texto); }
+.av-l2 .ic { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--azul); }
 .av-chip { display: none; }
 .av-pleg { display: block; padding: 0; }
 .av-pleg > summary { list-style: none; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; cursor: pointer; border-radius: var(--r-ctl); }
@@ -1717,6 +1733,7 @@ body.limitado .tostada { z-index: 120; }
 .linea-c.seis .cromo { width: 16%; }
 .linea-c.seis .ava.cr { width: 46px; height: 46px; }
 .linea-c.seis .cr-nom { font-size: var(--t-mini); padding: 2px 4px; }
+.linea-c.seis .cr-tit { left: -2px; min-width: 22px; font-size: var(--t-mini); padding: 0 2px; } .linea-c.seis .cr-rv { left: -4px; } .linea-c.seis .cr-est { right: -2px; }
 .cr-rv.tuyo { background: var(--rojo-btn); } .cr-rv.suyo { background: #3c3c47; color: #e6e3e8; }
 .cr-est.ev { display: inline-flex; align-items: center; justify-content: center; gap: 1px; background: rgba(8, 8, 10, 0.9); }
 .cr-est.ev.gol { background: #fff; color: #0b1a10; }
@@ -1739,7 +1756,8 @@ body.limitado .tostada { z-index: 120; }
 .cf-cab, .club-f { display: grid; grid-template-columns: 5px 26px 28px minmax(0, 1fr) 24px 34px 30px; column-gap: 10px; align-items: center; }
 .cf-cab { padding: 0 2px 7px 0; font: 600 var(--t-mini) 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
 .cf-cab span:nth-child(n+5) { text-align: right; }
-.cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol { display: none; }
+.cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol, .cf-cab .cf-casa, .cf-cab .cf-fuera, .club-f .cf-casa, .club-f .cf-fuera { display: none; }
+.cf-cab :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero), .club-f :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero) { display: none; }
 .club-f { position: relative; width: 100%; padding: 11px 2px 11px 0; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
   grid-template-areas: "kit pos esc n pj dg pts" "kit pos esc s s s s";
   --eu: transparent; --eu-f: transparent; background: linear-gradient(90deg, var(--eu-f), transparent 62%); transition: background-color 0.15s; }
@@ -1774,9 +1792,21 @@ body.limitado .tostada { z-index: 120; }
 .cf-ley small { flex-basis: 100%; font-size: var(--t-mini); line-height: 1.4; }
 .ch-eu { padding: 2px 8px; border-radius: var(--r-red); font: 700 var(--t-mini) 'Barlow'; color: #fff; background: var(--eu); }
 /* en el ordenador, la tabla entera */
-.escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 38px; column-gap: 14px; }
-.escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg pts" "kit pos esc s forma pj gep gol dg pts"; padding: 12px 6px 12px 0; }
-.escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol { display: block; }
+.escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 44px 44px 38px; column-gap: 14px; }
+.escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg casa fuera pts" "kit pos esc s forma pj gep gol dg casa fuera pts"; padding: 12px 6px 12px 0; }
+.escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol, .escritorio .cf-cab .cf-casa, .escritorio .cf-cab .cf-fuera { display: block; }
+.escritorio .club-f .cf-casa { display: block; grid-area: casa; } .escritorio .club-f .cf-fuera { display: block; grid-area: fuera; }
+/* (26 nov, Carlos: «añade más datos a la clasificación, los típicos de una tabla de liga») con 1500 px o más: G, E y P y GF y GC
+   por separado, puntos por partido y partidos sin encajar */
+@media (min-width: 1500px) {
+  .escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 26px 26px 26px 34px 34px 38px 44px 44px 46px 50px 38px; column-gap: 12px; }
+  .escritorio .club-f { grid-template-areas: "kit pos esc n forma pj g e p gf gc dg casa fuera ppp cero pts" "kit pos esc s forma pj g e p gf gc dg casa fuera ppp cero pts"; }
+  .escritorio .club-lista :is(.cf-cab, .club-f) :is(.cf-gep, .cf-gol) { display: none; }
+  .escritorio .cf-cab :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero) { display: block; }
+  .escritorio .club-f .cf-g { display: block; grid-area: g; } .escritorio .club-f .cf-e { display: block; grid-area: e; } .escritorio .club-f .cf-p { display: block; grid-area: p; }
+  .escritorio .club-f .cf-gf { display: block; grid-area: gf; } .escritorio .club-f .cf-gc { display: block; grid-area: gc; }
+  .escritorio .club-f .cf-ppp { display: block; grid-area: ppp; } .escritorio .club-f .cf-cero { display: block; grid-area: cero; }
+}
 .escritorio .club-f .cf-forma { display: flex; grid-area: forma; justify-content: flex-end; }
 .escritorio .club-f .cf-gep { display: block; grid-area: gep; } .escritorio .club-f .cf-gol { display: block; grid-area: gol; }
 .escritorio .club-f:hover { background-color: var(--plano); }
@@ -1894,7 +1924,34 @@ button.pf-eq { cursor: pointer; }
 button.pf-eq:active { opacity: 0.7; }
 /* con 7 pestañas abajo, las letras un poco más pequeñas en los móviles estrechos */
 @media (max-width: 400px) { .nav button { font-size: 11.5px; letter-spacing: -0.2px; } .nav button .ic { width: 23px; height: 23px; } }
-.escritorio .club-lista, .escritorio .cf-ley { max-width: 760px; }
+.escritorio .club-lista, .escritorio .cf-ley { max-width: 1100px; }
+/* (26 nov) «Tus clubes» plegable en el ordenador: el título hace de botón, con su flecha que gira */
+.tus-cl > summary { list-style: none; cursor: pointer; align-items: center; }
+.tus-cl > summary::-webkit-details-marker { display: none; }
+.tus-cl > summary .ic { width: 20px; height: 20px; flex: none; color: var(--texto2); transform: rotate(90deg); transition: transform 0.2s; }
+.tus-cl:not([open]) > summary .ic { transform: none; }
+.tus-cl > summary:hover h2 { color: var(--rojo-l); }
+.tus-cl:not([open]) > summary { margin-bottom: 0; }
+/* (26 nov) en el ordenador, «Tus clubes» en rejilla de hasta 10 por fila (sin carril) y la clasificación debajo, a todo lo ancho */
+.escritorio .clubes-e .club-lista { max-width: none; }
+.escritorio .clubes-e .club-carril { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(150px, calc((100% - 90px) / 10)), 1fr)); gap: 10px; overflow: visible; margin: 0; padding: 2px 0 0; scroll-snap-type: none; }
+.escritorio .clubes-e .club-card { width: auto; min-height: 150px; padding: 11px 11px 12px; }
+.escritorio .clubes-e .cc-cam { width: 64px; height: 64px; right: -8px; top: 12px; }
+.escritorio .clubes-e .cc-cab { padding-right: 40px; gap: 6px; }
+.escritorio .clubes-e .cc-cab .pt-esc { width: 22px; height: 22px; flex: none; }
+.escritorio .clubes-e .cc-n { font-size: var(--t-cuerpo); }
+.escritorio .clubes-e .cc-caras .ava { width: 26px; height: 26px; }
+.escritorio .clubes-e .cc-hoy { font-size: var(--t-mini); padding-left: 4px; }
+/* (26 nov) Equipo → Plantilla en el ordenador, como Hoy: las casillas del estado en una fila y la plantilla (columna estrecha) alineada arriba */
+.escritorio .ce-i > .eq2-tiles:first-child { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.escritorio .ce-i > .eq2-tiles:first-child > .eq2-t:last-child { grid-column: auto; }
+.escritorio .cols-e .eq-pl > .sec:first-child { margin-top: 0; }
+/* (26 nov) Equipo → Plantilla: con la columna de la derecha ancha, los jugadores a dos columnas (los títulos de cada puesto, a lo ancho) */
+.escritorio .eq-pl { container-type: inline-size; }
+@container (min-width: 860px) {
+  .eq-filas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 44px; align-items: stretch; }
+  .eq-filas > :not(.fila) { grid-column: 1 / -1; }
+}
 /* las capturas de un aviso de Fallo */
 .aviso-capt { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
 .aviso-capt .ac-m { position: relative; width: 66px; height: 100px; border-radius: var(--r-ctl); overflow: hidden; background: var(--plano2); flex: none; }
@@ -2153,6 +2210,9 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-l2s.con-est .pp-est { display: block; flex: 0 1 auto; max-width: 100%; white-space: normal; overflow: visible; text-overflow: clip; }
 .pp-l2s.con-est i, .pp-l2s.con-est .pp-porque { display: none; }
 .pp-l2s .pp-porque { display: block; -webkit-line-clamp: unset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); }
+/* (26 nov) de dónde sale el fichaje, al lado del nombre: si no cabe, baja de línea entera (nunca se corta) */
+.pp-l1.con-ori { flex-wrap: wrap; row-gap: 3px; }
+.pp-l1 .pp-ori { flex: 0 1 auto; max-width: 100%; white-space: normal; font-size: var(--t-mini); line-height: 1.25; padding: 1px 6px; }
 .paso3[open] .pp-l2s .pp-porque { display: none; } .paso3[open] .pp-l2s i { display: none; }
 .paso3 .pp-imp { font-size: var(--t-cuerpo); }
 .paso3 > .pp-d { padding: 0 14px 14px 14px; }
@@ -3458,6 +3518,23 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt p { margin: 8px 0 14px; font: 400 15px 'Barlow'; line-height: 1.35; color: var(--texto-2); }
 .nvt-mas { display: inline-block; margin: 0 0 16px; padding: 3px 10px; border-radius: 99px; background: rgba(255, 197, 71, 0.12); color: #ffc547; font: 600 13px 'Barlow'; }
 .nvt-no { display: block; margin: 6px auto 0; padding: 10px 16px; min-height: 40px; background: none; border: 0; color: var(--texto-2); font: 600 14px 'Barlow'; }
+
+/* (26 nov, Carlos: «un pequeño pop-up de las novedades»; y «el icono de la Liga Premium… morado», «varios diseños») la
+   tarjeta de novedades: un icono por cosa (el de premium, morado) y la lista (de los tres diseños, el que eligió Carlos) */
+.nvt.nvt-novs { padding: 18px 18px 12px; }
+.nvt-novs .dib { width: 84px; height: 63px; margin-bottom: 2px; }
+.nvt-novs h2 { font-size: 22px; }
+.nvt-ico { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(255, 79, 163, 0.14); color: #ff4fa3; }
+.nvt-ico svg { width: 18px; height: 18px; }
+.nvt-ico.ni-premium { background: linear-gradient(145deg, #8b5cf6, #5b21b6); color: #fff; box-shadow: 0 0 0 1px rgba(196, 181, 253, 0.35) inset, 0 4px 14px rgba(124, 58, 237, 0.35); }
+.nvt-ico.ni-origen { background: rgba(255, 197, 71, 0.13); color: #ffc547; }
+.nvt-ico.ni-ordenador { background: rgba(94, 178, 255, 0.14); color: #5eb2ff; }
+.nvt-novs b { display: block; font: 700 14.5px/1.25 'Barlow'; color: var(--texto); }
+.nvt-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px; vertical-align: 2px; background: rgba(255, 197, 71, 0.14); color: #ffc547; font: 700 10.5px/1.5 'Barlow'; font-style: normal; letter-spacing: .6px; text-transform: uppercase; white-space: nowrap; }
+.nvt-novs li span { display: block; font: 400 13.5px/1.3 'Barlow'; color: var(--texto-2); }
+.nvt-lista { list-style: none; margin: 12px 0 14px; padding: 0; text-align: left; }
+.nvt-lista li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.nvt-lista li:first-child { border-top: 0; }
 @keyframes nvt-velo { from { opacity: 0; } }
 @keyframes nvt-sube { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
 @media (prefers-reduced-motion: reduce) { .nvt, .nvt-velo { animation: none; } }
@@ -3862,3 +3939,156 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .inv-llega .inv-llega-cod{display:block;margin:10px 0;font:700 34px var(--cond);letter-spacing:8px;color:var(--texto);user-select:all}
 .inv-llega p{margin:6px 0;color:var(--texto-2);font-size:14px}
 .inv-llega .btn{margin-top:8px}
+
+/* ---------- (0.8.4o) el dinero que te dice un rival (dinero-dicho.js; diseños del lienzo del 25-26 nov) ---------- */
+/* la hoja para apuntar */
+.dd-hoja { padding: 2px 0 6px; }
+.dd-tit { margin: 0; font: 700 26px/1.02 var(--cond); text-transform: uppercase; }
+.dd-sub { margin: 6px 0 14px; font: 400 14.5px/1.4 'Barlow'; color: var(--texto-2); }
+.dd-cifra { display: flex; align-items: center; gap: 8px; }
+.dd-pm { display: grid; place-items: center; flex: none; width: 48px; height: 56px; border: 0; border-radius: var(--r-ctl); background: var(--s3); color: var(--texto); font: 600 24px 'Barlow'; cursor: pointer; }
+.dd-cifra.grande .dd-pm { width: 52px; height: 64px; font-size: 26px; }
+.dd-caja { flex: 1; min-width: 0; display: flex; align-items: baseline; justify-content: center; gap: 4px; height: 56px; box-sizing: border-box; padding: 6px 10px; border-radius: var(--r-ctl); background: var(--s2); border: 1px solid var(--linea); }
+.dd-cifra.grande .dd-caja { height: 64px; }
+.dd-in { width: 92px; min-width: 0; background: none; border: 0; color: #fff; text-align: right; font: 700 38px/1.1 var(--cond); }
+.dd-cifra.grande .dd-in { width: 110px; font-size: 44px; }
+.dd-in:focus { outline: none; }
+.dd-caja:focus-within { border-color: var(--rojo); }
+.dd-m { font: 700 22px var(--cond); color: var(--texto-3); }
+.dd-cifra.grande .dd-m { font-size: 24px; }
+.dd-atajos { display: flex; gap: 6px; margin: 10px 0 0; }
+.dd-atajos button { text-align: center; flex: 1; min-width: 0; height: 40px; border-radius: var(--r-red); background: var(--s2); color: var(--texto-2); border: 1px solid var(--linea); font: 600 14px 'Barlow'; cursor: pointer; white-space: nowrap; }
+.dd-atajos button[aria-pressed="true"] { background: var(--rojo-s); color: var(--rojo-texto); border-color: rgba(238, 28, 60, 0.5); }
+.dd-eti { margin: 16px 0 6px; font: 600 12.5px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--texto-3); }
+.dd-modo { display: flex; gap: 4px; padding: 4px; border-radius: var(--r-red); background: var(--s2); margin-top: 10px; }
+.dd-eti + .dd-modo { margin-top: 0; }
+.dd-modo button { flex: 1; text-align: center; padding: 9px 4px; border: 0; border-radius: var(--r-red); background: none; color: var(--texto-3); font: 600 14px 'Barlow'; cursor: pointer; }
+.dd-modo button[aria-pressed="true"] { background: var(--s3); color: #fff; }
+.dd-nota { margin: 10px 0 0; min-height: 18px; font: 500 13.5px 'Barlow'; color: var(--texto-3); }
+.dd-nota.err, .dd-err { color: var(--baja); }
+.dd-err { margin: 8px 0 0; font: 500 13.5px 'Barlow'; }
+.dd-ok { margin-top: 12px; padding: 15px; }
+/* la ficha del rival */
+.dd-tile b { color: #fff; }
+.dd-tile { border-color: rgba(47, 209, 143, 0.35); }
+.dd-tile::before { background: var(--sube); }
+.dd-cerr b { display: inline-flex; align-items: center; gap: 6px; color: var(--texto-3); }
+.dd-cerr b .ic { width: 18px; height: 18px; }
+.dd-cerr { cursor: pointer; }
+.dd-ficha { margin: 2px 0 6px; padding: 12px 14px; border-radius: var(--r-tarj); background: rgba(47, 209, 143, 0.08); border: 1px solid rgba(47, 209, 143, 0.22); }
+.dd-ficha p { margin: 0; font: 500 14px/1.4 'Barlow'; color: var(--texto); }
+.dd-ficha p b { font-weight: 700; }
+.dd-ficha.vacio { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--s1); border: 1px dashed var(--s3); }
+.dd-ficha.vacio p { color: var(--texto-2); }
+.dd-ficha .btn { text-transform: none; letter-spacing: 0; flex: none; }
+.dd-ficha .btn .ic { width: 16px; height: 16px; color: var(--rojo-l); }
+.dd-acc { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 4px; }
+.dd-acc .enlace { min-height: 36px; padding: 6px 0; background: none; border: 0; color: var(--rojo-l); font: 600 var(--t-sec2) 'Barlow'; text-decoration: underline; cursor: pointer; }
+.dd-acc .enlace.apag { color: var(--texto-3); }
+.dd-pie { margin: 4px 6px 8px; }
+/* Rivales → Clasificación */
+.pill.dd-p { background: var(--sube-s); color: var(--sube); }
+.pill.dd-ap { background: var(--rojo-s); color: var(--rojo-texto); box-shadow: inset 0 0 0 1px rgba(238, 28, 60, 0.5); cursor: pointer; }
+.pill.dd-ap .ic { width: 13px; height: 13px; }
+.dd-aviso { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; padding: 12px 8px 12px 14px; border-radius: var(--r-tarj); background: rgba(238, 28, 60, 0.1); border: 1px solid rgba(238, 28, 60, 0.22); }
+.dd-aviso > .ic { flex: none; width: 34px; height: 34px; padding: 8px; box-sizing: border-box; border-radius: 50%; background: rgba(238, 28, 60, 0.18); color: var(--rojo-texto); }
+.dd-aviso p { flex: 1; margin: 0; font: 500 14px/1.35 'Barlow'; color: var(--texto); }
+.dd-aviso p b { color: var(--rojo-texto); font-weight: 700; }
+.dd-aviso .b-ico { min-width: 40px; height: 40px; color: var(--texto-3); }
+.dd-aviso .b-ico::after { content: none; }
+/* la ventana «Quién y cuánto» y la novedad (sobre .nvt) */
+.nvt.dd-ventana, .nvt.nvt-dd { max-width: 358px; padding: 22px 20px 14px; border-radius: var(--r-hoja); background: #141418; text-align: left; max-height: calc(100dvh - 32px); overflow-y: auto; }
+.dd-capa, #nvd-capa { padding: 16px; }
+.dd-eti-r { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: var(--r-red); background: rgba(238, 28, 60, 0.14); color: var(--rojo-texto); font: 700 12px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; }
+.dd-eti-r i { width: 7px; height: 7px; border-radius: 50%; background: var(--rojo); }
+.dd-ventana h2, .nvt-dd h2 { margin: 12px 0 0; font: 700 28px/1 var(--cond); text-transform: uppercase; color: var(--texto); }
+.nvt-dd h2 { margin-top: 16px; font-size: 30px; }
+.dd-v-p { margin: 8px 0 0 !important; font: 400 15px/1.4 'Barlow' !important; color: var(--texto-2); }
+.dd-ventana .dd-eti { margin: 16px 0 8px; }
+.dd-sel-c { position: relative; }
+.dd-sel { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; box-sizing: border-box; padding: 8px 12px; border-radius: var(--r-ctl); background: var(--s2); border: 1px solid var(--linea); color: var(--texto); text-align: left; cursor: pointer; }
+.dd-sel[aria-expanded="true"] { border-color: var(--rojo); }
+.dd-sel.vacio .dd-op-t { color: var(--texto-3); font: 600 16px 'Barlow'; }
+.dd-sel .dd-fl { flex: none; width: 20px; height: 20px; margin-left: auto; color: var(--texto-3); transition: transform var(--mov-1); }
+.dd-sel[aria-expanded="true"] .dd-fl { transform: rotate(180deg); }
+.dd-sel .cara-m, .dd-op .cara-m { width: 36px; height: 36px; }
+.dd-op-t { display: flex; flex-direction: column; min-width: 0; }
+.dd-op-t b { font: 700 15.5px 'Barlow'; color: var(--texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dd-op-t small { font: 500 13px 'Barlow'; color: var(--texto-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dd-lista { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 3; max-height: 264px; overflow-y: auto; padding: 4px; border-radius: var(--r-ctl); background: #1c1c22; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55); }
+.dd-lista[hidden] { display: none; }
+.dd-op { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 6px 8px; border: 0; border-radius: 10px; background: none; color: var(--texto); text-align: left; cursor: pointer; }
+.dd-op:hover, .dd-op:focus-visible { background: var(--s3); outline: none; }
+.dd-op[aria-selected="true"] { background: var(--rojo-s); }
+.dd-op[aria-selected="true"] .cara-m { box-shadow: 0 0 0 2px var(--rojo); }
+.dd-v-pri, .dd-v-sec { text-align: center; display: block; width: 100%; min-height: 46px; margin: 12px 0 0; padding: 13px; border: 0; border-radius: var(--r-ctl); background: var(--rojo-accion); color: #fff; font: 700 16px 'Barlow'; text-align: center; cursor: pointer; }
+.dd-v-sec { background: var(--s3); color: var(--texto); font-size: 15px; }
+.dd-v-no { display: block; width: 100%; min-height: 44px; margin: 2px 0 0; padding: 12px; border: 0; background: none; color: var(--texto-3); font: 600 14px 'Barlow'; text-align: center; cursor: pointer; }
+.dd-v-pie { margin: 4px 0 0 !important; text-align: center; font: 400 12.5px/1.35 'Barlow' !important; color: var(--texto-3); }
+.dd-v-hecho { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px 0 4px; }
+.dd-v-ok { width: 64px; height: 64px; border-radius: 50%; background: var(--sube-s); color: var(--sube); display: grid; place-items: center; }
+.dd-v-ok .ic { width: 30px; height: 30px; stroke-width: 2.4; }
+.dd-v-hecho h2 { margin-top: 14px; }
+.dd-v-res { margin: 8px 0 0 !important; font: 600 17px/1.35 'Barlow' !important; color: #fff; }
+.dd-v-sub { margin: 6px 0 6px !important; font: 400 14.5px/1.4 'Barlow' !important; color: var(--texto-2); }
+.dd-v-hecho .dd-v-sec { margin-top: 12px; }
+.dd-v-hecho .dd-v-pri { margin: 8px 0 6px; font-size: 15px; }
+.nvd-dib { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; }
+.nvd-cara { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--s2); color: var(--azul, #58a6ff); font: 700 15px 'Barlow'; border: 2px solid var(--rojo); box-sizing: border-box; }
+.nvd-bur { padding: 8px 14px; border-radius: 14px 14px 14px 4px; background: var(--s2); font: 500 14.5px 'Barlow'; color: var(--texto-2); }
+.nvd-dib > .ic { flex: none; width: 20px; height: 20px; color: var(--texto-3); }
+.nvd-m { flex: none; padding: 6px 12px; border-radius: var(--r-red); background: var(--sube-s); color: var(--sube); font: 700 20px var(--cond); white-space: nowrap; }
+.nvt-dd > p { margin: 10px 0 0; font: 400 15px/1.42 'Barlow'; color: var(--texto-2); }
+.nvd-l { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.nvd-l li { display: flex; gap: 10px; align-items: center; font: 500 14px/1.35 'Barlow'; color: var(--texto); }
+.nvd-l .ic { flex: none; width: 18px; height: 18px; color: var(--sube); stroke-width: 2.4; }
+.nvt-dd .dd-v-pri { margin-top: 18px; }
+/* Pregunta: la tarjeta de debajo de la respuesta */
+.dd-chat { margin-top: 10px; padding: 14px; border-radius: var(--r-tarj); background: #141418; border: 1px solid rgba(238, 28, 60, 0.35); }
+.dd-chat-t { font: 700 12px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--rojo-texto); }
+.dd-chat-q { display: flex; align-items: center; gap: 10px; margin: 10px 0 12px; }
+.dd-chat-q b { display: block; font: 700 15.5px 'Barlow'; color: #fff; }
+.dd-chat-q div > span { display: block; font: 500 13px 'Barlow'; color: var(--texto-3); }
+.dd-chat-b { display: flex; gap: 8px; }
+.dd-chat-b .dd-v-pri, .dd-chat-b .dd-v-sec { margin: 0; flex: 1; font-size: 15px; padding: 12px 8px; }
+.dd-chat .dd-v-pie { text-align: left; margin-top: 8px !important; }
+.dd-ventana h2:focus, .nvt-dd h2:focus { outline: none; }
+
+/* Rivales → Parte (26 nov): una caja por rival y, debajo, cada línea con su acción */
+.parte-r { margin: 0 0 16px; }
+.parte-r > .fila { border-bottom: 0; }
+.parte-l { width: 100%; text-align: left; border: 0; color: inherit; font-family: inherit; margin: 6px 0 0; }
+button.parte-l { cursor: pointer; }
+.parte-l > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.parte-t { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.parte-d { flex: none; font: 700 var(--t-sec2) 'Barlow'; color: var(--texto2); white-space: nowrap; }
+.parte-l:not(.oro):not(.azul) .parte-d { color: var(--rojo-l); }
+.parte-n { color: var(--texto2); font-size: var(--t-sec2); }
+.parte-campo { display: block; width: 100%; max-width: 330px; height: auto; margin: 3px 0 1px; overflow: visible; }
+.parte-campo .pc-c { fill: rgba(255, 255, 255, 0.035); stroke: rgba(255, 255, 255, 0.16); stroke-width: 1; }
+.parte-campo .pc-l { fill: none; stroke: rgba(255, 255, 255, 0.11); stroke-width: 1; }
+.parte-campo .pc-d { fill: var(--texto); opacity: 0.88; }
+.parte-campo .pc-a { fill: color-mix(in srgb, var(--rojo-l) 20%, transparent); stroke: var(--rojo-l); stroke-width: 1.4; stroke-dasharray: 3.2 2.6; filter: drop-shadow(0 0 4px var(--rojo-l)); transform-box: fill-box; transform-origin: center; animation: parte-late 1.9s ease-in-out infinite; }
+.parte-campo .pc-t { font: 700 9px 'Barlow'; letter-spacing: 1px; fill: var(--texto2); opacity: 0.75; }
+.parte-campo .pc-t.mal { fill: var(--rojo-l); opacity: 1; }
+@keyframes parte-late { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.22); opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) { .parte-campo .pc-a { animation: none; } }
+.parte-esc { flex: none; display: inline-flex; gap: 3px; color: var(--azul); opacity: 0.38; }
+.parte-esc .ic { width: 15px; height: 15px; }
+.parte-l:not(.oro):not(.azul) .parte-d { padding: 2px 8px; border-radius: 999px; background: var(--rojo-s); }
+.parte-res { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+.parte-c b { color: var(--texto); }
+.parte-c.oro { box-shadow: inset 0 0 0 1px var(--oro); } .parte-c.azul { box-shadow: inset 0 0 0 1px var(--azul); } .parte-c:not(.oro):not(.azul) { box-shadow: inset 0 0 0 1px var(--rojo-l); }
+.parte-pie { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.35; }
+.parte-pie .pill { flex: none; }
+
+/* (0.8.5; Carlos, 26 nov, 23:13) el parte de los rivales: un botón dorado a la derecha del título de Rivales, como función top */
+.riv-tit .parte-top { margin-left: auto; }
+.parte-top { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px 6px 10px; border-radius: 99px; border: 1px solid rgba(255, 197, 71, 0.45); background: linear-gradient(135deg, rgba(255, 197, 71, 0.16), rgba(255, 197, 71, 0.06)); color: #ffc547; font: 700 15px 'Barlow'; letter-spacing: 0.2px; text-transform: none; cursor: pointer; }
+.parte-top .ic { width: 16px; height: 16px; }
+.parte-top small { padding: 1px 6px; border-radius: 99px; background: #ffc547; color: #1a1420; font: 800 10px/1.5 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; }
+.parte-top .tab-n { margin-left: 2px; }
+.parte-top.activo { background: #ffc547; color: #1a1420; border-color: #ffc547; }
+.parte-top.activo small { background: #1a1420; color: #ffc547; }
+.parte-top .tab-n { background: #ffc547; color: #1a1420; }
+.parte-top.activo .tab-n { background: #1a1420; color: #ffc547; }

@@ -11,6 +11,7 @@
 //  (f) un servidor de antes (sin `msgs`): el texto y la respuesta salen igual, como dos burbujas
 //  (g) (0.8.4c) quien ayuda contesta: abrirlo lo da por visto, lo suyo se añade con captura y sale como «Tú»
 //  (h) (0.8.4c) el dueño ve lo que contestó quien ayuda con su nombre, y lo suyo como «Tú»
+//  (j) (26 nov) el dueño y quien ayuda dan un aviso por terminado sin contestar: deja de salir como sin contestar
 //  (i) (0.8.4c) quien ayuda también reporta los suyos: pestañas «Recibidos» y «Reportar un fallo»; desde la banda, la
 //      etiqueta BETA o una pantalla de error se abre directamente en «Reportar un fallo»
 // Uso: node .github/prueba-avisos.mjs   (PW_MODULO y CHROME como en prueba-web.mjs). Sale con 1 si algo falla.
@@ -63,8 +64,9 @@ function servidor(papel, { viejo = false, conDomy = false } = {}) {
     if (u.pathname === '/fallos/escribir') { vistos.escribir.push(b); mio.msgs.push({ n: mio.msgs.length, de: 'u', t: Date.now(), texto: b.texto, caps: (b.capturas || []).length }); return json({ ok: true, n: mio.msgs.length - 1 }); }
     if (u.pathname === '/fallos/captura') return json({ img: CAPTURA });
     if (!ve) return json({ e: 'Solo para el dueño de la app' }, 403);
-    if (u.pathname === '/fallos/todos') { const ult = pepe.msgs[pepe.msgs.length - 1]; return json({ lista: [{ id: pepe.id, t: pepe.t, quien: pepe.quien, equipo: pepe.equipo, txt: pepe.msgs[0].texto, r: ult.de === 'd' ? ult.t : 0, v: 0, c: 1, n: pepe.msgs.length, de: ult.de, ult: ult.t }], pendientes: ult.de === 'u' ? 1 : 0 }); }
-    if (u.pathname === '/fallos/uno') { if (u.searchParams.get('visto') === '1') vistos.abierto++; const h = app(pepe, true); return json(admin ? { ...h, diag: pepe.diag } : h); }
+    if (u.pathname === '/fallos/todos') { const ult = pepe.msgs[pepe.msgs.length - 1]; return json({ lista: [{ id: pepe.id, t: pepe.t, quien: pepe.quien, equipo: pepe.equipo, txt: pepe.msgs[0].texto, r: ult.de === 'd' ? ult.t : pepe.cer || 0, v: 0, c: 1, n: pepe.msgs.length, de: ult.de, ult: ult.t, ...(pepe.cer ? { cer: pepe.cer } : {}) }], pendientes: ult.de === 'u' && !pepe.cer ? 1 : 0 }); }
+    if (u.pathname === '/fallos/terminar') { vistos.terminar = (vistos.terminar || 0) + 1; pepe.cer = Date.now(); return json({ ok: true, cer: pepe.cer }); }
+    if (u.pathname === '/fallos/uno') { if (u.searchParams.get('visto') === '1') vistos.abierto++; const h = { ...app(pepe, true), ...(pepe.cer ? { cer: pepe.cer } : {}) }; return json(admin ? { ...h, diag: pepe.diag } : h); }
     if (u.pathname === '/fallos/responder') { vistos.responder.push(b); pepe.msgs.push({ n: pepe.msgs.length, de: 'd', t: Date.now(), texto: b.respuesta, caps: (b.capturas || []).length, por: 'Fantasy Manager', autDe: papel }); return json({ ok: true, n: pepe.msgs.length - 1 }); }
     return json({ ok: true });
   };
@@ -205,6 +207,25 @@ try {
       if (process.env.FOTOS) await page.evaluate(() => document.querySelector('.aviso.abierto .msgs').scrollIntoView()).then(() => page.screenshot({ path: `${process.env.FOTOS}/avisos-ayuda-${donde}.png` }));
       ok(sv.vistos.responder.length === 1 && sv.vistos.responder[0].capturas.length === 1 && r.n === 2 && r.lados === 'suyo,mio' && r.quien === 'Pepe,Tú' && r.caja === '' && r.pill === 'Contestado', `(g) ${donde}: lo que contesta se añade, con captura, sale como «Tú» y queda contestado (${JSON.stringify(r)})`);
       ok(!errores.length, `(g) ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
+      await ctx.close();
+    }
+    /* (j) (26 nov) darlo por terminado */
+    for (const papel of ['dueño', 'ayuda']) {
+      const { ctx, page, errores, sv } = await pagina(papel, movil);
+      await accion(page, 'avisos'); await page.waitForTimeout(900);
+      await accion(page, 'abrirAviso', { id: 'abc123def' }); await page.waitForTimeout(900);
+      const antes = await page.evaluate(() => ({ boton: !!document.querySelector('.aviso.abierto [data-accion="terminarAviso"]'), pend: window.S.av.pendientes }));
+      if (process.env.FOTOS) await page.evaluate(() => document.querySelector('.av-term').scrollIntoView({ block: 'center' })).then(() => page.screenshot({ path: `${process.env.FOTOS}/avisos-terminar-${papel}-${donde}.png` }));
+      await page.click('.aviso.abierto [data-accion="terminarAviso"]'); await page.waitForTimeout(900);
+      const r = await page.evaluate(() => ({ boton: !!document.querySelector('.aviso.abierto [data-accion="terminarAviso"]'), txt: (document.querySelector('.aviso.abierto .av-term') || {}).textContent || '', pill: (document.querySelector('.aviso.abierto .pill') || {}).textContent, pend: window.S.av.pendientes, n: (document.querySelector('.av-pest .av-n') || {}).textContent || '' }));
+      if (process.env.FOTOS) await page.screenshot({ path: `${process.env.FOTOS}/avisos-terminado-${papel}-${donde}.png` });
+      ok(antes.boton && antes.pend === 1 && sv.vistos.terminar === 1 && !r.boton && /terminado/.test(r.txt) && r.pill === 'Terminado' && r.pend === 0, `(j) ${papel}, ${donde}: «Dar por terminado» lo quita de los sin contestar (${JSON.stringify({ antes, r })})`);
+      // al volver a abrir la bandeja, sigue terminado (lo dice el servidor)
+      await accion(page, 'cerrarHoja'); await page.waitForTimeout(300);
+      await accion(page, 'avisos'); await page.waitForTimeout(900);
+      const r2 = await page.evaluate(() => ({ pill: (document.querySelector('.aviso.recibido .pill') || {}).textContent, pend: window.S.av.pendientes }));
+      ok(r2.pill === 'Terminado' && r2.pend === 0, `(j) ${papel}, ${donde}: al volver, sigue terminado (${JSON.stringify(r2)})`);
+      ok(!errores.length, `(j) ${papel}, ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
       await ctx.close();
     }
     /* (h) (0.8.4c) el dueño ve quién contestó */

@@ -98,7 +98,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
       ${arreglos.length ? `<section class="nv-notas">
         <p class="nv-eti">Notas de la actualización</p>
         <h2>Correcciones</h2>
-        <ol>${arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}${nuevas.length > 1 ? `<small>${esc(c.v)}</small>` : ''}</li>`).join('')}</ol>
+        <ol>${arreglos.map((c) => `<li><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}${nuevas.length > 1 ? `<small>${esc(c.v)}</small>` : ''}</li>`).join('')}</ol>
       </section>` : ''}
       <section class="nv-fin">
         <div class="nv-fin-logo">${LOGO}</div>
@@ -182,16 +182,32 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
 /* (20 nov, Carlos: «que aparezca en la pantalla pero no ocupe toda, y que no diga mucho texto») una novedad corta: una
    tarjeta en el centro, encima de la app, con su dibujo, el título, una línea, una chapita (mas) y un botón. Se cierra con
    «Ahora no», tocando fuera o con el atrás de Android (cerrarPresentacion). a: el «aviso» de una versión de version.js */
+/* (0.8.4s; Carlos, 26 nov: «el icono de la Liga Premium… morado» y «pásame varios diseños») los iconos de la tarjeta de
+   novedades, uno por cosa (`ico`). El de premium es nuestro (una corona en un cuadro morado), no el logo de LaLiga */
+const ICO_NOV = {
+  parte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 8l2 2m0-2l-2 2M15 13l2 2m0-2l-2 2"/><path d="M10 9.5c2 0 3 1 4 3" stroke-dasharray="1.5 2"/><path d="M9 21h6"/></svg>',
+  premium: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8l4 3 4-6 4 6 4-3-1.6 9H5.6z"/><rect x="5.6" y="18.4" width="12.8" height="1.8" rx=".9"/></svg>',
+  origen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg>',
+  ordenador: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+};
+const tagNov = (c) => (c.tag ? ` <em class="nvt-tag">${esc(c.tag)}</em>` : '');
+const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.ico)}" aria-hidden="true">${ICO_NOV[c.ico]}</i>` : '');
+/** la lista de la tarjeta de novedades (Carlos, 26 nov, 23:07, de tres diseños eligió la lista): una fila por cosa, con su
+    icono, el título (y su etiqueta, `tag`) y una línea */
+function listaNov(a) {
+  return `<ul class="nvt-lista">${a.lista.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
+}
 export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
   const capa = document.createElement('div');
   capa.className = 'nvt-capa';
   capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
-    <div class="nvt" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
       <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
       <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
       <h2 id="nvt-t">${esc(a.t)}</h2>
       ${a.x ? `<p>${esc(a.x)}</p>` : ''}
+      ${a.lista && a.lista.length ? listaNov(a) : ''}
       ${a.mas ? `<span class="nvt-mas">${esc(a.mas)}</span>` : ''}
       ${a.ir ? `<button type="button" class="btn ancho" data-nvt="ir">${esc(a.ir.txt || 'Verlo')}</button>` : ''}
       <button type="button" class="nvt-no" data-nvt="no">${a.ir ? 'Ahora no' : 'Vale'}</button>
@@ -253,8 +269,8 @@ export function tarjetaIphone({ apple = '', linea = '', alCerrar = () => {} } = 
 export function listaNovedades() {
   return visibles().map((n) => `<div class="nvl">
     <div class="nvl-cab"><b>${esc(n.v)}</b><span>${esc(n.t)}</span><small>${esc(fechaNov(n))}</small></div>
-    ${(n.cosas || []).map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
-    ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
+    ${(n.cosas || []).map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+    ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
   </div>`).join('');
 }
 
@@ -271,7 +287,7 @@ export const ultimaImportante = () => (importantes()[0] || {}).v || null;
 export function listaImportantes() {
   return importantes().map((n) => `<div class="nvl">
     <div class="nvl-cab"><b>${esc(n.v)}</b><small>${esc(fechaNov(n))}</small></div>
-    ${n.cosas.map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+    ${n.cosas.map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
     ${n.arreglos.length ? `<div class="nvl-arreglos"><small>También se ha arreglado</small><ul>${n.arreglos.map((c) => `<li>${esc(c.t)}</li>`).join('')}</ul></div>` : ''}
   </div>`).join('');
 }

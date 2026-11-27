@@ -60,7 +60,7 @@ export const CASOS = [
   // reglas de LaLiga
   { id: 'regla-puntos', tipo: 'reglas', q: '¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?' },
   { id: 'regla-14', tipo: 'reglas', q: 'Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?', debe: /14 d[ií]as/ },
-  { id: 'regla-25', tipo: 'reglas', q: '¿Cuántos jugadores puedo tener como mucho en la plantilla?', debe: /\b25\b/ },
+  { id: 'regla-24', tipo: 'reglas', q: '¿Cuántos jugadores puedo tener como mucho en la plantilla?', debe: /\b24\b/ },
   { id: 'regla-vender-jornada', tipo: 'reglas', q: 'Si vendo a un titular con la jornada ya empezada, ¿me cuentan sus puntos de esa jornada?' },
   { id: 'regla-dudosa', tipo: 'reglas', q: '¿Cuánto me da LaLiga por quedar primero de mi liga al final de la temporada?' },
   // estrategia
@@ -166,6 +166,31 @@ export const CASOS = [
   { id: 'compra-10', tipo: 'coherencia', sigue: true, q: 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero', debe: /suerte|puede|primera|floja|loteria|sorteo|mejor caso|techo|maximo/, noDebe: /no compras|el dueno no vende|suele dar(te)? (un|unos)/ },
   { id: 'laliga-cuanto', tipo: 'coherencia', q: '¿Cuánto da LaLiga por un jugador cuando lo pones a la venta?', debe: /10 ?%/, noDebe: /suele dar(te)? (un|unos) \+?\d|de mediana un/ },
 
+  // --- (26 nov, las ligas premium de LaLiga; escenas `m-premium` y `sabado-premium` de banco.mjs: `en` dice en qué escenas
+  // se pregunta) lo que propone la app de capitán, banquillo y entrenador tiene que ser lo que diga la IA, con las reglas de
+  // lo encendido y sin inventar lo que no se le pasa (el premio del 11 ideal, lo que cuesta una cesión). Las de `prep`
+  // tocan la liga y van al final: sin entrenadores (¿ficho uno?) y con capitán y banquillo apagados por el administrador ---
+  { id: 'pm-capitan', tipo: 'premium', en: 'premium', q: '¿A quién pongo de capitán esta jornada?', debe: /\{CAP\}/ },
+  { id: 'pm-capitan-no-juega', tipo: 'premium', en: 'premium', sigue: true, q: '¿Y si al final no juega, qué pasa con el doble?', noDebe: /pasa al (siguiente|suplente|banquillo)|hereda(?![^.]{0,12}\bno\b)/ },
+  { id: 'pm-capitan-entrenador', tipo: 'premium', en: 'premium', q: '¿Puedo poner de capitán a mi entrenador para que me dé el doble?', debe: /\bno\b/ },
+  { id: 'pm-banquillo', tipo: 'premium', en: 'premium', q: '¿A quién pongo en el banquillo?', debe: /\{BAN\}/ },
+  { id: 'pm-banquillo-regla', tipo: 'premium', en: 'premium', sigue: true, q: '¿Y cuándo entra uno del banquillo a puntuar?', debe: /no juega|ni un minuto|sin jugar|0 minutos|no dispute/ },
+  { id: 'pm-entrenador', tipo: 'premium', en: 'premium', q: '¿Qué entrenador alineo esta jornada?', debe: /\{ENTA\}/ },
+  { id: 'pm-entrenador-vendo', tipo: 'premium', en: 'premium', q: '¿Vendo a {ENTB}? Los entrenadores no puntúan, ¿no?', debe: /punt[uú]a|5/, noDebe: /no (se alinea ni )?punt[uú]an?(?![^.]{0,30}(si|cuando) (pierde|su equipo pierde))[^.]{0,20}(v[eé]ndelo|vende)/ },
+  { id: 'pm-entrenador-puntos', tipo: 'premium', en: 'premium', q: '¿Cuántos puntos da un entrenador?', debe: /5[^.]{0,80}2|gana/ },
+  { id: 'pm-tope', tipo: 'premium', en: 'premium', q: 'Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?', debe: /no (te )?(cuentan|ocupan|suman|entran)|aparte|fuera del tope/ },
+  { id: 'pm-formacion', tipo: 'premium', en: 'premium', q: '¿Puedo jugar con un 4-2-4 en mi liga?', debe: /\bs[ií]\b/ },
+  { id: 'pm-once', tipo: 'premium', en: 'premium', q: '¿Qué once pongo para la próxima jornada, con capitán y banquillo?', debe: /\{CAP\}/ },
+  { id: 'pm-ideal', tipo: 'premium', en: 'premium', q: '¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?', noDebe: /\b100[ .]?(000|mil)\b(?! ?€? por (cada )?punto)/ },
+  { id: 'pm-cesion', tipo: 'premium', en: 'premium', q: '¿Puedo pedirle cedido a {R2} a {SUYO} para esta jornada? ¿Cuánto me costaría?' },
+  { id: 'pm-que-hago', tipo: 'plan', en: 'premium', q: '¿Qué hago hoy?' },
+  { id: 'pm-fichar-ent', tipo: 'premium', en: 'premium', prep: 'sin-entrenador', q: 'No tengo entrenador. ¿Ficho alguno?', debe: /\{ENTL\}/ },
+  { id: 'pm-fichar-ent-cuanto', tipo: 'premium', en: 'premium', sigue: true, q: '¿Y cuánto pujo por él?', debe: /\{ENTPUJA\}/ },
+  { id: 'pm-fichar-ent-plan', tipo: 'plan', en: 'premium', q: '¿Qué hago hoy?', debe: /\{ENTL\}/ },
+  { id: 'pm-apagado-capitan', tipo: 'premium', en: 'premium', prep: 'premium-apagado', q: '¿A quién pongo de capitán y en el banquillo?', debe: /apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador/ },
+  // y en una liga estándar: no hay capitán
+  { id: 'pm-estandar-capitan', tipo: 'premium', en: '^(martes|sabado)$', prep: 'estandar', q: '¿A quién pongo de capitán esta jornada?', debe: /no (hay|tiene|existe|est[aá])|premium/ },
+
 ];
 
 /* lo que se cambia en la liga de ejemplo antes de preguntar (lo mismo en todas las escenas): un rival con el nombre de un
@@ -255,6 +280,41 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
     window.__irreal = f.id;
     await rehacer();
     mk.IRREAL = f.nombre; mk.RIRREAL = riv.manager;
+  }
+  // (26 nov, premium) sin entrenadores en la plantilla: ¿ficho uno?
+  if (prep === 'sin-entrenador' && !window.__sinEnt) {
+    const yo = D.yo.teamId;
+    D.plantillas[yo] = D.plantillas[yo].filter((x) => (D.maestro[x.pid] || {}).pos !== 5);
+    // (sin pujas puestas: el saldo, libre; y la liga «recién leída», D.t: si no, en la misma sesión el bloque de la liga que va
+    // a la IA se repite tal cual 10 min, `fotoChat`, y no se enteraría del cambio)
+    for (const m of D.mercado || []) m.miPuja = null;
+    D.t = (D.t || Date.now()) + 1000;
+    window.__sinEnt = true;
+    await rehacer();
+  }
+  // (26 nov, premium) una liga estándar leída con esta versión (la de ejemplo no trae el campo)
+  if (prep === 'estandar' && !window.__estandar) {
+    D.liga = { ...D.liga, premium: false, pf: { formations: false, captain: false, bench: false, loan: false, ideal: false, coach: false } };
+    D.t = (D.t || Date.now()) + 1000;
+    window.__estandar = true;
+    await rehacer();
+  }
+  // (26 nov, premium) el administrador apaga capitán y banquillo
+  if (prep === 'premium-apagado' && !window.__pmApagado) {
+    D.liga = { ...D.liga, pf: { ...(D.liga.pf || {}), captain: false, bench: false } };
+    D.t = (D.t || Date.now()) + 1000;
+    window.__pmApagado = true;
+    await rehacer();
+  }
+  // (26 nov, premium) lo que propone la app ahora mismo: capitán, primer suplente, el entrenador que alinea, el otro y el libre
+  if (M.premium && M.premium.liga) {
+    const pro = M.premiumPropuesta ? M.premiumPropuesta() : null;
+    if (pro && pro.capitan) mk.CAP = pro.capitan.j.nombre;
+    if (pro && pro.banquillo && pro.banquillo[0]) mk.BAN = pro.banquillo[0].j.nombre;
+    const ents = (M.mias || []).filter((x) => x.j && x.j.pos === 5).map((x) => x.j);
+    if (M.once && M.once.entrenador) { mk.ENTA = M.once.entrenador.nombre; const o = ents.find((j) => j.id !== M.once.entrenador.id); if (o) mk.ENTB = o.nombre; }
+    const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+    if (fe) { mk.ENTL = fe.j.nombre; mk.ENTPUJA = U.eur(fe.puja).replace(/\s+/g, ' '); }
   }
   const poner = (s) => String(s).replace(/\{([A-Za-z0-9]+)\}/g, (a, k) => (mk[k] != null ? mk[k] : a));
   const pre = poner(q);

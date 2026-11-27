@@ -97,6 +97,8 @@ export async function saludar(datos) {
   if (r && r.ev === true) mandados(ev);
   // la bienvenida ya vista en otro dispositivo con esta cuenta: aquí tampoco sale
   if (r && r.bv && !LS.get('bienvenida', 0)) LS.set('bienvenida', r.bv);
+  // (0.8.4o) y la novedad del dinero de los rivales
+  if (r && r.nd && !LS.get('nov-dinero', 0)) LS.set('nov-dinero', r.nd);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
   // (0.8.4) y si ve lo de todos (quien ayuda con los fallos); un servidor de antes no lo dice: solo el dueño
@@ -113,6 +115,11 @@ export function apuntarBienvenida(datos) {
   LS.set('bienvenida', Date.now());
   return pedirWorker('POST', '/hola', { ...datos, bv: true }).then((r) => { if (r && r.bv) LS.set('bienvenida', r.bv); }).catch(() => {});
 }
+/** (0.8.4o) la novedad de apuntar el dinero de un rival: una vez por cuenta (aquí y en el Worker, /hola con nd) */
+export function apuntarNovDinero(datos) {
+  LS.set('nov-dinero', Date.now());
+  return pedirWorker('POST', '/hola', { ...datos, nd: true }).then((r) => { if (r && r.nd) LS.set('nov-dinero', r.nd); }).catch(() => {});
+}
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
 export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});
 /** un aviso entero (el dueño y quien ayuda); `abrir`: lo abres de verdad y cuenta como visto (0.8.4; quien ayuda, desde la 0.8.4c) */
@@ -125,6 +132,13 @@ export const escribirAviso = (id, texto, capturas = []) => pedirWorker('POST', '
     capturas si las lleva */
 export async function responderAviso(id, respuesta, capturas = []) {
   const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta, capturas }, { tiempo: capturas.length ? 60000 : 20000 });
+  const a = avisosGuardados();
+  if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
+  return r;
+}
+/** (26 nov; el dueño y quien ayuda) da un aviso por terminado: deja de contar como sin contestar hasta que vuelva a escribir */
+export async function terminarAviso(id) {
+  const r = await pedirWorker('POST', '/fallos/terminar', { id });
   const a = avisosGuardados();
   if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;
@@ -150,11 +164,28 @@ export async function huellaCompra(liga, pid, t) {
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-puja|${liga}|${pid}|${t}`));
   return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
 }
-/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top }] }; true si han entrado */
-export async function mandarCompras(c) {
+/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top, p }], l }; devuelve lo que
+    contesta el servidor si han entrado y false si no. (26 nov) `p` es el id del jugador (el de LaLiga, público) y `l`, la
+    huella de la liga: con ellos el servidor apunta además lo pagado por cada jugador en todas las ligas y contesta con `jug`
+    (cuántas ha apuntado así); un servidor de antes no los mira y contesta sin `jug` */
+export async function mandarCompras(c, l = '', t = '') {
   if (!mejorarIA() || !c || !c.length) return false;
-  try { await pedirWorker('POST', '/pujas', { c }, { tiempo: 15000 }); return true; } catch (e) { return false; }
+  try { return (await pedirWorker('POST', '/pujas', l ? { c, l, t } : { c }, { tiempo: 15000 })) || false; } catch (e) { return false; }
 }
+/* ---------- (26 nov) lo que solo se ve juntando todas las ligas (otras-ligas.js; el servidor, worker/src/ligas.js) ---------- */
+const huella24 = async (texto) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto)))].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+/** la huella de la liga (24 hex): al servidor nunca le llega el id de la liga, y él la vuelve a cifrar con una sal suya */
+export const huellaLiga = (liga) => huella24(`fm-liga|${liga}`);
+/** la huella de una cláusula que se abrió (liga|jugador|hasta cuándo estaba protegida): solo para no contarla dos veces */
+export const huellaApertura = (liga, pid, base) => huella24(`fm-cla|${liga}|${pid}|${base}`);
+/** manda los libres del mercado con sus pujas y las cláusulas que se abrieron, sin nombres (si el usuario lo deja): true si
+    entra, { tope } si el servidor dice que por hoy ya está (no se insiste hasta mañana) y false si falla */
+export async function mandarLigas(cuerpo) {
+  if (!mejorarIA() || !cuerpo || !cuerpo.l) return false;
+  try { await pedirWorker('POST', '/ligas', cuerpo, { tiempo: 15000 }); return true; } catch (e) { return e && e.estado === 429 && e.datos && e.datos.tope ? { tope: String(e.datos.tope) } : false; }
+}
+/** lo pagado en las demás ligas de la misma clase (`t`) y la demanda de esos jugadores: { on, p, d } (lanza si no contesta) */
+export const verOtrasLigas = (l, t, ids) => pedirWorker('POST', '/ligas/ver', { l, t, ids }, { tiempo: 15000 });
 /** lo que se paga en todas las ligas por tramo de valor y de subida, con 6 h de caché: { t, cal } */
 export const calPujasGuardada = () => LS.get('pujas-cal', { t: 0, cal: null });
 export async function leerCalPujas() {

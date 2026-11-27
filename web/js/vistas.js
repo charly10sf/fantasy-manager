@@ -1,6 +1,7 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
+import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe, elDia } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
@@ -15,8 +16,9 @@ import { guiaClave } from './clave.js';
 import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
-import { paronLejos } from './operaciones.js';
+import { paronLejos, origenFichaje } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
+import { parte, visibles } from './parte.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -460,7 +462,7 @@ export function hechoEnLiga(S, P, o) {
       const a = mio(['compra', 'clausula']);
       if (a) return { estado: 'hecho', texto: porImp(a, a.clase === 'clausula' ? 'Clausulado' : 'Fichado') };
       if (o.accion !== 'clausular') {
-        const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja);
+        const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja) || (M.entrenadoresMercado || []).find((x) => x.pid === o.pid && x.miPuja);
         if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}` };
       }
       return null;
@@ -475,7 +477,7 @@ export function hechoEnLiga(S, P, o) {
   }
 }
 
-const OBJ = { titular: ['bien', 'Para tu once'], revender: ['oro', 'Para revender'], caja: ['', 'Para hacer caja'] };
+const OBJ = { titular: ['bien', 'Para tu once'], revender: ['oro', 'Para revender'], caja: ['', 'Para hacer caja'], entrenador: ['bien', 'Entrenador'] };
 function objetivoPill(o) {
   const k = String(o.objetivo || '').toLowerCase().replace(/^revend.*/, 'revender');
   const x = OBJ[k];
@@ -519,6 +521,10 @@ function clavesDe(o) {
   const d = o.datos || {};
   return [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean);
 }
+/** (26 nov, IsmaelMartín) de dónde sale un fichaje (origenFichaje), al lado del nombre: si no cabe, baja de línea
+ *  entera (nunca se corta) */
+const ORI_CLS = { mercado: 'libre', venta: 'vende', trato: 'vende', clausula: 'abierta' };
+const oriHTML = (ori) => (ori ? `<span class="pill pp-ori ${ORI_CLS[ori.tipo] || ''}">${esc(ori.txt)}</span>` : '');
 function pasoOp(S, P, o) {
   const j = o.j;
   const ok = hecho(S, P, o);
@@ -533,6 +539,8 @@ function pasoOp(S, P, o) {
   // la cara y el nombre abren su ficha (30 oct, Carlos: sin tener que ir a buscarlo al mercado); el resto de la
   // tarjeta la sigue abriendo y cerrando
   // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
+  // (26 nov, IsmaelMartín) de dónde sale el fichaje: «Mercado», «En venta · equipo» o «Cláusula · equipo»
+  const ori = o.descartada ? null : origenFichaje(S.M, o);
   const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
   // (24 nov) si la app lo ha sacado al repasar el plan con los datos de ahora, el paso dice qué ha cambiado y desde cuándo
   const cambiaTxt = pasoCambiaTxt(P, o);
@@ -568,7 +576,7 @@ function pasoOp(S, P, o) {
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
       ${cara}
       <span class="pp-c">
-        <span class="pp-l1">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
+        <span class="pp-l1${ori ? ' con-ori' : ''}">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b>${oriHTML(ori)}</span>
         <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(o.descartada ? String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, '') : porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
@@ -623,9 +631,11 @@ function urgenteFila(S, a, nota) {
   const j = a.pid ? S.M.J(a.pid) : null;
   const largo = a.cuando && a.cuando.length > 14;
   const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(a.icono || 'alerta')}</span>`;
+  // (26 nov) un fichaje urgente dice también de dónde sale
+  const ori = ['clausular', 'pujar'].includes(a.tipo) ? origenFichaje(S.M, a) : null;
   return `<details class="paso2 paso3 urg t-${esc(a.tipo)}"><summary>
       <span class="pp-num" aria-hidden="true">${icono('alerta')}</span>${cara}
-      <span class="pp-c"><span class="pp-l1"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b></span>
+      <span class="pp-c"><span class="pp-l1${ori ? ' con-ori' : ''}"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b>${oriHTML(ori)}</span>
       <span class="pp-l2s">${a.cuando && !largo ? `<span class="pp-cu">${esc(a.cuando)}</span><i>·</i>` : ''}<span class="pp-porque">${esc(a.texto)}</span></span></span><span></span>
     </summary><div class="pp-d">${largo ? `<p class="pp-sub">${esc(a.cuando)}</p>` : ''}<p class="pp-mot pp-mot1">${esc(a.texto)}</p>${nota ? `<div class="aviso-op">${icono('info')}${esc(nota)}</div>` : ''}
       <div class="op-pie">${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : a.hash ? `<button data-ir="${esc(a.hash)}">${icono('flecha')}Ver</button>` : ''}${conSustituto(S, a) ? `<button data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}<button data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}">${icono('cerrar')}Quitar hasta mañana</button></div></div></details>`;
@@ -891,13 +901,22 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   const cambios = mio && rec ? cambiosOnce(M, lineas, form, rec) : null;
   const saleIds = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
+  // (26 nov, parte B) en una liga premium, el capitán y el banquillo que propone la app para el once que recomienda (el
+  // suyo, el de la IA o el tuyo con sus cambios): una sola cuenta, la del motor. Con la jornada en juego ya no se cambian
+  const pm = V || M.enJuego ? null : premiumOnce(M, rec ? rec.lineas : lineas, mio ? (LS.get(K('mi-once'), null) || {}).pr : null);
+  const capId = mio ? (pm && pm.capTuyo ? String(pm.capTuyo.id) : null) : pm && pm.cap ? String(pm.cap.j.id) : null;
   const filas = [3, 2, 1, 0].map((i) => {
     const n = i === 0 ? 1 : f[i - 1] || 0;
+    // (una línea vacía, como la delantera de un 4-6-0, no se pinta)
+    if (!n && !(lineas[i] || []).length) return '';
     const js = (lineas[i] || []).slice(0, n);
     while (js.length < n) js.push(null);
-    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
+    return `<div class="linea-c${n >= 6 ? ' seis' : n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V, cap: !!(j && capId === String(j.id)) }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
   });
-  const ent = M.once && M.once.entrenador;
+  // (26 nov) el entrenador del campo (solo sale en una liga premium que los tiene): si el campo es el que tienes puesto en
+  // LaLiga o el de la jornada en juego, el que TÚ alineaste (o ninguno); el que elige la app, solo en el once de la app
+  const entDe = (ids) => { if (!(M.premium && M.premium.entrenador)) return null; const mias = new Set(M.mias.map((x) => String(x.pid))); return (ids || []).map((pid) => M.J(pid)).find((j) => j && j.pos === 5 && mias.has(String(j.id))) || null; };
+  const ent = real ? entDe(V && V.once) : mio ? entDe((LS.get(K('mi-once'), null) || {}).ids) : deIA ? null : M.once && M.once.entrenador;
   h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true, directo: !!V })}</div>` : ''}</div>`;
   // (19 nov, Carlos: «no veo el sentido a cómo pone banquillo y lo del once de la app») fuera del directo, debajo del campo
@@ -905,10 +924,15 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // no hay nada flojo). Sin banquillo ni tira de «fuera» (Carlos, 08:20: «¿de qué sirve?»); siguen en la lista de la plantilla
   const hayCambios = !!(cambios && cambios.pares.length);
   if (hayCambios) h += cambiosOnceHTML(M, cambios);
+  if (pm) h += premiumOnceHTML(pm);
   if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios, S.plan), sinCambios: !hayCambios, conLinea: mio });
   h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
+  // (26 nov, parte B) la formación que tienes puesta en LaLiga ya no vale en tu liga (una de las de premium con esa función
+  // apagada por el administrador): con ella no se puntúa (ayuda de LaLiga, «Ligas premium»)
+  const fPuesta = real ? V.forma : mio ? (LS.get(K('mi-once'), null) || {}).forma : null;
+  if (Array.isArray(fPuesta) && M.formacionApagada(fPuesta)) notas.push(`<b class="rojo">Tu ${esc(fPuesta.join('-'))} no vale ahora en tu liga y con él no puntúas${real ? '' : ': pon otra formación en LaLiga Fantasy'}.</b>`);
   if ((real || mio) && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
@@ -924,6 +948,39 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;
 }
+
+/** (26 nov, parte B) el capitán y el banquillo de una liga premium para ese once: lo que propone el motor (`M.capitanDe`,
+    `M.banquilloDe`) y, si la app ha reconocido lo que tienes puesto en LaLiga (`pr`, de `alineacionDe`), si ya coincide */
+export function premiumOnce(M, lineas, pr = null) {
+  if (!M.premium || !(M.premium.capitan || M.premium.banquillo || M.premium.entrenador) || !Array.isArray(lineas)) return null;
+  // la propuesta del motor (sin los que la app te manda vender), la misma de la ficha y la IA; del banquillo no sale
+  // quien sigue en el campo que se ve
+  const pp = M.premiumPropuesta ? M.premiumPropuesta() : null;
+  const enEste = new Set(lineas.flat().filter(Boolean).map((j) => String(j.id)));
+  const cap = pp ? pp.capitan : null, ban = pp ? pp.banquillo.filter((b) => !enEste.has(String(b.j.id))) : [];
+  // el entrenador: con dos, el que alinea `mejorOnce`; sin ninguno, el que conviene fichar
+  const mios = M.premium.entrenador ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league').map((x) => x.j) : [];
+  const elegido = mios.length >= 2 && M.once && M.once.entrenador ? M.once.entrenador : null;
+  const otro = elegido ? mios.find((j) => j.id !== elegido.id) || null : null;
+  const ent = elegido ? { j: elegido, otro: otro && M.mejorPartidoEnt(elegido, otro) ? otro : null } : null;
+  const fichar = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  if (!cap && !ban.length && !ent && !fichar) return null;
+  const tuyo = (id, pos) => { const j = id != null && M.mias.some((x) => String(x.pid) === String(id)) ? M.J(id) : null; return j && (pos == null ? j.pos < 5 : j.pos === pos) ? j : null; };
+  return { cap, ban, ent, fichar, capTuyo: pr && pr.cap ? tuyo(pr.cap) : null, banTuyo: (p) => (pr && pr.banq && pr.banq[p] ? tuyo(pr.banq[p], p) : null), entTuyo: pr && pr.ent ? tuyo(pr.ent, 5) : null, partido: (j) => { const p = M.proximoPartido(j.equipoId); return p ? `${p.casa ? 'en casa contra' : 'fuera, contra'} ${p.rival}` : ''; } };
+}
+function premiumOnceHTML(pm) {
+  const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  const fila = (j, sub, tuyo) => `<div class="co-f pm-f"><button class="co-j" data-j="${esc(j.id)}">${ava(j, 'm')}<span><b>${esc(j.nombre)}</b><i>${sub}</i></span></button>${tuyo ? (String(tuyo.id) === String(j.id) ? `<span class="pm-ya">${icono('ok')} puesto</span>` : `<span class="pm-ya no">ahora, ${esc(tuyo.nombre)}</span>`) : ''}</div>`;
+  let h = '';
+  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados`, pm.capTuyo);
+  for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
+  if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el que más lleva por jornada')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
+  if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · puja ${eur(pm.fichar.puja)} · ${d1(pm.fichar.media)} pts por jornada`, null);
+  const partes = [pm.cap && 'capitán', pm.ban.length && 'banquillo', (pm.ent || pm.fichar) && 'entrenador'].filter(Boolean);
+  const titulo = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}` : partes[0] || '';
+  return `<div class="cambio-once pm-once"><div class="co-t">${titulo.charAt(0).toUpperCase()}${titulo.slice(1)}</div>${h}</div>`;
+}
+const POS_CORTA = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
 /** (19 nov) lo flojo de tu once: los que tienen menos de la mitad de ser titular (o están de baja) y no tienes a nadie
     mejor fuera (como mucho 3); para los 2 primeros, lo mejor de su puesto en el mercado que te llega y juega */
@@ -1235,13 +1292,13 @@ function eqPlantillaHTML(S, op) {
     ],
     maxPills: 2, conMini: true, op: op(x.pid),
   });
-  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
-    <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
+  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.premium && M.premium.entrenador && M.mias.some((x) => x.j.pos === 5) ? `${M.mias.filter((x) => x.j.pos !== 5).length} jugadores y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : `${M.mias.length} jugadores`}</span></div>
+    <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div><div class="eq-filas">`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
       if (!xs.length) continue;
-      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 && !(M.premium && M.premium.entrenador) ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
   } else if (orden === 'titular') {
@@ -1258,7 +1315,8 @@ function eqPlantillaHTML(S, op) {
     const val = { valor: (x) => x.j.valor, puntos: (x) => num(x.j.puntos) }[orden];
     l += [...M.mias].sort((a, b) => val(b) - val(a)).map(fila).join('');
   }
-  return l;
+  // (26 nov, Carlos: «en el PC hay mucho espacio a la derecha») en una columna ancha, las filas van a dos columnas (CSS: .eq-pl)
+  return `<div class="eq-pl">${l}</div></div>`;
 }
 
 /** Cláusulas: el resumen en casillas, cómo funcionan (plegado) y cada uno con una barra de cuánto está su cláusula por
@@ -1321,7 +1379,8 @@ export function equipo(S) {
   if (seg === 'plantilla') {
     const once = `<div id="eq-once" data-ancla>${onceHTML(S, null, { conBanquillo: true, directo: true })}</div>`;
     // en el ordenador, el estado y el once a la izquierda y la plantilla al lado
-    h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op), 'lado-izq') : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
+    // (26 nov, Carlos: «el campo más ancho, como en la pestaña del plan») como en Hoy: lo del once a lo ancho y la plantilla en la columna estrecha de la derecha
+    h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op)) : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
   } else if (seg === 'jornadas') {
     h += jornadasHTML(S);
   } else if (seg === 'venta') {
@@ -1337,16 +1396,77 @@ export function equipo(S) {
 /* ================= RIVALES ================= */
 /** una cláusula de un rival que te llega: con tu dinero, abierta o que se abre en menos de 48 h */
 const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
+/** el parte de los rivales con las llaves de ahora: { jornada, toca, desde, abierto, rivales: los que tienen algo que se pueda
+    enseñar, ya ordenados }. Lo ÚNICO que se pinta sale de `visibles`. Si algo falla dentro, Rivales no se cae: sale vacío */
+export function parteVisto(S) {
+  try {
+    const P = parte(S.M, S.D);
+    const abierto = !bloqueada('parteRivales');
+    return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }) };
+  } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
+}
+const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', 'oro'], blindajes: ['escudo', 'azul'] };
+const PARTE_POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+/** el resumen de arriba: cuántos rivales hay de cada cosa, contando SOLO lo que se ve */
+const PARTE_RES = [['rojo', 'en negativo', 'en negativo', ''], ['falta', 'corto de un puesto', 'cortos de un puesto', 'oro'], ['blindajes', 'sin blindajes', 'sin blindajes', 'azul']];
+/** la gráfica de «le falta» (Carlos, 26 nov, 18:33: fuera los cuadrados por puesto; «algo que denote calidad»): SU CAMPO en
+    pequeño, de portería a portería. En cada línea, un punto por cada uno que tiene y puede jugar (hasta lo que cabe en un
+    once: 1, 5, 5 y 3) y, donde le falta, un aro que late. `ps`: [{ p, n, falta }] de parte.js */
+const PARTE_CABE = { 1: 1, 2: 5, 3: 5, 4: 3 }, PARTE_X = { 1: 30, 2: 106, 3: 190, 4: 274 };
+function parteCampo(ps) {
+  const fig = ps.map((x) => {
+    const hay = Math.min(num(x.n), PARTE_CABE[x.p]), aros = Math.min(num(x.falta), PARTE_CABE[x.p]), n = Math.min(hay + aros, 5);
+    const paso = n > 4 ? 14.5 : 17, cx = PARTE_X[x.p], antes = Math.floor((n - aros) / 2);
+    let g = '';
+    for (let k = 0; k < n; k++) {
+      const cy = Math.round((45 + (k - (n - 1) / 2) * paso) * 10) / 10, aro = k >= antes && k < antes + aros;
+      g += aro ? `<circle class="pc-a" cx="${cx}" cy="${cy}" r="6.2"/>` : `<circle class="pc-d" cx="${cx}" cy="${cy}" r="4.6"/>`;
+    }
+    return `${g}<text class="pc-t${x.falta ? ' mal' : ''}" x="${cx}" y="103" text-anchor="middle">${PARTE_POS[x.p]}</text>`;
+  }).join('');
+  const txt = ps.map((x) => `${PARTE_POS[x.p]} ${x.n}${x.falta ? ` (falta${x.falta > 1 ? 'n' : ''} ${x.falta})` : ''}`).join(', ');
+  return `<svg class="parte-campo" viewBox="0 0 304 108" role="img" aria-label="${esc(txt)}"><rect class="pc-c" x="1" y="1" width="302" height="88" rx="10"/><path class="pc-l" d="M152 1v88M1 23h30v44H1M303 23h-30v44h30"/><circle class="pc-l" cx="152" cy="45" r="15"/>${fig}</svg>`;
+}
+/** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que te cambia los planes, con su acción.
+    CORTO (Carlos, 26 nov, 18:10: «menos texto y más sintetizado y entendible»): arriba, cuándo empieza la jornada y cuántos
+    rivales hay de cada cosa; de cada línea, el hecho en negrita con su cifra, UNA frase con lo que puedes hacer y, en «le
+    falta», su campo en pequeño (`parteCampo`); los blindajes gastados, dos escudos apagados. Sale desde 4 días antes de la jornada (antes dice cuándo, sin candado: no hay nada
+    que abrir). QUIÉN está en negativo sale con el parte abierto (Carlos, 26 nov, 18:34: «solo eso, no por cuánto»); la cifra,
+    solo con el dinero de ese rival abierto, y entonces el candado del final lo dice */
+function parteHTML(S, PV) {
+  const { M } = S;
+  if (!PV.jornada) return nada('El parte sale cuando hay una jornada por delante.');
+  if (!PV.toca) return nada(`El parte de la jornada ${PV.jornada} sale ${PV.desde && PV.desde > Date.now() ? `${elDia(PV.desde)}, 4 días antes de que empiece` : 'cuando acabe la que se está jugando'}.`);
+  let h = `<p class="t2 peq">Jornada ${PV.jornada}${PV.ini ? ` · empieza ${cuando(PV.ini)}` : ''}</p>`;
+  if (!PV.abierto) return h + candado('parteRivales');
+  if (PV.rivales.length) {
+    const res = PARTE_RES.map(([t, uno, varios, col]) => { const n = PV.rivales.filter((x) => x.lineas.some((l) => l.tipo === t)).length; return n ? `<span class="pill parte-c ${col}"><b>${n}</b> ${n === 1 ? uno : varios}</span>` : ''; }).join('');
+    h += `<div class="parte-res">${res}</div>`;
+    h += PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
+    ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0];
+      const cuerpo = `${icono(ic)}<div><span class="parte-t"><b>${esc(l.txt)}</b>${l.tipo === 'blindajes' ? `<span class="parte-esc" title="${esc(l.dato || '')}">${icono('escudo')}${icono('escudo')}</span>` : l.dato ? `<span class="parte-d">${esc(l.dato)}</span>` : ''}</span>${l.puestos ? parteCampo(l.puestos) : ''}<span class="parte-a">${esc(l.accion)}</span>${l.nota ? `<span class="parte-n">${esc(l.nota)}</span>` : ''}</div>`;
+      return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('');
+  } else h += nada('Hoy no hay nada de tus rivales que te cambie los planes.');
+  // quién está en negativo ya se ve; por cuánto, solo con su dinero abierto: el candado sale si a alguno de los que salen le falta la cifra
+  if (PV.rivales.some((x) => x.lineas.some((l) => l.sinCifra))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con su dinero abierto, sale también por cuánto.</span></div>`;
+  return h;
+}
+
 export function rivales(S) {
   const { M } = S;
   const seg = S.seg.rivales || 'clasif';
-  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
+  // (0.8.5; Carlos, 26 nov, 23:13: «que salga a la derecha de Rivales, en dorado… el parte como función top», y no entre las
+  // pestañas) el parte va en un botón dorado al lado del título; su número, solo con la llave abierta
+  const PV = parteVisto(S);
+  const nParte = PV.abierto ? PV.rivales.length : 0;
+  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo riv-tit">Rivales<button type="button" class="parte-top${seg === 'parte' ? ' activo' : ''}" data-seg="rivales:parte" aria-pressed="${seg === 'parte'}">${icono(PV.abierto ? 'corona' : 'candado')}<span>Parte</span><small>Top</small>${nParte ? `<span class="tab-n oro">${nParte}</span>` : ''}</button></h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
   // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
   h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
+  else if (seg === 'parte') h += parteHTML(S, PV);
   else if (seg !== 'clausulas') {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
@@ -1355,14 +1475,16 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>${caraManager(e)}
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} en&nbsp;7&nbsp;días</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${bloqueada('dineroRivales', r.e.teamId) ? (r.dinero && r.dinero.exacto ? '' : pillRival(r.e.teamId)) : r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">${ptsJornadaTxt(M, e) || 'pts'}</div>`}</div></button>`;
     }).join('');
     // el dinero de cada uno cerrado: un solo candado arriba (antes, uno en cada fila)
     const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
+    // (0.8.4o) con el dinero de alguno cerrado, en su fila «Apuntar» (o «Te dijo 48 M»): un aviso arriba hasta que se quita
+    const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
-    h += ancho() ? cols(candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : candDinero + tabla;
+    h += ancho() ? cols(avisoD + candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
   } else {
     const f = S.filtro.cl || 'llegan';
     h += `<div class="filtros">${[['llegan', 'Te llegan'], ['pronto', 'Se abren pronto'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
@@ -1508,6 +1630,17 @@ export function mercado(S) {
     // (con lo de los rivales cerrado, su candado va con el del radar en una tarjeta, debajo de la lista)
     if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div>`;
     else if (man.length) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;
+    // (26 nov, parte B) en una liga premium con entrenador, los del mercado, aparte de los jugadores y sin veredictos
+    const ents = M.entrenadoresMercado || [];
+    if (ents.length) {
+      const d1e = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+      const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+      ml += `<div class="grupo"><span>Entrenadores</span><span>${ents.length}</span></div>${ents.map((m) => filaJugador(m, {
+        sub: `${esc(m.j.equipo)}${M.proximoPartido(m.j.equipoId) ? ` · ${rivalSub(M, m.j)}` : ''}`,
+        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? '<span class="pill bien">No tienes entrenador</span>' : '', estadoPill(m.j)],
+        derecha: `<div class="v">${eur(m.precio)}</div><div class="d apag">${d1e(m.media)} pts por jornada</div>`,
+      })).join('')}`;
+    }
     h += lista2(ml);
     // el radar de subidas, debajo de la lista (antes iba arriba y la tapaba); cerrado, junto a los otros candados
     h += bloqueada('inercia') ? '' : radarHTML(S);
@@ -1678,7 +1811,7 @@ export function ia(S) {
   const hora = (ts) => (ts ? cuando(ts) : '');
   h += msgs.map((m, i) => (m.r === 'yo'
     ? `<div class="msg yo${m.fotos && m.fotos.length ? ' con-fotos' : ''}">${fotosMsg(m.fotos, i)}${m.t ? `<div>${esc(m.t)}</div>` : ''}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
-    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${m.dr ? tarjetaChatHTML(m.dr, i, S.D) : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   // para seguir la conversación sin escribir
   if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat

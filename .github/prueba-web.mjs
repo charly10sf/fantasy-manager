@@ -503,70 +503,161 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
-// 13: en la app, con versión nueva publicada no se juega (0.7.6): la ventana que no se cierra y lo que hace con cada
-// respuesta de AlDia, con un puente de Android de mentira (paquete.json y app.json por su http)
+// 13: la versión nueva se pone sola (0.8.4r, 26 nov; antes, desde la 0.7.6, la ventana que no se cierra): en la app (con
+// un puente de Android de mentira: paquete.json y app.json por su http) AlDia la baja y la página se recarga sin ventana;
+// con algo a medias espera; la ventana de siempre solo si AlDia falla o tras 2 intentos que no cambian la versión
 {
   const puente = (cfg) => `(() => {
     const C = ${JSON.stringify(cfg)}; window.__fm = { C, bajadas: [], busquedas: 0 };
-    sessionStorage.setItem('cargas', String((Number(sessionStorage.getItem('cargas')) || 0) + 1));
+    const cargas = (Number(sessionStorage.getItem('cargas')) || 0) + 1;
+    sessionStorage.setItem('cargas', String(cargas));
+    // (soloUna) tras la primera recarga ya está la nueva: el paquete publicado deja de ser más nuevo
+    const paquete = C.soloUna && cargas > 1 ? { ...C.paquete, version: '0.0.1' } : C.paquete;
     const resp = {};
+    window.__soltar = null;
     window.FantasyApp = new Proxy({
       avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '5000', canal: () => C.canal, hayQR: () => false, programarAvisos: () => {},
       nativo: () => 'h1', web: () => JSON.stringify({ propia: 'x', activa: null, error: C.error || null }),
-      http: (id, m, url) => { const b = /paquete\\.json/.test(url) ? C.paquete : /app\\.json/.test(url) ? C.app : null; resp[id] = JSON.stringify(b ? { s: 200, b: JSON.stringify(b) } : { s: 404, b: '' }); setTimeout(() => window.__http(id), 30); },
+      http: (id, m, url) => {
+        const b = /paquete\\.json/.test(url) ? paquete : /app\\.json/.test(url) ? C.app : null;
+        resp[id] = JSON.stringify(b ? { s: 200, b: JSON.stringify(b) } : { s: 404, b: '' });
+        // (retener) el paquete no contesta hasta que la prueba lo suelta: así se pone antes lo que esté a medias
+        if (C.retener && /paquete\\.json/.test(url) && cargas === 1) { window.__soltar = () => window.__http(id); return; }
+        setTimeout(() => window.__http(id), 30);
+      },
       respuesta: (id) => resp[id],
-      buscarWeb: () => { window.__fm.busquedas++; setTimeout(() => window.webBuscada && window.webBuscada(C.buscar), 200); },
+      buscarWeb: () => { window.__fm.busquedas++; setTimeout(() => window.webBuscada && window.webBuscada(C.buscar), 200); return true; },
       actualizar: (u) => window.__fm.bajadas.push(u),
       webViva: () => {},
     }, { get: (o, k) => (k in o ? o[k] : undefined) });
     localStorage.setItem('fm-demo', 'true');
   })();`;
+  // (22 nov) el APK de GitHub cerró el 21 nov y, pasada esa fecha, la pantalla del cierre tapaba lo que miran estas
+  // comprobaciones (la «Web» de main dejó de publicar): aquí el cierre va apagado, que se mira aparte (17)
+  const sinCierre = `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: false } })); localStorage.setItem('fm-tema-aviso', String(Date.now())); localStorage.setItem('fm-beta-aviso', String(Date.now()));`;
+  // (y sin los avisos del tema del evento y de la beta, que son un tutorial: con uno abierto, la versión nueva espera)
+  const cargas = (page) => page.evaluate(() => Number(sessionStorage.getItem('cargas'))).catch(() => 0);
+  const botones = (page) => page.$$eval('#forzar button', (bs) => bs.map((b) => b.textContent.trim() + (b.disabled ? '(off)' : ''))).catch(() => []);
   const casos = [
-    ['misma parte Android, AlDia la baja', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva' }, 'recarga'],
-    ['AlDia ya la descartó', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'igual' }, 'descargar'],
+    // se baja, se recarga y ya es la nueva: ni ventana ni más recargas
+    ['Google Play, se pone sola', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva', soloUna: true }, 'sola'],
+    // la recarga no cambia la versión (AlDia no la pone): un segundo intento y luego la ventana, sin bucle
+    ['Google Play, la recarga no la pone', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva' }, 'dos'],
+    ['Google Play, AlDia ya la descartó', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'igual' }, 'reintentar'],
+    ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
     // (0.7.13j) el APK de GitHub ya no se publica: con la parte Android nueva no ofrece ninguna descarga
     ['APK de GitHub con parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
     ['Google Play con parte Android nueva', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
-    ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
-    ['la publicada no es más nueva', { canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
+    ['la publicada no es más nueva', { canal: 'play', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
   ];
-  // (22 nov) el APK de GitHub cerró el 21 nov y, pasada esa fecha, la pantalla del cierre tapaba la ventana que miran estas
-  // comprobaciones (la «Web» de main dejó de publicar): aquí el cierre va apagado, que se mira aparte (17)
-  const sinCierre = `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: false } }));`;
   for (const [nombre, cfg, espera] of casos) {
     const { ctx, page, errores } = await pagina({ init: puente(cfg) + sinCierre });
     await page.goto(`${BASE}/index.html`);
-    await page.waitForTimeout(2500);
-    const hay = await page.$('#forzar');
     let r = '';
-    if (espera === 'nada') r = hay ? 'sale la ventana y no debía' : '';
-    else if (!hay) r = 'no sale la ventana';
-    else {
-      const botones = async () => page.$$eval('#forzar button', (bs) => bs.map((b) => b.textContent.trim() + (b.disabled ? '(off)' : '')));
-      const b0 = await botones();
-      if (espera === 'apk') {
-        if (b0.join() !== 'Descargar la app') r = `botones ${b0.join()}`;
-        else { await page.click('#forzar [data-accion="bajarApp"]'); const u = await page.evaluate(() => window.__fm.bajadas[0]); if (!/fantasy-manager\.apk$/.test(u || '')) r = `baja ${u}`; }
-      } else {
-        if (b0.join() !== 'Actualizar ahora') r = `botones al salir ${b0.join()}`;
-        else {
-          await page.click('#forzar [data-accion="ponerAppNueva"]');
-          await page.waitForTimeout(900);
-          const cargas = await page.evaluate(() => Number(sessionStorage.getItem('cargas'))).catch(() => 0);
-          if (espera === 'recarga') { if (cargas < 2) r = 'no recarga con la nueva'; }
-          else {
-            const b1 = await botones();
-            if (espera === 'descargar' && b1.join() !== 'Ir a Google Play,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
-            if (espera === 'descargar' && await page.$('#forzar [data-accion="bajarApp"]')) r = 'aún ofrece descargar la app de fuera de Google Play';
-            if (espera === 'reintentar' && b1.join() !== 'Volver a intentarlo') r = `botones tras el error ${b1.join()}`;
-            const txt = await page.$eval('#forzar p', (p) => p.textContent);
-            if (espera === 'reintentar' && !/sin red/.test(txt)) r = `no dice el motivo: ${txt}`;
-          }
-        }
+    if (espera === 'nada') {
+      await page.waitForTimeout(2500);
+      if (await page.$('#forzar')) r = 'sale la ventana y no debía';
+      else if (await cargas(page) > 1) r = 'se recarga y no debía';
+    } else if (espera === 'sola') {
+      // sin ventana en ningún momento: se mira cada poco mientras se pone
+      let vista = false;
+      for (let i = 0; i < 20; i++) { if (await page.$('#forzar').catch(() => null)) vista = true; await page.waitForTimeout(250); }
+      await page.waitForFunction(() => window.S && window.S.D, null, { timeout: 25000 }).catch(() => {});
+      await page.waitForTimeout(1500);
+      const n = await cargas(page);
+      if (vista || await page.$('#forzar')) r = 'sale la ventana';
+      else if (n !== 2) r = `${n} cargas (tenía que recargar una vez)`;
+    } else if (espera === 'dos') {
+      await page.waitForFunction(() => Number(sessionStorage.getItem('cargas')) >= 3 && !!document.getElementById('forzar'), null, { timeout: 20000 }).catch(() => {});
+      await page.waitForTimeout(1500);
+      const n = await cargas(page), b = await botones(page);
+      if (n !== 3) r = `${n} cargas (tenían que ser 2 recargas y parar)`;
+      else if (b.join() !== 'Actualizar ahora') r = `tras 2 intentos, la ventana no sale o trae ${b.join() || 'nada'}`;
+    } else {
+      await page.waitForSelector('#forzar', { timeout: 5000 }).catch(() => {});
+      const b = await botones(page);
+      if (!b.length) r = 'no sale la ventana de reserva';
+      else if (b.join() !== 'Volver a intentarlo') r = `botones tras el fallo ${b.join()}`;
+      else {
+        const txt = await page.$eval('#forzar p', (p) => p.textContent);
+        if (/sin red/.test(cfg.buscar) && !/sin red/.test(txt)) r = `no dice el motivo: ${txt}`;
+        if (await cargas(page) > 1) r = 'se ha recargado sin tener la nueva';
       }
     }
-    if (r) mal(`app nueva, ${nombre}: ${r}`); else bien(`app nueva, ${nombre}: ${espera === 'nada' ? 'no obliga' : espera}`);
+    if (r) mal(`app nueva, ${nombre}: ${r}`); else bien(`app nueva, ${nombre}: ${{ nada: 'no hace nada', sola: 'se pone sola, sin ventana', dos: '2 intentos y la ventana, sin bucle', reintentar: 'la ventana con «Volver a intentarlo»' }[espera]}`);
     if (errores.length) mal(`app nueva, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+    await ctx.close();
+  }
+  // con una pregunta a la IA en marcha espera (ni ventana ni recarga, tampoco al irse a segundo plano); al acabar, se pone sola
+  {
+    const { ctx, page, errores } = await pagina({ init: puente({ canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva', soloUna: true, retener: true }) + sinCierre });
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.D && window.S.M && !window.S.cargando && typeof window.__soltar === 'function', null, { timeout: 25000 }).catch(() => {});
+    await page.evaluate(() => { window.S.charlando = true; window.__soltar(); });
+    await page.waitForTimeout(1500);
+    // a segundo plano con la pregunta en marcha
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await page.waitForTimeout(800);
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => false }); document.dispatchEvent(new Event('visibilitychange')); });
+    const r1 = await page.evaluate(() => ({ cargas: Number(sessionStorage.getItem('cargas')), forzar: !!document.getElementById('forzar'), busca: window.__fm.busquedas, espera: window.S.sola && window.S.sola.espera }));
+    let r = '';
+    if (r1.cargas !== 1 || r1.forzar || r1.busca) r = `con la pregunta en marcha: ${r1.cargas} cargas, ventana ${r1.forzar}, ${r1.busca} descargas`;
+    else if (r1.espera !== 'pregunta') r = `no dice que espera a la pregunta (${r1.espera})`;
+    else {
+      await page.evaluate(() => { window.S.charlando = false; });
+      await page.waitForFunction(() => Number(sessionStorage.getItem('cargas')) >= 2, null, { timeout: 15000 }).catch(() => {});
+      const n = await cargas(page);
+      if (n !== 2) r = `al acabar la pregunta no se pone (${n} cargas, espera «${await page.evaluate(() => window.S.sola && window.S.sola.espera).catch(() => '?')}»)`;
+      else if (await page.$('#forzar')) r = 'al acabar sale la ventana';
+    }
+    if (r) mal(`app nueva, con una pregunta en marcha: ${r}`); else bien('app nueva, con una pregunta en marcha: espera (también en segundo plano) y al acabar se pone sola');
+    if (errores.length) mal(`app nueva, con una pregunta en marcha: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+    await ctx.close();
+  }
+  // con una ficha abierta espera y, al irse a segundo plano, se pone; al volver, la misma pestaña y la misma ficha
+  {
+    const { ctx, page, errores } = await pagina({ init: puente({ canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva', soloUna: true, retener: true }) + sinCierre });
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.D && window.S.M && !window.S.cargando && typeof window.__soltar === 'function', null, { timeout: 25000 }).catch(() => {});
+    await page.evaluate(() => document.querySelector('[data-ir="mercado"]')?.click());
+    await page.waitForTimeout(500);
+    await page.evaluate(() => document.querySelector('#vista [data-j]')?.click());
+    await page.waitForSelector('.hoja', { timeout: 4000 }).catch(() => {});
+    const antes = await page.evaluate(() => ({ vista: window.S.vista, hoja: window.S.tipoHoja && window.S.tipoHoja.join(':') }));
+    await page.evaluate(() => window.__soltar());
+    await page.waitForTimeout(1500);
+    let r = '';
+    const n1 = await cargas(page);
+    if (!antes.hoja) r = 'no se ha abierto la ficha';
+    else if (n1 !== 1) r = 'recarga con la ficha abierta';
+    else {
+      await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+      await page.waitForFunction(() => Number(sessionStorage.getItem('cargas')) >= 2, null, { timeout: 8000 }).catch(() => {});
+      await page.waitForFunction(() => window.S && window.S.D && window.S.M && window.S.tipoHoja, null, { timeout: 25000 }).catch(() => {});
+      const d = await page.evaluate(() => ({ cargas: Number(sessionStorage.getItem('cargas')), vista: window.S && window.S.vista, hoja: window.S && window.S.tipoHoja && window.S.tipoHoja.join(':'), forzar: !!document.getElementById('forzar') }));
+      if (d.cargas !== 2) r = `al irse a segundo plano no se pone (${d.cargas} cargas)`;
+      else if (d.forzar) r = 'sale la ventana';
+      else if (d.vista !== antes.vista || d.hoja !== antes.hoja) r = `vuelve a ${d.vista} / ${d.hoja} y estaba en ${antes.vista} / ${antes.hoja}`;
+    }
+    if (r) mal(`app nueva, con una ficha abierta: ${r}`); else bien('app nueva, con una ficha abierta: espera, se pone al irse a segundo plano y vuelve a la misma pestaña y ficha');
+    if (errores.length) mal(`app nueva, con una ficha abierta: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+    await ctx.close();
+  }
+  // en la web (iPhone, ordenador): se pone sola con recargarWeb; si la recarga no la trae (la caché del iPhone), un segundo
+  // intento y luego la ventana con lo de cerrar la web del todo
+  {
+    const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-tema-aviso', String(Date.now())); localStorage.setItem('fm-beta-aviso', String(Date.now())); sessionStorage.setItem('cargas', String((Number(sessionStorage.getItem('cargas')) || 0) + 1));` });
+    await page.route('**/paquete.json*', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ version: '9.9.9', archivos: {} }) }));
+    await page.goto(`${BASE}/index.html#mercado`);
+    await page.waitForFunction(() => Number(sessionStorage.getItem('cargas')) >= 3 && !!document.getElementById('forzar'), null, { timeout: 25000 }).catch(() => {});
+    await page.waitForTimeout(1500);
+    const d = await page.evaluate(() => ({ cargas: Number(sessionStorage.getItem('cargas')), t: (document.getElementById('forzar') || {}).textContent || '', hash: location.hash, sola: JSON.stringify(window.S && window.S.sola), reg: localStorage.getItem('fm-nueva-sola') }));
+    let r = '';
+    if (d.cargas !== 3) r = `${d.cargas} cargas (tenían que ser 2 recargas y parar; ${d.sola}, ${d.reg})`;
+    else if (!/cierra la web del todo/.test(d.t)) r = `tras 2 intentos, la ventana no sale o no dice que la cierre: ${d.t.slice(0, 80)}`;
+    else if (d.hash !== '#mercado') r = `vuelve a ${d.hash}`;
+    if (r) mal(`web nueva: ${r}`); else bien('web nueva: se pone sola, 2 intentos como mucho y la ventana de reserva, en la misma pestaña');
+    if (errores.length) mal(`web nueva: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
     await ctx.close();
   }
   // app.json con «nativo» que no casa a propósito: esta web mira «huella» y no saca la banda
@@ -1014,6 +1105,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const t = Date.now() - 60 * 864e5, d = {};
     for (const tid of ids.slice(0, 3)) { const c = M.dineroCuentaBruta(tid); d[tid] = { v: Math.round(c.v + 3e6), r: 0, min: Math.round(c.v + 3e6), max: Math.round(c.v + 3e6), t, est: Math.round(c.v) }; }
     LS.set(K('dinero-dicho'), d);
+    // (0.8.4o) lo apuntado solo entra en la cuenta con el dinero de ese rival abierto: se abren los cuatro (como con sus anuncios)
+    LS.set('top-rivales', { j: null, usos: 0, abiertos: Object.fromEntries(ids.map((x) => [String(x), Date.now() + 5 * 60e3])), uno: null });
     return { ids, bruta: ids.map((tid) => M.dineroCuentaBruta(tid).v) };
   });
   await page.reload();
@@ -1024,6 +1117,14 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   const dif = (a, b) => Math.abs(a - b) < 2e5;
   if (antes.ids.length < 4 || !r.propio || !r.otro || r.corr.n !== 3 || !r.propio.correccion || !r.propio.correccion.propio || !dif(r.propio.v - r.brutaP.v, 3e6) || !r.otro.correccion || !dif(r.otro.v - r.brutaOtro.v, 1.5e6)) mal(`dinero corregido con lo apuntado: ${JSON.stringify({ antes, r })}`);
   else bien(`dinero corregido con lo apuntado: el que lo dijo hace 60 días, +3 M (el suyo); otro rival, +1,5 M (mediana de 3, a medias)`);
+  // (0.8.4o) y con su dinero cerrado, lo apuntado no corrige nada (ni lo suyo ni lo de los demás): sería enseñar lo cerrado
+  await page.evaluate(async () => { const { LS } = await import('/js/util.js'); LS.del('top-rivales'); });
+  await page.reload();
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const rc = await page.evaluate((ids) => { const M = window.S.M; return { corr: M.correccionDinero, propio: M.dineroCuenta(ids[0]), otro: M.dineroCuenta(ids[3]) }; }, antes.ids);
+  if (rc.corr.n !== 0 || (rc.propio && rc.propio.correccion) || (rc.otro && rc.otro.correccion)) mal(`dinero cerrado: lo apuntado no corrige nada: ${JSON.stringify(rc.corr)}`);
+  else bien('dinero cerrado: lo apuntado no corrige la cuenta de nadie mientras está cerrado');
   if (errores.length) mal(`dinero corregido: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
@@ -1264,14 +1365,16 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
         const entera = !!document.querySelector('.nv-cap');
         const boton = document.querySelector(corta ? '[data-nvt="ir"]' : '[data-nv-ir]');
         if (boton) { boton.click(); await new Promise((ok) => setTimeout(ok, 1200)); }
-        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, sigue: !!document.querySelector('.nvt') };
+        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, vista: `${window.S.vista}:${(window.S.seg || {})[window.S.vista] || ''}`, sigue: !!document.querySelector('.nvt') };
       }, !!nw.aviso);
       const accion = nw.aviso ? nw.aviso.ir : (nw.cosas.find((c) => c.ir && c.ir.accion) || {}).ir;
       if (nw.aviso && (r.entera || r.sigue)) r.abierta = false;
       const sale = nw.todos === true || nw.todos === (app ? 'app' : 'web');
-      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && r.hoja));
+      // (0.8.4s) el botón puede abrir una hoja (accion) o llevar a una pestaña (v, seg: «Ver el parte» → Rivales → Parte)
+      const llega = !accion ? true : accion.accion ? !!r.hoja : accion.seg ? r.vista === accion.seg : r.vista.startsWith(`${accion.v}:`);
+      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && llega));
       if (!ok) mal(`novedades de una versión (${nw.v}), ${app ? 'app' : 'web'}: ${JSON.stringify(r)}`);
-      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja}` : 'no se abre'}`);
+      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja || r.vista}` : 'no se abre'}`);
       if (errores.length) mal(`novedades solo para la web: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
       await ctx.close();
     }
@@ -1436,8 +1539,10 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
           await page.waitForTimeout(600);
           const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
-          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas') mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas: ${orden.join(' · ')}`);
-          else bien('Rivales: Clasificación · Por jornada · Cláusulas');
+          // (0.8.5) el parte de los rivales ya no es una pestaña: es el botón dorado junto al título
+          const parteBtn = await page.evaluate(() => !!document.querySelector('h1 .parte-top[data-seg="rivales:parte"]'));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas' || !parteBtn) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas con el botón del Parte al lado del título: ${orden.join(' · ')}${parteBtn ? '' : ' (sin el botón)'}`);
+          else bien('Rivales: Clasificación · Por jornada · Cláusulas y el botón dorado del Parte junto al título');
           await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
           await page.waitForTimeout(600);
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));

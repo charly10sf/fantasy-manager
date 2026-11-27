@@ -16,7 +16,7 @@
 import { pagina, cerrar } from './banco.mjs';
 
 const N = Number(process.argv[2]) || 12, SEM = Number(process.argv[3]) || 1;
-const ESC = (process.argv[4] || 'martes,m-limpio,veda,sabado,enjuego,paron,m-negativo,holgado,jueves-negativo,mercado-real,m-reventa,m-cierre,m-baja-sin-relevo,m-baja-con-relevo,m-reventa-aguanta').split(',');
+const ESC = (process.argv[4] || 'martes,m-limpio,veda,sabado,enjuego,paron,m-negativo,holgado,jueves-negativo,mercado-real,m-reventa,m-cierre,m-baja-sin-relevo,m-baja-con-relevo,m-reventa-aguanta,m-premium,sabado-premium,m-premium-sin').split(',');
 let mal = 0;
 const ok = (c, t) => { if (!c) mal++; console.log(`${c ? 'BIEN' : 'MAL '} ${t}`); };
 
@@ -297,7 +297,7 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
   await P.cerrar();
 }
 // E. lo que encontró el repaso independiente (24 nov), cada cosa con su escena
-for (const [escena, que] of [['m-25', 'llena'], ['veda', 'retira'], ['martes', 'pastilla']]) {
+for (const [escena, que] of [['m-24', 'llena'], ['veda', 'retira'], ['martes', 'pastilla']]) {
   const P = await pagina(escena);
   const r = await P.page.evaluate(async ({ COMUN, que }) => {
     // eslint-disable-next-line no-eval
@@ -322,7 +322,7 @@ for (const [escena, que] of [['m-25', 'llena'], ['veda', 'retira'], ['martes', '
     const baena = M.misVentas.find((v) => v.j.nombre === 'Álex Baena');
     return { pill: luego ? Co.planPill(luego).replace(/<[^>]+>/g, '') : null, nom: luego && luego.jugador, baena: baena ? baena.porque : null, pujas: M.misPujas, dinero: D.dinero };
   }, { COMUN, que });
-  if (que === 'llena') ok(r.n >= 25 && !r.chollos.length && !r.vale.length, `E. con la plantilla llena (${r.n}), ni Mercado llama «Chollo» a nadie (${JSON.stringify(r.chollos)}) ni a la IA le llega ningún fichaje como «vale» (${JSON.stringify(r.vale)})`);
+  if (que === 'llena') ok(r.n >= 24 && !r.chollos.length && !r.vale.length, `E. con la plantilla llena (${r.n}), ni Mercado llama «Chollo» a nadie (${JSON.stringify(r.chollos)}) ni a la IA le llega ningún fichaje como «vale» (${JSON.stringify(r.vale)})`);
   else if (que === 'retira') ok(r.sin || (r.df === 'no' && !/chollo/i.test(r.tag) && /Retirar puja/.test(r.pill) && !/esperar a/.test(r.pasoChat)), r.sin ? 'E. (veda: el plan no retira ninguna puja en esta escena)' : `E. la puja que el plan retira (${r.nom}): Mercado no lo llama chollo («${r.tag}»), la pastilla dice «${r.pill}» y al chat le llega «${r.pasoChat}»`);
   else {
     ok(!r.pill || !/ hoy$/.test(r.pill), `E. la pastilla de un paso para otro día (${r.nom}) no dice «hoy»: «${r.pill}»`);

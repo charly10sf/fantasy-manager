@@ -31,6 +31,40 @@ export const noMerece = (M, o) => {
   return !!x && !M.mereceClausula(x);
 };
 
+/** (26 nov, idea de IsmaelMartín; Carlos: «al lado de cada jugador, si es del mercado o de un rival, y de cuál») de
+ *  dónde sale un fichaje que recomienda la app: del mercado libre, de lo que tiene en venta un rival o de su cláusula.
+ *  Lo dice la app con sus datos, nunca la IA. El rival va por el nombre de su equipo en la liga (no el apodo).
+ *  Devuelve { tipo: 'mercado' | 'venta' | 'clausula' | 'trato', tid, txt } o null */
+export function origenFichaje(M, o) {
+  if (!M || !o) return null;
+  const acc = String(o.accion || o.tipo || '').toLowerCase();
+  if (!['pujar', 'comprar', 'ofertar', 'clausular'].includes(acc)) return null;
+  const pid = String(o.pid || (o.j && o.j.id) || '');
+  if (!pid) return null;
+  const r = String(o.ref || '').trim().toUpperCase().charAt(0);
+  const yo = String((M.yo && M.yo.teamId) || '');
+  const eq = (tid) => { const e = tid && M.equipo && M.equipo[tid]; return (e && (e.nombre || e.manager)) || ''; };
+  const de = (tipo, tid, pre) => { const n = eq(tid); return n ? { tipo, tid: String(tid), txt: `${pre} · ${n}` } : null; };
+  if (acc === 'clausular' || r === 'C') {
+    const x = (M.clausulas || []).find((c) => String(c.pid) === pid);
+    const tid = (x && x.rival && x.rival.teamId) || (M.dueno && M.dueno[pid] !== yo ? M.dueno[pid] : null);
+    if (tid) return de('clausula', tid, 'Cláusula');
+  } else if (r === 'T') {
+    const tid = M.dueno && M.dueno[pid];
+    if (tid && String(tid) !== yo) return de('trato', tid, 'Trato');
+  } else {
+    const m = (M.mercado || []).find((y) => String(y.pid) === pid && !(y.tipo === 'manager' && String(y.vendedorTeamId || '') === yo));
+    if (m) return m.tipo === 'manager' ? de('venta', m.vendedorTeamId, 'En venta') : { tipo: 'mercado', tid: null, txt: 'Mercado' };
+  }
+  // ya fichado (o fuera del mercado): lo que dice la actividad de la liga, y si no, la referencia del paso
+  const a = (M.actividad || []).filter((y) => y.esYo && String(y.pid) === pid && (y.clase === 'compra' || y.clase === 'clausula')).sort((x, y) => y.t - x.t)[0];
+  if (a) {
+    if (a.otroT && String(a.otroT) !== yo) return de(a.clase === 'clausula' ? 'clausula' : 'venta', a.otroT, a.clase === 'clausula' ? 'Cláusula' : 'En venta');
+    if (a.clase === 'compra' && !a.otroT && !a.otro) return { tipo: 'mercado', tid: null, txt: 'Mercado' };
+  }
+  return r === 'P' ? { tipo: 'mercado', tid: null, txt: 'Mercado' } : null;
+}
+
 export function paronLejos(M, ahora = Date.now()) {
   return !!(M && M.paron && M.proxima && M.paron.ini <= M.proxima.ini && M.paron.fin > ahora && M.proxima.ini - ahora > PARON_VUELTA);
 }
@@ -119,6 +153,13 @@ export function catalogo(D, M, notas = []) {
   for (const m of M.mercado) {
     if (m.tipo === 'liga') add({ ref: `P-${m.pid}`, tipo: 'pujar', pid: m.pid, j: m.j, precio: m.precio, puja: m.puja, pujaLiga: m.pujaLiga, recortada: m.recortada, pujaGana: m.pujaGana, pGana: m.pGana, pujas: m.pujas, miPuja: m.miPuja, cierra: m.cierra, interes: m.interes, sobre: m.sobre, saldo: num(D.dinero) - num(M.misPujas) });
   }
+  // (26 nov) P de entrenador: en una liga premium que los tiene y sin ninguno, el libre que la app ficharía
+  // (`M.ficharEntrenador`: los entrenadores no van en `M.mercado`). Se paga con saldo y no ocupa sitio en la plantilla
+  // (con la puja ya puesta sigue aquí, con `miPuja`: el paso de un plan guardado no sale como «no está en el mercado»)
+  const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  const ep = !fe && M.premium && M.premium.entrenador && !M.mias.some((x) => x.j && x.j.pos === 5 && x.j.estado !== 'out_of_league') ? (M.entrenadoresMercado || []).find((m) => m.miPuja) : null;
+  const eo = fe || ep;
+  if (eo && !lista.some((o) => o.pid === eo.pid)) add({ ref: `P-${eo.pid}`, tipo: 'pujar', entrenador: true, pid: eo.pid, j: eo.j, precio: eo.precio, puja: eo.puja, media: eo.media, miPuja: eo.miPuja || null, cierra: eo.cierra || M.cierreMercado || null, interes: 100, saldo: num(D.dinero) - num(M.misPujas) });
   // M: lo que venden otros managers
   for (const m of M.mercado) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
@@ -182,6 +223,8 @@ export function textoOp(o, M = null) {
     : '';
   switch (o.ref[0]) {
     case 'P': {
+      // (26 nov) un entrenador (liga premium): sin lo de los jugadores (ni lo que se paga por los de su valor, ni revender)
+      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; ${o.miPuja ? `MI PUJA ACTUAL ${eur(o.miPuja)}; ` : ''}la app pujaría ${eur(o.puja)}, lo que vale y NI UN EURO MÁS (los entrenadores casi siempre bajan de valor: no sirven para revender), pagado con saldo`;
       // (lo que se paga en esta liga por los libres va entero una sola vez, en su bloque; aquí, lo de los de su valor,
       // que es con lo que hay que comparar: un +100 % por uno de 600 mil puede ser lo normal; Carlos, 30 oct)
       const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor, o.pid) : null;

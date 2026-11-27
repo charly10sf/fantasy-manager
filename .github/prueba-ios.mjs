@@ -322,15 +322,11 @@ async function probar(motor) {
       ({ ctx, p, reg } = await abrir(nav, motor, { paquete }));
       await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
       await p.waitForFunction(() => window.__pedidos.some((x) => /paquete\.json/.test(x.u)), null, { timeout: 8000 }).catch(() => {});
-      await p.waitForSelector('#forzar', { timeout: sale ? 5000 : 1200 }).catch(() => {});
-      const hay = await p.locator('#forzar').count();
-      mira((hay === 1) === sale, `${T} versión nueva publicada y ${nombre}: ${sale ? 'sale la ventana de actualizar' : 'no sale nada (la app nueva llega por la tienda)'}`);
+      // (0.8.4r) ya no hay ventana: la app le pide sola la web nueva a AlDia y, cuando está, la página se recarga
+      await p.waitForFunction(() => window.__buscadas >= 1, null, { timeout: sale ? 5000 : 1500 }).catch(() => {});
+      const pide = await p.evaluate(() => window.__buscadas);
+      mira((pide === 1) === sale && !(await p.locator('#forzar').count()), `${T} versión nueva publicada y ${nombre}: ${sale ? 'se pide sola, sin ventana' : 'no se pide nada (la app nueva llega por la tienda)'}${pide > 1 ? ` (${pide} veces)` : ''}`);
       if (sale) {
-        const tx = ((await p.textContent('#forzar')) || '').replace(/\s+/g, ' ');
-        mira(/99\.0\.0/.test(tx) && !/Google Play/.test(tx), `${T} la ventana dice la versión y no habla de Google Play`);
-        await p.click('#forzar [data-accion="ponerAppNueva"]');
-        await p.waitForFunction(() => window.__buscadas === 1, null, { timeout: 3000 }).catch(() => {});
-        mira((await p.evaluate(() => window.__buscadas)) === 1, `${T} «Actualizar ahora» le pide la web nueva a la app`);
         // la app contesta que ya la ha bajado: la página se recarga con ella
         const recarga = p.waitForEvent('load', { timeout: 8000 }).then(() => true, () => false);
         await p.evaluate(() => window.webBuscada('nueva'));
