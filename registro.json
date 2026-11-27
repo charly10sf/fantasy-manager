@@ -2349,6 +2349,13 @@
    "jornada": 14,
    "id": "2126295362340098420",
    "t": "2026-11-27T12:41:33.857Z"
+  },
+  {
+   "clave": "onces|135",
+   "tipo": "onces",
+   "jornada": 14,
+   "id": "2126391016869527853",
+   "t": "2026-11-27T19:01:39.949Z"
   }
  ],
  "estados": {
@@ -3439,7 +3446,8 @@
    "SPORT|136938642": 1795799520000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000,
    "SPORT|136260402": 1795800660000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000,
+   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000
   },
   "hechos": [
    {
@@ -3974,7 +3982,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -4892,25 +4900,21 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 47,
-   "redactar": 10,
-   "revisar": 9,
+   "clasificar": 48,
+   "redactar": 13,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 129156,
-  "salida": 24346,
-  "cacheLee": 74643,
-  "cacheEscribe": 22580,
-  "dolares": 0.214311,
+  "entrada": 141657,
+  "salida": 25526,
+  "cacheLee": 94308,
+  "cacheEscribe": 33864,
+  "dolares": 0.290189,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-22T12:01:47.531Z",
-    "texto": "👀 Raphinha juega, y con él Moleiro: los dos referentes de sus equipos están en el once, así que quien los tenga puede estar tranquilo.\n\nEl Barça se estira con tres arriba y el Villarreal 🚢 se coloca con dos líneas de cuatro. No hay ninguna sorpresa, y en una hora o así rueda el balón."
-   },
    {
     "t": "2026-11-22T14:26:42.406Z",
     "texto": "👀 El Racing ⚓ juega en El Sardinero con un 4-2-3-1 y Yassir Zabiri, el que más puntos da de su equipo, va de delantero.\n\nLa Real Sociedad responde con un 4-4-2 y Carlos Soler arranca en el medio. Ninguno ha dado un giro raro al once, así que quien tenga a gente de este partido ya sabe a qué atenerse."
@@ -4926,6 +4930,10 @@
    {
     "t": "2026-11-23T19:06:42.256Z",
     "texto": "👀 O. Rey es la sorpresa del once del Levante en el Ciutat de València: el centrocampista juega de inicio aunque no suele hacerlo, y los granotas se ponen en un 4-2-3-1.\n\nEn el Elche no hay ningún titular inesperado; sale en un 4-3-3. Ryan bajo palos en el Levante, con una media de 6,8, y Revivo en la defensa del Elche son quienes más puntos dan de cada equipo, y los dos están en el once."
+   },
+   {
+    "t": "2026-11-27T19:01:39.951Z",
+    "texto": "Quien tenga jugadores del Levante o del Racing puede respirar: los dos onces son los esperados y no hay ningún susto.\n\nLos granotas salen con un 4-3-3 y los racinguistas con un 4-2-3-1. Ryan, con 6,5 de media, está bajo palos en el Levante, y Zabiri, de lo que más puntúa del Racing, juega arriba. En una hora o así arranca en el Ciutat de València."
    }
   ],
   "final": [
@@ -9971,13 +9979,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7027,
+   "ok": 7028,
    "fallos": 0,
-   "ejecuciones": 5769,
+   "ejecuciones": 5770,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:56:13.457Z"
+   "ultima": "2026-11-27T19:01:13.649Z"
   }
  },
  "ptsDirecto": {},
@@ -9994,15 +10002,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:56:22.270Z"
+   "ultimaBien": "2026-11-27T19:01:43.310Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:56:22.270Z"
+   "ultimaBien": "2026-11-27T19:01:43.310Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:56:22.270Z"
+   "ultimaBien": "2026-11-27T19:01:43.310Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10010,11 +10018,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:56:22.270Z"
+   "ultimaBien": "2026-11-27T19:01:43.310Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:56:22.270Z"
+   "ultimaBien": "2026-11-27T19:01:43.310Z"
   }
  },
  "avisos": [
