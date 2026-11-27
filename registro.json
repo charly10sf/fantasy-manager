@@ -3238,7 +3238,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/koke-sobre-record-victorias-simeone-laliga-le-dimos-enhorabuena-increible-tantos-anos-club-grande-haber-cambiado-mentalidad-club-20261124_3481262.html": 1795529745000,
@@ -3434,18 +3433,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-recibir-rayo-vallecano_0_2008598760.html": 1795783283000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/",
-    "medio": "Cadena SER",
-    "t": 1795524815000,
-    "id": "3039",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Murillo causa baja tras sufrir una brecha en la ceja",
-    "motivo": "brecha en la ceja",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html",
     "medio": "Diario Sur",
@@ -9901,13 +9888,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6953,
+   "ok": 6954,
    "fallos": 0,
-   "ejecuciones": 5695,
+   "ejecuciones": 5696,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:51:22.891Z"
+   "ultima": "2026-11-27T12:56:12.165Z"
   }
  },
  "ptsDirecto": {},
@@ -9924,15 +9911,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:51:41.969Z"
+   "ultimaBien": "2026-11-27T12:56:20.211Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:51:41.969Z"
+   "ultimaBien": "2026-11-27T12:56:20.211Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:51:41.969Z"
+   "ultimaBien": "2026-11-27T12:56:20.211Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9940,11 +9927,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:51:41.969Z"
+   "ultimaBien": "2026-11-27T12:56:20.211Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:51:41.969Z"
+   "ultimaBien": "2026-11-27T12:56:20.211Z"
   }
  },
  "avisos": [
