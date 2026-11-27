@@ -25,6 +25,37 @@ export function eur(v, { dec = 2, signo = false } = {}) {
 /** 12.403.551 → "12.403.551 €" */
 export const eurLargo = (v) => `${num(v) < 0 ? '−' : ''}${NF0.format(Math.abs(Math.round(num(v))))} €`;
 /** el número grande partido: { ent: "12", dec: ",40", uni: "M" } */
+/* (27 nov, Carlos con la ficha de un rival: «≈ 43,30 M · ± 21,70 M por la recompensa diaria») De qué sale el ± del dinero
+   de un rival. La recompensa diaria da como mucho 7,5 M (la mitad de las de la liga, con tope): un ± mayor viene de otra
+   cosa y hay que decir cuál. `d.partes` lo trae el motor (dineroCuentaBruta y lo que te dijo). Lo de más peso primero */
+const MARGEN_POR = {
+  rec: ['la recompensa diaria', 'la recompensa diaria (no se sabe cuántas ha cogido)'],
+  dudas: ['subidas de cláusula', 'subidas de cláusula que no se pueden medir'],
+  desvio: ['movimientos que faltan', 'movimientos que faltan (tu cuenta no cuadra con tu saldo, y la suya sale de la tuya)'],
+  raros: ['movimientos sin cifra', 'movimientos de un tipo que no se sabe leer'],
+  dicho: ['lo que te dijo', 'lo que te dijo, que era un tramo y no una cifra'],
+};
+export function margenPartes(d) {
+  const p = (d && d.partes) || null;
+  if (!p) return [];
+  return Object.keys(MARGEN_POR).map((k) => ({ k, v: num(p[k]), corto: MARGEN_POR[k][0], largo: MARGEN_POR[k][1] })).filter((x) => x.v >= 1e5).sort((a, b) => b.v - a.v);
+}
+/** «por la recompensa diaria», «por subidas de cláusula y la recompensa diaria»… ('' si no se sabe); `uno`: solo lo que más pesa (la casilla de la ficha del rival, que es corta) */
+export function margenPor(d, { uno = false } = {}) {
+  const ps = margenPartes(d);
+  if (!ps.length) return '';
+  const dos = !uno && ps[1] && ps[1].v >= 0.5 * ps[0].v && ps[1].v >= 2e6;
+  return `por ${ps[0].corto}${dos ? ` y ${ps[1].corto}` : ''}`;
+}
+/** la frase larga: «El ± son 9,20 M de A, 7,50 M de B y 1,00 M de holgura.» Las cifras, solo si suman lo que se enseña */
+export function margenLargo(d) {
+  const ps = margenPartes(d);
+  if (!ps.length) return '';
+  const fija = num(d.partes.fija), suma = ps.reduce((t, x) => t + x.v, 0) + fija, cuadra = Math.abs(suma - num(d.margen)) <= 2e5;
+  const l = ps.map((x) => `${cuadra ? `${eur(x.v)} de ` : ''}${x.largo}`);
+  if (cuadra && fija >= 1e5) l.push(`${eur(fija)} de holgura`);
+  return `El ± ${cuadra ? 'son' : 'sale de'} ${l.length > 1 ? `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}` : l[0]}.`;
+}
 export function eurPartido(v) {
   const x = num(v), a = Math.abs(x), neg = x < 0 ? '−' : '';
   if (a >= 999500) { const [e, d] = NF2.format(a / 1e6).split(','); return { ent: neg + e, dec: ',' + d, uni: 'M' }; }

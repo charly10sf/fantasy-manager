@@ -14,9 +14,10 @@
    Una decisión: { pid, j, accion: 'vender' | 'aguantar', matiz, paso, regla, porque, porqueLargo, cifras, cuando, t }
      matiz  lo que antes no se podía decir: 'acepta' (acepta la oferta), 'esta-oferta-no', 'espera-oferta' (en venta y sin
             ofertas), 'con-recambio', 'antes-del-giro', 'otro-dia', 'por-dinero'; al aguantar: 'dicho', 'reventa', 'vuelve',
-            'sube', 'busca-sustituto', 'titular', 'clausula', 'oferta-no' (tiene una oferta y no compensa) o null
+            'sube', 'busca-sustituto', 'titular', 'clausula', 'oferta-no' (tiene una oferta y no compensa), 'ver-ofertas'
+            (se le abre la cláusula: a la venta sin obligación de aceptar) o null
      paso   qué se hace hoy: 'aceptar', 'poner' (a la venta), 'esperar' (ya está en venta: a por otra oferta), 'fichar'
-            (antes, el recambio) o 'nada'
+            (antes, el recambio), 'tantear' (ponerlo en el mercado solo para ver qué ofrecen) o 'nada'
 
    EL ORDEN DE LAS REGLAS (la primera que se cumple decide; la tabla, también en claude/auditoria-coherencia.md):
      1 dicho         «a X no lo vendo», dicho en Pregunta                                   → aguantar
@@ -24,21 +25,24 @@
                      (en una liga premium con entrenador puntúa: aguantar; destituido, vender)
      3 baja          lesión larga, fuera de LaLiga o sancionado y cayendo (`M.vendeBaja`)    → vender
      4 reventa       comprado para revender: `M.aguantaReventa` → aguantar; si no → vender (hoy si toca, o la víspera)
-     5 vuelve        el que vuelve y sigue subiendo                                          → aguantar
-     6 sube          sube un 0,5 % al día o más sin frenar (Fornals, 13 nov)                 → aguantar
-     7 cambio        titular que baja, sin relevo y con recambio en el mercado (`M.cambioDe`) → vender cuando llegue el recambio
-     8 titular-baja  titular que baja todos los días: con relevo → vender; sin relevo → aguantar (búscale sustituto)
-     9 titular-gira  titular que ha girado pero no baja todos los días (Carlos, 14 nov)      → aguantar
-    10 clausula      se frena, con la cláusula abierta por encima de LaLiga y un rival que la paga → aguantar
-    11 inercia       suplente que ha girado, baja o se ha parado (`M.ventaPorInercia`)       → vender
-    12 desplome      suplente con beneficio que lleva un −4 % en 7 días                      → vender
-    13 resto                                                                                 → aguantar
+     5 protege       sube, con la cláusula en su valor o cerca, a tiro de un rival y se le abre en 2 días o menos
+                     (Carlos, 27 nov, El Hilali: `protegerAntes`)        → aguantar, a la venta solo para ver ofertas
+     6 vuelve        el que vuelve y sigue subiendo                                          → aguantar
+     7 sube          sube un 0,5 % al día o más sin frenar (Fornals, 13 nov)                 → aguantar
+     8 cambio        titular que baja, sin relevo y con recambio en el mercado (`M.cambioDe`) → vender cuando llegue el recambio
+                     (el portero titular que baja poco, menos de un 5 % en 7 días: aguantar; Carlos, 27 nov, Gulácsi)
+     9 titular-baja  titular que baja todos los días: con relevo → vender; sin relevo → aguantar (búscale sustituto)
+    10 titular-gira  titular que ha girado pero no baja todos los días (Carlos, 14 nov)      → aguantar
+    11 clausula      se frena, con la cláusula abierta por encima de LaLiga y un rival que la paga → aguantar
+    12 inercia       suplente que ha girado, baja o se ha parado (`M.ventaPorInercia`)       → vender
+    13 desplome      suplente con beneficio que lleva un −4 % en 7 días                      → vender
+    14 resto                                                                                 → aguantar
    Encima, la oferta que tenga (el consejo de `M.misVentas`, con UNA cuenta para el que sube) y, encima de todo, el dinero.
 
    FICHAR (`M.decisionFichar`, uno que no es tuyo): la puja que el plan retira → plantilla llena → el paso vivo del plan →
    mirado y descartado (los «Mirados», `sinFichar`, lo que la app no haría hoy). Encima de un «no», si ya tiene tu puja y el
    plan no la retira: «no pujaría, pero tu puja sigue» (`yaPujada`, 25 nov). La palabra de cómo va su valor, `comoVa`. */
-import { eur, pct, cuando, DIA, HORA, TOPE_PLANTILLA } from './util.js';
+import { eur, pct, cuando, elDia, DIA, HORA, TOPE_PLANTILLA } from './util.js';
 
 const num = (x) => +x || 0;
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -57,6 +61,57 @@ export function tocaRevender(M, x, ahora = Date.now()) {
   const protege = !!x.protegidoHasta && x.protegidoHasta - ahora <= 1.5 * DIA;
   return { toca: !ventana || ahora >= ventana.ponerVenta - 6 * HORA || baja || protege, baja, protege, cuando: ventana ? ventana.ponerVenta : null };
 }
+
+/* ---------- proteger a uno ANTES de que se le abra la cláusula (27 nov, Carlos con El Hilali) ----------
+   «Los jugadores hay que protegerlos, ya sea blindándolos o incluso vendiéndolos al mercado antes de que salga la cláusula
+   para que no te lo roben. Si has comprado un jugador por 40 millones y va por 60 y le quedan 2 días de cláusula, te
+   tendría que decir: ponlo en el mercado para ver si llega una muy buena oferta, y blíndalo. Una de las dos o las dos a
+   la vez. Es una cosa muy seria.» El que sube con la cláusula en su valor o cerca y a tiro de un rival (el veredicto
+   «proteger» de `M.ventaMia`) y al que se le acaba la protección en `PROTEGE_DIAS` o menos: a esa hora cualquiera se lo
+   lleva a precio de mercado. Con los 14 días del fichaje (o un blindaje que aún dura) LaLiga no deja ponerle el blindaje
+   antes, así que lo único que se puede hacer hoy es ponerlo en el mercado, que no obliga a nada (en venta se le puede
+   blindar igual y se le puede clausular igual: Carlos, 27 nov), y blindarlo en cuanto se pueda. Al que solo cierra la
+   jornada y ya lleva hoy su blindaje en el plan (`M.paraEscudo`) no le hace falta.
+   La oferta que se acepta es la «muy buena»: lo que valdría en `MUY_BUENA_DIAS` días si sigue subiendo así (Carlos, 27 nov,
+   al preguntarle con El Hilali, 29,92 M y +0,9 M al día: «lo que valdría en 7 días», antes que un +5, +10 o +15 %) y
+   nunca menos que su cláusula, que es lo que cobraría si se lo quitan. Con uno que sube deprisa LaLiga no llega (su
+   oferta va de −10 % a +10 %): entonces solo vale la de un rival. */
+export const PROTEGE_DIAS = 2;
+/* (27 nov, Carlos con Gulácsi: «siendo además portero, te puedes permitir que caiga algo su valor, ya que es una posición
+   algo distinta») al portero titular no se le vende ni se le busca cambio porque se frene, gire o baje un poco: solo si
+   cae de verdad (más de `PORTERO_CAE` % en 7 días). Es uno por equipo, juega siempre y el recambio no se encuentra igual */
+export const PORTERO_CAE = 5;
+export const MUY_BUENA_DIAS = 7;
+/** { abre, desde, hh, soloVeda, escudo: 'antes' | 'al-abrir' | null, quedan, corte, clausula } o null */
+export function protegerAntes(M, x, ahora = Date.now()) {
+  if (!M || !x || !x.j || x.j.pos === 5 || !x.j.valor || !x.clausula || x.abierta || !x.protegidoHasta) return null;
+  const falta = x.protegidoHasta - ahora;
+  if (falta <= 0 || falta > PROTEGE_DIAS * DIA) return null;
+  // (el mismo riesgo que miran el blindaje, los avisos y las operaciones de la IA: sin riesgo no hay nada que proteger)
+  if (x.riesgo === 'ninguno' || x.noBlindar || x.ventaInercia || (M.noVender && M.noVender.has(x.pid))) return null;
+  // el que hoy ya lleva su blindaje de antes de la jornada: con eso está protegido
+  if (x.soloVeda && (M.paraEscudo || []).includes(x.pid)) return null;
+  let vm = null; try { vm = M.ventaMia ? M.ventaMia(x) : null; } catch (e) { vm = null; }
+  if (!vm || vm.veredicto !== 'proteger') return null;
+  // el blindaje: al que solo cierra la jornada se le pone antes de que se reabra; al de los 14 días (o con un blindaje que
+  // aún dura), en cuanto se acaben, que puede ser antes de que se pueda pagar si cae dentro del cierre de la jornada
+  const E = M.escudosMios || { quedan: 0 };
+  const desde = x.soloVeda ? ahora : Math.min(x.protegidoHasta, x.protLiga && x.protLiga > ahora ? x.protLiga : x.protegidoHasta);
+  // (los que quedan hoy, sin los que ya van a otros: si para entonces se han recargado, mejor, pero no se promete)
+  const quedan = Math.max(0, num(E.quedan) - (M.paraEscudo || []).length);
+  const escudo = !quedan ? null : x.soloVeda || desde < x.protegidoHasta ? 'antes' : 'al-abrir';
+  // (el veredicto «proteger» ya pide que suba: `vm.p7` es lo que se espera que suba en 7 días)
+  const corte = Math.ceil(Math.max(x.j.valor + Math.max(0, num(MUY_BUENA_DIAS === 7 ? vm.p7 : (x.inercia || M.inercia(x.pid) || { proy: () => 0 }).proy(MUY_BUENA_DIAS))), x.clausula) / 1e4) * 1e4;
+  const hh = cuando(x.protegidoHasta).split(' ').pop();
+  return { abre: x.protegidoHasta, desde, hh, txt: `${elDia(x.protegidoHasta)} a las ${hh}`, soloVeda: !!x.soloVeda, escudo, quedan, corte, clausula: x.clausula };
+}
+/** «blíndalo en cuanto se abra» / «blíndalo hoy antes de las 21:00» / «blíndalo mañana entre las 12:00 y las 14:00» / '' */
+export const protegeEscudoTxt = (p) => {
+  if (!p || !p.escudo) return '';
+  if (p.escudo === 'al-abrir') return 'blíndalo en cuanto se abra';
+  const dia = elDia(p.abre);
+  return p.soloVeda ? `blíndalo ${dia} antes de las ${p.hh}` : `blíndalo ${dia} entre las ${cuando(p.desde).split(' ').pop()} y las ${p.hh}`;
+};
 
 /** (25 nov, B8) cómo va su valor, con la MISMA palabra que la línea de la inercia (la fase de `M.inercia`): Catena salía
  * «HA GIRADO A LA BAJA» en lo que lee la IA y «se está frenando» en la decisión. Sin fase, lo de la venta por inercia */
@@ -103,15 +158,25 @@ function base(D, M, x, ahora) {
     if (r.toca) return out('vender', 'reventa', null, `Lo compraste para revender (${ben}) y ${r.baja ? 'ha empezado a bajar: mejor salir ya' : r.protege ? 'se le acaba la protección de la cláusula' : 'toca venderlo antes de la jornada'}.`);
     return out('vender', 'reventa', 'otro-dia', `Lo compraste para revender (${ben}): se pone a la venta ${cuando(r.cuando, { hora: false })}, para la última oferta antes de la jornada.`, { cuando: r.cuando });
   }
-  // 5. el que vuelve y sigue subiendo
+  // 5. proteger antes de que se le abra la cláusula: aguantar, y a la venta solo para ver ofertas
+  const pa = protegerAntes(M, x, ahora);
+  if (pa) {
+    const bl = protegeEscudoTxt(pa);
+    return out('aguantar', 'protege', 'ver-ofertas', `Se le abre la cláusula ${pa.txt} (${eur(pa.clausula)}) y sube: a ese precio te lo quitan. Ponlo a la venta para ver ofertas, sin aceptar menos de ${eur(pa.corte)} (lo que valdría en ${MUY_BUENA_DIAS} días)${bl ? `, y ${bl}` : ''}.`, { protege: pa });
+  }
+  // 6. el que vuelve y sigue subiendo
   if (ine && ine.vuelve) return out('aguantar', 'vuelve', 'vuelve', `Vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día): cada día que lo aguantes vale más.`);
-  // 6. sube de verdad
+  // 7. sube de verdad
   if (ine && !vi && ['sube', 'acelera'].includes(ine.fase) && v && num(ine.ult) >= v * 0.005) {
     const dias = diasVispera(M, ahora), gana = ine.proy ? ine.proy(dias) : ine.proyJ;
     if (gana > 0) return out('aguantar', 'sube', 'sube', `Sube ${eur(ine.ult, { signo: true })} al día: aguantándolo ${dias} día${dias === 1 ? '' : 's'} más vale unos ${eur(gana)} más.`, { gana, dias });
   }
-  // 7-9. un titular
+  // 8-10. un titular
   if (tit) {
+    // el portero titular que baja poco: se aguanta (ni cambio ni a la venta)
+    if (j.pos === 1 && (bs || vi) && !(P7(t) != null && P7(t) < -PORTERO_CAE)) {
+      return out('aguantar', 'titular-gira', 'titular', `${bs ? `Baja ${bs.planos ? 'casi todos los días' : `${bs.dias} días seguidos`}` : comoVa(M, pid, vi)}, pero es tu portero titular (${d1(pierde)} pts por jornada) y baja poco: se aguanta.`);
+    }
     const cb = M.cambioDe ? M.cambioDe(pid) : null;
     if (cb) {
       const r = cb.rec[0];
@@ -125,7 +190,7 @@ function base(D, M, x, ahora) {
     if (vi) return out('aguantar', 'titular-gira', 'titular', `${comoVa(M, pid, vi)}, pero es titular en tu once (${d1(pierde)} pts por jornada) y aún no baja todos los días.`);
     return out('aguantar', 'resto', 'titular', `Es titular en tu once (${d1(pierde)} pts por jornada) y no está bajando.`);
   }
-  // 10-11. un suplente, por la inercia
+  // 11-12. un suplente, por la inercia
   if (vi) {
     if (vi.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula') return out('aguantar', 'clausula', 'clausula', `Se frena, pero su cláusula (${eur(x.clausula)}) paga más que LaLiga y a algún rival le llega: si te lo clausulan, cobras más.`);
     const hoy = num(vi.ult) < 0 ? ` (hoy ${eur(vi.ult, { signo: true })})` : '';
@@ -133,11 +198,11 @@ function base(D, M, x, ahora) {
       ? out('vender', 'inercia', null, `Ha girado a la baja${hoy} y ${sitio}: cada día vale menos.`)
       : out('vender', 'inercia', 'antes-del-giro', `Ha dejado de subir y ${sitio}: véndelo antes de que gire.`);
   }
-  // 12. con beneficio y cayendo
+  // 13. con beneficio y cayendo
   if (((M.partidazo(pid) || {}).nivel || 0) < 2 && x.ganado > 0 && P7(t) != null && P7(t) < -4 && !M.esperarVenta(x).tipo) {
     return out('vender', 'desplome', null, `Lo compraste por ${eur(x.compra)} y vale ${eur(v)}, pero lleva un ${pct(Math.abs(P7(t)), 1, false)} de bajada en 7 días: asegura el beneficio.`);
   }
-  // 13. el resto
+  // 14. el resto
   const sube = !!ine && ['sube', 'acelera', 'rebote'].includes(ine.fase) && num(ine.ult) > 0;
   return out('aguantar', 'resto', null, sube ? 'Está subiendo y no hay motivo para venderlo.' : 'Ni sube ni baja de verdad: véndelo solo si te pagan bien.');
 }
@@ -145,10 +210,12 @@ function base(D, M, x, ahora) {
 /** con la oferta que tiene (si está en venta): UNA cuenta para aceptarla o no */
 function conOferta(D, M, x, b, ahora) {
   const pid = x.pid, v = (M.misVentas || []).find((y) => y.pid === pid);
-  if (!v) return { ...b, paso: b.accion === 'vender' ? (b.matiz === 'con-recambio' ? 'fichar' : b.matiz === 'otro-dia' ? 'nada' : 'poner') : 'nada' };
+  if (!v) return { ...b, paso: b.accion === 'vender' ? (b.matiz === 'con-recambio' ? 'fichar' : b.matiz === 'otro-dia' ? 'nada' : 'poner') : b.regla === 'protege' ? 'tantear' : 'nada' };
   const mejor = v.mejor || null;
   if (!mejor) {
     if (b.accion === 'vender') return { ...b, matiz: b.matiz === 'con-recambio' ? b.matiz : 'espera-oferta', paso: 'esperar', enVenta: true, porque: b.matiz === 'con-recambio' ? b.porque : `${b.porque} Ya está a la venta: la oferta de LaLiga llega con el cambio de mercado.` };
+    // (27 nov) el que se protege ya está en el mercado: falta ver qué ofrecen (y blindarlo cuando se pueda)
+    if (b.regla === 'protege') { const bl = protegeEscudoTxt(b.protege); return { ...b, paso: 'nada', enVenta: true, porque: `Se le abre la cláusula ${b.protege.txt} (${eur(b.protege.clausula)}) y sube. Ya está a la venta para ver ofertas: no aceptes menos de ${eur(b.protege.corte)}${bl ? `, y ${bl}` : ''}.` }; }
     return { ...b, paso: 'nada', enVenta: true };
   }
   const j = x.j, val = j.valor || 0, prima = mejor.importe - val;
@@ -163,6 +230,13 @@ function conOferta(D, M, x, b, ahora) {
   }
   const esperar = (matiz, txt) => ({ ...b, matiz, paso: b.accion === 'vender' ? 'esperar' : 'nada', enVenta: true, oferta: 'esperar', porque: txt, cifras });
   const aceptar = (txt, regla = b.regla) => ({ ...b, accion: 'vender', regla, matiz: 'acepta', paso: 'aceptar', enVenta: true, oferta: 'aceptar', porque: txt, cifras });
+  // (27 nov) el que se protege poniéndolo a la venta: se acepta solo la oferta «muy buena» (`protegerAntes`), haga falta o no
+  // (si hace falta el dinero lo dice el plan, encima)
+  if (b.regla === 'protege') {
+    const pa = b.protege, bl = protegeEscudoTxt(pa);
+    if (mejor.importe >= pa.corte) return aceptar(`Se le abre la cláusula ${pa.txt} y te lo quitarían por ${eur(pa.clausula)}: ${quien} te da ${ofertaTxt}, más de lo que valdría en ${MUY_BUENA_DIAS} días. Acéptala.`);
+    return esperar('oferta-no', `Se le abre la cláusula ${pa.txt} y está a la venta para ver ofertas, pero esta (${ofertaTxt}) no: acepta solo desde ${eur(pa.corte)}, lo que valdría en ${MUY_BUENA_DIAS} días${bl ? `; y ${bl}` : ''}.`);
+  }
   if (b.regla === 'dicho') return esperar('dicho', `${b.porque} No aceptes la oferta; si has cambiado de idea, quítalo en «Lo que me has dicho».`);
   if (b.accion === 'vender') {
     // lo de revender, cuando toca, se acepta: no hay otra oferta antes de la jornada
@@ -196,6 +270,7 @@ const CORTO = {
 export function decisionCorta(d) {
   if (!d) return '';
   if (d.accion === 'vender') return CORTO[d.matiz] || 'Vender';
+  if (d.matiz === 'ver-ofertas') return d.enVenta ? 'En venta para ver ofertas' : 'A la venta para ver ofertas';
   return d.matiz === 'dicho' ? 'No se vende: lo has dicho tú' : d.matiz === 'busca-sustituto' ? 'Aguantar: búscale sustituto' : d.matiz === 'oferta-no' ? 'Aguantar: esta oferta no' : 'Aguantar';
 }
 /** para el titular de Hoy: «Turrientes: a la venta, pero esta oferta no» */
@@ -232,6 +307,8 @@ export function ventaVista(M, x, { sinInercia = false } = {}) {
   }
   if (d.regla === 'titular-gira') return r('duda', ya ? 'Ha girado · titular' : 'Frenando · titular', ya ? 'Ha girado, pero es titular: se aguanta' : 'Se frena, pero es titular: se aguanta', ya ? 'baja' : 'reloj');
   if (d.matiz === 'busca-sustituto') return r('duda', 'Baja · búscale sustituto', 'Baja todos los días: búscale sustituto');
+  // (27 nov) se le abre la cláusula: a la venta, pero solo para ver ofertas (no es una venta)
+  if (d.matiz === 'ver-ofertas') return r('duda', d.enVenta ? 'En venta · ver ofertas' : 'Se abre · ver ofertas', d.enVenta ? 'Se le abre la cláusula: en venta para ver ofertas' : 'Se le abre la cláusula: ponlo a la venta para ver ofertas', 'escudo');
   if (d.enVenta && d.oferta === 'esperar') return r('duda', 'Oferta: no aceptar', 'Tiene una oferta: no la aceptes', 'reloj');
   return null;
 }

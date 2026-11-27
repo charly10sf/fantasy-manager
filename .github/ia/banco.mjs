@@ -504,7 +504,23 @@ export function arbitro(R, D, M, eur) {
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
       // (27 nov) r15: en el cierre de la jornada sí se blinda al que ya no tiene los 14 días (ni otro blindaje); por su
       // cuenta, sin fiarse de las marcas del motor
-      else { escudos++; const enCierre = !!x.veda && (!x.protLiga || x.protLiga <= Date.now()); if (hoy && !x.abierta && !enCierre) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
+      // (27 nov, proteger antes de que se abra) un blindaje para hoy a uno que aún está protegido solo vale si el paso dice
+      // la hora en que LaLiga deja ponérselo («hoy a las 13:05, en cuanto se abra», «hoy entre las 12:00 y las 14:00»)
+      else {
+        escudos++;
+        const enCierre = !!x.veda && (!x.protLiga || x.protLiga <= Date.now());
+        const tPuede = x.protLiga && x.protLiga > Date.now() ? Math.min(x.protLiga, x.protegidoHasta) : x.protegidoHasta;
+        const aSuHora = !!tPuede && new RegExp(`\\b(a|entre) las ${fmtH.format(new Date(tPuede))}\\b`).test(cuando);
+        if (hoy && !x.abierta && !enCierre && !aSuHora) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`);
+      }
+    } else if (o.accion === 'tantear') {
+      // (27 nov) rT: a la venta solo para ver ofertas: uno mío, que no esté ya en venta, con la cláusula aún cerrada y que
+      // se abre en 2 días o menos (si ya está abierta no hay «antes»), con su porqué; no mueve dinero ni sale del once
+      const x = M.mias.find((y) => y.pid === o.pid);
+      if (!x) mal.push(`rT: ${q} no es mío`);
+      else if (x.abierta || !x.protegidoHasta || x.protegidoHasta - Date.now() > 2 * DIA) mal.push(`rT: a la venta para ver ofertas a ${q}, que ${x.abierta ? 'ya tiene la cláusula abierta' : 'no se abre en 2 días'}`);
+      else if (imp) mal.push(`rT: a la venta para ver ofertas a ${q} con importe`);
+      else if (!String(o.motivo || '').trim()) mal.push(`sin motivo: tantear ${q}`);
     } else if (o.retira) pujado -= +o.retira;   // una puja retirada deja de contar (se puede retirar cuando se quiera)
     else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
   }

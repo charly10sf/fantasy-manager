@@ -24,7 +24,7 @@ const ok = (c, t) => { if (!c) mal++; console.log(`${c ? 'BIEN' : 'MAL '} ${t}`)
 // (texto: se evalúa en la página; deja en window.__cc las piezas comunes a todas las partes)
 const COMUN = `
   const Mo = await import('./js/motor.js'), Pm = await import('./js/plan.js'), I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), U = await import('./js/util.js'),
-    Vi = await import('./js/vistas.js'), De = await import('./js/decide.js'), Fo = await import('./js/fondo.js'), Av = await import('./js/avisos.js'), Co = await import('./js/comunes.js');
+    Vi = await import('./js/vistas.js'), De = await import('./js/decide.js'), Fo = await import('./js/fondo.js'), Av = await import('./js/avisos.js'), Co = await import('./js/comunes.js'), Af = await import('./js/avisos-ficha.js');
   const S = window.S, c = Dt.cfg();
   const norm = (t) => String(t || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
   // un paso de la IA que vende a uno tuyo (acepta la oferta si la tiene), repasado por la app
@@ -41,10 +41,16 @@ const COMUN = `
     const opV = (R.ops || []).find((o) => !o.descartada && !o.sugerencia && String(o.pid) === String(pid) && o.accion === 'vender');
     const mir = [...(R.descartes || []), ...(R.avisos || [])].find((z) => String(z.pid) === String(pid));
     s.plan = opV ? 'V' : mir && !(R.ops || []).some((o) => String(o.pid) === String(pid) && !o.descartada) ? 'A' : null;
+    s.planTxt = opV ? '' : mir ? String(mir.motivo || mir.detalle || '') : '';
     const u = Vi.urgentesDe(Sx).urg.find((a) => String(a.pid) === String(pid) && ['vender', 'sustituto'].includes(a.tipo));
     s.hoy = u ? (u.tipo === 'vender' ? 'V' : 'A') : null;
     const vv = De.ventaVista(M, x);
-    s.equipo = vv ? (/[Vv]ender|[Vv]éndelo|Acepta|En venta|A la venta|[Rr]evender|a la venta/.test(vv.pill + ' ' + vv.largo) && !/titular: se aguanta|no la aceptes|búscale sustituto/.test(vv.largo) ? 'V' : 'A') : null;
+    s.equipo = vv ? (/[Vv]ender|[Vv]éndelo|Acepta|En venta|A la venta|[Rr]evender|a la venta/.test(vv.pill + ' ' + vv.largo) && !/titular: se aguanta|no la aceptes|búscale sustituto|para ver ofertas/.test(vv.largo) ? 'V' : 'A') : null;
+    // (27 nov, Gulácsi) la tarjeta de la inercia de la ficha: «véndelo…» solo si la decisión es vender. Manda el título
+    // (lo de después del «·»): debajo va el porqué de la decisión, que puede decir «véndelo solo si te pagan bien»
+    let tf = ''; try { const e = document.createElement('div'); e.innerHTML = (Af.inerciaPlanHTML(Sx, pid, { mio: true, mia: x }) || {}).html || ''; tf = ((e.querySelector('summary') || e).textContent || '').replace(/\\s+/g, ' '); } catch (e) { tf = 'ERROR ' + e.message; }
+    s.ficha = /^ERROR/.test(tf) ? 'ERROR' : /· (es titular: )?se aguanta|· búscale sustituto|· a la venta solo para ver ofertas|· dijiste que no lo vendes|· esta oferta no/.test(tf) ? 'A' : /v[eé]ndelo/i.test(tf) ? 'V' : null;
+    s.fichaTxt = tf.slice(0, 90);
     s.enVenta = v && v.mejor ? (v.consejo === 'aceptar' ? 'V' : 'no-aceptar') : null;
     const fa = avisosF.filter((a) => (a.k || '').split(':')[1] === String(pid));
     s.fondo = fa.some((a) => /^(vende|lesion-venta|revender)$/.test(a.k.split(':')[0]) || /^Acepta la oferta/.test(a.titulo)) ? 'V' : null;
@@ -59,7 +65,8 @@ const COMUN = `
     const veL = lin.find((l) => /puesto a /.test(l)) || '';
     s.chatVenta = /→ la app aconseja ACEPTAR/.test(veL) ? 'V' : /→ la app aconseja ESPERAR/.test(veL) ? 'no-aceptar' : null;
     const ia = iaVende(D, M, x);
-    s.ia = !ia.o || ia.o.ya ? null : ia.o.descartada ? (ia.o.cambia ? 'no-aceptar' : 'A') : ia.o.porDinero ? '$' : ia.o.sugerencia ? null : 'V';
+    // (27 nov) al que se protege, «véndelo» se queda en ponerlo a la venta para ver ofertas: no es una venta
+    s.ia = !ia.o || ia.o.ya || ia.o.accion === 'tantear' ? null : ia.o.descartada ? (ia.o.cambia ? 'no-aceptar' : 'A') : ia.o.porDinero ? '$' : ia.o.sugerencia ? null : 'V';
     return { d, s, ia, v };
   };
   // ¿qué tendría que decir cada sitio, según la decisión?
@@ -123,6 +130,8 @@ for (const escena of ESC) {
         if (rnd() < 0.25) { const f = pick(mis); if (D.maestro[f.pid]) D.maestro[f.pid].estado = pick(['injured', 'suspended', 'doubtful']); }
         // cláusulas tuyas casi a su valor y abiertas (proteger)
         for (const f of mis) if (rnd() < 0.12 && D.maestro[f.pid]) { f.clausula = Math.round(D.maestro[f.pid].valor * (1.02 + rnd() * 0.1)); f.protegidoHasta = Date.now() - 3600e3; }
+        // (27 nov) y las que se abren pronto, casi a su valor (proteger antes de que se abran)
+        for (const f of mis) if (rnd() < 0.12 && D.maestro[f.pid]) { f.clausula = Math.round(D.maestro[f.pid].valor * (1 + rnd() * 0.06)); f.protegidoHasta = Date.now() + Math.round((2 + rnd() * 50) * 3600e3); }
         // lo que ha dicho él: «a X no lo vendo»
         if (rnd() < 0.12) window.__nv = pick(mis).pid; else window.__nv = null;
       } else window.__nv = null;
@@ -145,9 +154,9 @@ for (const escena of ESC) {
         const clave = `${d.accion}/${d.regla}${d.matiz ? '/' + d.matiz : ''}`;
         out.porRegla[clave] = (out.porRegla[clave] || 0) + 1;
         const de = `${escena}#${n} ${x.j.nombre} (${U.eur(x.j.valor)}, ${M.perdida(x.pid) >= 0.3 ? 'titular' : 'suplente'}, saldo ${U.eur(D.dinero)}${v && v.mejor ? `, oferta ${Math.round(v.mejor.sobre * 1000) / 10} %` : v ? ', en venta sin ofertas' : ''}) → decisión «${d.corta}» (${clave})`;
-        for (const k of ['plan', 'hoy', 'equipo', 'enVenta', 'fondo', 'chat', 'chatEquipo', 'chatVenta', 'ia']) {
+        for (const k of ['plan', 'hoy', 'equipo', 'ficha', 'enVenta', 'fondo', 'chat', 'chatEquipo', 'chatVenta', 'ia']) {
           if (sit[k] != null) out.porSitio[k] = (out.porSitio[k] || 0) + 1;
-          if (choca(d, k, sit[k], v)) falla(`${de}; ${k} dice ${sit[k]}${k === 'chat' ? ` («${sit.chatTxt}»)` : k === 'ia' ? ` (aviso: «${String((ia.o || {}).aviso || '').slice(0, 110)}»; titular: «${ia.titular}»)` : ''}`);
+          if (choca(d, k, sit[k], v)) falla(`${de}; ${k} dice ${sit[k]}${k === 'chat' ? ` («${sit.chatTxt}»)` : k === 'plan' && sit.planTxt ? ` (mirado: «${sit.planTxt.slice(0, 140)}»)` : k === 'ficha' ? ` («${sit.fichaTxt}»)` : k === 'ia' ? ` (aviso: «${String((ia.o || {}).aviso || '').slice(0, 110)}»; titular: «${ia.titular}»)` : ''}`);
         }
         // «a la venta, pero esta oferta no»: el paso lo dice y el titular no dice «mejor aguantar»
         if (d.matiz === 'esta-oferta-no' && ia.o && ia.o.descartada) {

@@ -1120,7 +1120,7 @@ export function analizar(D, H, c, extra = {}) {
       const rec = M.recompensas(dc.t, ahora);
       const margen = Math.round((num(dc.r) + 0.3e6 + rec * 0.5) / 1e5) * 1e5;
       // (0.7.13z) desde que te lo dijo ha podido coger entre 0 y `rec`: la cifra va en medio (rec / 2) y el margen es esa mitad
-      return { v: dc.v + mov - sub + rec * 0.5, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec * 0.5, n: f.n };
+      return { v: dc.v + mov - sub + rec * 0.5, exacto: false, margen, partes: { fija: 0.3e6, rec: rec * 0.5, dicho: num(dc.r) }, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec * 0.5, n: f.n };
     }
     return M.dineroCuenta(tid);
   };
@@ -3244,7 +3244,12 @@ export function analizar(D, H, c, extra = {}) {
     // (27 nov, El Hilali) y los que solo cierra la jornada, el día en que se reabren (o a 12 h o menos): el blindaje dura
     // M.ESCUDO_H desde que se pone, así que puesto la víspera se gastaría casi entero con las cláusulas aún cerradas
     const aTiempo = (x) => x.abierta || (x.soloVeda && (diaDe(x.protegidoHasta) === diaDe(ahora) || x.abreEn <= 12 * HORA) && ahora + M.ESCUDO_H * HORA > x.protegidoHasta);
-    M.paraEscudo = ES.quedan ? M.mias.filter((x) => aTiempo(x) && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
+    /* (27 nov, Carlos con Gulácsi, portero titular de 15,30 M con la cláusula abierta a 18,54 M, un +21 %, y «riesgo bajo»:
+       «no tiene sentido… que lo blinde, cuando está a 18 M la cláusula valiendo 15») con la cláusula abierta y el riesgo
+       bajo no se gasta un blindaje, aunque a algún rival le llegue el dinero: solo con riesgo medio o alto. A la que aún
+       está cerrada el motor ya le baja un escalón por estarlo, así que ahí vale todo lo que no sea «ninguno» */
+    M.mereceEscudo = (x) => !!x && (x.abierta ? ['medio', 'alto'].includes(x.riesgo) : x.riesgo !== 'ninguno');
+    M.paraEscudo = ES.quedan ? M.mias.filter((x) => aTiempo(x) && !x.escudo && x.importa && M.mereceEscudo(x) && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
   }
   /* ---------- el cambio: vender a un titular que baja y fichar su recambio (24 nov, Carlos con Alti) ----------
      «puedo tener un jugador en el 11 titular porque no tengo otro… este jugador hay que venderlo aunque no tienes todavía

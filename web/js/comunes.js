@@ -1,5 +1,5 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
-import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
+import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy, margenPartes, margenLargo } from './util.js';
 import { enApp, enIPhone } from './puente.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien, parteFin } from './limite.js';
@@ -280,7 +280,7 @@ export function campoVivo(M, ids) {
     <span class="cv-forma">${esc(forma)}</span>${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, vivo: true })}</div>` : ''}</div>`;
 }
 
-const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
+const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', tantear: 'A la venta para ver ofertas', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
 export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.retira ? 'Retirar puja' : op.etiqueta || ACC[op.accion] || op.accion}${op.hoy === false ? ' · otro día' : ' hoy'}</span>` : '');
 
@@ -362,13 +362,15 @@ function correccionTxt(c) {
   const de = c.propio ? 'lo que te dijo él la última vez' : [c.n ? `lo que te han dicho ${c.n} rival${c.n === 1 ? '' : 'es'}` : '', c.todos ? 'lo que apunta la gente en todas las ligas' : ''].filter(Boolean).join(' y ');
   return c.v ? ` Corregido ${eur(c.v, { signo: true })} con ${de}: la cuenta solía fallar por ahí.` : ` El margen, ajustado con ${de}.`;
 }
+/** el ± es casi todo la recompensa diaria (lo de siempre): lo demás no llega a 1 M */
+const soloRec = (d) => { const ps = margenPartes(d); return !ps.length || (ps[0].k === 'rec' && ps.slice(1).reduce((t, x) => t + x.v, 0) < 1e6); };
 export function dineroLargo(d) {
   if (!d) return 'No se sabe: LaLiga no lo da y aún no hay movimientos guardados.';
   if (d.v == null) return `No se sabe todavía: LaLiga no lo da y para calcularlo ${d.motivo || 'faltan datos'}.`;
   if (d.exacto) return `${eur(d.v)}, exacto (${d.fuente === 'API' ? 'lo da LaLiga' : `de ${d.fuente}`}).`;
-  if (d.dicho) return `Unos ${eur(d.v)} (± ${eur(d.margen)}). Te dijo que tenía ${d.dicho.min === d.dicho.max ? eur(d.dicho.v) : `entre ${eur(d.dicho.min)} y ${eur(d.dicho.max)}`} ${cuando(d.dicho.t)}${d.desdeDicho ? ` y desde entonces, con lo que ha movido y la mitad de las recompensas diarias que ha podido coger, lleva ${eur(d.desdeDicho, { signo: true })}` : ' y no ha movido nada desde entonces'}. El ± es por la recompensa diaria: la app no tiene forma de saber cuánto coge cada uno.`;
+  if (d.dicho) return `Unos ${eur(d.v)} (± ${eur(d.margen)}). Te dijo que tenía ${d.dicho.min === d.dicho.max ? eur(d.dicho.v) : `entre ${eur(d.dicho.min)} y ${eur(d.dicho.max)}`} ${cuando(d.dicho.t)}${d.desdeDicho ? ` y desde entonces, con lo que ha movido y la mitad de las recompensas diarias que ha podido coger, lleva ${eur(d.desdeDicho, { signo: true })}` : ' y no ha movido nada desde entonces'}. ${margenLargo(d) || 'El ± es por la recompensa diaria: la app no tiene forma de saber cuánto coge cada uno.'}`;
   const c = d.cuenta;
-  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. El ± es por la recompensa diaria: no sale en ningún sitio y la app no tiene forma de saber cuánto ha cogido cada uno${d.centro ? `, así que la cifra está en el punto medio entre que no haya cogido ninguna y que las haya cogido todas (${eur(d.centro, { signo: true })} frente a darle las mismas que a ti)` : ''}.${d.correccion ? correccionTxt(d.correccion) : ''}${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
+  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. ${soloRec(d) ? `El ± es por la recompensa diaria: no sale en ningún sitio y la app no tiene forma de saber cuánto ha cogido cada uno${d.centro ? `, así que la cifra está en el punto medio entre que no haya cogido ninguna y que las haya cogido todas (${eur(d.centro, { signo: true })} frente a darle las mismas que a ti)` : ''}.` : `${margenLargo(d)}${d.centro ? ` La cifra está en el punto medio entre que no haya cogido ninguna recompensa diaria y que las haya cogido todas (${eur(d.centro, { signo: true })} frente a darle las mismas que a ti).` : ''}`}${d.correccion ? correccionTxt(d.correccion) : ''}${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
 }
 
 /* ---------- las funciones top, bloqueadas (limite.js: bloqueada) ---------- */

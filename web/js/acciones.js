@@ -5,7 +5,7 @@
 import { eur, pct, dura, cuando, DIA, HORA } from './util.js';
 import { paronLejos } from './operaciones.js';
 import { esClausulable } from './motor.js';
-import { comoVa } from './decide.js';
+import { comoVa, protegeEscudoTxt } from './decide.js';
 import { pujaLinea } from './puja-txt.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
@@ -96,6 +96,15 @@ export function acciones(D, M, c) {
   // (24 nov, decide.js) todo sale de la decisión de cada jugador: vender (o cambiar por un recambio) y, al titular que gira
   // o baja sin relevo, «búscale sustituto» (Carlos, 14 nov: a un titular no se le vende hasta que baja todos los días)
   const dec = (x) => (M.decisionBase ? M.decisionBase(x.pid) : null);
+  // (27 nov, Carlos con El Hilali: «los jugadores hay que protegerlos… antes de que salga la cláusula») el que sube con la
+  // cláusula en su valor y se le abre en 2 días o menos (decide.js, regla «protege»): al mercado para ver ofertas y el
+  // blindaje en cuanto se pueda. Con el plan delante es uno de sus pasos y aquí no se repite
+  (M.mias || []).map((x) => ({ x, d: dec(x) })).filter((y) => y.d && y.d.regla === 'protege' && y.d.protege && (y.d.paso === 'tantear' || y.d.protege.escudo))
+    .sort((a, b) => a.d.protege.abre - b.d.protege.abre).slice(0, 2).forEach(({ x, d }, k) => add({
+      tipo: 'proteger', prio: 85 - k, icono: 'escudo', pid: x.pid, cuando: cuando(d.protege.abre),
+      titulo: d.paso === 'tantear' ? `${x.j.nombre}: a la venta para ver ofertas` : `${x.j.nombre}: ${protegeEscudoTxt(d.protege)}`,
+      texto: d.porque,
+    }));
   const cifrasVi = (x) => {
     const vi = x.ventaInercia || { urgencia: 'ya', ult: 0, perder: 0 };
     const dias = vi.hastaJ ? `en ${vi.hastaJ} día${vi.hastaJ > 1 ? 's' : ''} ` : '';

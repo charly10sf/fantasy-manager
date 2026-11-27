@@ -317,7 +317,7 @@ h1.titulo { font-weight: 700; }
 .accion-t { font: 700 var(--t-mini) 'Barlow'; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: var(--r-pl); background: var(--plano3); color: var(--texto); }
 .accion-t.vender { background: var(--sube-s); color: var(--sube); }
 .accion-t.clausular, .accion-t.pujar, .accion-t.comprar { background: var(--rojo-s); color: var(--rojo-l); }
-.accion-t.blindar { background: var(--oro-s); color: var(--oro); }
+.accion-t.blindar, .accion-t.tantear { background: var(--oro-s); color: var(--oro); }
 .accion-t.alinear, .accion-t.esperar { background: var(--azul-s); color: var(--azul); }
 .op-top .cuando { font: 600 var(--t-sec2) 'Barlow'; color: var(--texto2); display: inline-flex; align-items: center; gap: 4px; }
 .op-top .cuando .ic { width: 15px; height: 15px; }
@@ -2085,7 +2085,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 /* cada paso: cerrado, una fila con lo justo; abierto, el detalle */
 .paso2 { border-radius: var(--r-tarj); background: var(--plano); border: 1px solid var(--linea); border-left: 3px solid var(--plano3); }
 .paso2.vender { border-left-color: var(--sube); } .paso2.clausular, .paso2.pujar, .paso2.comprar { border-left-color: var(--rojo); }
-.paso2.blindar { border-left-color: var(--oro); } .paso2.alinear, .paso2.esperar { border-left-color: var(--azul); }
+.paso2.blindar, .paso2.tantear { border-left-color: var(--oro); } .paso2.alinear, .paso2.esperar { border-left-color: var(--azul); }
 .paso2.hecho { opacity: 0.6; } .paso2.descartada { opacity: 0.75; border-left-color: var(--baja); }
 .paso2.sugerencia { border-left-color: var(--plano3); }
 .accion-t.descartada { background: var(--baja-s); color: var(--baja); }
@@ -3208,7 +3208,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* los tonos */
 .pl.sube, .pill.bien, .pill.chollo, .amenaza.baja, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
 .pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D { --pl-c: var(--baja); --pl-b: rgba(255, 111, 97, 0.4); }
-.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
+.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .accion-t.tantear, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
 .pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .amenaza.muyalta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
 .pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora { --pl-c: var(--azul); --pl-b: rgba(88, 166, 255, 0.4); }
 .pill.estim { box-shadow: none; border: 1px dashed var(--s3); }
@@ -3216,7 +3216,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .pl.lleno, .accion-t { --pl-b: transparent; --pl-f: var(--s3); }
 .pl.lleno.sube, .accion-t.vender { --pl-f: var(--sube-s); }
 .pl.lleno.baja, .accion-t.descartada { --pl-f: var(--baja-s); }
-.pl.lleno.oro, .accion-t.blindar { --pl-f: var(--oro-s); }
+.pl.lleno.oro, .accion-t.blindar, .accion-t.tantear { --pl-f: var(--oro-s); }
 .pl.lleno.rojo, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar { --pl-f: var(--rojo-s); }
 .pl.lleno.azul, .accion-t.alinear, .accion-t.esperar { --pl-f: var(--azul-s); }
 /* lo urgente es la única etiqueta rellena de verdad */

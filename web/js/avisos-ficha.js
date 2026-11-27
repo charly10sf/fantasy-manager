@@ -68,9 +68,18 @@ export function inerciaPlanHTML(S, pid, { mio = false, op = null, mia = null } =
   else if (x.proyJ < 0) linea = `Si sigue así, pierde ~${eur(-x.proyJ)} en ${dias(x.hastaJ)}`;
   else linea = TIT[x.fase] || '';
 
+  /* (27 nov, Carlos con Gulácsi: «pone que se está frenando, que lo venda, y luego que lo blinde») lo que se hace con uno
+     tuyo lo dice su decisión (decide.js), también en esta tarjeta: cuenta cómo va su valor y, si la decisión es aguantarlo,
+     lo dice en vez de mandar venderlo por su cuenta (antes salía «véndelo antes de que gire» de un titular que el plan blindaba) */
+  const dec = mio && M.decision ? M.decision(pid) : null;
+  const aguanta = !!dec && dec.accion === 'aguantar' && (mal || ojo) && !vu;
+  const aguantaTxt = !aguanta ? '' : dec.matiz === 'busca-sustituto' ? 'búscale sustituto' : dec.matiz === 'ver-ofertas' ? 'a la venta solo para ver ofertas' : dec.matiz === 'dicho' ? 'dijiste que no lo vendes' : dec.matiz === 'titular' || dec.regla === 'titular-gira' ? 'es titular: se aguanta' : dec.matiz === 'oferta-no' ? 'esta oferta no' : 'se aguanta';
+  // (y la línea de debajo, si solo repetía el título, da el porqué)
+  if (aguanta && linea === (TIT[x.fase] || '')) linea = String(dec.porque || linea);
   // el consejo corto del título (con un partidazo de por medio cambia el consejo: va solo dentro)
   let corto = '';
   if (!pz && !vu && x.fase !== 'rebote') corto = mio ? (mal ? 'véndelo ya' : larga ? `véndelo en ${Math.max(1, Math.round(x.giroEn) - 1)} días` : ojo ? 'véndelo antes de que gire' : '') : (larga ? 'aún da para comprar y vender' : mal || ojo ? 'no es momento de comprarlo' : '');
+  if (aguanta && corto) corto = aguantaTxt;
   if (vu) corto = mio ? 'aguántalo mientras suba' : 'compensa para revender';
 
   const tit = vu ? `Vuelve a subir` : TIT[x.fase];
@@ -90,7 +99,7 @@ export function inerciaPlanHTML(S, pid, { mio = false, op = null, mia = null } =
   else if (x.fase === 'acelera') cadaDia = `Últimos días: ${u3} al día.`;
   else if (x.fase === 'rebote') cadaDia = `Es un rebote pequeño tras mucho bajar (${subida.map(fmt).join(', ')} al día). Puede estar tocando fondo o seguir bajando: solo con esto no hay motivo para venderlo.`;
 
-  const vende = mio && (mal || ojo);
+  const vende = mio && (mal || ojo) && !aguanta;
   const quita = vende && M.perdida ? M.perdida(pid) : 0;
   const quitaTxt = quita >= 0.3 ? `Vendiéndolo pierdes unos ${String(Math.round(quita * 10) / 10).replace('.', ',')} pts por jornada: ficha a quien lo sustituya.` : '';
   let proteg = '';
@@ -109,6 +118,7 @@ export function inerciaPlanHTML(S, pid, { mio = false, op = null, mia = null } =
       `Hizo ${pz.pts} puntos en su último partido. LaLiga suele subirle el valor los días siguientes: la bajada puede frenarse o darse la vuelta. ${mio ? 'Espera al cambio de mañana antes de venderlo.' : 'Puede que mañana ya esté más caro.'}`,
     ][pz.nivel - 1];
   } else if (x.fase === 'rebote') consejo = mio ? 'Decide por sus puntos y su sitio en tu once.' : 'Está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.';
+  else if (aguanta) consejo = linea === dec.porque ? '' : String(dec.porque || '');
   else if (mio) consejo = mal ? 'Déjalo solo si lo necesitas sí o sí para la jornada.' : '';
   else consejo = larga ? 'Para quedártelo mucho tiempo, no: en unos días gira.' : '';
 

@@ -1920,6 +1920,17 @@ function llegaSinc(claves) {
   if (S.hoja || S.cargando || tourAbierto()) return;
   if (S.vista === 'ia' ? !S.charlando : true) { const y = window.scrollY; pintar(); if (S.vista !== 'ia') window.scrollTo(0, y); }
 }
+/** (27 nov, Carlos: «Blindaste a El Hilali hoy 20:27 · Por tu cuenta») lo que el plan de hoy te ha pedido, por si al hacerlo
+ * el paso deja de salir (el blindaje ya puesto, el que ya está a la venta): «Lo que llevas hoy» lo lee para decir «Del
+ * plan». Por liga y solo del día */
+function apuntarPedido(P) {
+  try {
+    const dia = diaDe(), g = LS.get(K('plan-pidio'), null);
+    const l = new Set(g && g.dia === dia && Array.isArray(g.l) ? g.l : []), n = l.size;
+    for (const o of (P && P.ops) || []) if (o.pid && !o.descartada && !o.sugerencia && ['vender', 'tantear', 'blindar', 'clausular', 'pujar', 'comprar'].includes(o.accion)) l.add(`${o.accion}:${o.pid}`);
+    if (l.size !== n || !g || g.dia !== dia) LS.set(K('plan-pidio'), { dia, l: [...l].slice(-80) });
+  } catch (e) { /* sin apuntarlo: «Lo que llevas hoy» dirá «Por tu cuenta» */ }
+}
 function montarPlan() {
   // (22 nov) si después de ese plan le has contado a la IA algo que manda (sin blindajes, a quién no vendes…), ya no vale:
   // sale el de la app con eso contado, hasta que lo rehagas
@@ -1933,6 +1944,7 @@ function montarPlan() {
   if (S.M.verPlan) S.M.verPlan(S.plan);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
+  apuntarPedido(S.plan);
   // (24 nov) los cambios del plan (quién sale → quién entra): si ganas la puja, el motor da relevo al que sale
   const cbs = S.plan.ops.filter((o) => o.cambio && !o.descartada);
   if (cbs.length && !enDemo()) {

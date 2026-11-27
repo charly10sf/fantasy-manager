@@ -22,7 +22,7 @@ import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia, T
 
 const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
 import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, noRevenderCorto, prisaNegativo, malPartidoTxt } from './motor.js';
-import { conPlan } from './decide.js';
+import { conPlan, protegeEscudoTxt, MUY_BUENA_DIAS } from './decide.js';
 import { pujaLinea, noCompensaTxt } from './puja-txt.js';
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, pujaReal } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
@@ -723,6 +723,32 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
       datos: { porque: 'cláusula casi a su valor y es importante en tu once', cuanto: eur(b.coste), cuando: x.abierta ? 'ahora' : antesDe(x.protegidoHasta), siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
   }
 
+  /* (27 nov, Carlos con El Hilali: «los jugadores hay que protegerlos, blindándolos o vendiéndolos al mercado antes de que
+     salga la cláusula… una de las dos o las dos a la vez») proteger ANTES de que se abra: lo dice la decisión del jugador
+     (decide.js, regla «protege»). Dos pasos, según lo que se pueda: ponerlo hoy en el mercado solo para ver ofertas (no
+     entra dinero ni sale del once: no es una venta) y el blindaje en cuanto LaLiga lo deje. Con el plan vendiéndolo, nada */
+  const protegidos = new Set();
+  for (const x of M.mias) {
+    const dv = M.decisionBase ? M.decisionBase(x.pid) : null, pa = dv && dv.regla === 'protege' ? dv.protege : null;
+    if (!pa || vendidos.has(x.pid) || lista.some((o) => o.pid === x.pid) || ops.some((o) => o.pid === x.pid && o.accion === 'blindar')) continue;
+    const bl = protegeEscudoTxt(pa), hoyAbre = diaDe(pa.abre) === diaDe(ahora);
+    // (poco texto: en la fila se lee la hora y lo primero del porqué; lo demás, al abrirla)
+    if (dv.paso === 'tantear' && !vetados.has(`O-${x.pid}`)) {
+      protegidos.add(x.pid);
+      ops.push({ accion: 'tantear', ref: `O-${x.pid}`, objetivo: 'proteger', pid: x.pid, jugador: x.j.nombre, donde: 'en el mercado, solo para ver ofertas', importe: null, cuando: hoyAbre ? antesDe(pa.abre) : 'hoy', confianza: 'media', _k: `O-${x.pid}`,
+        motivo: `Solo para ver ofertas: se le abre la cláusula ${pa.txt} (${eur(pa.clausula)}) y sube, y a ese precio te lo quitan. No aceptes menos de ${eur(pa.corte)} (lo que valdría en ${MUY_BUENA_DIAS} días). Ponerlo a la venta no te obliga a nada y en venta se le puede blindar igual.`,
+        datos: { porque: `solo para ver ofertas: se le abre la cláusula ${pa.txt} y sube`, cuanto: `acepta solo desde ${eur(pa.corte)}`, cuando: hoyAbre ? antesDe(pa.abre) : 'hoy', siNo: `te lo pueden quitar por ${eur(pa.clausula)}` } });
+    }
+    if (pa.escudo && escudos < ((M.escudosMios || {}).quedan || 0) && !vetados.has(`B-${x.pid}`)) {
+      escudos++;
+      protegidos.add(x.pid);
+      const alAbrir = pa.escudo === 'al-abrir', plazo = alAbrir ? pa.txt : bl.replace(/^blíndalo /, '');
+      ops.push({ accion: 'blindar', ref: `B-${x.pid}`, objetivo: 'proteger', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: plazo, confianza: 'media', _k: `B-${x.pid}`, alAbrir: pa.desde,
+        motivo: `${alAbrir ? 'En cuanto se abra su cláusula: hasta esa hora LaLiga no deja blindarlo' : `Antes de que se reabra su cláusula (${plazo})`}. Vale ${eur(pa.clausula)}, casi lo que él, y sube: a ese precio te lo quitan. El blindaje dura ${M.ESCUDO_H} h y es gratis (te quedan ${(M.escudosMios || {}).quedan} esta jornada).`,
+        datos: { porque: alAbrir ? 'en cuanto se abra su cláusula: hasta esa hora LaLiga no deja blindarlo' : 'antes de que se reabra su cláusula, que está casi en su valor', cuanto: 'gratis (un anuncio)', cuando: plazo, siNo: `te lo pueden quitar por ${eur(pa.clausula)}` } });
+    }
+  }
+
   /* la alineación, si la jornada empieza pronto (con otra en juego, no: el once está cerrado) */
   const onceFijo = M.mejorOnce(cierta);
   const pujados = lista.filter((o) => o.incierta && o.entra && onceAhora.lineas.flat().some((j) => j.id === o.entra.id)).map((o) => o.entra.nombre);
@@ -765,7 +791,11 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     return 'Con el resto del plan ya no mejora tu once lo bastante para lo que cuesta.';
   };
   const llena = M.llena, nPl = M.nPlantilla;
-  const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid))
+  const enVenta0 = M.enVenta || new Set();
+  // (27 nov, caso-contradicciones) el que ya está a la venta y su decisión es venderlo no es un «mirado»: salía «Hoy no hay
+  // motivo para venderlo» de uno de baja que ya esperaba su oferta
+  const yaEnVenta = (a) => a.tipo === 'vender' && enVenta0.has(a.pid) && ((M.decisionBase ? M.decisionBase(a.pid) : null) || {}).accion === 'vender';
+  const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid) && !yaEnVenta(a))
     .filter((a, i, xs) => xs.findIndex((b) => b.pid === a.pid) === i).slice(0, 6)
     .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador && !alternativas.some((o) => o.pid === d.pid) && !X.avisos.some((v) => v.pid === d.pid));
   /* (25 nov, auditoría de fallos, hallazgo 7: Mercado marcaba «Chollo» a tres y el plan solo llevaba uno; de los otros dos
@@ -824,7 +854,9 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const add = (t, prio, texto, rev) => { const d = diaDe(t); (dias[d] ||= { t, cosas: [] }).cosas.push(rev ? { prio, texto, rev } : { prio, texto }); };
   const hora = (t) => cuando(t).split(' ').pop();
   for (const x of M.clausulas.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.meLlega && y.interes >= 55)) add(x.protegidoHasta, x.interes, `${hora(x.protegidoHasta)} se abre ${x.j.nombre} (${eur(x.clausula)}, de ${x.rival.manager || x.rival.nombre})`);
-  for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
+  // (27 nov, Carlos: «lo que tienes que hacer no debería salir tan pequeño») el que ya lleva su paso de proteger en el plan no
+  // se repite aquí, plegado
+  for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno' && !protegidos.has(y.pid))) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
   if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
   // (Carlos, 14 nov, punto 9) al empezar la jornada se reabren las cláusulas: si te queda un blindaje gratis y tienes un
   // titular a su valor sin protección, ese es el momento (las 24 h de antes están cerradas)
@@ -836,7 +868,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     // hoy con la cláusula abierta, sí: ese blindaje se le acaba antes); y se dice «antes de»: a esa hora ya los puede
     // pagar cualquiera
     const yaHoy = new Set(ops.filter((o) => o.accion === 'blindar' && !o.importe && (M.mias.find((y) => y.pid === o.pid) || {}).soloVeda).map((o) => o.pid));
-    const aTiro = M.mias.filter((y) => !yaHoy.has(y.pid) && !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
+    const aTiro = M.mias.filter((y) => !yaHoy.has(y.pid) && !protegidos.has(y.pid) && !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
     if (quedan > 0 && aTiro.length) add(inicio, 98, `antes de las ${hora(inicio)}, blinda gratis a ${aTiro.slice(0, quedan).map((y) => y.j.nombre).join(' y ')}: a esa hora se reabren las cláusulas y la suya está casi en su valor`);
   }
   if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
@@ -873,13 +905,15 @@ export function titularMotor(P) {
   const quien = (xs) => (xs.length <= 2 ? xs.map((o) => (o.j && o.j.nombre) || o.jugador).join(' y ') : `${xs.length}`);
   const acepta = de('vender').filter((o) => o.etiqueta === 'Aceptar oferta'), vende = de('vender').filter((o) => o.etiqueta !== 'Aceptar oferta');
   const retira = vivos.filter((o) => o.retira);
+  const prot = [...de('blindar'), ...de('tantear')].filter((o, i, xs) => xs.findIndex((y) => y.pid === o.pid) === i);
   const partes = [
     retira.length && `retirar la puja por ${quien(retira)}`,
     acepta.length && `aceptar la oferta por ${quien(acepta)}`,
     vende.length && `poner a la venta a ${quien(vende)}`,
     de('clausular').length && `clausular a ${quien(de('clausular'))}`,
     de('pujar').length && `pujar por ${quien(de('pujar'))}`,
-    de('blindar').length && `proteger a ${quien(de('blindar'))}`,
+    // (27 nov) proteger: el blindaje y poner a la venta para ver ofertas (cada jugador, una vez)
+    prot.length && `proteger a ${quien(prot)}`,
     vivos.filter((o) => rev(o) && !o.aguantar).length && `especular con ${quien(vivos.filter((o) => rev(o) && !o.aguantar))} para revender`,
     vivos.filter((o) => rev(o) && o.aguantar).length && `pujar por ${quien(vivos.filter((o) => rev(o) && o.aguantar))} para aguantarlo${vivos.filter((o) => rev(o) && o.aguantar).length > 1 ? 's' : ''}`,
   ].filter(Boolean);

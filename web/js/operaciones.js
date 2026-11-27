@@ -148,7 +148,8 @@ export function catalogo(D, M, notas = []) {
     // (22 nov) «a este no lo vendo», dicho en Pregunta: venderlo no está entre lo que se puede hacer hoy
     if (!(M.noVender && M.noVender.has(x.pid))) add({ ref: `V-${x.pid}`, tipo: 'vender', pid: x.pid, j: x.j, precio: x.j.valor, compra: x.compra || null, ganado: x.ganado });
     // (sin riesgo, ni se ofrece: con la cláusula lejos de su valor no hace falta blindarlo; lo vio Carlos el 30 oct)
-    if (x.clausula && x.riesgo !== 'ninguno' && !x.noBlindar && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, soloVeda: !!x.soloVeda, escudoYa: !!x.escudoYa, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: !!x.escudoYa && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
+    // (27 nov, Gulácsi) ni con la cláusula abierta y el riesgo bajo: no se gasta un blindaje en él (`M.mereceEscudo`)
+    if (x.clausula && (M.mereceEscudo ? M.mereceEscudo(x) : x.riesgo !== 'ninguno') && !x.noBlindar && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, soloVeda: !!x.soloVeda, escudoYa: !!x.escudoYa, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: !!x.escudoYa && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
   }
   // P: libres de la liga
   for (const m of M.mercado) {

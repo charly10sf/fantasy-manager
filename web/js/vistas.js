@@ -183,7 +183,7 @@ export function conEnlaces(S, texto) {
 /** (24 nov) un paso del plan de la IA que la app ha sacado al repasarlo con los datos de ahora: «A las 06:25: vender. Ahora: …» */
 export function pasoCambiaTxt(P, o) {
   if (!P || !o || !o.descartada || !o.decAhora || !P.t || P.auto || P.motorHoy) return '';
-  const VERBO = { vender: 'vender', clausular: 'clausular', pujar: 'pujar', comprar: 'comprar', blindar: 'blindar', ofertar: 'ofertar' };
+  const VERBO = { vender: 'vender', clausular: 'clausular', pujar: 'pujar', comprar: 'comprar', blindar: 'blindar', ofertar: 'ofertar', tantear: 'ponerlo a la venta para ver ofertas' };
   const era = o.etiqueta === 'Aceptar oferta' ? 'aceptar la oferta' : VERBO[o.accion] || o.accion;
   const c = o.decAhora.corta || '';
   return `A las ${horaDe(P.t)}: ${era}. Ahora: ${c.charAt(0).toLowerCase()}${c.slice(1)}.`;
@@ -208,8 +208,12 @@ export function llevasHTML(S) {
   const proponia = P ? P.ops.filter((o) => o.pid && o.descartada && o.decAhora).map((o) => ({ pid: o.pid, accion: o.accion })) : [];
   const deAntesT = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion), t: p.t })));
   let dichoIA = []; try { dichoIA = consejosChat(M, undefined, { desde: desde - 12 * HORA }); } catch (e) { dichoIA = []; }
+  // (27 nov, Carlos: «Blindaste a El Hilali… Por tu cuenta») lo que el plan de hoy te pidió y ya no sale como paso porque lo
+  // has hecho (el blindaje puesto, el que ya está a la venta): app.js lo apunta al montar cada plan (`apuntarPedido`)
+  const pedido = (() => { const g = LS.get(K('plan-pidio'), null); return new Set(g && g.dia === hoyD && Array.isArray(g.l) ? g.l : []); })();
   const origenDe = (pid, acciones) => {
     if (ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || proponia.some((o) => o.pid === pid && acciones.includes(o.accion))) return { plan: true, txt: horaPlan ? `Del plan de las ${horaPlan}` : 'Del plan' };
+    if (acciones.some((a) => pedido.has(`${a}:${pid}`))) return { plan: true, txt: 'Del plan' };
     const a = deAntesT.find((o) => o.pid === pid && acciones.includes(o.accion));
     if (a) return { plan: true, txt: `Del plan de las ${horaDe(a.t)}` };
     const k = acciones.includes('vender') ? dichoIA.find((y) => y.pid === pid && y.clase === 'V') : null;
@@ -241,7 +245,7 @@ export function llevasHTML(S) {
   }
   for (const v of M.misVentas || []) {
     const mej = v.mejor;
-    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']), nota: ahoraDe(v.pid),
+    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender', 'tantear']), nota: ahoraDe(v.pid),
       texto: `${v.j.nombre} a la venta${mej ? `: la mejor oferta, ${eur(mej.importe)}${mej.deLiga ? ' (LaLiga)' : ''}` : ': aún sin ofertas'}` });
   }
   const hechos = items.filter((x) => x.estado === 'hecho').length, curso = items.filter((x) => x.estado === 'curso').length;
@@ -416,7 +420,7 @@ function ligaHTML(S) {
 }
 
 /* ================= EL PLAN DEL DÍA ================= */
-const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
+const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', tantear: 'A la venta', alinear: 'Alinear', esperar: 'Esperar' };
 
 /** ¿ya lo has hecho? lo marcas tú o se ve en la actividad de la liga */
 export const claveHechos = (P) => (P.auto ? `auto-${P.dia}` : String(P.t));
@@ -476,6 +480,12 @@ export function hechoEnLiga(S, P, o) {
       const antes = P.foto && P.foto.clausulas ? P.foto.clausulas[o.pid] : null;
       const ahora = M.mias.find((x) => x.pid === o.pid);
       return antes && ahora && ahora.clausula > antes + 1000 ? { estado: 'hecho', texto: `Cláusula subida a ${eur(ahora.clausula)}` } : null;
+    }
+    // (27 nov) a la venta solo para ver ofertas: hecho en cuanto está en el mercado (no hay que aceptar nada)
+    case 'tantear': {
+      const a = mio(['venta']);
+      if (a) return { estado: 'hecho', texto: porImp(a, 'Vendido') };
+      return M.enVenta && M.enVenta.has(o.pid) ? { estado: 'hecho', texto: 'Ya está a la venta' } : null;
     }
     default: return null;
   }
@@ -654,15 +664,28 @@ export function cambiosDesdePlan(S) {
 const FASES = [
   ['caja', 'Haz caja', 'lo que vendes o aceptas'],
   ['fichar', 'Ficha', 'pujas, compras y cláusulas'],
-  ['proteger', 'Protege', 'tus cláusulas abiertas'],
+  ['proteger', 'Protege', 'tus cláusulas'],
   ['once', 'Alinea', 'antes de la jornada'],
 ];
 function faseDe(o) {
   if (o.sugerencia || o.hoy === false || o.accion === 'esperar') return 'luego';
   if (o.accion === 'vender') return 'caja';
   if (['clausular', 'pujar', 'comprar'].includes(o.accion)) return 'fichar';
-  if (o.accion === 'blindar') return 'proteger';
+  if (o.accion === 'blindar' || o.accion === 'tantear') return 'proteger';
   return 'once';
+}
+/**
+ * (27 nov, Carlos, 20:29: «las cosas que tienes que hacer no deberían salir tan pequeñas: si es algo importante, que te
+ * salga directamente», y al ver las maquetas: «ya hay una cosa que a veces pone urgente, antes de nada, en rojo: pues ahí,
+ * si es un jugador que merezca la pena») el paso del plan que protege a uno tuyo y caduca HOY (se le abre la cláusula, o
+ * se reabre con la jornada) va arriba, en «Antes de nada», y no al final, en «Protege». Solo si el jugador merece la pena
+ * (`x.importa`: pesa en tu once o sube de verdad con la cláusula cerca de su valor) y mientras no esté hecho
+ */
+export function pasoUrgente(S, P, o) {
+  if (!o || o.descartada || o.sugerencia || o.hoy === false || !o.pid || o.importe || !['tantear', 'blindar'].includes(o.accion)) return false;
+  const x = ((S.M && S.M.mias) || []).find((y) => y.pid === o.pid);
+  if (!x || !x.importa || x.abierta || !x.protegidoHasta || diaDe(x.protegidoHasta) !== diaDe()) return false;
+  return !hecho(S, P, o);
 }
 function urgenteFila(S, a, nota) {
   const j = a.pid ? S.M.J(a.pid) : null;
@@ -686,8 +709,10 @@ export function plegarFase(P, f, abierta) {
 }
 function fasesHTML(S, P) {
   const { urg, nota } = urgentesDe(S);
-  const vivos = P.ops.filter((o) => !o.descartada), fuera = P.ops.filter((o) => o.descartada);
-  if (!vivos.length && !fuera.length && !urg.length) return '';
+  // (27 nov) los pasos de proteger que caducan hoy suben a «Antes de nada»
+  const urgOps = P.ops.filter((o) => pasoUrgente(S, P, o));
+  const vivos = P.ops.filter((o) => !o.descartada && !urgOps.includes(o)), fuera = P.ops.filter((o) => o.descartada);
+  if (!vivos.length && !fuera.length && !urg.length && !urgOps.length) return '';
   const cp = cuentaPasos(S, P);
   const total = cp.pend + cp.hechos;
   let h = '';
@@ -698,10 +723,10 @@ function fasesHTML(S, P) {
   const caja = (f, titulo, sub, filas, { tot = null, saldo = null, cls = '', n = 0, todoHecho = false } = {}) => {
     k++;
     const abierta = plegadas[f] ? plegadas[f] === 'abierta' : !todoHecho;
-    return `<details class="fase ${cls}" ${abierta ? 'open' : ''}><summary class="fase-t" data-accion="plegarFase" data-f="${f}"><span class="fase-n">${cls === 'f-urg' ? '!' : cls === 'f-luego' ? '·' : k - (urg.length ? 1 : 0)}</span><span class="fase-tx"><b>${titulo}</b><small>${sub}</small><small class="fase-cuantos">${todoHecho ? 'hecho' : `${n} ${n === 1 ? 'paso' : 'pasos'}`}</small></span>${tot ? `<span class="fase-tot ${tot > 0 ? 'mas' : 'menos'}">${tot > 0 ? '+' : '−'}${eur(Math.abs(tot))}</span>` : ''}${icono('flecha', 'fase-ab')}</summary>
+    return `<details class="fase ${cls}" ${abierta ? 'open' : ''}><summary class="fase-t" data-accion="plegarFase" data-f="${f}"><span class="fase-n">${cls === 'f-urg' ? '!' : cls === 'f-luego' ? '·' : k - (urg.length || urgOps.length ? 1 : 0)}</span><span class="fase-tx"><b>${titulo}</b><small>${sub}</small><small class="fase-cuantos">${todoHecho ? 'hecho' : `${n} ${n === 1 ? 'paso' : 'pasos'}`}</small></span>${tot ? `<span class="fase-tot ${tot > 0 ? 'mas' : 'menos'}">${tot > 0 ? '+' : '−'}${eur(Math.abs(tot))}</span>` : ''}${icono('flecha', 'fase-ab')}</summary>
       <div class="pasos3">${filas}</div>${saldo != null ? `<div class="fase-saldo"><span>Te quedan <b class="${saldo < 0 ? 'neg' : ''}">${eur(saldo)}</b></span></div>` : ''}</details>`;
   };
-  if (urg.length) h += caja('urg', 'Antes de nada', 'urgente y fuera del plan', urg.map((a) => urgenteFila(S, a, nota[a.pid])).join(''), { cls: 'f-urg', n: urg.length });
+  if (urg.length || urgOps.length) h += caja('urg', 'Antes de nada', urgOps.length ? 'urgente: caduca hoy' : 'urgente y fuera del plan', urgOps.map((o) => pasoOp(S, P, o)).join('') + urg.map((a) => urgenteFila(S, a, nota[a.pid])).join(''), { cls: 'f-urg', n: urg.length + urgOps.length });
   const conDinero = FASES.filter(([f]) => vivos.some((o) => faseDe(o) === f));
   conDinero.forEach(([f, titulo, sub], i) => {
     const ops = vivos.filter((o) => faseDe(o) === f);
