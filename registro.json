@@ -3428,7 +3428,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261127/1004256307/rosier-aimar-oroz-regresan-titulares.html": 1795794923000,
    "SPORT|136915398": 1795791490000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261127/1004256316/parecia-le-tocaba-dar-paso-adelante-kubo-queda-fondo-armario.html": 1795795829000,
-   "AS|https://as.com/futbol/mourinho-se-salta-la-teoria-moderna-con-bernardo-f202611-n/": 1795798903000
+   "AS|https://as.com/futbol/mourinho-se-salta-la-teoria-moderna-con-bernardo-f202611-n/": 1795798903000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256343/adeyemi-kerolin-aleixandri-sorprenden-barca-academy-estados-unidos.html": 1795800537000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256339/terzic-convoca-todos-disponibles-visitar-manana-malaga.html": 1795800212000
   },
   "hechos": [
    {
@@ -3907,11 +3909,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256339/terzic-convoca-todos-disponibles-visitar-manana-malaga.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795800212000,
+    "id": "927",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Berenguer alterna entrenamientos en solitario con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -4829,17 +4843,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 114827,
-  "salida": 20302,
+  "entrada": 117146,
+  "salida": 21513,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.210856,
+  "dolares": 0.211693,
   "reservado": 0
  },
  "recientes": {
@@ -9908,13 +9922,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7008,
+   "ok": 7009,
    "fallos": 0,
-   "ejecuciones": 5750,
+   "ejecuciones": 5751,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T17:26:11.439Z"
+   "ultima": "2026-11-27T17:31:12.719Z"
   }
  },
  "ptsDirecto": {},
@@ -9931,15 +9945,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T17:26:19.635Z"
+   "ultimaBien": "2026-11-27T17:31:29.669Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T17:26:19.635Z"
+   "ultimaBien": "2026-11-27T17:31:29.669Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T17:26:19.635Z"
+   "ultimaBien": "2026-11-27T17:31:29.669Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9947,11 +9961,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T17:26:19.635Z"
+   "ultimaBien": "2026-11-27T17:31:29.669Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T17:26:19.635Z"
+   "ultimaBien": "2026-11-27T17:31:29.669Z"
   }
  },
  "avisos": [
