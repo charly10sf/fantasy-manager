@@ -8,6 +8,8 @@
 # países, edad, datos para la revisión y las capturas del último «App Store» de ios.yml) y dice qué falta para enviar.
 # Con «[app-store]»: compila con los anuncios de verdad, NO la mete en TestFlight y la deja elegida en la ficha de la App
 # Store. Ninguno de los dos envía nada a revisión.
+# (27 nov) Con «[enviar]»: no compila; publicación manual y la versión de la ficha a la revisión de la App Store
+# (ficha.mjs enviar). Solo con el «envía» de Carlos.
 name: TestFlight
 
 on:
@@ -71,7 +73,7 @@ jobs:
           git push -q origin HEAD:${GITHUB_REF_NAME}
 
   subir:
-    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') }}
     # Xcode 27 (SDK de iOS 27): Apple lo exige desde abril de 2027 (aviso ITMS-90725 del 27 nov 2026)
     runs-on: xcode-27
     timeout-minutes: 60
@@ -229,7 +231,7 @@ jobs:
 
   configurar:
     needs: [clave, subir]
-    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -282,3 +284,17 @@ jobs:
           REVISOR_USUARIO: ${{ secrets.REVISOR_USUARIO }}
           REVISOR_CLAVE: ${{ secrets.REVISOR_CLAVE }}
         run: node .github/ios/ficha.mjs ficha
+
+  # (27 nov) el envío a la revisión de la App Store, con «[enviar]» en el mensaje del commit (solo con el «envía» de Carlos)
+  enviar:
+    if: ${{ contains(github.event.head_commit.message, '[enviar]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: A revisión
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: node .github/ios/ficha.mjs enviar
