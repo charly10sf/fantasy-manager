@@ -3217,8 +3217,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
-   "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
@@ -3403,21 +3401,10 @@
    "SPORT|136908943": 1795755664000,
    "SPORT|136890387": 1795757416000,
    "MARCA|https://www.marca.com/radio/2026/11/27/adria-altimira-reivindica-depor-recibir-barca-merecemos-primera-demostrar.html": 1795763665000,
-   "MARCA|https://www.marca.com/radio/2026/11/27/jugador-alaves-defiende-vinicius-visitar-bernabeu-dudar-jugador-talento-me-parece-poco-loco.html": 1795763683000
+   "MARCA|https://www.marca.com/radio/2026/11/27/jugador-alaves-defiende-vinicius-visitar-bernabeu-dudar-jugador-talento-me-parece-poco-loco.html": 1795763683000,
+   "SPORT|136912770": 1795764475000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html",
-    "medio": "MARCA",
-    "t": 1795508850000,
-    "id": "3182",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lemar sufre una lesión en el isquiotibial tras reaparecer",
-    "motivo": "pinchazo en el isquiotibial",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html",
     "medio": "Mundo Deportivo",
@@ -3836,7 +3823,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4759,17 +4746,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 17283,
-  "salida": 2013,
+  "entrada": 19294,
+  "salida": 2353,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.055175,
+  "dolares": 0.055546,
   "reservado": 0
  },
  "recientes": {
@@ -9838,13 +9825,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6899,
+   "ok": 6900,
    "fallos": 0,
-   "ejecuciones": 5641,
+   "ejecuciones": 5642,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T08:26:18.693Z"
+   "ultima": "2026-11-27T08:31:13.551Z"
   }
  },
  "ptsDirecto": {},
@@ -9861,15 +9848,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T08:26:28.407Z"
+   "ultimaBien": "2026-11-27T08:31:27.138Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T08:26:28.407Z"
+   "ultimaBien": "2026-11-27T08:31:27.138Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T08:26:28.407Z"
+   "ultimaBien": "2026-11-27T08:31:27.138Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9877,11 +9864,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T08:26:28.407Z"
+   "ultimaBien": "2026-11-27T08:31:27.138Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T08:26:28.407Z"
+   "ultimaBien": "2026-11-27T08:31:27.138Z"
   }
  },
  "avisos": [
