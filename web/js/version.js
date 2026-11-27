@@ -30,7 +30,7 @@ export const NOVEDADES = [
     // en dos líneas sin desplegable (vistas.js, `pasoPuja`; los textos en puja-txt.js); sin «Sale a»; y la app pide a LaLiga
     // lo que valían los comprados que no sabía (app.js, `valorComprasSiToca`). (Va con letra b: la 0.8.5a es la del parte,
     // en su rama)
-    v: '0.8.5b', f: '2026-11-27', h: '', t: 'Pujas que ganan',
+    v: '0.8.5b', f: '2026-11-27', h: '05:03', t: 'Pujas que ganan',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'balanza', t: 'Pujas que ganan', x: 'La puja que te propone la app es la que se lleva al jugador unas 8 de cada 10 veces en tu liga, según lo que se ha pagado de verdad por jugadores parecidos. Si para llevártelo casi seguro hay que pagar demasiado, te lo dice y no te propone pujar.' },
       { para: 'dueño', tipo: 'mejora', d: 'plan', t: 'Cada puja, en dos líneas', x: 'En el plan, cada puja dice cuánto pujar, cuántas veces de cada 10 ganas, cuánto pagas sobre su valor y en cuántos días lo recuperas. Sin desplegables.' },
@@ -48,7 +48,7 @@ export const NOVEDADES = [
     // pestaña, en dorado (`tab-oro`), y «Cláusulas a tiro» del ordenador se quita (repetía el plan). (03:29) Las funciones top,
     // solo con la corona (opción A de Carlos: ni candado ni «TOP»), y quién paga, 12 h con un anuncio (`horasQuien`). (04:35) La inercia, gratis (fuera de `BLOQUEADAS` y de
     // «bloqueadas» de limites.json)
-    v: '0.8.5a', f: '2026-11-27', h: '', t: 'El parte, más completo',
+    v: '0.8.5a', f: '2026-11-27', h: '05:03', t: 'El parte, más completo',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'El parte de los rivales, más completo', x: 'Ahora sale cada rival con su ficha: su plantilla, dónde va corto, sus blindajes si ha gastado alguno, lo suyo que te llega por cláusula, lo que vende y sus bajas. Su saldo, solo si tienes su dinero abierto. Lo que ha cambiado desde la última vez que lo miraste sale marcado como nuevo.' },
       { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'Abierto hasta la jornada', x: 'Con los dos anuncios, el parte queda abierto hasta que empieza la jornada, no solo un día. Y antes de abrirlo ya ves cuántos rivales hay en negativo, sin blindajes o cortos de un puesto.' },
