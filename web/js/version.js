@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5';
+export const VERSION = '0.8.5b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,19 @@ export const VERSION = '0.8.5';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (27 nov, Carlos: «recomienda pujas muy a la baja… no tiene sentido recomendar una puja que pierde»; la medida, en
+    // claude/medida-puja-27nov.md del proyecto) la puja de un libre es la que gana unas 7-8 de cada 10 veces (motor.js,
+    // `M.pujaPara` y la curva medida `M.ganaReal`); si no compensa, `noCompensa` y el plan no la propone; las pujas del plan,
+    // en dos líneas sin desplegable (vistas.js, `pasoPuja`; los textos en puja-txt.js); sin «Sale a»; y la app pide a LaLiga
+    // lo que valían los comprados que no sabía (app.js, `valorComprasSiToca`). (Va con letra b: la 0.8.5a es la del parte,
+    // en su rama)
+    v: '0.8.5b', f: '2026-11-27', h: '', t: 'Pujas que ganan',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'balanza', t: 'Pujas que ganan', x: 'La puja que te propone la app es la que se lleva al jugador unas 8 de cada 10 veces en tu liga, según lo que se ha pagado de verdad por jugadores parecidos. Si para llevártelo casi seguro hay que pagar demasiado, te lo dice y no te propone pujar.' },
+      { para: 'dueño', tipo: 'mejora', d: 'plan', t: 'Cada puja, en dos líneas', x: 'En el plan, cada puja dice cuánto pujar, cuántas veces de cada 10 ganas, cuánto pagas sobre su valor y en cuántos días lo recuperas. Sin desplegables.' },
+    ],
+  },
   {
     // (26 nov, Carlos: «vamos a hacer lo de las funciones del fantasy premium despacito…»; claude/nota-premium.md del proyecto)
     // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad

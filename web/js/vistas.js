@@ -17,6 +17,7 @@ import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos, origenFichaje } from './operaciones.js';
+import { lineaPaso, noCompensaTxt } from './puja-txt.js';
 import { porJornadaHTML } from './directo.js';
 import { parte, visibles } from './parte.js';
 
@@ -525,7 +526,40 @@ function clavesDe(o) {
  *  entera (nunca se corta) */
 const ORI_CLS = { mercado: 'libre', venta: 'vende', trato: 'vende', clausula: 'abierta' };
 const oriHTML = (ori) => (ori ? `<span class="pill pp-ori ${ORI_CLS[ori.tipo] || ''}">${esc(ori.txt)}</span>` : '');
+/* (27 nov, Carlos: «la tarjeta en 2 líneas cortas como mucho, sin desplegable: la puja, la probabilidad, cuánto pago de más y
+   en cuánto lo recupero, o que no compensa. Mismo criterio en las otras variantes») una puja del plan es una tarjeta fija de
+   dos líneas: arriba, «Pujar» y el jugador con la puja a la derecha; abajo, con cuánto ganas y lo pagado de más con en
+   cuánto lo recuperas (para revender, cuándo venderlo y lo que ganarías). Sin «Sale a»: el precio de salida no es lo que se
+   paga. El círculo marca el paso hecho y el resto abre la ficha */
+function pasoPuja(S, P, o) {
+  const j = o.j;
+  const ok = hecho(S, P, o);
+  const liga = hechoEnLiga(S, P, o);
+  const curso = liga && liga.estado === 'curso';
+  const est = o.descartada ? 'descartada' : curso ? 'curso' : ok ? 'hecho' : o.sugerencia ? 'sugerencia' : '';
+  const nombre = j ? j.nombre : o.jugador || '';
+  // (la etiqueta de dónde sale, solo si no es el mercado: «Pujar» ya lo dice y, con ella, en 360 px se cortaba el nombre)
+  const ori0 = o.descartada ? null : origenFichaje(S.M, o);
+  const ori = ori0 && ori0.tipo !== 'mercado' ? ori0 : null;
+  const puja = num(o.puja_max || o.importe);
+  const imp = puja && !o.descartada ? `<span class="pp-imp">${eur(puja)}</span>` : '';
+  const cambiaTxt = pasoCambiaTxt(P, o);
+  const l2 = liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>`
+    : `<span class="pp-porque">${esc(o.descartada ? String(cambiaTxt || o.aviso || '').replace(/^La app lo (descarta|quita)[.:]\s*/, '') : lineaPaso(S.M, o, { corto: true }))}</span>`;
+  const marca = liga || o.descartada
+    ? `<span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : liga ? icono('ok') : icono('cerrar')}</span>`
+    : `<button class="pp-num" data-accion="hecho" data-n="${o.n}" aria-label="${ok ? 'Deshacer' : 'Marcar como hecho'}">${ok ? icono('ok') : ''}</button>`;
+  const cara = j ? `<span class="pp-j" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono('lista')}</span>`;
+  return `<div class="paso2 paso3 corto pujar ${est}"><div class="pp-fila"${j ? ` data-j="${esc(j.id)}" role="button" tabindex="0"` : ''}>
+      ${marca}${cara}
+      <span class="pp-c">
+        <span class="pp-l1${ori ? ' con-ori' : ''}"><span class="accion-t ${o.descartada ? 'descartada' : 'pujar'}">${o.descartada ? (cambiaTxt ? 'Ha cambiado' : 'Descartado') : 'Pujar'}</span><b class="pp-nom">${esc(nombre)}</b>${oriHTML(ori)}${imp}</span>
+        <span class="pp-l2s${liga ? ' con-est' : ''}">${l2}</span>
+      </span>
+    </div></div>`;
+}
 function pasoOp(S, P, o) {
+  if (o.accion === 'pujar') return pasoPuja(S, P, o);
   const j = o.j;
   const ok = hecho(S, P, o);
   // si se ve en LaLiga que lo has hecho, se dice qué y no hace falta el botón
@@ -1618,14 +1652,14 @@ export function mercado(S) {
         ap, estadoPill(m.j), m.noVende || ap || (opM(m) && opM(m).retira) ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
         m.tipo === 'liga' && m.pujas ? `<span class="pill${pujaReciente(m) ? ' duda' : ''}">${m.pujas} puja${m.pujas > 1 ? 's' : ''}${pujaReciente(m) ? ' · nueva' : ''}</span>` : '',
       ],
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(pujaDe(m))}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? (m.noCompensa && !opM(m) ? `<div class="d apag" title="${esc(noCompensaTxt(m))}">no compensa</div>` : `<div class="d apag">puja ${eur(pujaDe(m))}</div>`) : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
     }); };
     const PL = M.pujasLiga;
     // (por tramos de valor: cuanto más barato, más se paga en porcentaje; Carlos, 30 oct)
     const tramoCorto = (x) => (x.desde === 0 ? `menos de ${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? `más de ${eur(x.desde, { dec: 0 })}` : `de ${x.desde / 1e6} a ${eur(x.hasta, { dec: 0 })}`);
     const pagaTxt = !PL || PL.poco ? ''
-      : PL.tramos && PL.tramos.length >= 2 ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga, cuanto más barato, más se paga sobre su valor (mediana): ${PL.tramos.map((x) => `${tramoCorto(x)}, <b>${pct(x.med * 100)}</b>`).join(' · ')}. A la derecha, la puja que propone la app (con lo que se paga por los de su valor): la misma en Especular y en el plan.</p>`
-      : `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que propone la app: la misma en Especular y en el plan.</p>`;
+      : PL.tramos && PL.tramos.length >= 2 ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga, cuanto más barato, más se paga sobre su valor (mediana): ${PL.tramos.map((x) => `${tramoCorto(x)}, <b>${pct(x.med * 100)}</b>`).join(' · ')}. A la derecha, la puja de la app, la que gana unas 7-8 de cada 10 veces: la misma en el plan.</p>`
+      : `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja de la app, la que gana unas 7-8 de cada 10 veces: la misma en el plan.</p>`;
     let ml = liga.length ? `<div class="grupo"><span>Libres · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
     // (con lo de los rivales cerrado, su candado va con el del radar en una tarjeta, debajo de la lista)
     if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div>`;

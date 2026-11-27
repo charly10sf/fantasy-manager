@@ -66,15 +66,17 @@ try {
   await page.click('[data-ir="equipo"]');
   await page.click('[data-ir="hoy"]');
   await page.waitForSelector('.paso3 .pp-ori');
-  const B = await page.$$eval('details.paso3', (l) => l.map((d) => {
+  // (27 nov) las pujas son tarjetas fijas de dos líneas (div.paso3.corto, .pp-fila), sin desplegable
+  const B = await page.$$eval('details.paso3, div.paso3.corto', (l) => l.map((d) => {
     const ori = d.querySelector('.pp-l1 .pp-ori');
-    const caja = d.querySelector('summary').getBoundingClientRect();
+    const caja = d.querySelector('summary, .pp-fila').getBoundingClientRect();
     const r = ori && ori.getBoundingClientRect();
     return { nom: (d.querySelector('.pp-nom') || {}).textContent || '', acc: (d.querySelector('.accion-t') || {}).textContent || '', desc: d.classList.contains('descartada'), ori: ori ? ori.textContent : null, corta: ori ? ori.scrollWidth > ori.clientWidth + 1 || r.right > caja.right + 1 : false };
   }));
   const de = (nom) => B.find((x) => x.nom === nom && !x.desc);
   ok(de(B0.venta) && de(B0.venta).ori && de(B0.venta).ori.startsWith('En venta · '), `Hoy: ${B0.venta} lleva «${de(B0.venta) && de(B0.venta).ori}»`);
-  for (const p of B0.pujas) ok(de(p) && de(p).ori === 'Mercado', `Hoy: la puja por ${p} lleva «${de(p) && de(p).ori}»`);
+  // (27 nov) una puja ya dice «Pujar» (siempre es del mercado): sin la etiqueta, para que quepa en dos líneas en 360 px
+  for (const p of B0.pujas) ok(de(p) && !de(p).ori, `Hoy: la puja por ${p} sin etiqueta («Pujar» ya dice que es del mercado)`);
   const d = B.find((x) => x.nom === B0.libre && x.desc);
   ok(d && !d.ori, `Hoy: el descartado (${B0.libre}) no lleva etiqueta`);
   ok(B.every((x) => !x.corta), `en 360 px ninguna etiqueta se corta (${B.filter((x) => x.ori).length} con etiqueta)`);

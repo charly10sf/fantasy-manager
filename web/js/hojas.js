@@ -2,6 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
+import { lineaPaso, pujaLinea, noCompensaTxt, vecesCorto, pujaDe } from './puja-txt.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
@@ -373,7 +374,10 @@ export function fichaJugador(S, pid) {
   let planDentro = false;
   if (M.inercia && M.inercia(pid)) { if (bloqueada('inercia')) cerradas.push('inercia'); else { const r = inerciaPlanHTML(S, pid, { mio: !!mia, op, mia }); h += r.html; planDentro = r.fundido; } }
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
-  if (op && !planDentro) h += avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
+  // (27 nov) una puja: la misma línea que en Hoy (con cuánto ganas y lo pagado de más), sin el párrafo
+  if (op && !planDentro) h += op.accion === 'pujar'
+    ? avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: lineaPaso(M, op), t: `Plan de hoy: pujar ${eur(num(op.puja_max || op.importe))}` })
+    : avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
   // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
   const dpl = !op && descartePlan(S, pid);
   if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: dpl.yaPujada ? 'Plan de hoy: no pujaría, pero tu puja sigue' : `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : (S.M.clausulas || []).some((y) => String(y.pid) === String(pid)) && !(S.M.mercado || []).some((y) => String(y.pid) === String(pid)) ? 'lo clausules' : 'pujes'}`, texto: dpl.aviso || '' });
@@ -448,15 +452,20 @@ export function fichaJugador(S, pid) {
         // (37) «Libre en el mercado»: a la vista, desde cuánto y lo que haría la app; dentro, la subasta y lo que se paga en tu liga
         const noPuja = cc && !cc.ok && !espX;
         const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor, m.pid) : null;
-        const lineaL = m.miPuja ? `Desde ${eur(m.precio)} · tu puja: ${eur(m.miPuja)}` : cc && !cc.ok && espX ? `Desde ${eur(m.precio)} · para revender, la app pujaría ${eur(espX)}` : noPuja ? `Desde ${eur(m.precio)} · con su calendario, la app no pujaría` : `Desde ${eur(m.precio)} · la app pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)})`;
+        // (27 nov) la puja que gana unas 7-8 de cada 10 veces, con lo pagado de más, o que no compensa; el precio de salida
+        // («Sale a», lo que valía al salir al mercado) va dentro: no es lo que se paga
+        const pMia = m.miPuja && m.quien && m.quien.pMia != null ? m.quien.pMia : m.miPuja ? (pujaDe(M, m.pid, num(m.miPuja)) || {}).pGana : null;
+        const lineaL = m.miPuja ? `Tu puja: ${eur(m.miPuja)}${pMia != null ? ` · ganas ${vecesCorto(pMia)}` : ''}${m.puja > m.miPuja && !m.noCompensa ? ` · la app pujaría ${eur(m.puja)}` : ''}`
+          : cc && !cc.ok && espX ? `Para revender, la app pujaría ${eur(espX)}` : noPuja ? 'Con su calendario, la app no pujaría'
+          : m.noCompensa && !espX ? noCompensaTxt(m, { porque: true }) : `La app pujaría ${eur(m.puja)} · ${pujaLinea(m)}`;
         const cal = m.miPuja ? '' : cc && !cc.ok && espX ? 'Para revender da igual su calendario.' : noPuja ? `Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : '';
         // (0.7.13u) por los que venían como él (su subida y si es de los top) y, si tu liga tiene pocos, con todas las ligas
-        const liga = PV ? `Por ${M.pagaTxt(PV)} se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.${m.pGana != null ? ` Con la puja de la app te lo llevarías más o menos ${Math.max(1, Math.round(m.pGana * 10))} de cada 10 veces.` : ''}` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
-        const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
+        const liga = PV ? `Por ${M.pagaTxt(PV)} se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
+        const tope = '';
         // (26 nov) debajo, en la misma tarjeta, lo pagado por él y su demanda en las demás ligas (apagado en limites.json:
         // no sale nada); gratis, sin candado (Carlos, 19:31)
         h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL + otrasLigasHTML(S, m),
-          d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
+          d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. Precio de salida ${eur(m.precio)}. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
         // (0.8.2) quién puede estar detrás de las pujas de otros que lleva (función top)
         if (m.ajenas > 0 && m.quien && m.quien.cands.length) { if (bloqueada('quienPuja')) cerradas.push('quienPuja'); else h += quienPujaHTML(S, m); }
       }

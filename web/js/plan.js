@@ -23,6 +23,7 @@ import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia, T
 const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
 import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, noRevenderCorto, prisaNegativo, malPartidoTxt } from './motor.js';
 import { conPlan } from './decide.js';
+import { pujaLinea, noCompensaTxt } from './puja-txt.js';
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, pujaReal } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
 
@@ -354,7 +355,8 @@ function candidatos(X, vetados) {
   const dineroP = num(D.dinero) - num(M.misPujas);
   // (con la puja que de verdad gana si con la de la app casi nunca te lo llevas: `pujaReal`)
   const vaParon = (y) => cholloParon(M, y.j, pujaReal(y)) || subeHastaVuelta(M, y.j, pujaReal(y)) || aSuValorParon(M, y, pujaReal(y), dineroP);
-  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && !(X.enCambio && X.enCambio.has(y.pid)) && (((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || vaParon(y)))
+  // (27 nov) solo si la puja que gana unas 7-8 de cada 10 veces compensa (`noCompensa`): no se propone una que pierde
+  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && !y.noCompensa && !(X.enCambio && X.enCambio.has(y.pid)) && (((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || vaParon(y)))
     || (paron && ['normal', 'frena'].includes(y.veredicto) && aSuValorParon(M, y, pujaReal(y), dineroP)))).slice(0, 5)) {
     const ver = V[`P-${m.pid}`];
     if (!ver || !ver.ok || !/^el once/.test(ver.para || '')) continue;
@@ -364,8 +366,9 @@ function candidatos(X, vetados) {
     const conSaldo = paron && !cholloParon(M, m.j, pujaReal(m)) && !subeHastaVuelta(M, m.j, pujaReal(m));
     nuevo({ k: `P-${m.pid}`, clase: 'pujar', objetivo: 'titular', pid: m.pid, j: m.j, importe: m.puja, puja: m.puja, entra: m.j, incierta: true, euros: -deMasNeto(m.j, m.tend, m.puja), ref: `P-${m.pid}`, interes: m.interes, conSaldo,
       op: (cu) => ({ accion: 'pujar', ref: `P-${m.pid}`, objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
-        motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. ${cu.gana >= 0.3 ? `Mejora tu once unos ${d1(cu.gana)} pts por jornada` : 'Refuerza tu plantilla'}${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}${pujaOnceTxt(M, m)} Es una subasta a ciegas: si no la ganas, no pagas nada.`,
-        datos: { porque: cu.gana >= 0.3 ? `mejora tu once: +${d1(cu.gana)} pts por jornada` : 'refuerza tu plantilla', cuanto: `puja de ${eur(m.puja)} (sale a ${eur(m.precio)})`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: 'se lo lleva otro o vuelve a LaLiga' } }) });
+        // (27 nov, Carlos: «menos texto») lo que se enseña es la puja en una línea (`pujaLinea`); el porqué, corto
+        motivo: `${cu.gana >= 0.3 ? `Mejora tu once unos ${d1(cu.gana)} pts por jornada` : 'Refuerza tu plantilla'}. ${pujaLinea(m)}.${cm.txt ? ` ${cm.txt}` : ''}`,
+        datos: { porque: cu.gana >= 0.3 ? `mejora tu once: +${d1(cu.gana)} pts por jornada` : 'refuerza tu plantilla', cuanto: `puja de ${eur(m.puja)}`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: 'se lo lleva otro o vuelve a LaLiga' } }) });
   }
 
   /* P-ent. (26 nov, noche) en una liga premium con entrenadores y sin ninguno: pujar por el libre que la app ficharía
@@ -777,6 +780,8 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
       const ver = X.V[`P-${m.pid}`];
       if (ver && !ver.ok) return corto(ver.aviso, 160) || 'La app no pujaría hoy por él.';
       if (llena) return `Tienes la plantilla llena (${TOPE_PLANTILLA}): no se puede pujar por nadie más sin vender antes.`;
+      // (27 nov) la puja que gana unas 7-8 de cada 10 veces no compensa: una línea y su cifra
+      if (m.noCompensa) return `${noCompensaTxt(m)}.`;
       if (enAlt.has(String(m.pid))) return 'Vale para tu once, pero el plan de hoy lleva otros pasos antes: si te sobra dinero, es una opción.';
       if (cand && !cuentas(X, [...lista, cand])) return 'No cabe hoy: con lo que ya llevas pujado y el resto del plan pasarías del tope de deuda.';
       const deMas = num(m.puja) - num(m.j.valor);
@@ -785,10 +790,10 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
       if (!cand && gana < 0.3) return 'No mejora tu once: en su puesto ya tienes a quien rinde igual o más.';
       const cm = M.compraCal ? M.compraCal(m.j, m.puja) : null;
       if (!cand && cm && !cm.ok) return corto(cm.txt, 160) || 'Su calendario no acompaña para lo que cuesta.';
-      if (deMas > Math.max(3e5, num(m.j.valor) * 0.08)) return `Sale a su valor, pero para ganarlo en tu liga hay que pujar ${eur(m.puja)}: ${eur(deMas)} de más para lo que mejora tu once.`;
+      if (deMas > Math.max(3e5, num(m.j.valor) * 0.08)) return `Para ganarlo en tu liga hay que pujar ${eur(m.puja)}: ${eur(deMas)} de más para lo que mejora tu once.`;
       return 'Con el resto del plan ya no mejora tu once lo bastante para lo que cuesta.';
     };
-    const chollos = (M.mercado || []).filter((m) => m.tipo === 'liga' && m.veredicto === 'chollo' && m.j && !m.miPuja && !M.dueno[m.pid] && !enPlan.has(m.pid) && !lista.some((o) => o.pid === m.pid))
+    const chollos = (M.mercado || []).filter((m) => m.tipo === 'liga' && (m.veredicto === 'chollo' || (m.noCompensa && m.veredicto === 'sube' && m.interes >= 55)) && m.j && !m.miPuja && !M.dueno[m.pid] && !enPlan.has(m.pid) && !lista.some((o) => o.pid === m.pid))
       .sort((a, b) => (b.interes || 0) - (a.interes || 0));
     for (const m of chollos) { try { const t = String(porQueNoChollo(m) || '').trim(); if (t) sinFichar[m.pid] = `${t.charAt(0).toUpperCase()}${t.slice(1)}`; } catch (e) { /* sin su porqué: se queda como estaba */ } }
     descartes.push(...chollos.filter((m) => sinFichar[m.pid] && !enAlt.has(String(m.pid)) && !visto.has(String(m.pid))).slice(0, 3).map((m) => ({ pid: m.pid, jugador: m.j.nombre, motivo: sinFichar[m.pid] })));

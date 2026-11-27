@@ -1774,11 +1774,40 @@ function alDiaDichos() {
   fijarMotor(S.M);
   montarPlan();
 }
+/* (27 nov) lo que valía cada jugador comprado en el mercado de tu liga, para lo que se paga en tu liga (la puja que gana):
+   si el histórico de aquí es corto (un móvil nuevo, el navegador borrado) y el jugador no tiene ficha, el motor no sabe lo
+   que valía y esa compra no cuenta (en el Chrome de Carlos, el 27 nov, 113 de 157). Se le pide a LaLiga su histórico de
+   valor (la misma ruta que la ficha), como mucho 20 jugadores cada vez y cada uno una vez, y se guardan solo los días de
+   alrededor de cada compra. LS «valor-compras» (por liga): { pid: { t, v: [[t, valor]] } }, 50 días */
+let valorComprasEnMarcha = false;
+async function valorComprasSiToca() {
+  if (valorComprasEnMarcha || !S.D || !S.M || enDemo() || !S.D.liga) return;
+  const k = K('valor-compras'), vc = LS.get(k, {}), ahora = Date.now();
+  for (const pid of Object.keys(vc)) if (!vc[pid] || ahora - (+vc[pid].t || 0) > 50 * DIA) delete vc[pid];
+  const falta = (S.M.comprasSinValor || []).filter((pid) => !vc[pid]).slice(0, 20);
+  if (!falta.length) return;
+  valorComprasEnMarcha = true;
+  const lista = (actHist(S.D.liga.id) || { lista: [] }).lista || [];
+  let nuevos = 0;
+  try {
+    await enParalelo(falta, 3, async (pid) => {
+      const v = await historialValor(pid).catch(() => null);
+      const ts = lista.filter((a) => a.clase === 'compra' && String(a.pid) === String(pid) && a.t).map((a) => a.t);
+      const pts = (v || []).filter(([t]) => ts.some((tc) => t <= tc && tc - t <= 3 * DIA));
+      vc[pid] = { t: ahora, v: pts };
+      if (pts.length) nuevos++;
+    });
+  } finally { valorComprasEnMarcha = false; }
+  if (K('valor-compras') !== k) return;
+  LS.set(k, vc);
+  // con compras nuevas que ya cuentan, el motor otra vez (como al cambiar lo que te dice un rival)
+  if (nuevos && S.D && S.M) { const ap = S.M.aprende; S.M = analizar(S.D, S.H, S.c, extraM()); S.M.aprende = ap; fijarMotor(S.M); montarPlan(); }
+}
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
   return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: dichosMotorF(), calDinero: calDineroGuardada().cal,
-    pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal, pujasVistas: apuntarPujasVistas(), quienVisto: S.D && !enDemo() ? LS.get(K('quien-visto'), {}) : {} };
+    pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal, valorCompras: S.D && !enDemo() ? LS.get(K('valor-compras'), {}) : {}, pujasVistas: apuntarPujasVistas(), quienVisto: S.D && !enDemo() ? LS.get(K('quien-visto'), {}) : {} };
 }
 
 /* (0.7.13u) tus pujas del mercado, para aprender de las que ganas y pierdes: cada una que la app ve puesta (jugador, lo que
@@ -1975,6 +2004,7 @@ function saludarSiToca(por = 'cada10') {
   calDineroSiToca();
   calPujasSiToca();
   comprasSiToca();
+  valorComprasSiToca().catch(() => {});
   // (26 nov) lo de todas las ligas: si algo de esto falla, que no pase nada (no es de lo que se ve)
   // (leer lo de las demás va después de mandar lo de la tuya: el servidor solo contesta a quien ha mandado algo de su liga)
   ligasSiToca().catch(() => {}).then(() => { try { otrasSiToca(); } catch (e) { /* nada */ } });

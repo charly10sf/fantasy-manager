@@ -6,6 +6,7 @@ import { eur, pct, dura, cuando, DIA, HORA } from './util.js';
 import { paronLejos } from './operaciones.js';
 import { esClausulable } from './motor.js';
 import { comoVa } from './decide.js';
+import { pujaLinea } from './puja-txt.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -155,10 +156,11 @@ export function acciones(D, M, c) {
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
   }));
 
-  M.mercado.filter((m) => !m.miPuja && m.veredicto === 'chollo' && m.meLlega && (m.puja || m.precio) <= M.pujaMax && !M.dueno[m.pid] && M.compraCal(m.j, m.puja || m.precio).ok).slice(0, 2).forEach((m, k) => add({
+  // (27 nov) con la puja que gana unas 7-8 de cada 10 veces, y solo si compensa; sin «Está a» (el precio de salida)
+  M.mercado.filter((m) => !m.miPuja && m.veredicto === 'chollo' && !m.noCompensa && m.meLlega && (m.puja || m.precio) <= M.pujaMax && !M.dueno[m.pid] && M.compraCal(m.j, m.puja || m.precio).ok).slice(0, 2).forEach((m, k) => add({
     tipo: 'pujar', prio: 55 - k, icono: 'mercado', pid: m.pid, cuando: m.cierra ? `Cierra ${cuando(m.cierra)}` : 'Hoy',
-    titulo: `Puja por ${m.j.nombre}`,
-    texto: `Está a ${eur(m.precio)}${m.sobre <= 0.005 ? ', lo que vale' : ` (un ${Math.round(m.sobre * 100)} % sobre su valor)`}${m.por.length ? `: ${m.por.slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : ''}${M.compraCal(m.j, m.puja || m.precio).txt ? ` ${M.compraCal(m.j, m.puja || m.precio).txt}` : ''}`,
+    titulo: `Puja ${eur(m.puja)} por ${m.j.nombre}`,
+    texto: `${pujaLinea(m)}.${M.compraCal(m.j, m.puja || m.precio).txt ? ` ${M.compraCal(m.j, m.puja || m.precio).txt}` : ''}`,
   }));
 
   if (paronLejos(M, ahora)) add({

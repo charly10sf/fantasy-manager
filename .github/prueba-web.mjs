@@ -949,12 +949,18 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const esp0 = (antes.esp || []).filter((x) => x.pid !== j.id);
     // (sin saldo, para que no entre por estar a su valor)
     const dOrig = D.dinero; D.dinero = 0;
-    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: j.valor * 1.2, r: 0.025, beneficio: j.valor * 0.12 }]);
+    // (27 nov) que suba hasta la vuelta por encima de la puja que gana en la liga (ahora la de 7-8 de cada 10, más alta)
+    const vf = Math.max(j.valor * 1.2, (m.puja || 0) * 1.1);
+    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: vf, r: 0.025, beneficio: vf - precio }]);
     const quieto = una(esp0);
     D.dinero = dOrig;
     // (0.7.13p) uno a su valor, bueno y sin bajar, que se paga con el saldo: vale para el once aunque no sea chollo; si no
     // te llega con el saldo, no
     const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02 && !(antes.esp || []).some((e) => String(e.pid) === String(x.j.id))) || null;
+    // (27 nov) que la puja que gana le compense (con un calendario de riesgo alto, `noCompensa`, ya no se puja): aquí se
+    // mira lo del parón, no eso
+    const nc0 = m2 ? m2.noCompensa : null;
+    if (m2) { m2.noCompensa = null; M._cat = null; }
     let aValor = null, sinSaldo = null;
     if (m2) {
       m2.interes = Math.max(m2.interes || 0, 60);
@@ -965,7 +971,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
       const prueba = () => { const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: m2.j.nombre, pid: m2.j.id, importe: imp, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(m2.j.id)); return o ? !!o.descartada : null; };
       D.dinero = imp * 2 + (M.misPujas || 0); aValor = prueba();
       D.dinero = Math.round(imp / 2) + (M.misPujas || 0); sinSaldo = prueba();
-      D.dinero = d0; M.inercia = ine0; M.tend = tend0;
+      D.dinero = d0; M.inercia = ine0; M.tend = tend0; m2.noCompensa = nc0; M._cat = null;
     }
     M.paron = antes.paron; M.enParon = antes.enParon; if (M.proxima) M.proxima.ini = antes.ini; M.especular = antes.esp;
     return { sube, quieto, aValor, sinSaldo };

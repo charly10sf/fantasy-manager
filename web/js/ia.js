@@ -17,6 +17,7 @@ import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } fr
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo, ofertaDueno, motivoPeligro } from './motor.js';
+import { noCompensaTxt, pujaDe } from './puja-txt.js';
 import { comoVa } from './decide.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor, AJUSTES as AJ_PLAN } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
@@ -1332,7 +1333,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
       ['no subían', med((x) => x.r != null && x.r <= 0.004)], [`eran de los top (más de ${eur(M.corteTop, { dec: 0 })})`, med((x) => x.top)]].filter(([, x]) => x);
     const MP = M.misPujasRes;
     if (g.length || M.calPujas || MP) {
-      L.push(`\nCÓMO SE PAGA SEGÚN CÓMO VIENE EL JUGADOR${g.length ? ` (compras de esta liga, con lo que subía cada uno esos días): ${g.map(([t, x]) => `los que ${t}, mediana ${pct(x.med * 100)} sobre su valor (${x.n})`).join('; ')}` : ''}.${M.calPujas ? ` En todas las ligas hay ${M.calPujas.n} compras apuntadas, sin nombres: cuando aquí hay pocas parecidas, la puja de cada P- mezcla las de aquí con esas.` : ''} La puja de la app (P-) ya va con los que venían como él: para uno que sube fuerte, no la bajes, que en esta liga con menos se lo lleva otro. Si con esa puja no sale revenderlo, se dice en su línea (PARA REVENDER NO SALE) y entonces solo vale para tenerlo.${MP ? ` MIS PUJAS (las ${MP.n} últimas que vio la app): ganadas ${MP.ganadas}, perdidas ${MP.perdidas}${MP.falta != null ? `; en las perdidas, quien se lo llevó pagó de mediana ${pct(MP.falta * 100, 1, false)} más sobre su valor que yo` : ''}${MP.ajuste > 0.01 ? '; por eso la app puja algo más arriba de lo normal en esta liga' : MP.ajuste < -0.01 ? '; las gano casi todas, así que la app puja algo más abajo' : ''}.` : ''}`);
+      L.push(`\nCÓMO SE PAGA SEGÚN CÓMO VIENE EL JUGADOR${g.length ? ` (compras de esta liga, con lo que subía cada uno esos días): ${g.map(([t, x]) => `los que ${t}, mediana ${pct(x.med * 100)} sobre su valor (${x.n})`).join('; ')}` : ''}.${M.calPujas ? ` En todas las ligas hay ${M.calPujas.n} compras apuntadas, sin nombres: cuando aquí hay pocas parecidas, la puja de cada P- mezcla las de aquí con esas.` : ''} La puja de la app (P-) es la que gana unas 7-8 de cada 10 veces en esta liga: no la bajes, que con menos lo normal es perderlo; si no compensa, su línea dice NO COMPENSA y no se propone. Si con esa puja no sale revenderlo, se dice en su línea (PARA REVENDER NO SALE) y entonces solo vale para tenerlo.${MP ? ` MIS PUJAS (las ${MP.n} últimas que vio la app): ganadas ${MP.ganadas}, perdidas ${MP.perdidas}${MP.falta != null ? `; en las perdidas, quien se lo llevó pagó de mediana ${pct(MP.falta * 100, 1, false)} más sobre su valor que yo` : ''}${MP.ajuste > 0.01 ? '; por eso la app puja algo más arriba de lo normal en esta liga' : MP.ajuste < -0.01 ? '; las gano casi todas, así que la app puja algo más abajo' : ''}.` : ''}`);
     }
   }
   // lo que se puede hacer hoy, cada cosa con los datos de su jugador (forma, once, rivales, prensa)
@@ -2324,6 +2325,12 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
             aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(importe)}. La app la deja en ${eur(objetivoP)}: con más pagarías de más.`;
             importe = objetivoP; o.puja_max = importe;
           }
+          // (27 nov) nunca una puja que gana menos de la mitad de las veces: si no te llega para la que gana (o la IA se queda
+          // corta y no se puede subir), fuera, con la cifra que haría falta
+          if (importe < objetivoP) {
+            const pI = (pujaDe(M, opC.pid, importe) || {}).pGana;
+            if (pI != null && pI < (M.PISO_PUJA || 0.5)) { descartada = true; aviso = `La app lo descarta: con ${eur(importe)} lo normal es perderlo. Para llevártelo casi seguro hay que ir a ${eur(objetivoP)}${sube < objetivoP ? ' y no te llega' : ''}.`; }
+          }
           // (25 nov, hallazgo 4: «puja de 1,32 M (sale a 1,27 M)» en las pastillas y, debajo, «Subida de 1,32 M a 1,43 M», con
           // el paso en 1,43 M) UNA sola puja a la vista: si al repasar el plan cambia, las pastillas y la frase de la IA dicen
           // la del paso, y el aviso cuenta de cuál venía y por qué
@@ -2428,6 +2435,11 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
         aviso = `${aviso ? `${aviso} ` : ''}La IA pagaba ${eur(importe)} por subirla. La app lo deja en la subida justa, ${eur(tope)}${bj.parcial && bj.caro ? ` (deja fuera a ${bloqueada('quienPaga') ? 'casi todos' : `todos menos a ${bj.parcial.quedan.join(', ')}`})` : ''}: con más pagarías de más.`;
         importe = tope;
       }
+    }
+    // (27 nov) la puja que gana unas 7-8 de cada 10 veces no compensa para tu once (ni se recupera teniéndolo): fuera, con la
+    // cifra. No se puja menos: con menos lo normal es perderlo (Carlos: «no tiene sentido recomendar una puja que pierde»)
+    if (!ya && !descartada && accion === 'pujar' && opC && opC.noCompensa && !o.entrenador && !o.aguantar && !String(o.objetivo || '').startsWith('revend')) {
+      descartada = true; aviso = `La app lo descarta. ${noCompensaTxt(opC)}.`;
     }
     // pagar mucho más de lo que vale: se avisa y, si es una barbaridad sin un trato que le hayas contado, se descarta
     // lo que cuenta es el dinero que se pierde (un +25 % por uno de 3 M no es lo mismo que por uno de 40 M),
