@@ -10096,17 +10096,24 @@
    "w": "2026-11-27T21:39:03Z",
    "f": "2026-11-27T21:41:13.286Z",
    "rf": "82:14"
+  },
+  "fm|135|1640985|81": {
+   "j": "Yassir Zabiri",
+   "m": "81'",
+   "f": "2026-11-27T21:46:17.219Z",
+   "rf": "87:17",
+   "casado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7080,
+   "ok": 7082,
    "fallos": 0,
-   "ejecuciones": 5802,
+   "ejecuciones": 5803,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T21:41:13.286Z"
+   "ultima": "2026-11-27T21:46:17.219Z"
   }
  },
  "ptsDirecto": {
@@ -10160,27 +10167,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:41:31.346Z"
+   "ultimaBien": "2026-11-27T21:46:20.575Z"
   }
  },
  "avisos": [
