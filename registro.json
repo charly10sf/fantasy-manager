@@ -3418,7 +3418,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256173/rodri-empieza-trabajar-grupo.html": 1795776315000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/27/alerta-guido-paterna-entrenamiento-valencia-136918798.html": 1795777600000,
    "AS|https://as.com/futbol/primera/simeone-con-bajas-arriba-pero-con-el-cuti-romero-mas-cerca-f202611-n/": 1795778023000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000
   },
   "hechos": [
    {
@@ -3835,7 +3836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -4753,22 +4754,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795780874074
+  }
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 7,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 66282,
-  "salida": 9934,
+  "entrada": 68297,
+  "salida": 10074,
   "cacheLee": 48609,
   "cacheEscribe": 20797,
-  "dolares": 0.170579,
+  "dolares": 0.170851,
   "reservado": 0
  },
  "recientes": {
@@ -9837,13 +9840,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6942,
+   "ok": 6943,
    "fallos": 0,
-   "ejecuciones": 5684,
+   "ejecuciones": 5685,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:56:12.237Z"
+   "ultima": "2026-11-27T12:01:14.074Z"
   }
  },
  "ptsDirecto": {},
@@ -9860,15 +9863,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:56:22.343Z"
+   "ultimaBien": "2026-11-27T12:01:28.779Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:56:22.343Z"
+   "ultimaBien": "2026-11-27T12:01:28.779Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:56:22.343Z"
+   "ultimaBien": "2026-11-27T12:01:28.779Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9876,11 +9879,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:56:22.343Z"
+   "ultimaBien": "2026-11-27T12:01:28.779Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:56:22.343Z"
+   "ultimaBien": "2026-11-27T12:01:28.779Z"
   }
  },
  "avisos": [
