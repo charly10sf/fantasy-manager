@@ -693,7 +693,7 @@ export function fichaRival(S, tid) {
   const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
   const conDinero = r.dinero && r.dinero.v != null;
   const tDinero = bloqueada('dineroRivales', tid)
-    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}${selloTop()}</b><span>su dinero ›</span></button>`
+    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('corona')}</b><span>su dinero ›</span></button>`
     : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
@@ -749,7 +749,7 @@ export function fichaRival(S, tid) {
     // la diferencia, solo con su dinero abierto
     const cerradoD = bloqueada('dineroRivales', tid), exactoD = !!(r.dinero && r.dinero.exacto), ddR = exactoD ? null : dichoDe(tid);
     if (cerradoD) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${cerradoD ? (ddR ? `${tileDicho(ddR)}<button type="button" class="eq2-t dd-cerr" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}Cerrado</b><span>su dinero en la app</span></button>` : '') : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
+    h += `<div class="eq2-tiles">${cerradoD ? (ddR ? `${tileDicho(ddR)}<button type="button" class="eq2-t dd-cerr" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('corona')}Cerrado</b><span>su dinero en la app</span></button>` : '') : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
       <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado` : 'sin compras al mercado'}</span></div></div>`;
     // si te ha dicho cuánto tiene, se apunta (la hoja «dicho»): con su dinero abierto, desde entonces sale de eso más lo que mueva
     if (!exactoD) {
@@ -858,14 +858,14 @@ function anuncioTopHTML(A, S) {
   const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
   const veces = (k) => (k === 1 ? '1 vez' : `${k} veces`);
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+    <span class="bloq-grande">${icono('corona')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
   const yaAb = rivales ? rivalesAbiertos() : [];
   if (rivales && rid == null) {
     const rs = M ? M.rivales : [];
     h += `<p>Se abre <b>por rival</b>, ${min} minutos, con ${ads}. ${q ? `Te ${q === 1 ? 'queda 1 vez' : `quedan ${veces(q)}`} esta jornada.` : `Ya lo has abierto las ${veces(n)} de esta jornada.`}</p>`;
     h += `<div class="lista-rival-top">${rs.map((r) => {
       const ab = yaAb.includes(String(r.e.teamId));
-      return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('candado')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
+      return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('corona')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
     }).join('')}</div>
       ${botonInvitarTop(A.clave)}<button class="btn ancho sec" data-accion="noTop" style="margin-top:10px">Ahora no</button></div>`;
     return h;

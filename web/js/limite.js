@@ -78,7 +78,7 @@ function esDe(yo) {
    15 nov, 02:08: «TODO un solo anuncio salvo ver el dinero del rival durante 5 minutos, que serán 2»):
    - El dinero de un rival (dineroRivales), POR RIVAL: 2 anuncios seguidos lo abren 5 MINUTOS; como mucho 2 veces por
      jornada. «top» en limites.json: { "rivales": 2, "anuncios": 2, "minutos": 5 }.
-   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 5 HORAS («horasQuien»: 5). Sin tope.
+   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 12 HORAS («horasQuien»: 12; Carlos, 27 nov: «durante 12 horas en vez de durante 5»). Sin tope.
    - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
      hasta las 00:00 de Madrid.
    Antes (0.6.3a-0.7.11f) las de los rivales iban por función: 2 anuncios, 2 veces por jornada y 1 hora, y a un amigo
@@ -96,7 +96,7 @@ const porJornada = (clave) => POR_JORNADA.includes(clave);
 const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
 const cfgTop = () => {
   const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {};
-  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5), parteAnuncios: Math.min(3, Math.floor(num0(t.parteAnuncios, 2))) };
+  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 12), parteAnuncios: Math.min(3, Math.floor(num0(t.parteAnuncios, 2))) };
 };
 /** cuántos anuncios pide cada vez (los del dinero de un rival, todos seguidos) */
 export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : clave === 'parteRivales' ? cfgTop().parteAnuncios : 1);

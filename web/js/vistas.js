@@ -2,7 +2,7 @@
    (Directo, la jornada en juego, está en directo.js.) */
 import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe, elDia } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, selloTop, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { ventaVista, comoVa } from './decide.js';
@@ -1505,8 +1505,8 @@ export function rivales(S) {
   const nParte = PV.abierto ? PV.rivales.filter((x) => x.lineas.length).length : 0;
   let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
   // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales») antes estaba en Directo; el número del parte,
-  // solo con la llave abierta; el sello TOP, el de todas las funciones top (Carlos, 27 nov: «la misma corona en todas»)
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['parte', `${PV.abierto ? '' : icono('candado')}Parte${selloTop()}`, nParte, 'oro', 'tab-oro']]);
+  // solo con la llave abierta; la corona, la de todas las funciones top (Carlos, 27 nov, 03:29: opción A, solo la corona)
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['parte', `${icono('corona')}Parte`, nParte, 'oro', 'tab-oro']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
   else if (seg === 'parte') h += parteHTML(S, PV);

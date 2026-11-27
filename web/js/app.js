@@ -3502,7 +3502,7 @@ function bloqHTML(arg) {
   const [clave, como] = String(arg || '').split('|');
   const [t, x] = BLOQUEO[como] || BLOQUEO[clave] || ['Función top', ''];
   return `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <span class="bloq-grande">${icono('corona')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>${esc(dondeTop(clave).trim())}</p>
         ${enApp || enIPhone ? '' : botonPlay()}
         ${Hj.botonInvitarTop(clave)}

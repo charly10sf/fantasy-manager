@@ -1016,7 +1016,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 }
 
 // 16b: (0.7.12, Carlos 15 nov) todo con 1 anuncio salvo el dinero de un rival: 2 anuncios seguidos, ese rival 5
-// minutos, 2 veces por jornada; quién paga, 1 anuncio y 5 horas (todos los rivales); jornada nueva, a cero
+// minutos, 2 veces por jornada; quién paga, 1 anuncio y 12 horas (27 nov; antes 5) (todos los rivales); jornada nueva, a cero
 {
   const { ctx, page, errores } = await pagina();
   await page.goto(`${BASE}/index.html`);
@@ -1057,12 +1057,12 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else bien('dinero por rival: con 2 anuncios, ese rival 5 minutos (los demás y quién paga, cerrados); queda 1 vez');
   if (!r.pasado) mal('dinero por rival: pasados los 5 minutos sigue abierto');
   else bien('dinero por rival: pasados los 5 minutos se cierra');
-  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 5 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
-  else bien('quién paga: 1 anuncio, todos los rivales, 5 horas (y no gasta las veces del dinero)');
+  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 12 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
+  else bien('quién paga: 1 anuncio, todos los rivales, 12 horas (y no gasta las veces del dinero)');
   if (r.tope.quedan !== 0 || !r.tope.tercero || !/Ya has visto el dinero de un rival las 2 veces/.test(r.hojaLlena)) mal(`dinero por rival: el tope de 2: ${JSON.stringify(r.tope)} / ${r.hojaLlena.slice(0, 160)}`);
   else bien('dinero por rival: 2 veces por jornada y la tercera ya no');
-  if (!/5 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
-  else bien('quién paga: la hoja dice un anuncio y 5 horas');
+  if (!/12 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
+  else bien('quién paga: la hoja dice un anuncio y 12 horas');
   if ((r.elegir.match(/data-rival="/g) || []).length) mal('dinero por rival: con el tope gastado, la elección deja abrir otro');
   else bien('dinero por rival: sin rival se elige de la lista (con el tope gastado, ninguno se puede abrir)');
   if (r.nueva.quedan !== 2) mal(`dinero por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
