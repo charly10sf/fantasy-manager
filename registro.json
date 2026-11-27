@@ -2430,6 +2430,17 @@
    "jornada": 14,
    "id": "2126442661834011012",
    "t": "2026-11-27T22:26:52.960Z"
+  },
+  {
+   "clave": "mercado|2026-11-28",
+   "tipo": "mercado",
+   "jornada": 14,
+   "id": "2126454863173234860",
+   "t": "2026-11-27T23:15:22.117Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "581"
+   }
   }
  ],
  "estados": {
@@ -5000,19 +5011,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-27",
+  "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 55,
-   "redactar": 24,
-   "revisar": 14,
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 189633,
-  "salida": 29636,
-  "cacheLee": 170494,
-  "cacheEscribe": 47180,
-  "dolares": 0.442903,
+  "entrada": 6004,
+  "salida": 199,
+  "cacheLee": 8457,
+  "cacheEscribe": 1125,
+  "dolares": 0.019343,
   "reservado": 0
  },
  "recientes": {
@@ -5084,10 +5095,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-22T23:16:17.455Z",
-    "texto": "📈 Rioja, del Valencia 🦇, es el chollo de hoy: vale 3,1 M, sube un 1,8 % y trae una media de 4,6. Para tapar un hueco barato, merece un vistazo.\n\nArriba del todo repite Vini Jr., con quince días seguidos subiendo y 28,8 M ganados desde el 8 de noviembre.\n\nAbajo repite Diomande: siete días cayendo y 7,1 M menos desde el 16 de noviembre, aunque sigue siendo el 5º delantero con más puntos de la temporada."
-   },
-   {
     "t": "2026-11-23T23:15:30.703Z",
     "texto": "Yassir Zabiri, del Racing, sigue sin techo: otros 2,3 M esta noche y ya lleva 87 días seguidos subiendo, 61 M desde el 29 de agosto. Se va a 65 M.\n\nLa mayor subida del día es para Pedri, con 2,6 M más y cinco días al alza. Y Diomande, del Real Madrid, encadena ocho días cayendo y 9 M menos desde el 16 de noviembre.\n\nEn el Atlético ganan todos juntos 4,4 M; en el Dépor pierden lo mismo."
    },
@@ -5102,6 +5109,10 @@
    {
     "t": "2026-11-26T23:15:24.699Z",
     "texto": "El chollo de hoy es Fortuño, del Espanyol: vale 5,5 M, sube un 3,3 % y suma 38 puntos en las tres últimas jornadas. Para un fichaje barato, es de los que merece un vistazo.\n\nArriba sigue Yassir Zabiri, con otros 2 M y 90 días seguidos subiendo: 67,4 M desde el 29 de agosto. Y Fermín repite abajo, 3,1 M menos y cinco días cayendo.\n\nEn el Atlético, 4,7 M de ganancia sumando a sus jugadores."
+   },
+   {
+    "t": "2026-11-27T23:15:22.120Z",
+    "texto": "📈 Pedri, con su noveno día seguido al alza, es el segundo que más sube esta noche: 1,9 M más y 15 M ganados desde el 19 de noviembre. Ya vale 93,2 M.\n\nAbajo, Fermín repite como el que más baja: 2,6 M menos y seis días cayendo. Eso sí, sigue siendo el 3º centrocampista con más puntos de la temporada.\n\nY Diomande, del Madrid, ya acumula doce días de bajada."
    }
   ],
   "previa": [
@@ -5653,6 +5664,22 @@
    "cacheLee": 126777,
    "cacheEscribe": 57099,
    "dolares": 0.544805,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-27",
+   "llamadas": {
+    "clasificar": 55,
+    "redactar": 24,
+    "revisar": 14,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 189633,
+   "salida": 29636,
+   "cacheLee": 170494,
+   "cacheEscribe": 47180,
+   "dolares": 0.442903,
    "reservado": 0
   }
  ],
@@ -10217,7 +10244,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T23:11:19.307Z"
+   "ultimaBien": "2026-11-27T23:15:22.123Z"
   },
   "FotMob": {
    "seguidas": 0,
