@@ -3243,7 +3243,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000,
    "SPORT|136803573": 1795533788000,
-   "SPORT|136802760": 1795532721000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255007/flick-actualiza-cubasi-habla-sobre-sustituto-lamine.html": 1795537999000,
    "SPORT|136752105": 1795535503000,
@@ -9893,13 +9892,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6979,
+   "ok": 6980,
    "fallos": 0,
-   "ejecuciones": 5721,
+   "ejecuciones": 5722,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T15:01:21.133Z"
+   "ultima": "2026-11-27T15:06:20.542Z"
   }
  },
  "ptsDirecto": {},
@@ -9916,15 +9915,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:01:30.453Z"
+   "ultimaBien": "2026-11-27T15:06:31.285Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:01:30.453Z"
+   "ultimaBien": "2026-11-27T15:06:31.285Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:01:30.453Z"
+   "ultimaBien": "2026-11-27T15:06:31.285Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9932,11 +9931,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:01:30.453Z"
+   "ultimaBien": "2026-11-27T15:06:31.285Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:01:30.453Z"
+   "ultimaBien": "2026-11-27T15:06:31.285Z"
   }
  },
  "avisos": [
