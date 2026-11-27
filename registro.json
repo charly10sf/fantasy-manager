@@ -3432,7 +3432,8 @@
    "SPORT|136926613": 1795780219000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256244/betis-recupera-morante-rayo.html": 1795783576000,
    "SPORT|136927120": 1795780924000,
-   "SPORT|136927125": 1795780864000
+   "SPORT|136927125": 1795780864000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256120/terzic-avanza-lesionados-athletic.html": 1795785358000
   },
   "hechos": [
    {
@@ -3873,11 +3874,25 @@
     "nums": [
      23
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256120/terzic-avanza-lesionados-athletic.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795785358000,
+    "id": "2314",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Vivian no podrá jugar mañana en La Rosaleda",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     17
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -4799,17 +4814,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 94676,
-  "salida": 16090,
+  "entrada": 96713,
+  "salida": 16906,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.206735,
+  "dolares": 0.207347,
   "reservado": 0
  },
  "recientes": {
@@ -9878,13 +9893,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6960,
+   "ok": 6961,
    "fallos": 0,
-   "ejecuciones": 5702,
+   "ejecuciones": 5703,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T13:26:11.947Z"
+   "ultima": "2026-11-27T13:31:14.487Z"
   }
  },
  "ptsDirecto": {},
@@ -9901,15 +9916,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:26:21.589Z"
+   "ultimaBien": "2026-11-27T13:31:32.731Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:26:21.589Z"
+   "ultimaBien": "2026-11-27T13:31:32.731Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:26:21.589Z"
+   "ultimaBien": "2026-11-27T13:31:32.731Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9917,11 +9932,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:26:21.589Z"
+   "ultimaBien": "2026-11-27T13:31:32.731Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:26:21.589Z"
+   "ultimaBien": "2026-11-27T13:31:32.731Z"
   }
  },
  "avisos": [
