@@ -3439,7 +3439,8 @@
    "AS|https://as.com/futbol/terzic-se-lleva-a-todos-los-disponibles-a-malaga-f202611-n/": 1795800933000,
    "SPORT|136938642": 1795799520000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000,
-   "SPORT|136260402": 1795800660000
+   "SPORT|136260402": 1795800660000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000
   },
   "hechos": [
    {
@@ -3958,11 +3959,23 @@
     "nums": [
      22
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html",
+    "medio": "COPE",
+    "t": 1795804722000,
+    "id": "3092",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Olmo supera su última lesión y está al cien",
+    "motivo": "última lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -4880,17 +4893,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 127086,
-  "salida": 23759,
+  "entrada": 129156,
+  "salida": 24346,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.21381,
+  "dolares": 0.214311,
   "reservado": 0
  },
  "recientes": {
@@ -9959,13 +9972,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7024,
+   "ok": 7025,
    "fallos": 0,
-   "ejecuciones": 5766,
+   "ejecuciones": 5767,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:41:11.318Z"
+   "ultima": "2026-11-27T18:46:18.588Z"
   }
  },
  "ptsDirecto": {},
@@ -9982,15 +9995,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:41:22.794Z"
+   "ultimaBien": "2026-11-27T18:46:32.855Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:41:22.794Z"
+   "ultimaBien": "2026-11-27T18:46:32.855Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:41:22.794Z"
+   "ultimaBien": "2026-11-27T18:46:32.855Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9998,11 +10011,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:41:22.794Z"
+   "ultimaBien": "2026-11-27T18:46:32.855Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:41:22.794Z"
+   "ultimaBien": "2026-11-27T18:46:32.855Z"
   }
  },
  "avisos": [
