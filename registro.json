@@ -3464,7 +3464,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000,
    "SPORT|136943137": 1795804483000,
    "SPORT|136943358": 1795804802000,
-   "SPORT|136941303": 1795806344000
+   "SPORT|136941303": 1795806344000,
+   "SPORT|136947063": 1795808508000
   },
   "hechos": [
    {
@@ -4023,7 +4024,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -4943,17 +4944,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 54,
+   "clasificar": 55,
    "redactar": 14,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 155469,
-  "salida": 27187,
+  "entrada": 157531,
+  "salida": 27561,
   "cacheLee": 94308,
   "cacheEscribe": 41327,
-  "dolares": 0.326528,
+  "dolares": 0.326921,
   "reservado": 0
  },
  "recientes": {
@@ -10038,13 +10039,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7058,
+   "ok": 7060,
    "fallos": 0,
-   "ejecuciones": 5791,
+   "ejecuciones": 5792,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:46:11.451Z"
+   "ultima": "2026-11-27T20:51:10.606Z"
   }
  },
  "ptsDirecto": {
@@ -10074,27 +10075,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:46:23.267Z"
+   "ultimaBien": "2026-11-27T20:51:16.898Z"
   }
  },
  "avisos": [
