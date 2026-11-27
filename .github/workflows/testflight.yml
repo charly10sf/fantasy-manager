@@ -8,6 +8,8 @@
 # países, edad, datos para la revisión y las capturas del último «App Store» de ios.yml) y dice qué falta para enviar.
 # Con «[app-store]»: compila con los anuncios de verdad, NO la mete en TestFlight y la deja elegida en la ficha de la App
 # Store. Ninguno de los dos envía nada a revisión.
+# (27 nov) Con «[enviar]»: no compila; publicación manual y la versión de la ficha a la revisión de la App Store
+# (ficha.mjs enviar). Solo con el «envía» de Carlos.
 name: TestFlight
 
 on:
@@ -71,17 +73,23 @@ jobs:
           git push -q origin HEAD:${GITHUB_REF_NAME}
 
   subir:
-    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') }}
-    runs-on: macos-26
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && !contains(github.event.head_commit.message, '[estado]') && !contains(github.event.head_commit.message, '[retirar]') && !contains(github.event.head_commit.message, '[publicar]') }}
+    # Xcode 27 (SDK de iOS 27): Apple lo exige desde abril de 2027 (aviso ITMS-90725 del 27 nov 2026)
+    runs-on: xcode-27
     timeout-minutes: 60
     outputs:
       build: ${{ steps.numero.outputs.build }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Con qué se compila
+        # Xcode 27.1 mientras la imagen lo tenga: las subidas con Xcode 27.2 (27B52) las rechaza ahora App Store Connect
+        # (ITMS-90534, foros de Apple, hilos 854417 y 854462). Si App Store Connect ya lo acepta, se quita esta línea.
         run: |
+          if [ -d /Applications/Xcode_27.1.app ]; then sudo xcode-select -s /Applications/Xcode_27.1.app; fi
           xcodebuild -version
           xcodebuild -showsdks | grep -i iphoneos || true
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphoneos[0-9]+' | head -1 | grep -oE '[0-9]+')
+          [ "${SDK:-0}" -ge 27 ] || { echo "::error::El SDK de iPhone es el $SDK: hace falta el 27 o más"; exit 1; }
       - name: El número de compilación
         id: numero
         # como en Android: el número de la ejecución × 10 + el intento (sube siempre; Apple no deja repetir)
@@ -223,7 +231,7 @@ jobs:
 
   configurar:
     needs: [clave, subir]
-    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && !contains(github.event.head_commit.message, '[estado]') && !contains(github.event.head_commit.message, '[retirar]') && !contains(github.event.head_commit.message, '[publicar]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -254,10 +262,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ID=$(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 10 --json databaseId -q '.[].databaseId' | while read -r r; do
-            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda; then echo "$r"; break; fi; done)
+          # la más reciente que trae las cinco buenas de los dos tamaños (una con una prueba fallida trae «fallo.png»)
+          ID=""
+          for r in $(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 15 --json databaseId -q '.[].databaseId'); do
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda || continue
+            rm -rf "$RUNNER_TEMP/capturas"; gh run download "$r" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas" || continue
+            if [ "$(ls "$RUNNER_TEMP/capturas/61" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ] && [ "$(ls "$RUNNER_TEMP/capturas/67" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ]; then ID=$r; break; fi
+            echo "la ejecución $r no trae las cinco de cada tamaño: la siguiente"
+          done
           if [ -n "$ID" ]; then
-            gh run download "$ID" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas"
             echo "CAPTURAS=$RUNNER_TEMP/capturas" >> "$GITHUB_ENV"
             echo "capturas de la ejecución $ID:"; find "$RUNNER_TEMP/capturas" -name '*.png' | sort
           else
@@ -271,3 +284,39 @@ jobs:
           REVISOR_USUARIO: ${{ secrets.REVISOR_USUARIO }}
           REVISOR_CLAVE: ${{ secrets.REVISOR_CLAVE }}
         run: node .github/ios/ficha.mjs ficha
+
+  # (27 nov) el envío a la revisión de la App Store, con «[enviar]» en el mensaje del commit (solo con el «envía» de Carlos)
+  enviar:
+    if: ${{ contains(github.event.head_commit.message, '[enviar]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: A revisión
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: node .github/ios/ficha.mjs enviar
+
+  # (27 nov, la 0.9) sin compilar: «[estado]» dice en qué está cada versión y cada envío a revisión y el DSA (no toca
+  # nada); «[retirar]» quita de la revisión lo enviado; «[publicar]» publica la versión aprobada si el DSA está aprobado
+  # (solo con el «publica» de Carlos). Si van varias en el mismo mensaje, en este orden.
+  revision:
+    if: ${{ contains(github.event.head_commit.message, '[estado]') || contains(github.event.head_commit.message, '[retirar]') || contains(github.event.head_commit.message, '[publicar]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: La revisión de la App Store
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          RETIRAR: ${{ contains(github.event.head_commit.message, '[retirar]') && 'si' || '' }}
+          PUBLICAR: ${{ contains(github.event.head_commit.message, '[publicar]') && 'si' || '' }}
+          SOLO: "0.9"
+        run: |
+          if [ -n "$RETIRAR" ]; then node .github/ios/ficha.mjs retirar
+          elif [ -n "$PUBLICAR" ]; then node .github/ios/ficha.mjs publicar
+          else node .github/ios/ficha.mjs situacion; fi

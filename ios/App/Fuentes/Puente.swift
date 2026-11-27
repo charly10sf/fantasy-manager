@@ -20,6 +20,7 @@ extension Principal: WKScriptMessageHandler {
             "avisos": Avisos.yo.permitidos,
             "alarma": Avisos.hayAlarma,
             "privacidad": Anuncios.yo.hayPrivacidad,
+            "anuncios": Anuncios.yo.estado(),
             "vista": UIApplication.shared.applicationState != .background,
             // (iOS 3) lo que depende del iPhone: si lee QR con la cámara y si dicta sin sacar el audio del móvil
             "qr": Principal.hayQR,
@@ -54,6 +55,13 @@ extension Principal: WKScriptMessageHandler {
         // (al volver a la app el iPhone aún la da por «en segundo plano» un instante: se dice desde fuera)
         let vista = deVuelta || UIApplication.shared.applicationState != .background
         js("window.FantasyApp && window.FantasyApp.__pon({ avisos: \(Avisos.yo.permitidos), privacidad: \(Anuncios.yo.hayPrivacidad), vista: \(vista) })")
+        ponerEstadoAnuncios()
+    }
+
+    /// (iOS 5, 27 nov) cómo están los anuncios por dentro, para el diagnóstico de la web (estadoAnuncios)
+    func ponerEstadoAnuncios() {
+        guard let d = try? JSONSerialization.data(withJSONObject: Anuncios.yo.estado()), let j = String(data: d, encoding: .utf8) else { return }
+        js("window.FantasyApp && window.FantasyApp.__pon({ anuncios: \(j) })")
     }
 
     /// la respuesta de una petición: se deja en la página y se la avisa con __http(id), como en Android

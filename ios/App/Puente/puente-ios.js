@@ -21,7 +21,7 @@
   if (!mh) return;
   var D = /*DATOS*/{};
   var guardado = D.guardado || {};
-  var estado = { web: D.web || null, login: D.login || null, via: D.via || '', avisos: !!D.avisos, privacidad: !!D.privacidad, vista: D.vista !== false };
+  var estado = { web: D.web || null, login: D.login || null, via: D.via || '', avisos: !!D.avisos, privacidad: !!D.privacidad, vista: D.vista !== false, anuncios: D.anuncios || null };
   var resp = {};
   var tiene = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
   var txt = function (x) { return x == null ? '' : String(x); };
@@ -109,6 +109,8 @@
     verAnuncio: function (para) { enviar('verAnuncio', { p: txt(para) }); },
     cancelarAnuncio: function () { enviar('cancelarAnuncio'); },
     hayPrivacidadAnuncios: function () { return !!estado.privacidad; },
+    // (iOS 5) cómo están por dentro (consentimiento, rastreo, cargados, último fallo), para el diagnóstico
+    estadoAnuncios: function () { return estado.anuncios || null; },
     privacidadAnuncios: function () { enviar('privacidadAnuncios'); },
 
     /* ---- (iOS 3) fotos, la versión nueva (Medios.swift y Principal.swift) ---- */
