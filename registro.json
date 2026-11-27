@@ -3240,7 +3240,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000,
-   "SPORT|136805812": 1795539246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000,
    "SPORT|136810666": 1795544869000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261124/1004255072/aramburu-luka-sucic-margen-zubieta-dos-dias-partido-londres.html": 1795548702000,
@@ -9909,13 +9908,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7001,
+   "ok": 7002,
    "fallos": 0,
-   "ejecuciones": 5743,
+   "ejecuciones": 5744,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T16:51:13.683Z"
+   "ultima": "2026-11-27T16:56:11.668Z"
   }
  },
  "ptsDirecto": {},
@@ -9932,15 +9931,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:51:23.870Z"
+   "ultimaBien": "2026-11-27T16:56:22.174Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:51:23.870Z"
+   "ultimaBien": "2026-11-27T16:56:22.174Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:51:23.870Z"
+   "ultimaBien": "2026-11-27T16:56:22.174Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9948,11 +9947,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:51:23.870Z"
+   "ultimaBien": "2026-11-27T16:56:22.174Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:51:23.870Z"
+   "ultimaBien": "2026-11-27T16:56:22.174Z"
   }
  },
  "avisos": [
