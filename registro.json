@@ -4866,32 +4866,31 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000,
    "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795776392000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795779064000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795779064000,
+   "SPORT|136940333": 1795799657000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136940333": 1795803380635
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 125255,
-  "salida": 23651,
+  "entrada": 127086,
+  "salida": 23759,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.213573,
+  "dolares": 0.21381,
   "reservado": 0
  },
  "recientes": {
@@ -9960,13 +9959,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7023,
+   "ok": 7024,
    "fallos": 0,
-   "ejecuciones": 5765,
+   "ejecuciones": 5766,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:36:12.145Z"
+   "ultima": "2026-11-27T18:41:11.318Z"
   }
  },
  "ptsDirecto": {},
@@ -9983,15 +9982,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:36:21.237Z"
+   "ultimaBien": "2026-11-27T18:41:22.794Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:36:21.237Z"
+   "ultimaBien": "2026-11-27T18:41:22.794Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:36:21.237Z"
+   "ultimaBien": "2026-11-27T18:41:22.794Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9999,11 +9998,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:36:21.237Z"
+   "ultimaBien": "2026-11-27T18:41:22.794Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:36:21.237Z"
+   "ultimaBien": "2026-11-27T18:41:22.794Z"
   }
  },
  "avisos": [
