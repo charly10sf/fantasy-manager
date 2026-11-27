@@ -3233,7 +3233,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
-   "SPORT|136795046": 1795521999000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
    "SPORT|136797133": 1795524053000,
@@ -3431,18 +3430,6 @@
     "oficial": false,
     "hecho": "Murillo causa baja tras sufrir una brecha en la ceja",
     "motivo": "brecha en la ceja",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136795046",
-    "medio": "SPORT",
-    "t": 1795521999000,
-    "id": "3039",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Murillo entrena al margen con el grupo",
-    "motivo": "",
     "plazo": "",
     "nums": []
    },
@@ -9839,13 +9826,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6944,
+   "ok": 6945,
    "fallos": 0,
-   "ejecuciones": 5686,
+   "ejecuciones": 5687,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:06:21.954Z"
+   "ultima": "2026-11-27T12:11:26.090Z"
   }
  },
  "ptsDirecto": {},
@@ -9862,15 +9849,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:06:29.444Z"
+   "ultimaBien": "2026-11-27T12:11:39.562Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:06:29.444Z"
+   "ultimaBien": "2026-11-27T12:11:39.562Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:06:29.444Z"
+   "ultimaBien": "2026-11-27T12:11:39.562Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9878,11 +9865,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:06:29.444Z"
+   "ultimaBien": "2026-11-27T12:11:39.562Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:06:29.444Z"
+   "ultimaBien": "2026-11-27T12:11:39.562Z"
   }
  },
  "avisos": [
