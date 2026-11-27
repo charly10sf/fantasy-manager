@@ -1123,7 +1123,8 @@ function hoyAncho(S) {
   let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
-  const der = marcador(S, { tiempos: true }) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
+  // (27 nov) sin «Cláusulas a tiro»: repetía lo que ya dice el plan
+  const der = marcador(S, { tiempos: true }) + diasHTML(S) + movimientosHTML(S, 5);
   return bandasHoy(S) + paronHTML(S) + cols(izq, der);
 }
 function bandasHoy(S) {
@@ -1143,17 +1144,6 @@ function bandasHoy(S) {
     h += `<div class="banda">${icono('alerta')}<span>${conexion ? 'Sin conexión al leer' : 'No se ha podido leer'}: ${esc(av.map((a) => a.paso).slice(0, 3).join(', '))}${av.length > 3 ? ` y ${av.length - 3} más` : ''}.${graves ? ' Lo que depende de eso puede salir incompleto.' : conexion ? ' Dale a Actualizar en un rato.' : ''}</span><button data-accion="${graves ? 'mandarFallo' : conexion ? 'recargar' : 'diag'}">${graves ? 'Avisar' : conexion ? 'Actualizar' : 'Ver'}</button></div>`;
   }
   return h;
-}
-/** las cláusulas de rivales que te llegan y se abren ya o pronto */
-function aTiroHTML(S) {
-  const { M } = S;
-  const parar = M.clausulas.filter((x) => x.meLlega && x.interes >= 45 && (x.abierta || x.abreEn < 2 * DIA))
-    .sort((a, b) => (a.abierta === b.abierta ? (a.abierta ? b.interes - a.interes : a.abreEn - b.abreEn) : a.abierta ? -1 : 1)).slice(0, ancho() ? 6 : 10);
-  if (!parar.length) return '';
-  return `<div class="sec"><h2>Cláusulas a tiro</h2><button class="mas" data-ir="rivales" data-seg="rivales:clausulas">Todas</button></div><div class="carril">${parar.map((x) => `<button class="tj" data-j="${esc(x.pid)}"><span class="esq">${x.interes}</span>${ava(x.j)}
-      <div class="n">${esc(x.j.nombre)}</div><div class="s">de ${esc(x.rival.manager || x.rival.nombre)}</div>
-      <div class="gr">${eur(x.clausula)}</div>
-      <div class="cuenta ${x.abierta ? 'ya' : ''}">${icono(x.abierta ? 'abierto' : 'reloj')}${x.abierta ? 'Abierta' : cuando(x.protegidoHasta)}</div></button>`).join('')}</div>`;
 }
 function noticiasHTML(S, { plegar = false } = {}) {
   const { M } = S;
@@ -1191,7 +1181,7 @@ export function ventaHTML(v) {
 /* ================= EQUIPO ================= */
 /** las subpestañas, con un número al lado cuando hay algo que contar ([clave, texto, número, 'rojo'|'']) */
 // las pestañas de cada pantalla: se quedan fijas arriba al bajar (el ancla marca dónde van, para volver a ellas)
-export const tabs = (v, actual, lista, { llenas = false } = {}) => `<div class="tabs-ancla"></div><div class="tabs${llenas ? ' llenas' : ''}"><div class="tabs-in" role="tablist"${llenas ? ` style="--n:${lista.length}"` : ''}>${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
+export const tabs = (v, actual, lista, { llenas = false } = {}) => `<div class="tabs-ancla"></div><div class="tabs${llenas ? ' llenas' : ''}"><div class="tabs-in" role="tablist"${llenas ? ` style="--n:${lista.length}"` : ''}>${lista.map(([k, t, n, cls, bcls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${[actual === k ? 'activo' : '', bcls || ''].join(' ').trim()}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
 
 /* ================= EQUIPO ================= */
 // Rediseño del 30 oct (lo pidió Carlos: «todo más claro y más visual»): arriba tu cara, el nombre y cuatro números; las
@@ -1395,7 +1385,6 @@ export function equipo(S) {
 
 /* ================= RIVALES ================= */
 /** una cláusula de un rival que te llega: con tu dinero, abierta o que se abre en menos de 48 h */
-const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
 /** el parte de los rivales con las llaves de ahora: { jornada, toca, desde, abierto, rivales: los que tienen algo que se pueda
     enseñar, ya ordenados }. Lo ÚNICO que se pinta sale de `visibles`. Si algo falla dentro, Rivales no se cae: sale vacío */
 export function parteVisto(S) {
@@ -1505,22 +1494,23 @@ function parteHTML(S, PV) {
 
 export function rivales(S) {
   const { M } = S;
-  const seg = S.seg.rivales || 'clasif';
-  // (0.8.5; Carlos, 26 nov, 23:13: «que salga a la derecha de Rivales, en dorado… el parte como función top», y no entre las
-  // pestañas) el parte va en un botón dorado al lado del título; su número, solo con la llave abierta
+  // (27 nov, 02:51; Carlos: «lo del parte, mételo en Rivales, donde iría lo de cláusulas, en dorado») la pestaña Cláusulas
+  // se quita (cada rival tiene la suya en su ficha y el plan ya dice a quién clausular) y en su sitio va el parte, en dorado;
+  // quien la tuviera guardada abre la clasificación
+  let seg = S.seg.rivales || 'clasif';
+  if (seg === 'clausulas') seg = 'clasif';
   if (seg !== 'parte') guardarParteVisto();
   const PV = parteVisto(S);
   // (27 nov) el número del botón: los que tienen algo que hacer, no todos (ahora todos salen con su ficha)
   const nParte = PV.abierto ? PV.rivales.filter((x) => x.lineas.length).length : 0;
-  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo riv-tit">Rivales<button type="button" class="parte-top${seg === 'parte' ? ' activo' : ''}" data-seg="rivales:parte" aria-pressed="${seg === 'parte'}">${icono(PV.abierto ? 'corona' : 'candado')}<span>Parte</span><small>Top</small>${nParte ? `<span class="tab-n oro">${nParte}</span>` : ''}</button></h1>`;
-  // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
-  const llegan = M.clausulas.filter(teLlega).length;
-  // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
+  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
+  // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales») antes estaba en Directo; el número del parte,
+  // solo con la llave abierta
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['parte', `${icono(PV.abierto ? 'corona' : 'candado')}Parte`, nParte, 'oro', 'tab-oro']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
   else if (seg === 'parte') h += parteHTML(S, PV);
-  else if (seg !== 'clausulas') {
+  else {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;
@@ -1536,21 +1526,8 @@ export function rivales(S) {
     const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
     // (0.8.4o) con el dinero de alguno cerrado, en su fila «Apuntar» (o «Te dijo 48 M»): un aviso arriba hasta que se quita
     const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
-    // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
-    h += ancho() ? cols(avisoD + candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
-  } else {
-    const f = S.filtro.cl || 'llegan';
-    h += `<div class="filtros">${[['llegan', 'Te llegan'], ['pronto', 'Se abren pronto'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
-    let xs = M.clausulas;
-    if (f === 'llegan' || f === 'abiertas') xs = xs.filter(teLlega);
-    if (f === 'pronto' || f === 'hoy' || f === 'semana') xs = xs.filter((x) => !x.abierta && x.abreEn < 7 * DIA).sort((a, b) => a.abreEn - b.abreEn);
-    void HORA;
-    h += `<p class="t2 peq">Para clausular tienes <b>${eur(S.D.dinero)}</b>: las cláusulas se pagan con saldo, sin deuda. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
-    h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
-      sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
-      pills: [clausulaPill(x), estadoPill(x.j), calPill(M, x.j, { soloDuro: true }), x.meLlega ? '' : '<span class="pill">No te llega</span>'],
-      derecha: `<div class="v">${eur(x.clausula)}</div><div class="d">${barra(x.interes)} <span class="t2">${x.interes}</span></div>`, op: S.opPorPid[x.pid],
-    })).join('')) : nada('Ninguna con este filtro.');
+    // en el ordenador, al lado de la clasificación: lo último que han hecho
+    h += ancho() ? cols(avisoD + candDinero + tabla, movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
   }
   return h;
 }

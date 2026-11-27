@@ -47,7 +47,7 @@ const foto = () => page.evaluate(async (tid) => {
   const vista = (k, segs, f) => { for (const s of segs) { S.seg[k] = s; out[`${k}:${s}`] = quita(f(S)); } };
   out.hoy = quita(V.hoy(S));
   vista('equipo', ['plantilla', 'jornadas', 'venta', 'clausulas', 'dinero'], V.equipo);
-  vista('rivales', ['clasif', 'jornadas', 'clausulas'], V.rivales);
+  vista('rivales', ['clasif', 'jornadas', 'parte'], V.rivales);
   vista('mercado', ['venta', 'especular', 'tendencias', 'movimientos'], V.mercado);
   const SUB = { plantilla: ['todos', 'puesto'], suben: ['hoy', '7d'], clausulas: ['quitas', 'quita'], juego: ['perfil', 'venta', 'movs'] };
   for (const r of S.M.rivales) for (const [seg, subs] of Object.entries(SUB)) for (const sub of subs) { S.segRival = { tid: r.e.teamId, seg, sub }; out[`ficha ${r.e.teamId} ${seg}/${sub}`] = quita(Hj.fichaRival(S, r.e.teamId)); }

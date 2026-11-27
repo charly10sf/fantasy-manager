@@ -1524,10 +1524,11 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
           await page.waitForTimeout(600);
           const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
-          // (0.8.5) el parte de los rivales ya no es una pestaña: es el botón dorado junto al título
-          const parteBtn = await page.evaluate(() => !!document.querySelector('h1 .parte-top[data-seg="rivales:parte"]'));
-          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas' || !parteBtn) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas con el botón del Parte al lado del título: ${orden.join(' · ')}${parteBtn ? '' : ' (sin el botón)'}`);
-          else bien('Rivales: Clasificación · Por jornada · Cláusulas y el botón dorado del Parte junto al título');
+          // (27 nov) la pestaña Cláusulas se quita y el parte va en su sitio, en dorado; «Cláusulas a tiro» ya no está
+          const parteOro = await page.evaluate(() => !!document.querySelector('.tabs button.tab-oro[data-seg="rivales:parte"]'));
+          const aTiro = await page.evaluate(() => /Cláusulas a tiro/.test(document.body.innerText) || !!document.querySelector('[data-seg="rivales:clausulas"]'));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Parte' || !parteOro || aTiro) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Parte (dorada), o queda algo de Cláusulas: ${orden.join(' · ')}${parteOro ? '' : ' (sin la dorada)'}${aTiro ? ' (queda Cláusulas)' : ''}`);
+          else bien('Rivales: Clasificación · Por jornada · Parte, en dorado, y nada de la pestaña Cláusulas');
           await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
           await page.waitForTimeout(600);
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
