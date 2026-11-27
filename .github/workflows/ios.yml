@@ -121,10 +121,13 @@ jobs:
       - name: El simulador
         run: |
           xcrun simctl list devices available | grep -i iphone || true
-          SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9]+' | head -1 | grep -oE '[0-9]+')
+          # el SDK entero (27.1): la imagen trae también simuladores de versiones beta más nuevas (con el 27.2 de Xcode 27.2
+          # beta, el que lanza las pruebas se colgaba antes de empezar), así que se coge el de la misma versión o, si no hay,
+          # el más nuevo que no pase del SDK
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9]+\.[0-9]+' | head -1 | sed 's/iphonesimulator//')
           UDID=$(xcrun simctl list devices available -j | SDK="$SDK" python3 -c "
           import json, os, re, sys
-          sdk = int(os.environ.get('SDK') or 0)
+          sdk = tuple(int(x) for x in (os.environ.get('SDK') or '0.0').split('.')[:2])
           mejor = None
           for rt, lista in json.load(sys.stdin)['devices'].items():
               m = re.search(r'iOS-(\d+)-(\d+)', rt)
@@ -135,7 +138,7 @@ jobs:
                   if not d.get('isAvailable', True) or not d['name'].startswith('iPhone'):
                       continue
                   # el de la versión con la que se compila, y un iPhone normal (ni Pro Max, ni Plus, ni SE)
-                  nota = (v[0] == sdk, bool(re.fullmatch(r'iPhone \d+( Pro)?', d['name'])), v, d['name'])
+                  nota = (v == sdk, v <= sdk, bool(re.fullmatch(r'iPhone \d+( Pro)?', d['name'])), v if v <= sdk else (0, 0), d['name'])
                   if mejor is None or nota > mejor[0]:
                       mejor = (nota, d['udid'], d['name'], rt)
           if not mejor:
@@ -179,13 +182,16 @@ jobs:
         continue-on-error: true
         timeout-minutes: 35
         run: |
-          buscar() { xcrun simctl list devices available -j | NOMBRES="$1" python3 -c "
+          # como en «El simulador»: nunca uno de una versión más nueva que el SDK (las beta de la imagen)
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9]+\.[0-9]+' | head -1 | sed 's/iphonesimulator//')
+          buscar() { xcrun simctl list devices available -j | NOMBRES="$1" SDK="$SDK" python3 -c "
           import json, os, re, sys
           nombres = os.environ['NOMBRES'].split('|')
+          sdk = tuple(int(x) for x in (os.environ.get('SDK') or '99.99').split('.')[:2])
           mejor = None
           for rt, lista in json.load(sys.stdin)['devices'].items():
               m = re.search(r'iOS-(\\d+)-(\\d+)', rt)
-              if not m: continue
+              if not m or (int(m.group(1)), int(m.group(2))) > sdk: continue
               for d in lista:
                   if d['name'] in nombres:
                       nota = (-nombres.index(d['name']), int(m.group(1)), int(m.group(2)))
