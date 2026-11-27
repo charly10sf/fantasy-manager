@@ -3218,7 +3218,6 @@
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
-   "SPORT|136779676": 1795502755000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000,
@@ -9840,13 +9839,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6878,
+   "ok": 6879,
    "fallos": 0,
-   "ejecuciones": 5620,
+   "ejecuciones": 5621,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T06:41:17.354Z"
+   "ultima": "2026-11-27T06:46:11.315Z"
   }
  },
  "ptsDirecto": {},
@@ -9863,15 +9862,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:41:26.950Z"
+   "ultimaBien": "2026-11-27T06:46:18.440Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:41:26.950Z"
+   "ultimaBien": "2026-11-27T06:46:18.440Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:41:26.950Z"
+   "ultimaBien": "2026-11-27T06:46:18.440Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9879,11 +9878,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:41:26.950Z"
+   "ultimaBien": "2026-11-27T06:46:18.440Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T06:41:26.950Z"
+   "ultimaBien": "2026-11-27T06:46:18.440Z"
   }
  },
  "avisos": [
