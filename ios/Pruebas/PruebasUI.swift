@@ -139,9 +139,11 @@ final class PruebasUI: XCTestCase {
     /// En iOS 27 un aviso tocado en la pantalla bloqueada (o en la lista de avisos, que se le parece) no abre la app hasta
     /// deslizar desde abajo: es lo que hace una persona
     private func desbloquear() {
-        let abajo = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.995))
-        abajo.press(forDuration: 0.05, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35)))
-        Thread.sleep(forTimeInterval: 1)
+        // desde la barra de inicio (más abajo cae fuera de la pantalla y no hace nada), despacio, hasta media pantalla
+        let abajo = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.98))
+        abajo.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)),
+                    withVelocity: 1000, thenHoldForDuration: 0.1)
+        Thread.sleep(forTimeInterval: 1.5)
     }
 
     /// Busca un aviso del iPhone por lo que pone, lo toca y espera a que la app llegue a donde tiene que llegar (`llega`).
@@ -155,7 +157,9 @@ final class PruebasUI: XCTestCase {
             if aviso.exists && aviso.isHittable {
                 if !capturado { capturado = true; captura(nombre) }
                 if aviso.exists && aviso.isHittable {
-                    aviso.tap()
+                    // por su sitio: si la tira se va justo entre mirarla y tocarla, el toque no hace fallar la prueba
+                    let marco = aviso.frame
+                    sistema.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: marco.midX, dy: marco.midY)).tap()
                     if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
                     if aviso.exists {
                         // sigue ahí: se ha quedado en la pantalla bloqueada (iOS 27), que pide deslizar para abrir
@@ -390,6 +394,10 @@ final class PruebasUI: XCTestCase {
             contestar(["Parar", "Stop", "Detener"], 6)
         }
         app.terminate()
+        // en iOS 27 la alarma deja el iPhone en la pantalla bloqueada: se desbloquea para las pruebas de los avisos
+        XCUIDevice.shared.press(.home)
+        Thread.sleep(forTimeInterval: 1)
+        desbloquear()
     }
 
     /// El plan y la pregunta con la app cerrada. (1) Una pregunta a la IA en marcha: al salir de la app, se le dice al
@@ -439,7 +447,7 @@ final class PruebasUI: XCTestCase {
             let fin = esperar("la respuesta del bonificado", 15, falla: false) { self.haz($0)["anuncio"] is [String: Any] }
             apuntar("11-bonificado-visto", ["anuncio": haz(fin)["anuncio"] ?? "sin respuesta"])
         } else {
-            print("=== bonificado === no encuentro el botón de cerrar. Botones: \(app.buttons.allElementsBoundByIndex.prefix(12).map { $0.label })")
+            print("=== bonificado === no encuentro el botón de cerrar. Botones: \(app.buttons.debugDescription.prefix(1500))")
         }
         app.terminate()
     }
