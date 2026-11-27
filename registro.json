@@ -3448,7 +3448,8 @@
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000,
    "SPORT|136940118": 1795802506000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000,
-   "SPORT|136943137": 1795804483000
+   "SPORT|136943137": 1795804483000,
+   "SPORT|136943358": 1795804802000
   },
   "hechos": [
    {
@@ -3995,7 +3996,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -4913,17 +4914,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 147694,
-  "salida": 26166,
+  "entrada": 149721,
+  "salida": 26258,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.291113,
+  "dolares": 0.291362,
   "reservado": 0
  },
  "recientes": {
@@ -9992,13 +9993,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7036,
+   "ok": 7037,
    "fallos": 0,
-   "ejecuciones": 5778,
+   "ejecuciones": 5779,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T19:41:10.831Z"
+   "ultima": "2026-11-27T19:46:11.327Z"
   }
  },
  "ptsDirecto": {},
@@ -10015,15 +10016,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:41:22.039Z"
+   "ultimaBien": "2026-11-27T19:46:20.333Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:41:22.039Z"
+   "ultimaBien": "2026-11-27T19:46:20.333Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:41:22.039Z"
+   "ultimaBien": "2026-11-27T19:46:20.333Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10031,11 +10032,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:41:22.039Z"
+   "ultimaBien": "2026-11-27T19:46:20.333Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:41:22.039Z"
+   "ultimaBien": "2026-11-27T19:46:20.333Z"
   }
  },
  "avisos": [
