@@ -3220,7 +3220,6 @@
    "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
-   "SPORT|136787219": 1795514571000,
    "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
    "SPORT|136786191": 1795516703000,
@@ -3405,18 +3404,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256129/oportunidad-reenganchar-jonathan-david.html": 1795770375000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136787219",
-    "medio": "SPORT",
-    "t": 1795514571000,
-    "id": "3182",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lemar sufre una nueva lesión tras jugar",
-    "motivo": "lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html",
     "medio": "Mundo Deportivo",
@@ -9813,13 +9800,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6919,
+   "ok": 6920,
    "fallos": 0,
-   "ejecuciones": 5661,
+   "ejecuciones": 5662,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:01:13.003Z"
+   "ultima": "2026-11-27T10:06:10.237Z"
   }
  },
  "ptsDirecto": {},
@@ -9836,15 +9823,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:01:22.771Z"
+   "ultimaBien": "2026-11-27T10:06:17.543Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:01:22.771Z"
+   "ultimaBien": "2026-11-27T10:06:17.543Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:01:22.771Z"
+   "ultimaBien": "2026-11-27T10:06:17.543Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9852,11 +9839,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:01:22.771Z"
+   "ultimaBien": "2026-11-27T10:06:17.543Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:01:22.771Z"
+   "ultimaBien": "2026-11-27T10:06:17.543Z"
   }
  },
  "avisos": [
