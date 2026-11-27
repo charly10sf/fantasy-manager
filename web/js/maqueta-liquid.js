@@ -129,15 +129,11 @@ function movimiento() {
     html.classList.toggle('desplazada', y > 6);
     pegada();
     const d = y - y0; y0 = y;
-    if (y < 40) { if (html.classList.contains('nav-min')) { html.classList.remove('nav-min'); seguirCapsulas(); } acum = 0; return; }
+    if (y < 40) { html.classList.remove('nav-min'); acum = 0; return; }
     acum = (Math.sign(d) === Math.sign(acum) ? acum : 0) + d;
-    const antes = html.classList.contains('nav-min');
     if (acum > 28) html.classList.add('nav-min');
     else if (acum < -18) html.classList.remove('nav-min');
-    if (antes !== html.classList.contains('nav-min')) seguirCapsulas();
   };
-  // (solo capturas y vídeos) mientras la cápsula de los botones se recoge o se abre, su cristal de captura la sigue
-  const seguirCapsulas = () => { if (!html.classList.contains('maq-captura')) return; const fin = performance.now() + 650; const paso = () => { capsulasCaptura(); if (performance.now() < fin) requestAnimationFrame(paso); }; requestAnimationFrame(paso); };
   window.addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(mirar); } }, { passive: true });
 
   // 1b. escribiendo en Pregunta (el teclado abierto): la barra se aparta

@@ -400,10 +400,8 @@ html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -6px -1px -4px
 html.dM .sup .sup-beta { bottom: -5px; }
 /* en pantallas estrechas las dos cápsulas se tocaban: más hueco entre ellas y la de la liga se sale menos */
 @media (max-width: 380px) { html.dM .sup { gap: 14px; } html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -7px -8px -7px -56px; } html.dM .sup-btns::before, html.dM .sup-btns::after { inset: -1px -4px -1px -2px; } }
-/* al bajar, la cápsula de los botones se recoge a solo iconos (como la barra de abajo) y vuelve al subir */
-html.dM .sup .b-ico { transition: min-width var(--muelle-ms) var(--muelle), font-size var(--muelle-ms) var(--muelle), margin var(--muelle-ms) var(--muelle), transform var(--toque); }
-html.dM.nav-min:not(.con-hoja) .sup .b-ico { min-width: 42px; font-size: 0; gap: 0; }
-html.dM.nav-min:not(.con-hoja) .sup .b-preg { margin: 0; }
+/* (probado y quitado el 27 nov, 13:21, Carlos: «lo veo una gilipollez») la cápsula de los botones NO se recoge al bajar:
+   Invitar, Pregunta y Ajustes llevan siempre su nombre */
 /* el botón de la pantalla abierta (Pregunta, Ajustes), con la misma lente que la pestaña activa de abajo */
 html.dM .sup .b-ico.activo { background: var(--gota); box-shadow: var(--gota-canto); }
 /* «Invitar dentro de Ajustes» (html.inv-aj, para comparar): fuera de la cápsula; en Ajustes ya tiene su fila */
