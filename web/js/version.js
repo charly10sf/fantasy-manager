@@ -32,9 +32,9 @@ export const NOVEDADES = [
     // (hojas.js, `.inv-oro`); el ordenador lleva el mismo material. El cristal se quita solo donde no toca (sin ajuste).
     // ESTA VERSIÓN SE CUENTA A TODOS con la tarjeta pequeña (Carlos, 27 nov: «la 0.9, la del rediseño gordo»), una línea.
     v: '0.9', f: '2026-11-27', t: 'Nuevo diseño', todos: true,
-    aviso: { d: 'pantalla', eti: 'Novedades', t: 'Nuevo diseño', x: 'La app estrena aspecto: más limpia, con la barra y los menús de cristal. Todo sigue donde estaba.' },
+    aviso: { d: 'cristal', eti: 'Novedades', t: 'Nuevo diseño', x: 'La app estrena aspecto: más limpia, con la barra y los menús de cristal. Todo sigue donde estaba.' },
     cosas: [
-      { tipo: 'nuevo', d: 'pantalla', t: 'Nuevo diseño', x: 'La app estrena aspecto en el móvil y en el ordenador: la barra de abajo y los menús flotan como un cristal, las fichas son más limpias y en la cabecera ves tu puesto y tus puntos. Todo sigue donde estaba.', importante: true },
+      { tipo: 'nuevo', d: 'cristal', t: 'Nuevo diseño', x: 'La app estrena aspecto en el móvil y en el ordenador: la barra de abajo y los menús flotan como un cristal, las fichas son más limpias y en la cabecera ves tu puesto y tus puntos. Todo sigue donde estaba.', importante: true },
       { tipo: 'mejora', d: 'regalo', t: 'Invitar, en Ajustes', x: 'Invitar a un amigo está ahora arriba del todo de Ajustes, en una tarjeta dorada.' },
     ],
   },

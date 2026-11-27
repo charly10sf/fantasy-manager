@@ -4127,7 +4127,8 @@ button.parte-h { cursor: pointer; }
 
 /* =====================================================================================================================
    0.9 · EL REDISEÑO «LIQUID» (27 nov; Carlos: «mucho más minimalista, que denote más calidad, tipo Liquid»; lo decidido,
-   en claude/rediseno-liquid-afinado.md del proyecto). Va entero aquí, al final, con la clase `lq` de <html> (index.html):
+   en claude/rediseno-liquid-afinado.md del proyecto). Va entero aquí, al final, con la clase `lq` de <html>, que pone liquid.js
+   solo con la app por dentro (la portada y la entrada se quedan como estaban):
    pesa lo mismo que la capa de la maqueta con la que se probó, y pisa lo de antes sin tocarlo.
    · El cristal es solo para lo que flota encima del contenido (la barra de abajo, las dos cápsulas de la cabecera, el
      selector de sección, la caja del chat, las hojas de media altura y los avisos). Nunca en las filas de una lista ni
@@ -4437,3 +4438,6 @@ html.lq .campo-cab { flex-wrap: wrap; row-gap: 8px; }
 html.lq .pp-l2s .pp-cu, html.lq .pp-l2s .pp-est { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 /* en los móviles más estrechos (320 px), las cinco pestañas de Equipo van de igual ancho y justas: un punto menos de letra */
 @media (max-width: 340px) { html.lq .tabs.llenas button { font-size: 12.5px; letter-spacing: -0.2px; } }
+/* el contraste, medido con lo peor por detrás (el césped del once pasando bajo el selector): las pestañas sin elegir
+   se quedaban en 4,1:1 con el gris de antes; con este blanco, 4,9:1 o más */
+html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 243, 0.84); }

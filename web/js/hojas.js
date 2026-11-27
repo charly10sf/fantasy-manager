@@ -2,6 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { diagAnuncios } from './intersticial.js';
+import { cristalTxt } from './liquid.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { lineaPaso, pujaLinea, noCompensaTxt, vecesCorto, pujaDe } from './puja-txt.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
@@ -1849,6 +1850,8 @@ export function textoDiagnostico(S) {
     ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.canal() === 'ios' ? 'por la ventana de inicio de sesión del iPhone' : nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'sesion-ios' ? 'por la ventana del iPhone' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
     // (27 nov, iOS 5) por qué salen o no los anuncios de la app (intersticial.js)
     ...(enApp ? [(() => { try { return diagAnuncios(); } catch (e) { return `Anuncios (app): ✗ ${e.message}`; } })()] : []),
+    // (0.9) el cristal del diseño nuevo en este dispositivo: sirve para poner el corte de «móvil justo» con datos de verdad
+    (() => { try { return `Cristal: ${cristalTxt()}`; } catch (e) { return 'Cristal: ¿?'; } })(),
     // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
     (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,

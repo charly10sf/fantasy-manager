@@ -28,10 +28,16 @@ export function cristalTxt() {
   return `${sin ? 'apagado (móvil justo)' : sinFiltro ? 'apagado (el navegador no lo pinta)' : rt ? 'apagado (lo pide el sistema)' : 'sí'} · memoria ${navigator.deviceMemory || '?'} GB · ${navigator.hardwareConcurrency || '?'} núcleos`;
 }
 
+/** el diseño nuevo es el de la app por dentro (la liga, la carga, el error): la portada y la entrada se quedan como están
+ * (regla del encargo: «ni portada ni páginas públicas»). La clase `lq` de <html> la pone y la quita esto, nunca index.html:
+ * así el texto que trae la página antes de que arranque la app tampoco la lleva */
+const dentro = () => !document.querySelector('#app > .portada, #app .sin-js');
+
 let puesto = false;
 export function iniciarLiquid() {
   if (puesto || typeof window === 'undefined') return;
   puesto = true;
+  html.classList.toggle('lq', dentro());
   let guardado = null;
   try { guardado = localStorage.getItem('fm-cristal'); } catch (e) { /* nada */ }
   html.classList.toggle('sin-cristal', !cristalDe(navigator, guardado));
@@ -49,6 +55,8 @@ export function iniciarLiquid() {
     pegada();
     const d = y - y0; y0 = y;
     if (y < 40 || !movil()) { html.classList.remove('nav-min'); acum = 0; return; }
+    // un salto de golpe (la app baja sola al final del chat, o vuelve arriba al cambiar de pestaña) no es bajar con el dedo
+    if (Math.abs(d) > 300) { acum = 0; return; }
     acum = (Math.sign(d) === Math.sign(acum) ? acum : 0) + d;
     if (acum > 28) html.classList.add('nav-min');
     else if (acum < -18) html.classList.remove('nav-min');
@@ -183,7 +191,7 @@ export function iniciarLiquid() {
   };
 
   let pte = false;
-  const todo = () => { pte = false; try { pildoras(); hojas(); vigilarNav(); cabecera(); } catch (e) { /* lo de adorno no rompe nada */ } };
+  const todo = () => { pte = false; try { html.classList.toggle('lq', dentro()); pildoras(); hojas(); vigilarNav(); cabecera(); } catch (e) { /* lo de adorno no rompe nada */ } };
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true, characterData: true });
   new MutationObserver(() => { gota(); setTimeout(gota, 440); pedir(); }).observe(html, { attributes: true, attributeFilter: ['class', 'style'] });

@@ -47,6 +47,9 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
     if (p === 'invitar') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } await page.click('.nvt [data-nvt="ir"]'); await page.waitForTimeout(900); r.push('hoja:' + await page.evaluate(() => (window.S.tipoHoja || [])[0] || (document.querySelector('.hoja') ? 'sí' : 'no'))); }
     // (0.8.4s) el botón de la tarjeta de novedades lleva a Rivales → Parte
     if (p === 'ver') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } await page.click('.nvt [data-nvt="ir"]'); await page.waitForTimeout(900); r.push('vista:' + await page.evaluate(() => `${window.S.vista}:${(window.S.seg || {}).rivales || ''}`)); }
+    // (0.9) la tarjeta de «Nuevo diseño» no lleva a ningún sitio: solo «Vale», que la cierra y la da por vista
+    if (p === 'vale') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } const ir = await page.evaluate(() => !!document.querySelector('.nvt [data-nvt="ir"]')); await page.click('.nvt .nvt-no'); await page.waitForTimeout(500); r.push(ir ? '(llevaba botón de ir)' : 'vale'); }
+    if (p === 'diseno') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && (t.querySelector('.nvt-eti') || {}).textContent === 'Novedades' && /nuevo diseño/i.test((t.querySelector('h2') || {}).textContent || '') && !t.querySelector('li') && !/anuncio/i.test(t.textContent) ? 'NUEVO DISEÑO' : 'otra'; }));
   }
   const sale = r.join(' → '), bien = sale === espera && !errores.length;
   if (!bien) mal++;
@@ -56,12 +59,13 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
 await caso('en la app, al venir de la 0.8f: sale, la app no recarga con ella en pantalla y sigue al reabrir', 'TARJETA → (no recargó) → TARJETA → TARJETA', { pasos: ['mira', 'recarga-app', 'mira', 'reabre', 'mira'] });
 await caso('cerrada con «Ahora no», no vuelve', 'TARJETA → nada', { pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 await caso('sin tocarla, al reabrir la app vuelve a salir', 'TARJETA → TARJETA', { pasos: ['mira', 'reabre', 'mira'] });
-await caso('quien ya tenía esta versión en la app sin haberla cerrado (la recarga se la llevó): la ve, el botón lleva al parte y no vuelve', 'TARJETA → vista:rivales:parte → nada', { vista: 'ACTUAL', pasos: ['mira', 'ver', 'reabre', 'mira'] });
+await caso('quien ya tenía esta versión en la app sin haberla cerrado (la recarga se la llevó): la ve, «Vale» la cierra y no vuelve', 'TARJETA → vale → nada', { vista: 'ACTUAL', pasos: ['mira', 'vale', 'reabre', 'mira'] });
 await caso('quien ya tenía esta versión en la web: nada', 'nada', { app: false, vista: 'ACTUAL', pasos: ['mira'] });
 await caso('instalación nueva en la app: nada', 'nada → nada', { vista: '', pasos: ['mira', 'reabre', 'mira'] });
-await caso('en la web, al venir de la 0.8f: sale la de novedades (la más nueva), el botón lleva al parte y no vuelve', 'TARJETA → vista:rivales:parte → nada', { app: false, pasos: ['mira', 'ver', 'reabre', 'mira'] });
+await caso('en la web, al venir de la 0.8f: sale la de la versión más nueva, «Vale» la cierra y no vuelve', 'TARJETA → vale → nada', { app: false, pasos: ['mira', 'vale', 'reabre', 'mira'] });
 // (0.8.4s) la tarjeta que sale es la de novedades, con su lista, y en el móvil sin la línea del ordenador
-await caso('la tarjeta de la versión nueva es la de novedades, con su lista', 'NOVEDADES', { app: false, pasos: ['novs'] });
+// (0.9) la más nueva es la de «Nuevo diseño»: una línea, sin lista y sin hablar de anuncios
+await caso('la tarjeta de la versión nueva es la de «Nuevo diseño», en una línea', 'NUEVO DISEÑO', { app: false, pasos: ['diseno'] });
 // (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo lo estipule; ahora, solo la de invitar»)
 await caso('quien viene de antes de la 0.8 (no es el dueño): solo la tarjeta, sin la presentación de todo lo de después', 'TARJETA → nada', { app: false, vista: '0.7.13za', pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 // (20 nov, Carlos) el recordatorio: cada 5 días a quien no tiene ningún amigo dentro; con un amigo, nunca más
