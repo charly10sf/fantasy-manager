@@ -3224,7 +3224,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136790672": 1795518790000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
    "SPORT|136795046": 1795521999000,
@@ -9819,13 +9818,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6933,
+   "ok": 6934,
    "fallos": 0,
-   "ejecuciones": 5675,
+   "ejecuciones": 5676,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:11:15.859Z"
+   "ultima": "2026-11-27T11:16:15.303Z"
   }
  },
  "ptsDirecto": {},
@@ -9842,15 +9841,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:11:29.646Z"
+   "ultimaBien": "2026-11-27T11:16:28.519Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:11:29.646Z"
+   "ultimaBien": "2026-11-27T11:16:28.519Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:11:29.646Z"
+   "ultimaBien": "2026-11-27T11:16:28.519Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9858,11 +9857,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:11:29.646Z"
+   "ultimaBien": "2026-11-27T11:16:28.519Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:11:29.646Z"
+   "ultimaBien": "2026-11-27T11:16:28.519Z"
   }
  },
  "avisos": [
