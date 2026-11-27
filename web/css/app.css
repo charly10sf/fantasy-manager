@@ -3776,10 +3776,17 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .bj-rel b { color: var(--texto); font-weight: 600; }
 .bj-rel i { margin-left: auto; flex: none; font: 700 15px/1 var(--cond); font-style: normal; color: var(--rojo-l); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
 .bj-rel .fl { flex: none; font: 700 12px/1 var(--cond); letter-spacing: 1px; text-transform: uppercase; color: var(--apagado); }
-.bj-club { display: flex; align-items: center; gap: 10px; width: 100%; margin: 22px 0 2px; padding: 0 0 8px; background: none; border: 0; border-bottom: 1px solid var(--linea); color: var(--texto); font: 700 var(--t-sec)/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; text-align: left; cursor: pointer; }
-.bj-club span { flex: 1; min-width: 0; }
-.bj-club b { font: 700 15px/1 var(--cond); color: var(--texto2); }
+.bj-g { margin: 0; }
+.bj-club { list-style: none; display: flex; align-items: center; gap: 10px; width: 100%; margin: 18px 0 2px; padding: 4px 0 8px; border-bottom: 1px solid var(--linea); color: var(--texto); font: 700 var(--t-sec)/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bj-club::-webkit-details-marker { display: none; }
+.bj-club .bj-cn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bj-club small { flex: none; font: 600 12px/1 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; color: var(--rojo-l); }
+.bj-club b { flex: none; font: 700 15px/1 var(--cond); color: var(--texto2); }
 .bj-club .pt-esc { width: 22px; height: 22px; }
+.bj-club .bj-fl { flex: none; width: 16px; height: 16px; color: var(--apagado); transition: transform 0.2s; }
+.bj-g[open] > .bj-club .bj-fl { transform: rotate(180deg); }
+.bj-g:not([open]) > .bj-club { margin-top: 10px; }
+.bj-ver { display: block; margin: 4px 0 6px auto; padding: 8px 2px; background: none; border: 0; font: 600 13.5px 'Barlow', sans-serif; color: var(--rojo-l); cursor: pointer; }
 .bj-ok { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
 .bj-ok .ic { color: var(--sube); width: 18px; height: 18px; }
 .bj-pie { margin: 18px 0 0; font-size: var(--t-mini); color: var(--apagado); text-align: center; }

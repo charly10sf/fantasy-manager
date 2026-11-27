@@ -3927,6 +3927,8 @@ document.addEventListener('click', async (ev) => {
     case 'plegarParon': { const det = el.closest('details'); if (det && S.M) Pz.plegarParon(S.M, d.f, !det.open); break; }
     // (37) los avisos de la ficha del jugador: se recuerda cuáles has abierto para no cerrarlos al repintar
     case 'plegarAviso': { const det = el.closest('details'); if (det) plegarAviso(S, d.k, !det.open); break; }
+    // (27 nov) los clubes de la hoja de bajas: se recuerda cuáles has plegado o abierto mientras la app está abierta
+    case 'plegarBaja': { const det = el.closest('details'); if (det) Bj.plegarBaja(S, d.k, !det.open); break; }
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;

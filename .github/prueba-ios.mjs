@@ -220,6 +220,11 @@ async function probar(motor) {
       window.FantasyApp.__pon({ avisos: true, privacidad: true, vista: false });
       r.tras = [n.avisosPermitidos(), n.hayPrivacidadAnuncios(), n.aLaVista()];
       window.FantasyApp.__pon({ vista: true });
+      // (iOS 5) cómo están los anuncios por dentro: sin decir nada la app, null; con __pon, lo que diga, y el diagnóstico lo cuenta
+      r.anunciosAntes = n.estadoAnuncios();
+      window.FantasyApp.__pon({ anuncios: { iniciado: true, listo: true, consentimiento: 3, puede: true, rastreo: 2, intersticial: true, fallo: 'intersticial: No ad to show.' } });
+      const it = await import('./js/intersticial.js');
+      r.diag = it.diagAnuncios();
       // los bloques de anuncios de limites.json: en la app de iOS, los de iOS
       const g = ut.LS.get('limites', null);
       ut.LS.set('limites', { t: Date.now(), cfg: { intersticial: { on: true, bloque: 'ca-app-pub-3175956326240112/1111111111', bloqueIos: 'ca-app-pub-3175956326240112/2222222222' }, apertura: { on: true, bloque: '', bloqueIos: 'ca-app-pub-3175956326240112/3333333333' } } });
@@ -227,6 +232,7 @@ async function probar(motor) {
       if (g) ut.LS.set('limites', g); else ut.LS.del('limites');
       return r;
     });
+    mira(dos.anunciosAntes === null && /^Anuncios \(app\): /.test(dos.diag) && /por dentro: listo, consentimiento 3, rastreo 2, cargados intersticial, fallo: intersticial: No ad to show\./.test(dos.diag), `${T} (iOS 5) el diagnóstico dice cómo están los anuncios por dentro: ${dos.diag}`);
     mira(dos.avisos.length === 2 && dos.avisos[0].alarma === true && dos.avisos[1].cada === 86400e3 && dos.permiso === 1 && dos.notificar.t === 'Título' && dos.notificar.x === 'Texto' && dos.notificar.h === 'hoy', `${T} (iOS 2) la lista de avisos, el permiso y un aviso al momento llegan a la app`);
     mira(dos.plan[0].rid === 'rid12345abc' && dos.plan[0].tk === 'SESION' && dos.plan[1] === 1 && dos.preg[0].rid === 'preg1234abc' && dos.preg[0].tk === 'SESION' && !JSON.stringify(dos.preg[0]).includes('Marcos') && !JSON.stringify(dos.preg[0]).includes('vendo') && dos.preg[1].ok === true && dos.preg[1].r === 'Vende a Pedri', `${T} (iOS 2) el plan y la pregunta en marcha llegan con su id y la sesión (los nombres de los rivales y lo preguntado no hacen falta), y el final de la pregunta, con su resumen`);
     mira(dos.anuncios[0].si === true && dos.anuncios[0].inter === true && /9792190459$/.test(dos.anuncios[0].b) && /9792190459$/.test(dos.anuncios[1].b) && dos.anuncios[2].toca === true && dos.anuncios[3].p === 'plan' && dos.anuncios[4] === 1 && dos.anuncios[5] === 1 && dos.mensajes === 13 && dos.zonaAntes === true, `${T} (iOS 2) los anuncios llegan a la app como en Android (zona, intersticial, apertura, bonificado, cancelar y privacidad; ${dos.mensajes} mensajes), y sin liga cargada la web no pide anuncios`);

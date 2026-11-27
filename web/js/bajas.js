@@ -2,7 +2,7 @@
    La cruz junto al título de Clubes abre la hoja 'bajas' con los lesionados, sancionados y dudas de los 20 clubes; en
    Equipo no hay botón nuevo: el recuadro «pueden jugar» abre la misma hoja en «Tu liga», con los tuyos primero.
    Cuatro pestañas con su número: Tu liga (los tuyos y los de tus rivales), Libres, Apercibidos (a una amarilla de la
-   sanción, de Understat o del portal; solo si hay) y Todas (por club, en el orden de la clasificación). De cada uno, la cara, el estado, la
+   sanción, de Understat o del portal; solo si hay) y Todas. Desde el 27 nov, todas por club (`porClub`). De cada uno, la cara, el estado, la
    lesión en pocas palabras y, si se sabe, cuándo vuelve; a los tuyos lesionados, el mejor relevo de tu mercado que te
    llega. El estado lo tiene ya la app (LaLiga y el once probable); la lesión y la vuelta las da el portal cada noche
    en bajas/partes.json (bot/web/bajas.mjs, `partesJson`), con el id de LaLiga y aparte de los demás archivos. Se lee
@@ -120,14 +120,41 @@ function vuelta(M, x, p, P, J) {
 
 const duenoTxt = (d) => (d ? (d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`) : 'Libre');
 
+const ptsTxt = (j) => `${num(j.puntos)} pts`;
+
 function fila(S, x, P, J, { club = true } = {}) {
   const { M } = S;
   const p = P && P.j[x.j.id];
   const pill = x.k === 'aper' ? `<span class="pill duda">${x.am} amarillas</span>` : PILL[x.k];
   const les = x.k !== 'suspended' && x.k !== 'aper' && p && p.l ? `<span class="bj-les">${esc(may(p.l))}</span>` : '';
-  const sub = [club ? esc(x.j.equipo || '') : '', duenoTxt(x.d)].filter(Boolean).join(' · ');
+  const sub = [club ? esc(x.j.equipo || '') : '', duenoTxt(x.d), ptsTxt(x.j)].filter(Boolean).join(' · ');
   const v = vuelta(M, x, p, P, J);
   return filaJugador({ j: x.j, tend: null }, { sub, pills: [pill, les], maxPills: 2, derecha: v ? `<div class="v">${esc(v.v)}</div><div class="d">${esc(v.d)}</div>` : '' }) + relevo(S, x);
+}
+
+/* (27 nov, Domy: «en cada uno de los apartados dentro debe de estar dividido por clubes y además por orden de puntos»;
+   Carlos: «que lo de los clubes se pudiera plegar») cada apartado de la hoja va por club, en el orden de la clasificación,
+   y dentro de cada club del que más puntos lleva al que menos. Cada club se pliega; se recuerda mientras la app está abierta
+   (S.bajasPleg, por pestaña y club). En «Todas» empiezan plegados salvo los clubes con alguno de tu liga; en las demás,
+   abiertos. El summary solo lleva texto e iconos (sin botones dentro): la ficha del club, con «Ver club» al final. */
+export function plegarBaja(S, k, abierto) { (S.bajasPleg ||= {})[k] = !!abierto; }
+
+function porClub(S, lista, P, J, clave, { abierto = () => true, verClub = false } = {}) {
+  const { D, M } = S;
+  const por = {};
+  for (const x of lista) (por[x.j.equipoId] ||= []).push(x);
+  const pos = (id) => { const t = M.equipoLiga ? M.equipoLiga(id) : null; return t ? t.pos : 99; };
+  const ids = Object.keys(por).sort((a, b) => pos(a) - pos(b) || String((D.equipos[a] || {}).nombre).localeCompare((D.equipos[b] || {}).nombre, 'es'));
+  const pleg = S.bajasPleg || {};
+  return ids.map((id) => {
+    const e = D.equipos[id] || {};
+    const xs = por[id].sort((a, b) => num(b.j.puntos) - num(a.j.puntos) || b.j.valor - a.j.valor);
+    const k = `${clave}|${id}`;
+    const ab = pleg[k] != null ? pleg[k] : abierto(xs);
+    const enLiga = verClub ? xs.filter((x) => x.d).length : 0;
+    return `<details class="bj-g"${ab ? ' open' : ''}><summary class="bj-club" data-accion="plegarBaja" data-k="${esc(k)}">${escudo(D, id)}<span class="bj-cn">${esc(e.nombre || '')}</span>${enLiga ? `<small>${enLiga} en tu liga</small>` : ''}<b>${xs.length}</b>${icono('abajo', 'bj-fl')}</summary>
+      ${xs.map((x) => fila(S, x, P, J, { club: false })).join('')}${verClub ? `<button class="bj-ver" data-club="${esc(id)}">Ver ${esc(e.nombre || 'el club')} ›</button>` : ''}</details>`;
+  }).join('');
 }
 
 /** a uno tuyo lesionado, el mejor de su puesto que hay hoy en tu mercado y te llega (el mismo criterio que «Sustitutos»).
@@ -168,33 +195,25 @@ export function hojaBajas(S, ver = 'todas') {
   const sec = (t, n, sub = '') => `<div class="sec"><h2>${t}</h2><span class="sub">${n}${sub ? ` · ${sub}` : ''}</span></div>`;
   if (ver === 'liga') {
     if (!mias.length && !riv.length) h += nada('Ni tú ni tus rivales tenéis a nadie de baja.');
-    else if (mias.length) h += sec('Tuyas', mias.length) + mias.map((x) => fila(S, x, P, J)).join('');
+    else if (mias.length) h += sec('Tuyas', mias.length) + porClub(S, mias, P, J, 'mias');
     else h += `<p class="bj-ok">${icono('ok')}No tienes a nadie de baja.</p>`;
     if (riv.length) {
       // de tus rivales: a quién le faltan más
       const por = {};
       for (const x of riv) por[x.d.txt] = (por[x.d.txt] || 0) + 1;
       const top = Object.entries(por).sort((a, b) => b[1] - a[1])[0];
-      h += sec('De tus rivales', riv.length, top && top[1] > 1 ? `a ${esc(top[0])} le faltan ${top[1]}` : '') + riv.map((x) => fila(S, x, P, J)).join('');
+      h += sec('De tus rivales', riv.length, top && top[1] > 1 ? `a ${esc(top[0])} le faltan ${top[1]}` : '') + porClub(S, riv, P, J, 'riv');
     }
   } else if (ver === 'libres') {
-    h += lib.length ? lib.map((x) => fila(S, x, P, J)).join('') : nada('Ninguno de los que están libres está de baja.');
+    h += lib.length ? porClub(S, lib, P, J, 'lib') : nada('Ninguno de los que están libres está de baja.');
   } else if (ver === 'aper') {
     const am = aper.filter((x) => x.d), resto = aper.filter((x) => !x.d);
     h += `<p class="t2 peq">Con una amarilla más en la J${J ? J.n : ''} se pierden el partido siguiente.</p>`;
-    if (am.length) h += sec('En tu liga', am.length) + am.map((x) => fila(S, x, P, J)).join('');
-    if (resto.length) h += sec('Libres', resto.length) + resto.map((x) => fila(S, x, P, J)).join('');
+    if (am.length) h += sec('En tu liga', am.length) + porClub(S, am, P, J, 'aper-liga');
+    if (resto.length) h += sec('Libres', resto.length) + porClub(S, resto, P, J, 'aper-lib');
   } else {
-    // todas, por club: los clubes en el orden de la clasificación
-    const por = {};
-    for (const x of bajas) (por[x.j.equipoId] ||= []).push(x);
-    const pos = (id) => { const t = M.equipoLiga ? M.equipoLiga(id) : null; return t ? t.pos : 99; };
-    const ids = Object.keys(por).sort((a, b) => pos(a) - pos(b) || String((D.equipos[a] || {}).nombre).localeCompare((D.equipos[b] || {}).nombre, 'es'));
-    if (!ids.length) h += nada('Ahora mismo no hay nadie de baja en LaLiga.');
-    for (const id of ids) {
-      const e = D.equipos[id] || {};
-      h += `<button class="bj-club" data-club="${esc(id)}">${escudo(D, id)}<span>${esc(e.nombre || '')}</span><b>${por[id].length}</b></button>${por[id].map((x) => fila(S, x, P, J, { club: false })).join('')}`;
-    }
+    // todas, por club: los clubes en el orden de la clasificación; plegados salvo los que tienen a alguno de tu liga
+    h += bajas.length ? porClub(S, bajas, P, J, 'todas', { abierto: (xs) => xs.some((x) => x.d), verClub: true }) : nada('Ahora mismo no hay nadie de baja en LaLiga.');
   }
   if (P && ver !== 'aper') h += `<p class="bj-pie">Partes de ${esc(cuando(P.t))}</p>`;
   return `${h}</div>`;

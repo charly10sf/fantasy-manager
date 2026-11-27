@@ -82,7 +82,8 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
     private var fallosApertura = 0
     private var bloqueAperturaWeb = ""
     /// lo último que ha fallado al cargar, para el diagnóstico de las pruebas
-    private(set) var ultimoFallo = ""
+    // (iOS 5) cada fallo nuevo llega a la página para el diagnóstico («Anuncios (app)», estadoAnuncios)
+    private(set) var ultimoFallo = "" { didSet { DispatchQueue.main.async { [weak self] in self?.act?.ponerEstadoAnuncios() } } }
 
     /// ¿se pueden pedir anuncios? Lo dice el consentimiento. Solo en las pruebas del simulador (con la app y los bloques de
     /// prueba de Google, que no tienen mensaje de consentimiento que enseñar), si el consentimiento da error se sigue
@@ -587,8 +588,8 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
         }
     }
 
-    #if DEBUG
-    /// cómo está, para las pruebas del simulador
+    /// cómo está: para las pruebas del simulador y (iOS 5, 27 nov) para el diagnóstico de la web, que lo lee con
+    /// estadoAnuncios. Nada personal: estados y el texto del último fallo
     func estado() -> [String: Any] {
         [
             "iniciado": iniciado, "listo": listo, "activado": activado,
@@ -599,5 +600,4 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
             "fallo": ultimoFallo,
         ]
     }
-    #endif
 }
