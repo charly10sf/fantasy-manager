@@ -3237,7 +3237,10 @@
   "3312": "out_of_league",
   "3313": "out_of_league",
   "3314": "out_of_league",
-  "3315": "out_of_league"
+  "3315": "out_of_league",
+  "3316": "out_of_league",
+  "3317": "out_of_league",
+  "3318": "out_of_league"
  },
  "novedadesPend": [],
  "noticias": {
@@ -3434,7 +3437,8 @@
    "AS|https://as.com/futbol/mourinho-se-salta-la-teoria-moderna-con-bernardo-f202611-n/": 1795798903000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256343/adeyemi-kerolin-aleixandri-sorprenden-barca-academy-estados-unidos.html": 1795800537000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256339/terzic-convoca-todos-disponibles-visitar-manana-malaga.html": 1795800212000,
-   "AS|https://as.com/futbol/terzic-se-lleva-a-todos-los-disponibles-a-malaga-f202611-n/": 1795800933000
+   "AS|https://as.com/futbol/terzic-se-lleva-a-todos-los-disponibles-a-malaga-f202611-n/": 1795800933000,
+   "SPORT|136938642": 1795799520000
   },
   "hechos": [
    {
@@ -3929,7 +3933,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4842,22 +4846,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136940333": 1795803380635
+  }
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 119098,
-  "salida": 22004,
+  "entrada": 121188,
+  "salida": 22624,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.212134,
+  "dolares": 0.212653,
   "reservado": 0
  },
  "recientes": {
@@ -9926,13 +9932,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7017,
+   "ok": 7018,
    "fallos": 0,
-   "ejecuciones": 5759,
+   "ejecuciones": 5760,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:11:12.206Z"
+   "ultima": "2026-11-27T18:16:20.635Z"
   }
  },
  "ptsDirecto": {},
@@ -9949,15 +9955,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:11:21.283Z"
+   "ultimaBien": "2026-11-27T18:16:36.024Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:11:21.283Z"
+   "ultimaBien": "2026-11-27T18:16:36.024Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:11:21.283Z"
+   "ultimaBien": "2026-11-27T18:16:36.024Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9965,11 +9971,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:11:21.283Z"
+   "ultimaBien": "2026-11-27T18:16:36.024Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:11:21.283Z"
+   "ultimaBien": "2026-11-27T18:16:36.024Z"
   }
  },
  "avisos": [
