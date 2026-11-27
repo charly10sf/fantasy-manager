@@ -3240,7 +3240,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255007/flick-actualiza-cubasi-habla-sobre-sustituto-lamine.html": 1795537999000,
-   "SPORT|136806032": 1795537551000,
    "SPORT|136799014": 1795538348000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000,
    "SPORT|136805812": 1795539246000,
@@ -9912,13 +9911,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6995,
+   "ok": 6996,
    "fallos": 0,
-   "ejecuciones": 5737,
+   "ejecuciones": 5738,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T16:21:13.567Z"
+   "ultima": "2026-11-27T16:26:12.104Z"
   }
  },
  "ptsDirecto": {},
@@ -9935,15 +9934,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:21:26.459Z"
+   "ultimaBien": "2026-11-27T16:26:20.196Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:21:26.459Z"
+   "ultimaBien": "2026-11-27T16:26:20.196Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:21:26.459Z"
+   "ultimaBien": "2026-11-27T16:26:20.196Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9951,11 +9950,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:21:26.459Z"
+   "ultimaBien": "2026-11-27T16:26:20.196Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:21:26.459Z"
+   "ultimaBien": "2026-11-27T16:26:20.196Z"
   }
  },
  "avisos": [
