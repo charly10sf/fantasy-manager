@@ -286,15 +286,19 @@ export function fichaRival(M, h, enVenta = [], ahora = Date.now()) {
   const planNo = (pid) => { const d = M.decisionFichar ? M.decisionFichar(pid) : null; return !!(d && d.accion === 'no'); };
   const cls = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.meLlega && (x.abierta || num(x.abreEn) < 2 * DIA) && x.j && !planNo(x.pid))
     .sort((a, b) => (b.abierta - a.abierta) || num(b.interes) - num(a.interes) || num(b.j.valor) - num(a.j.valor));
+  const enVentaPid = new Set(enVenta.map((m) => String(m.pid)));
   if (cls.length) {
     const c = cls[0], mas = cls.length > 1 ? ` (y ${cls.length - 1} más)` : '';
     // con la veda de las 24 h antes de la jornada se abren todas a la vez, al empezar: se dice la hora
     const abre = ahora + num(c.abreEn), cuandoAbre = diaDe(abre) === diaDe(ahora) ? `a las ${horaDe(abre)}` : num(c.abreEn) < DIA ? `mañana a las ${horaDe(abre)}` : `en ${durCorta(num(c.abreEn))}`;
-    hechos.push({ k: 'clausula', ic: 'candado', pid: c.pid, txt: c.abierta ? `Cláusula abierta de ${c.j.nombre}: ${eur(c.clausula)}${mas}` : `Cláusula de ${c.j.nombre} ${cuandoAbre}: ${eur(c.clausula)}${mas}` });
+    // (si además lo vende, en la misma línea: no se nombra dos veces)
+    const tb = enVentaPid.has(String(c.pid)) ? ' · también lo vende' : '';
+    hechos.push({ k: 'clausula', ic: 'candado', pid: c.pid, txt: c.abierta ? `Cláusula abierta de ${c.j.nombre}: ${eur(c.clausula)}${tb}${mas}` : `Cláusula de ${c.j.nombre} ${cuandoAbre}: ${eur(c.clausula)}${tb}${mas}` });
   }
+  const yaNombrado = cls.length ? String(cls[0].pid) : null;
   // lo que vende: primero lo que te mejora el once (lo mismo que mira «en negativo»), con lo que te da por jornada
   // (lo que el plan descarta, al final: nunca se enseña como lo primero que vende)
-  const venta = enVenta.filter((m) => m.j).map((m) => ({ m, g: M.mejora ? M.mejora(m.j) : 0, no: planNo(m.pid) })).sort((a, b) => a.no - b.no || b.g - a.g || num(b.m.j.valor) - num(a.m.j.valor)).map((x) => ({ ...x.m, gana: x.g }));
+  const venta = enVenta.filter((m) => m.j && String(m.pid) !== yaNombrado).map((m) => ({ m, g: M.mejora ? M.mejora(m.j) : 0, no: planNo(m.pid) })).sort((a, b) => a.no - b.no || b.g - a.g || num(b.m.j.valor) - num(a.m.j.valor)).map((x) => ({ ...x.m, gana: x.g }));
   if (venta.length) {
     const v = venta[0], buena = v.gana >= 0.5 && !planNo(v.pid);
     hechos.push({ k: 'venta', ic: 'euro', pid: v.pid, txt: `Vende a ${v.j.nombre}${buena ? ` (+${d1(v.gana)} pts por jornada)` : ''}${venta.length > 1 ? ` y ${venta.length - 1} más` : ''}` });
@@ -307,7 +311,7 @@ export function fichaRival(M, h, enVenta = [], ahora = Date.now()) {
     hechos.push({ k: 'bajas', ic: 'lesion', txt: `Bajas en su once: ${enLista(fuera.slice(0, 3).map((j) => `${j.nombre}${et[h.estado(j)] || ''}`))}${fuera.length > 3 ? ` y ${fuera.length - 3} más` : ''}` });
   }
   const firma = { rojo: !!h.rojo, quedan: h.escudos ? h.escudos.quedan : null, lleno: !!h.lleno, corto,
-    venta: Object.fromEntries(venta.map((m) => [m.pid, m.j.nombre])), abiertas: Object.fromEntries(cls.filter((x) => x.abierta).map((x) => [x.pid, x.j.nombre])) };
+    venta: Object.fromEntries(enVenta.filter((m) => m.j).map((m) => [m.pid, m.j.nombre])), abiertas: Object.fromEntries(cls.filter((x) => x.abierta).map((x) => [x.pid, x.j.nombre])) };
   return { estado, hechos, firma };
 }
 const durCorta = (ms) => (ms >= DIA ? `${Math.round(ms / 3600e3)} h` : ms >= 3600e3 ? `${Math.floor(ms / 3600e3)} h` : `${Math.max(1, Math.round(ms / 60e3))} min`);
