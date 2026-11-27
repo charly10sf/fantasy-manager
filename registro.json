@@ -3447,7 +3447,8 @@
    "SPORT|136260402": 1795800660000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000,
-   "SPORT|136940118": 1795802506000
+   "SPORT|136940118": 1795802506000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000
   },
   "hechos": [
    {
@@ -3982,7 +3983,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -4900,17 +4901,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 143683,
-  "salida": 25953,
+  "entrada": 145671,
+  "salida": 26045,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.290605,
+  "dolares": 0.29085,
   "reservado": 0
  },
  "recientes": {
@@ -9979,13 +9980,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7032,
+   "ok": 7033,
    "fallos": 0,
-   "ejecuciones": 5774,
+   "ejecuciones": 5775,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T19:21:12.846Z"
+   "ultima": "2026-11-27T19:26:11.397Z"
   }
  },
  "ptsDirecto": {},
@@ -10002,15 +10003,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:21:21.367Z"
+   "ultimaBien": "2026-11-27T19:26:21.240Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:21:21.367Z"
+   "ultimaBien": "2026-11-27T19:26:21.240Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:21:21.367Z"
+   "ultimaBien": "2026-11-27T19:26:21.240Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10018,11 +10019,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:21:21.367Z"
+   "ultimaBien": "2026-11-27T19:26:21.240Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:21:21.367Z"
+   "ultimaBien": "2026-11-27T19:26:21.240Z"
   }
  },
  "avisos": [
