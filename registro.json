@@ -4889,7 +4889,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136811655": 1795554036000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
    "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
@@ -10039,13 +10038,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7062,
+   "ok": 7064,
    "fallos": 0,
-   "ejecuciones": 5793,
+   "ejecuciones": 5794,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:56:11.614Z"
+   "ultima": "2026-11-27T21:01:11.419Z"
   }
  },
  "ptsDirecto": {
@@ -10075,27 +10074,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:56:16.689Z"
+   "ultimaBien": "2026-11-27T21:01:15.818Z"
   }
  },
  "avisos": [
