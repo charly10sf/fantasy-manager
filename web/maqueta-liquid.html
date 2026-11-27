@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#050506">
+  <title>Maqueta: rediseño «Liquid» de Fantasy Manager</title>
+  <!-- TEMPORAL (rediseño «Liquid», 27 nov): no es parte de la app y no se publica. Es la app de verdad con la liga de ejemplo
+       y, encima, una capa de CSS por dirección (css/maqueta-liquid.css): solo cambian cómo se ve y cómo se mueve, nada de lo
+       que hace ni de lo que dice. app.css y el JS de la app no se tocan. Esta página hace de dos cosas: sin «dentro» en la
+       dirección es el marco (un móvil con la app dentro y, abajo, fuera de la app, el selector de dirección y de pantalla);
+       con «?dentro=1» es la app con la capa puesta, a pantalla completa (lo que abren las capturas y los vídeos).
+       ?d=A|B|C|D|M  dirección      ?p=hoy|equipo|directo|rivales|mercado|clubes|ficha|rival|pregunta|ajustes|carga|top|barra
+       ?y=1  desplazada      ?top=1  funciones top abiertas      ?sc=1  sin cristal      ?n=2  refracción (solo Chromium, solo A)
+       ?tx=160  texto al 160 % -->
+  <script>
+    var Q = new URLSearchParams(location.search), DENTRO = Q.get('dentro') === '1';
+    document.documentElement.classList.add(DENTRO ? 'maq-dentro' : 'maq-fuera');
+    if (DENTRO) {
+      document.write('<link rel="stylesheet" href="css/app.css">');
+      var D0 = (Q.get('d') || 'A').toUpperCase();
+      document.documentElement.classList.add('d' + D0);
+      if ('ABC'.indexOf(D0) >= 0) document.documentElement.classList.add('dL');
+      if (Q.get('sc') === '1') document.documentElement.classList.add('sin-cristal');
+      if (Q.get('n') === '2') document.documentElement.classList.add('nivel-2');
+    }
+  </script>
+  <link rel="stylesheet" href="css/maqueta-liquid.css">
+</head>
+<body>
+  <!-- el filtro de la refracción (nivel 2), antes de que nada lo pida: en Chromium, si el CSS lo usa antes de que exista,
+       la barra parpadea transparente al cargar -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="fm-refraccion" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feImage id="fm-refraccion-mapa" href="" x="0" y="0" width="366" height="62" result="mapa" preserveAspectRatio="none"/>
+        <feDisplacementMap in="SourceGraphic" in2="mapa" scale="28" xChannelSelector="R" yChannelSelector="G" result="doblado"/>
+        <feGaussianBlur in="doblado" stdDeviation="5" result="borroso"/>
+        <feColorMatrix in="borroso" type="saturate" values="1.7"/>
+      </filter>
+    </defs>
+  </svg>
+  <div id="app"></div>
+  <div id="marco"></div>
+  <script type="module" src="js/maqueta-liquid.js"></script>
+</body>
+</html>
