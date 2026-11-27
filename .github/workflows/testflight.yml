@@ -72,7 +72,8 @@ jobs:
 
   subir:
     if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') }}
-    runs-on: macos-26
+    # Xcode 27 (SDK de iOS 27): Apple lo exige desde abril de 2027 (aviso ITMS-90725 del 27 nov 2026)
+    runs-on: xcode-27
     timeout-minutes: 60
     outputs:
       build: ${{ steps.numero.outputs.build }}
@@ -82,6 +83,8 @@ jobs:
         run: |
           xcodebuild -version
           xcodebuild -showsdks | grep -i iphoneos || true
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphoneos[0-9]+' | head -1 | grep -oE '[0-9]+')
+          [ "${SDK:-0}" -ge 27 ] || { echo "::error::El SDK de iPhone es el $SDK: hace falta el 27 o más"; exit 1; }
       - name: El número de compilación
         id: numero
         # como en Android: el número de la ejecución × 10 + el intento (sube siempre; Apple no deja repetir)

@@ -60,7 +60,8 @@ jobs:
 
   simulador:
     needs: remota
-    runs-on: macos-26
+    # Xcode 27 (SDK de iOS 27): Apple lo exige desde abril de 2027 (aviso ITMS-90725 del 27 nov 2026)
+    runs-on: xcode-27
     timeout-minutes: 95
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -74,6 +75,8 @@ jobs:
           xcodebuild -version
           ls /Applications | grep -i '^Xcode' || true
           xcodebuild -showsdks | grep -i iphone || true
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphoneos[0-9]+' | head -1 | grep -oE '[0-9]+')
+          [ "${SDK:-0}" -ge 27 ] || { echo "::error::El SDK de iPhone es el $SDK: hace falta el 27 o más"; exit 1; }
       # lo que tiene que ser igual que en Android: la clave pública que firma paquete.json y los sitios a los que la web
       # puede pedir por el puente
       - name: Lo mismo que en Android
