@@ -1139,7 +1139,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 // 16e: (0.7.13) lo que apunta la gente en todas las ligas corrige la cuenta de los rivales sin nada apuntado (y su margen),
 // por debajo de lo de tu liga; el texto lo dice, y Ajustes trae la casilla para no mandar nada (activada por defecto)
 {
-  const cal = { n: 60, med: -2e6, p10: -6e6, p25: -4e6, p75: 0, p90: 2e6, porDias: [[0, 30], [30, 60], [60, 100], [100, 9999]].map(([desde, hasta]) => ({ desde, hasta, n: 0, med: 0, p10: 0, p25: 0, p75: 0, p90: 0 })), porSub: [], porParon: [], t: Date.now() };
+  const cal = { cu: 2, n: 60, med: -2e6, p10: -6e6, p25: -4e6, p75: 0, p90: 2e6, porDias: [[0, 30], [30, 60], [60, 100], [100, 9999]].map(([desde, hasta]) => ({ desde, hasta, n: 0, med: 0, p10: 0, p25: 0, p75: 0, p90: 0 })), porSub: [], porParon: [], t: Date.now() };
   const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-dinero-cal', ${JSON.stringify(JSON.stringify({ t: Date.now(), cal }))});` });
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});

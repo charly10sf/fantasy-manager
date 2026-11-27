@@ -22,6 +22,15 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const TRAMOS_PUJA = [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, Infinity]];
 // (0.7.13) lo que apunta la gente del dinero de los rivales (calDinero del servidor): desde cuántos apuntes cuenta, en total o en un tramo
 const CAL_MIN = 8;
+/** desde qué nota el peligro de un rival es «medio» (Carlos, 27 nov) */
+export const MEDIO_DESDE = 33;
+/** la versión de la cuenta del dinero de los rivales: lo que apunta la gente se compara con lo que daba la cuenta, así que
+    los apuntes hechos con una cuenta de antes no valen para corregir la de ahora (la 2, del 27 nov: la plantilla del
+    principio empieza con la cláusula por encima del valor, y una subida pagada después de que el valor la subiera sola) */
+export const CUENTA_DINERO = 2;
+/** con qué cláusula empieza un jugador de la plantilla del principio, sobre lo que valía al crearse la liga (medido en la
+    liga de Carlos el 27 nov: 13 de 13 por encima de su valor; con los valores día a día, 1,663-1,669 en 7 de 7) */
+export const CLAUSULA_INICIAL = 5 / 3;
 // (27 nov) lo pagado de más por la puja que gana, si se recupera teniéndolo en estos días o menos, compensa (lo de antes)
 const RECUPERA_PUJA = 10;
 // (27 nov) «puja como mucho X» para revender, solo si con esa se gana como poco 7 de cada 10 (Carlos: «unas 7-8 de cada 10»)
@@ -952,7 +961,9 @@ export function analizar(D, H, c, extra = {}) {
   const flujos = {};
   {
     const fl = (tid) => (flujos[tid] ||= { v: 0, n: 0, gastado: 0, ingresado: 0, premios: 0, raros: 0, ev: [] });
-    const mover = (tid, x, t, k) => { const f = fl(tid); f.v += x; f.n++; f.ev.push([t || 0, x]); if (k) f[k] += Math.abs(x); };
+    // (27 nov) cada movimiento lleva su clase: 's' = pagado solo con saldo (una cláusula o una compra a otro mánager: después
+    // de pagarlo no puede quedar en negativo), 'p' = el premio de una jornada (si lo cobra, la empezó en positivo)
+    const mover = (tid, x, t, k, c) => { const f = fl(tid); f.v += x; f.n++; f.ev.push([t || 0, x, c || '']); if (k) f[k] += Math.abs(x); };
     // una venta a otro manager que saliera también como compra suya: no se cuenta dos veces
     const compraDe = new Set();
     for (const a of AH.lista) if ((a.clase === 'compra' || a.clase === 'clausula') && (a.otroId || a.otro)) compraDe.add(`${a.pid}|${Math.abs(num(a.importe))}|${tidDe(a.otroId, a.otro)}`);
@@ -961,16 +972,23 @@ export function analizar(D, H, c, extra = {}) {
       if (!imp) continue;
       const q = tidDe(a.quienId, a.quien), o = tidDe(a.otroId, a.otro);
       if (a.clase === 'compra' || a.clase === 'clausula') {
-        if (q) mover(q, -imp, a.t, 'gastado');
+        if (q) mover(q, -imp, a.t, 'gastado', a.clase === 'clausula' || o ? 's' : '');
         if (o && o !== q) mover(o, imp, a.t, 'ingresado');
       } else if (a.clase === 'venta') {
         if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) mover(q, imp, a.t, 'ingresado');
       } else if (a.clase === 'premio') {
-        if (q) mover(q, imp, a.t, 'premios');
+        if (q) mover(q, imp, a.t, 'premios', 'p');
       } else if (a.clase === 'otro' && q) fl(q).raros++; // un movimiento con dinero de un tipo que no se conoce: al margen
     }
   }
   M.flujos = flujos;
+  // los días en que cada mánager hace algo en la liga (comprar, vender o clausular): quien entra más, coge más recompensas
+  const diasActivo = {};
+  for (const a of AH.lista) {
+    if (!a.t || !['compra', 'venta', 'clausula'].includes(a.clase)) continue;
+    const q = tidDe(a.quienId, a.quien);
+    if (q) (diasActivo[q] ||= new Set()).add(diaDe(a.t));
+  }
   /** (26 nov, el parte de los rivales) ¿LaLiga ya le ha pagado el premio de la última jornada acabada? true: pagado; false:
    *  aún puede llegarle; null: no ha acabado ninguna o ya no se espera. El dinero de cada rival no cuenta el premio hasta que
    *  sale en los movimientos, así que con él por llegar no se puede dar a nadie por «en rojo»: le entra de golpe (100 mil
@@ -991,34 +1009,104 @@ export function analizar(D, H, c, extra = {}) {
   const subidas = {}, sinBase = [];
   {
     const sb = (tid) => (subidas[tid] ||= { v: 0, n: 0, dudas: 0, sinBase: 0, vistas: 0, lista: [] });
+    /* (27 nov, Carlos: «quiero que hagas las cuentas perfectas o lo más perfectas posibles») dos cosas que la cuenta daba
+       por pagadas y no lo eran, vistas en su liga con el histórico de valor de LaLiga día a día:
+       1) LA PLANTILLA DEL PRINCIPIO NO EMPIEZA CON LA CLÁUSULA EN SU VALOR, sino por encima (`CLAUSULA_INICIAL`, 5/3): a
+          cada jugador del principio que seguía en su equipo se le contaba un tercio de su valor como gastado en subirle
+          la cláusula (al último de su liga, 37 M en 9 jugadores sin haber subido ninguna). El tanto se mide en la propia
+          liga si hay 3 o más del principio con la cláusula por encima de lo más que han valido (la mediana)
+       2) UNA SUBIDA PAGADA DESPUÉS DE QUE EL VALOR SUBIERA LA CLÁUSULA SOLA: lo pagado es la mitad de lo que hay por encima
+          de lo más que ha valido, no de lo que costó (Gulácsi: comprado a 14,36, llegó a valer 15,54 y la cláusula está en
+          18,54: son 3,00 de subida, 1,50 pagados, no 2,09). Como no se sabe cuándo se pagó, vale la cuenta que da una
+          cifra redonda (se paga de medio millón en medio millón) y, si no, la del medio con la diferencia en el margen */
+    const v0De = (pid) => {
+      // lo que valía al crearse la liga: el punto de su histórico más cercano a ese día (de lo de hace más de 90 días solo
+      // hay uno por semana: el de justo antes puede ser de 6 días antes, y en una semana de agosto un valor cambia un 15 %)
+      let v0 = null;
+      if (AH.completa && AH.desde) {
+        let dif = 4 * DIA;
+        for (const [tt, vv] of (det[pid] && det[pid].valores) || []) { const d = Math.abs(tt - AH.desde); if (d < dif) { dif = d; v0 = vv; } else if (tt > AH.desde) break; }
+        if (v0 == null) v0 = valorEn(pid, AH.desde);
+      }
+      // si su histórico de valor empieza después de crearse la liga (el juego abre antes que LaLiga), su primer valor,
+      // si es de las 3 semanas siguientes
+      if (v0 == null && AH.completa && AH.desde) { const p0 = ((det[pid] && det[pid].valores) || [])[0]; if (p0 && p0[0] - AH.desde < 21 * DIA) v0 = p0[1]; }
+      return v0;
+    };
+    /* 3) UN JUGADOR COMPRADO A OTRO MÁNAGER LLEGA CON LA CLÁUSULA QUE TENÍA si es más de lo que se paga por él (visto en la liga
+          de Carlos: A. Herrero, comprado a un mánager por 15 M, tiene la cláusula en 35,06 M, los 5/3 de lo que valía al
+          crearse la liga; se le contaban 10 M pagados por subirla). La cláusula se sigue de mano en mano: del principio
+          (5/3 de su valor), lo más que ha valido entre medias, y en cada fichaje, lo pagado si es más; comprado a LaLiga,
+          empieza de nuevo en lo pagado */
+    const fichajesPid = {};
+    for (const l of Object.values(fichajes)) for (const a of l) (fichajesPid[a.pid] ||= []).push(a);
+    for (const l of Object.values(fichajesPid)) l.sort((x, y) => x.t - y.t);
+    const maxValorEntre = (pid, t0, t1) => {
+      let m = 0;
+      for (const [tt, vv] of (det[pid] && det[pid].valores) || []) if (tt >= t0 && tt <= t1 && vv > m) m = vv;
+      const d0 = diaDe(t0), d1 = diaDe(t1);
+      for (const [dd, vv] of (H.v && H.v[pid]) || []) if (dd >= d0 && dd <= d1 && vv > m) m = vv;
+      return m;
+    };
+    const clausulaHeredada = (pid, k) => {
+      const l = fichajesPid[pid] || [];
+      if (!l.length) return null;
+      let C = null, tPrev = AH.desde || 0;
+      // el primero que lo vende sin haberlo fichado lo tenía del principio
+      if (l[0].otroId || l[0].otro) { const v0 = v0De(pid); if (v0) C = Math.max(v0 * k, 1e6); }
+      for (const a of l) {
+        const imp = Math.abs(num(a.importe)), v = valorEn(pid, a.t) || 0;
+        if (C != null) C = Math.max(C, maxValorEntre(pid, tPrev, a.t));
+        C = a.otroId || a.otro ? Math.max(imp, C || 0, v, 1e6) : Math.max(imp, v, 1e6);
+        tPrev = a.t;
+      }
+      return C;
+    };
+    const ks = [];
+    for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) {
+      if (!f.clausula || J(f.pid).pos === 5 || fichajeAntes(tid, f.pid, ahora + DIA)) continue;
+      const v0 = v0De(f.pid);
+      if (v0 && f.clausula > maxValorDesde(f.pid, AH.desde) * 1.02) ks.push(f.clausula / Math.max(v0, 1e6));
+    }
+    ks.sort((a, b) => a - b);
+    const kIni = ks.length >= 3 ? clamp(ks.length % 2 ? ks[(ks.length - 1) / 2] : (ks[ks.length / 2 - 1] + ks[ks.length / 2]) / 2, 1, 2.5) : CLAUSULA_INICIAL;
+    M.clausulaInicial = { k: Math.round(kIni * 1000) / 1000, n: ks.length };
+    const redonda = (x) => x > 0 && Math.abs(x - Math.round(x / 5e5) * 5e5) <= 3e4;
+    const sinHistorico = [];
     for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) {
       if (!f.clausula) continue;
       const a = fichajeAntes(tid, f.pid, ahora + DIA);
       let base;
-      if (a) base = clausulaAlFichar(a);
+      if (a) base = clausulaHeredada(f.pid, kIni) || clausulaAlFichar(a);
       else {
-        // de su plantilla del principio: entonces su cláusula era lo que valía
-        let v0 = AH.completa && AH.desde ? valorEn(f.pid, AH.desde) : null;
-        // si su histórico de valor empieza después de crearse la liga (el juego abre antes que LaLiga), su primer valor,
-        // si es de las 3 semanas siguientes
-        if (v0 == null && AH.completa && AH.desde) { const p0 = ((det[f.pid] && det[f.pid].valores) || [])[0]; if (p0 && p0[0] - AH.desde < 21 * DIA) v0 = p0[1]; }
+        const v0 = v0De(f.pid);
         if (v0 == null) {
-          const posible = Math.max(0, f.clausula - Math.max(J(f.pid).valor, 1e6)) / 2;
+          // sin saber lo que valía al empezar: lo que haya por encima de la cláusula con la que habría empezado si valía lo de hoy
+          const posible = Math.max(0, f.clausula - Math.max(J(f.pid).valor * kIni, 1e6)) / 2;
           if (posible > 2e5) { sb(tid).sinBase++; sb(tid).dudas += posible; sinBase.push(f.pid); }
           continue;
         }
-        base = Math.max(v0, 1e6);
+        base = Math.max(v0 * kIni, 1e6);
       }
       // lo que sube sola la cláusula con el valor del jugador no cuenta: si está en lo más que ha valido desde entonces,
       // la ha puesto LaLiga al pasarla el valor
       const tBase = a ? a.t : AH.desde;
-      if (f.clausula <= maxValorDesde(f.pid, tBase) * 1.02) continue;
-      const subio = f.clausula - base;
-      // lo poco puede ser que valiera algo más al ficharlo que lo que se sabe
-      if (subio < Math.max(2e5, 0.03 * base)) continue;
-      sb(tid).v += subio / 2; sb(tid).n++;
-      sb(tid).lista.push({ pid: f.pid, de: base, a: f.clausula, pago: subio / 2 });
+      const mx = maxValorDesde(f.pid, tBase);
+      if (f.clausula <= mx * 1.02) continue;
+      const hi = f.clausula - base, lo = f.clausula - Math.max(base, mx);
+      // lo poco puede ser que valiera algo más al ficharlo que lo que se sabe (en los del principio, que el tanto no sea justo)
+      if (hi < Math.max(2e5, (a ? 0.03 : 0.05) * base)) continue;
+      let subio = hi, duda = 0;
+      if (lo < hi - 1e4) {
+        if (redonda(lo) && !redonda(hi)) subio = lo;
+        else if (!redonda(hi) || redonda(lo)) { subio = (lo + hi) / 2; duda = (hi - lo) / 4; }
+      }
+      // sin su histórico de valor no se ve si la cláusula la subió el valor: se pide su ficha (datos.js lee `M.sinBase`)
+      if (!(det[f.pid] && det[f.pid].valores)) sinHistorico.push(f.pid);
+      sb(tid).v += subio / 2; sb(tid).n++; sb(tid).dudas += duda;
+      sb(tid).lista.push({ pid: f.pid, de: base, a: f.clausula, pago: subio / 2, max: mx, inicial: !a });
     }
+    for (const pid of sinHistorico) if (!sinBase.includes(pid)) sinBase.push(pid);
     // las subidas que se vieron en jugadores que ya no tiene (el dinero se gastó igual)
     for (const m of H.mov || []) {
       if (!M.blindaPagada(m) || !m.teamId) continue;
@@ -1038,23 +1126,71 @@ export function analizar(D, H, c, extra = {}) {
   const desvio = baseV == null || !AH.completa || D.demo ? 0 : baseV < baseMin ? baseMin - baseV : baseV > baseMax ? baseV - baseMax : 0;
   M.baseDinero = baseV == null ? null : { v: baseV, min: baseMin, max: baseMax, desvio, saldo: num(D.dinero), mov: miF.v, subidas: miSub.v, dias: diasMov };
   const dichos = extra.dichos || {};
+  /* (27 nov, Carlos: «las cuentas tienen que ser lo más exactas posibles… la recompensa diaria se podría calcular en función
+     de si el tío es muy activo o no en la liga») LAS RECOMPENSAS DIARIAS DE CADA RIVAL, que no salen en ningún sitio, se
+     acotan con lo que sí se ve:
+     - LO MENOS que ha tenido que coger: cada vez que paga una cláusula o le compra a otro mánager (solo se puede con
+       saldo) y cada jornada que cobra premio (la empezó en positivo), sus 100 M de salida más lo movido hasta entonces no
+       pueden dar negativo; lo que falte, son recompensas (`recMin`). Las subidas de cláusula no se restan aquí (no se
+       sabe cuándo las pagó): así el mínimo es seguro. Si ni con todas las recompensas hasta ese día le llegaba, a la
+       cuenta le falta dinero suyo (`falta`): se le suma y va al margen
+     - LO QUE SE LE CALCULA: las tuyas se saben exactas (tu saldo menos tus movimientos); de ahí, cuántas coges por cada día
+       en que haces algo en la liga, y a cada rival, lo mismo por sus días (nunca menos que su mínimo ni más que todas).
+       El margen: de la mitad al doble de eso */
+  const diasLiga = AH.desde ? Math.max(1, Math.round((ahora - AH.desde) / DIA)) : 0;
+  const actDe = (tid) => (diasLiga && diasActivo[tid] ? Math.min(1, diasActivo[tid].size / diasLiga) : 0);
+  const miAct = actDe(yoTid);
+  const misRec = baseV != null && AH.completa && !D.demo && !desvio && recTotal > 0 ? clamp((baseV - 100e6) / recTotal, 0, 1) : null;
+  // recompensas por día activo: las tuyas; sin saberlas (o sin días tuyos), una de cada dos
+  const porDiaActivo = misRec != null && miAct > 0 ? clamp(misRec / miAct, 0.15, 1.5) : 0.5;
+  M.recompensasMias = misRec == null ? null : { v: misRec * recTotal, de: recTotal, act: miAct, porDia: porDiaActivo };
+  const recDe = (tid) => {
+    const f = flujos[tid] || { ev: [] };
+    const ev = f.ev.slice().sort((a, b) => a[0] - b[0]);
+    let s = 100e6, min = 0, falta = 0, k = 0;
+    // (lo que cobra en los 10 minutos siguientes a un pago cuenta como ya cobrado: un cambio de jugadores entre dos mánagers
+    // son una compra y una venta a la vez, y el orden en que salen no dice cuál fue antes. Así el mínimo sigue siendo seguro)
+    const mira = (t, i) => {
+      let b = s;
+      if (i != null) for (let n = i + 1; n < ev.length && ev[n][0] <= t + 10 * MIN; n++) if (ev[n][1] > 0) b += ev[n][1];
+      if (-b > min) min = -b;
+      const tope = AH.desde ? M.recompensas(AH.desde, Math.max(t, AH.desde)) : 0;
+      if (-b - tope > falta) falta = -b - tope;
+    };
+    // las jornadas que cobró: la que acabó justo antes de cada premio
+    const cobradas = new Set();
+    for (const [t, , c] of ev) if (c === 'p') { const jo = jornadas.filter((x) => x.fin <= t).pop(); if (jo && t - jo.fin < DIA) cobradas.add(jo.n); }
+    const inis = jornadas.filter((jo) => cobradas.has(jo.n) && jo.ini > (AH.desde || 0)).map((jo) => jo.ini);
+    for (const ini of inis) {
+      while (k < ev.length && ev[k][0] <= ini) { s += ev[k][1]; if (ev[k][2] === 's') mira(ev[k][0], k); k++; }
+      mira(ini);
+    }
+    while (k < ev.length) { s += ev[k][1]; if (ev[k][2] === 's') mira(ev[k][0], k); k++; }
+    min = Math.min(Math.max(0, min), recTotal);
+    const act = actDe(tid);
+    const est = clamp(porDiaActivo * act * recTotal, min, recTotal);
+    const lo = Math.max(min, 0.5 * porDiaActivo * act * recTotal), hi = Math.min(recTotal, Math.max(est, 2 * porDiaActivo * act * recTotal));
+    return { v: est, min, margen: Math.max(est - lo, hi - est, recTotal ? 2e5 : 0), act, dias: diasActivo[tid] ? diasActivo[tid].size : 0, falta: Math.max(0, falta) };
+  };
   /** la cuenta con los movimientos, sin lo que te haya dicho ni corregir (con esta se apunta cuánto fallaba) */
   M.dineroCuentaBruta = (tid) => {
     if (!tid || tid === yoTid) return null;
     if (D.dinero == null) return { v: null, exacto: false, fiable: 'no', motivo: 'no se sabe tu saldo' };
     if (!AH.completa) return { v: null, exacto: false, fiable: 'no', motivo: `faltan los movimientos del principio de la liga (hay desde ${AH.desde ? cuando(AH.desde, { hora: false }) : '?'})` };
     const f = flujos[tid] || { v: 0, n: 0, raros: 0 }, s = subidas[tid] || { v: 0, n: 0, dudas: 0 };
-    const v = baseV + f.v - s.v;
+    const rc = recDe(tid);
+    // 100 M de salida, lo que ha movido, lo que ha pagado por subir cláusulas, sus recompensas y, si ni con todas le
+    // llegaba para algo que pagó, lo que le falta a la cuenta
+    const v = 100e6 + f.v - s.v + rc.v + rc.falta;
     const valorR = num((M.equipo[tid] || {}).valor);
     // en una liga con mucho movimiento se puede tener bastante más dinero que equipo, así que arriba no hay tope;
     // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
     if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
-    // la recompensa diaria que uno coge y otro no, las subidas que no se pueden medir, lo raro y lo que no cuadra en la base
-    // (0.7.13z) el margen, por partes (el Diagnóstico las enseña): 1 M fijo, la mitad de las recompensas de la liga (cada
-    // rival ha cogido entre 0 y todas), las subidas de cláusula que no se miden, lo que no cuadra en tu base y lo raro
-    const partes = { fija: 1e6, rec: Math.min(recTotal, 15e6) * 0.5, dudas: num(s.dudas) + num(miSub.dudas), desvio, raros: (num(f.raros) + num(miF.raros)) * 1e6 };
-    const margen = Math.round((partes.fija + partes.rec + partes.dudas + partes.desvio + partes.raros) / 1e5) * 1e5;
-    return { v, exacto: false, margen, partes, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: baseV, mov: f.v, subidas: s.v, nSubidas: s.n } };
+    // el margen, por partes (el Diagnóstico las enseña): medio millón fijo, sus recompensas (de la mitad al doble de lo que
+    // se le calcula), las subidas de cláusula que no se miden, lo que no cuadra en TU cuenta, lo que le falta a la suya y lo raro
+    const partes = { fija: 0.5e6, rec: rc.margen, dudas: num(s.dudas), desvio, falta: rc.falta, raros: num(f.raros) * 1e6 };
+    const margen = Math.round((partes.fija + partes.rec + partes.dudas + partes.desvio + partes.falta + partes.raros) / 1e5) * 1e5;
+    return { v, exacto: false, margen, partes, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: 100e6, mov: f.v, subidas: s.v, nSubidas: s.n, rec: rc.v, recMin: rc.min, recTodas: recTotal, dias: rc.dias, diasLiga, falta: rc.falta } };
   };
   /* (0.7.12, Carlos 14 nov: «con el dinero que apunta la gente… se tendría que retroalimentar y mejorar la predicción»)
      lo que te han dicho los rivales corrige la cuenta de los demás. Cada vez que apuntas lo que tiene uno, se guarda lo
@@ -1071,7 +1207,7 @@ export function analizar(D, H, c, extra = {}) {
      reparto, en total y por días de liga). Va por debajo de lo de tu liga: lo tuyo pesa más (con 5 apuntes tuyos ya no
      cuenta lo de todos), y lo de todos pesa entero con 40 apuntes en su tramo. Con datos, el margen se acerca a lo que de
      verdad falla la cuenta (la mitad del p10-p90): se estrecha si la cuenta acierta y se abre si no */
-  const calD = extra.calDinero && Number(extra.calDinero.n) >= CAL_MIN ? extra.calDinero : null;
+  const calD = extra.calDinero && Number(extra.calDinero.n) >= CAL_MIN && num(extra.calDinero.cu) >= CUENTA_DINERO ? extra.calDinero : null;
   M.calDinero = calD ? { n: calD.n, med: calD.med, margen: Math.max(5e5, Math.round((calD.p90 - calD.p10) / 2 / 1e5) * 1e5) } : null;
   const deTodos = (c) => {
     if (!calD) return null;
@@ -1093,8 +1229,8 @@ export function analizar(D, H, c, extra = {}) {
        da por hecho que el rival ha cogido tantas recompensas diarias como tú; pero ha podido coger desde ninguna hasta todas
        y el ± ya es la mitad de ese hueco. Sin datos de nadie, la cifra se pone en el punto medio de lo que puede ser su base
        (de 100 M a 100 M + las recompensas de la liga); con lo que te han dicho, lo aprendido pesa y el punto medio, menos. */
-    const pesoDatos = propio ? 1 : Math.min(1, pesoG + wg);
-    const centro = baseV == null || D.demo ? 0 : Math.round(((baseMin + baseMax) / 2 - baseV) * (1 - pesoDatos) / 1e5) * 1e5;
+    // (27 nov) la cifra ya no se lleva al punto medio de las recompensas: lleva las que se le calculan a ese rival (`recDe`)
+    const centro = 0;
     const cc = Math.abs(corr) < 1e5 ? 0 : corr;
     if (!cc && !centro && margen === c.margen) return c;
     const out = { ...c, v: c.v + cc + centro, margen, centro };
@@ -2830,7 +2966,11 @@ export function analizar(D, H, c, extra = {}) {
   const riqMax = Math.max(0, ...Object.values(riqDe));
   // (20 nov, 18:39, Carlos: «haz otra escala con muy alto») cuatro escalones: muy alto desde 70, alto desde 50, medio
   // desde 30 y bajo por debajo
-  const nivelPel = (n) => (n >= 70 ? 'muyalta' : n >= 50 ? 'alta' : n >= 30 ? 'media' : 'baja');
+  // (27 nov, 23:25, Carlos, con su liga: el 1º, con 544 M de equipo y 5 clausulazos, salía «medio» (36) igual que el 7º, el
+  // 8º y el 9º (31, 32 y 30): «¿cómo va a ser el primero igual de peligroso que los últimos? Yo subiría el umbral… en vez
+  // de 30, a lo mejor 33») medio desde 33. El suelo de 30 de quien puede pagar una cláusula tuya en riesgo alto se queda
+  // (lo deja el primero de los «bajo»), pero ya no lo saca de «bajo»
+  const nivelPel = (n) => (n >= 70 ? 'muyalta' : n >= 50 ? 'alta' : n >= MEDIO_DESDE ? 'media' : 'baja');
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
     const serie = (H.eq && H.eq[e.teamId]) || [];
     const hace7 = serie.filter(([d]) => d <= otroDia(diaDe(ahora), -7)).pop();

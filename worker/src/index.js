@@ -476,8 +476,8 @@ export class Emparejar {
       const limite = `r|${diaHace(DINERO_DIAS)}`;
       const viejos = [...(await st.list({ prefix: 'r|', end: limite, limit: 2000 })).keys()];
       for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
-      const regs = [...(await st.list({ prefix: 'r|', reverse: true, limit: DINERO_MAX })).values()];
-      const cal = { ...calDinero(regs), t: Date.now() };
+      const regs = [...(await st.list({ prefix: 'r|', reverse: true, limit: DINERO_MAX })).values()].filter((x) => x && (x.cu || 1) >= DINERO_CUENTA);
+      const cal = { ...calDinero(regs), cu: DINERO_CUENTA, t: Date.now() };
       await st.put('cal', cal);
       return new Response(JSON.stringify(cal), { status: 200 });
     }
@@ -1437,6 +1437,11 @@ async function pushRuta(req, env, c) {
  * La sesión de LaLiga solo sirve para frenar (por cuenta y día, en el freno del día, que se borra a las 30 h): no se guarda
  * con el apunte. La corrección (calDinero) se rehace como mucho cada 6 h y la app la lee con 6 h de caché.
  */
+/* (27 nov) la versión de la cuenta del dinero con la que se hizo cada apunte (`cu`; sin ella, la 1). La corrección de todos
+   solo usa los de la versión de ahora (`CUENTA_DINERO` de web/js/motor.js): un apunte dice cuánto fallaba la cuenta de
+   entonces, y la 1 contaba como subidas de cláusula pagadas las de la plantilla del principio (fallaba hasta en decenas de
+   millones). La app no usa una corrección que no traiga su `cu` */
+export const DINERO_CUENTA = 2;
 export const DINERO_DIAS = 180, DINERO_MAX = 20000, DINERO_CAL_CADA = 6 * 3600e3, DINERO_CUENTA_DIA = 30, DINERO_TODOS_DIA = 5000;
 const diaHace = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 const numEn = (x, lo, hi, ent = false) => { const v = Number(x); if (!Number.isFinite(v) || v < lo || v > hi) return null; return ent ? Math.round(v) : Math.round(v / 1e3) * 1e3; };
@@ -1446,7 +1451,7 @@ export function apunteDinero(b) {
   const x = {
     e: numEn(b.e, -300e6, 300e6), m: numEn(b.m, 0, 200e6), r: numEn(b.r ?? 0, 0, 200e6), dl: numEn(b.dl, 0, 400, true), dp: numEn(b.dp ?? 0, 0, 400, true),
     mov: numEn(b.mov ?? 0, 0, 5000, true), sub: numEn(b.sub ?? 0, 0, 500, true), pago: b.pago === true, val: numEn(b.val ?? 0, 0, 5e9), pos: numEn(b.pos ?? 0, 0, 60, true),
-    nr: numEn(b.nr ?? 0, 0, 60, true), est: numEn(b.est ?? 0, -1e9, 5e9),
+    nr: numEn(b.nr ?? 0, 0, 60, true), est: numEn(b.est ?? 0, -1e9, 5e9), cu: numEn(b.cu ?? 1, 1, 99, true),
   };
   if (Object.values(x).some((v) => v === null) || x.dp > x.dl + 1) return null;
   return x;

@@ -477,13 +477,21 @@ function parseValores(r) {
   visitar(r, 0);
   return out.filter(([, v]) => v > 0).sort((a, b) => a[0] - b[0]);
 }
-/** el histórico de valor: los últimos 90 puntos enteros y lo anterior, uno por semana. LaLiga lo da desde el 29 jun
+/** el histórico de valor: los últimos 90 puntos enteros y lo anterior, uno por semana (y el más alto de cada semana). LaLiga lo da desde el 29 jun
     (un punto por día): guardando solo los 90 últimos, el valor de cuando se creó la liga se perdía y no se sabía con qué
     cláusula empezó un jugador que nadie ha fichado (salía «sin base» en el dinero de los rivales) */
 export function recortarValores(v) {
   if (!v || v.length <= 90) return v;
+  // (27 nov) de cada semana de lo anterior, su primer punto y también el más alto: la cláusula sube sola hasta lo más que ha
+  // valido, y con un punto por semana ese tope se perdía (una cláusula que había subido el valor parecía una subida pagada)
   const viejos = [];
-  for (const p of v.slice(0, -90)) if (!viejos.length || p[0] - viejos[viejos.length - 1][0] >= 7 * DIA - HORA) viejos.push(p);
+  let ini = null, alto = null;
+  const cerrar = () => { if (alto && alto !== ini) viejos.push(alto); };
+  for (const p of v.slice(0, -90)) {
+    if (!ini || p[0] - ini[0] >= 7 * DIA - HORA) { cerrar(); ini = alto = p; viejos.push(p); }
+    else if (p[1] > alto[1]) alto = p;
+  }
+  cerrar();
   return [...viejos, ...v.slice(-90)];
 }
 export const rutaValorFalla = () => { const t = LS.get('ruta-valor-falla', 0); return !!t && Date.now() - t < DIA; };

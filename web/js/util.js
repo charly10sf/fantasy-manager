@@ -29,7 +29,8 @@ export const eurLargo = (v) => `${num(v) < 0 ? '−' : ''}${NF0.format(Math.abs(
    de un rival. La recompensa diaria da como mucho 7,5 M (la mitad de las de la liga, con tope): un ± mayor viene de otra
    cosa y hay que decir cuál. `d.partes` lo trae el motor (dineroCuentaBruta y lo que te dijo). Lo de más peso primero */
 const MARGEN_POR = {
-  rec: ['la recompensa diaria', 'la recompensa diaria (no se sabe cuántas ha cogido)'],
+  rec: ['la recompensa diaria', 'sus recompensas diarias (no se sabe cuántas ha cogido)'],
+  falta: ['dinero que no se ve', 'dinero suyo que la cuenta no ve'],
   dudas: ['subidas de cláusula', 'subidas de cláusula que no se pueden medir'],
   desvio: ['movimientos que faltan', 'movimientos que faltan (tu cuenta no cuadra con tu saldo, y la suya sale de la tuya)'],
   raros: ['movimientos sin cifra', 'movimientos de un tipo que no se sabe leer'],

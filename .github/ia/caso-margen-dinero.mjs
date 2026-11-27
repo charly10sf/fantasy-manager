@@ -41,14 +41,14 @@ if (r.sin) ok(false, 'la liga de ejemplo no trae ningún rival con el dinero est
 else {
   const top = Object.entries(r.partes).filter(([k]) => k !== 'fija').sort((a, b) => b[1] - a[1])[0];
   ok(top[0] === 'rec' && /± [\d,]+ (M|mil) por la recompensa diaria/.test(r.a.casilla), `(a) ${r.nombre}, con la cuenta normal (pesa «${top[0]}»): «${r.a.casilla}»`);
-  ok(/El ± es por la recompensa diaria/.test(r.a.largo) && !/el ± es por/.test(r.a.ia), `(a) la explicación, la de siempre, y a la IA no se le repite («${r.a.ia.slice(0, 60)}…»)`);
+  ok(/El ± son [\d,]+ (M|mil) de sus recompensas diarias/.test(r.a.largo) && !/el ± es por/.test(r.a.ia), `(a) la explicación, la de siempre, y a la IA no se le repite («${r.a.ia.slice(0, 60)}…»)`);
   ok(/± 21,70 M por movimientos que faltan ›?/.test(r.b.casilla) && !/recompensa/.test(r.b.casilla), `(b) si lo que pesa es que faltan movimientos: «${r.b.casilla}»`);
-  ok(/El ± son 13,20 M de movimientos que faltan \(tu cuenta no cuadra[^)]*\), 7,50 M de la recompensa diaria \(no se sabe cuántas ha cogido\) y 1,00 M de holgura\./.test(r.b.largo), `(b) la explicación, con sus cifras: «…${r.b.largo.slice(r.b.largo.indexOf('El ±'), r.b.largo.indexOf('El ±') + 170)}…»`);
+  ok(/El ± son 13,20 M de movimientos que faltan \(tu cuenta no cuadra[^)]*\), 7,50 M de sus recompensas diarias \(no se sabe cuántas ha cogido\) y 1,00 M de holgura\./.test(r.b.largo), `(b) la explicación, con sus cifras: «…${r.b.largo.slice(r.b.largo.indexOf('El ±'), r.b.largo.indexOf('El ±') + 170)}…»`);
   ok(/el ± es por movimientos que faltan y la recompensa diaria/.test(r.b.ia), `(b) y lo lee la IA: «${r.b.ia.slice(-90)}»`);
-  ok(/por subidas de cláusula/.test(r.b2.casilla) && /El ± son 9,20 M de subidas de cláusula que no se pueden medir, 7,50 M de la recompensa diaria/.test(r.b2.largo) && /el ± es por subidas de cláusula y la recompensa diaria/.test(r.b2.ia), `(b) subidas de cláusula que no se miden: «${r.b2.casilla}»`);
+  ok(/por subidas de cláusula/.test(r.b2.casilla) && /El ± son 9,20 M de subidas de cláusula que no se pueden medir, 7,50 M de sus recompensas diarias/.test(r.b2.largo) && /el ± es por subidas de cláusula y la recompensa diaria/.test(r.b2.ia), `(b) subidas de cláusula que no se miden: «${r.b2.casilla}»`);
   ok(/por lo que te dijo/.test(r.c.casilla) && /El ± son 2,00 M de lo que te dijo, que era un tramo y no una cifra/.test(r.c.largo) && /el ± es por lo que te dijo/.test(r.c.ia), `(c) con lo que te dijo en un tramo: «${r.c.casilla}»`);
   ok(/± 21,20 M por lo que falla en otras ligas/.test(r.d.casilla) && !/recompensa/.test(r.d.casilla), `(d) si el ± crece por lo de todas las ligas, lo dice: «${r.d.casilla}»`);
-  ok(/El ± son 13,90 M de lo que falla esta cuenta en otras ligas \(10 apuntes de la gente: ahí falla entre −69,80 M y \+56,10 M\), 6,30 M de la recompensa diaria/.test(r.d.largo) && !/el ± es por/.test(r.d.ia), `(d) la explicación, con los apuntes y entre qué cifras, y a la IA no se le repite en cada rival: «…${r.d.largo.slice(r.d.largo.indexOf('El ±'), r.d.largo.indexOf('El ±') + 150)}…»`);
+  ok(/El ± son 13,90 M de lo que falla esta cuenta en otras ligas \(10 apuntes de la gente: ahí falla entre −69,80 M y \+56,10 M\), 6,30 M de sus recompensas diarias/.test(r.d.largo) && !/el ± es por/.test(r.d.ia), `(d) la explicación, con los apuntes y entre qué cifras, y a la IA no se le repite en cada rival: «…${r.d.largo.slice(r.d.largo.indexOf('El ±'), r.d.largo.indexOf('El ±') + 150)}…»`);
 }
 await cerrar();
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');

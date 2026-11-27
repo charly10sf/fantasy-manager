@@ -4,7 +4,7 @@ import { enApp, enWeb, enInicio, enIPhone, nativo, http, guardar, WORKER, WORKER
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras, cambiosLigeros } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
-import { analizar, rematarAuto, efectoTras, comoVenia } from './motor.js';
+import { analizar, rematarAuto, efectoTras, comoVenia, CUENTA_DINERO } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import { ventanaParte, parte as parteDe, visibles as parteVisibles, avisosParte, firmaAvisos, TOPE_AVISOS } from './parte.js';
@@ -2267,7 +2267,7 @@ async function apunteDinero(tid, dicho, cu) {
   const h = await huellaDinero(S.D.liga ? S.D.liga.id : '', tid, diaDe(ahora));
   return mandarDinero({
     h, e: dicho.v - dicho.est, m: cu.margen || 0, r: dicho.r || 0, dl: Math.round(dl), dp: Math.round(dp), mov: cu.n || 0, sub: (cu.cuenta && cu.cuenta.nSubidas) || 0,
-    pago: !!(S.D.liga && S.D.liga.premium), val: Math.max(0, Number(eq.valor) || 0), pos: Number(eq.pos) || 0, nr: (S.D.clasif || []).length, est: dicho.est,
+    pago: !!(S.D.liga && S.D.liga.premium), val: Math.max(0, Number(eq.valor) || 0), pos: Number(eq.pos) || 0, nr: (S.D.clasif || []).length, est: dicho.est, cu: CUENTA_DINERO,
   });
 }
 /* (0.8.4o) apuntar lo que te dijo un rival (la hoja, la ventana «Quién y cuánto» y la tarjeta del chat), con el mismo

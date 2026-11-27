@@ -154,6 +154,9 @@ jobs:
       # (27 nov) el ± del dinero de un rival dice de qué sale (no siempre es la recompensa diaria)
       - name: De qué sale el ± del dinero de un rival
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-margen-dinero.mjs
+      # (27 nov) la cuenta del dinero de un rival: la cláusula del principio, las subidas pagadas y las recompensas por actividad
+      - name: La cuenta del dinero de un rival
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-cuenta-dinero.mjs
       # (0.8z) al barato que baja se le vende por la inercia (el corte, un 3 % de lo que vale)
       - name: Vender al barato que baja
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-venta-barato.mjs

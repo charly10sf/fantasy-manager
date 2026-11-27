@@ -36,7 +36,7 @@ const forzar = async (P, { veda = false, sinMov = false, activoRico = false } = 
   const R = (tid) => M.rivales.find((r) => r.e.teamId === tid);
   const motivos = M.rivales.map((r) => Mo.motivoPeligro(r)), sinQuien = M.rivales.map((r) => Mo.motivoPeligro(r, { quien: false }));
   const enAlto = [];
-  for (const x of M.mias) if (x.riesgo === 'alto' && x.pagan) for (const y of x.pagan.seguro) enAlto.push({ j: x.j.nombre, rival: R(y.tid).e.nombre, nivel: R(y.tid).nivel });
+  for (const x of M.mias) if (x.riesgo === 'alto' && x.pagan) for (const y of x.pagan.seguro) enAlto.push({ j: x.j.nombre, rival: R(y.tid).e.nombre, nivel: R(y.tid).nivel, a: R(y.tid).amenaza });
   const ver = (r) => ({ n: r.e.nombre, nivel: r.nivel, a: r.amenaza, veda: r.peligro.veda ? r.peligro.veda.nivel : null, motivo: Mo.motivoPeligro(r), puede: r.peligro.puede, suele: r.peligro.suele });
   return { rico: ver(R(rico.tid)), activo: ver(R(activo.tid)), top: top.map((p) => D.maestro[p].nombre), motivos, sinQuien, enAlto };
 }, { sinMov, activoRico });
@@ -64,7 +64,7 @@ for (const e of ['martes', 'veda', 'enjuego', 'paron']) {
   ok(r.rico.nivel === 'muyalta', `(g) el rico con cuatro cláusulas tuyas baratas abiertas: «muy alto» (${r.rico.nivel}, ${r.rico.a})`);
   ok(r.motivos.every((m) => m && !/\d\s?(M|mil)\b|€/.test(m)), '(e) ningún porqué lleva cifras de dinero');
   ok(r.sinQuien.every((m) => !/le llega/i.test(m)), '(e) con «quién paga» cerrado no dice qué cláusulas le llegan');
-  ok(r.enAlto.every((x) => x.nivel !== 'baja'), `quien paga una cláusula tuya en riesgo alto no sale «bajo» (${r.enAlto.length} casos${r.enAlto.filter((x) => x.nivel === 'baja').map((x) => `: ${x.j} → ${x.rival}`).join('')})`);
+  ok(r.enAlto.every((x) => x.a >= 30), `quien paga una cláusula tuya en riesgo alto no baja de 30 (desde el 27 nov «medio» empieza en 33: Carlos) (${r.enAlto.length} casos${r.enAlto.filter((x) => x.a < 30).map((x) => `: ${x.j} → ${x.rival}`).join('')})`);
   await P.cerrar();
 }
 {
@@ -74,7 +74,7 @@ for (const e of ['martes', 'veda', 'enjuego', 'paron']) {
   ok(r.rico.nivel !== 'baja', `(c) en la veda, el rico con tus cláusulas baratas no es «bajo» (${r.rico.nivel})`);
   ok(r.activo.nivel === 'baja' && r.rico.nivel !== r.activo.nivel, `(c) en la veda no salen iguales el rico y el que no tiene dinero (${r.rico.nivel} / ${r.activo.nivel})`);
   ok(/^Cláusulas cerradas hasta .+; al reabrirse, /.test(r.rico.motivo), `(c) lo dice: «${r.rico.motivo}»`);
-  ok(r.enAlto.every((x) => x.nivel !== 'baja'), '(c) en la veda tampoco sale «bajo» quien paga una cláusula tuya en riesgo alto');
+  ok(r.enAlto.every((x) => x.a >= 30), '(c) en la veda tampoco baja de 30 quien paga una cláusula tuya en riesgo alto');
   await P.cerrar();
 }
 {
