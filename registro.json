@@ -2335,6 +2335,13 @@
    "jornada": 14,
    "id": "2126270172067451170",
    "t": "2026-11-27T11:01:28.254Z"
+  },
+  {
+   "clave": "caidas|14|3128",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2126282760356515865",
+   "t": "2026-11-27T11:51:29.554Z"
   }
  ],
  "estados": {
@@ -4752,16 +4759,16 @@
   "dia": "2026-11-27",
   "llamadas": {
    "clasificar": 20,
-   "redactar": 5,
-   "revisar": 5,
+   "redactar": 7,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 59755,
-  "salida": 9302,
-  "cacheLee": 30720,
-  "cacheEscribe": 19822,
-  "dolares": 0.145517,
+  "entrada": 66282,
+  "salida": 9934,
+  "cacheLee": 48609,
+  "cacheEscribe": 20797,
+  "dolares": 0.170579,
   "reservado": 0
  },
  "recientes": {
@@ -4961,10 +4968,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-24T06:02:50.163Z",
-    "texto": "El Villarreal llega a Balaídos el domingo 29 con dos titulares habituales en duda.\n\nAkhomach, que jugó 60 minutos o más en sus cinco últimos partidos, tiene un 27 % de titularidad: lo tiene difícil para salir de inicio ante el Celta. Su cotización tampoco acompaña, porque vale 8,2 M tras perder 5,1 M en el último mes.\n\nFoyth, en la zaga, arrastra molestias musculares desde el 30 de octubre y también está en duda."
-   },
-   {
     "t": "2026-11-24T06:02:51.659Z",
     "texto": "Tres titulares habituales llegan tocados a la jornada 14.\n\nEl más grave es Miguel Sierra: una luxación en el hombro y no se le espera hasta enero. Vale 6 M tras perder 6,7 M en un mes, así que es venta obligatoria.\n\nYoel Lago se pierde el Celta-Villarreal del domingo 29 por ciclo de amarillas, y Edu Expósito es duda para recibir al Getafe el lunes 30."
    },
@@ -4979,6 +4982,10 @@
    {
     "t": "2026-11-26T12:51:40.268Z",
     "texto": "El Cuti Romero es duda para el sábado a las 18:30 en el Martínez Valero, donde el Atleti visita al Elche.\n\nCon un 31 % de titularidad, puede quedarse fuera, y eso que es un central que juega casi siempre. El precio ya lo refleja: vale 34 M tras perder 23 M en el último mes."
+   },
+   {
+    "t": "2026-11-27T11:51:29.556Z",
+    "texto": "Guido Rodríguez, medio del Valencia, es duda para recibir al Osasuna en Mestalla el domingo a las 14:00. Las molestias que arrastra no están determinadas.\n\nTiene un 45 % de titularidad: puede quedarse fuera. Hasta ahora era fijo, con 60 minutos o más en sus cinco últimos partidos, y va a 4,9 puntos de media."
    }
   ],
   "balance": [
@@ -9830,13 +9837,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6940,
+   "ok": 6941,
    "fallos": 0,
-   "ejecuciones": 5682,
+   "ejecuciones": 5683,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:46:11.777Z"
+   "ultima": "2026-11-27T11:51:12.079Z"
   }
  },
  "ptsDirecto": {},
@@ -9853,15 +9860,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:46:22.996Z"
+   "ultimaBien": "2026-11-27T11:51:35.807Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:46:22.996Z"
+   "ultimaBien": "2026-11-27T11:51:35.807Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:46:22.996Z"
+   "ultimaBien": "2026-11-27T11:51:35.807Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9869,11 +9876,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:46:22.996Z"
+   "ultimaBien": "2026-11-27T11:51:35.807Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:46:22.996Z"
+   "ultimaBien": "2026-11-27T11:51:35.807Z"
   }
  },
  "avisos": [
