@@ -34,6 +34,7 @@ export const NOVEDADES = [
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'balanza', t: 'Pujas que ganan', x: 'La puja que te propone la app es la que se lleva al jugador unas 8 de cada 10 veces en tu liga, según lo que se ha pagado de verdad por jugadores parecidos. Si para llevártelo casi seguro hay que pagar demasiado, te lo dice y no te propone pujar.' },
       { para: 'dueño', tipo: 'mejora', d: 'plan', t: 'Cada puja, en dos líneas', x: 'En el plan, cada puja dice cuánto pujar, cuántas veces de cada 10 ganas, cuánto pagas sobre su valor y en cuántos días lo recuperas. Sin desplegables.' },
+      { para: 'dueño', tipo: 'mejora', d: 'botiquin', t: 'Bajas por club', x: 'En las bajas de la jornada, cada apartado va por club y, dentro de cada club, del que más puntos lleva al que menos. Los clubes se pliegan con un toque.' },
     ],
   },
   {

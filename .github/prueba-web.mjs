@@ -1424,6 +1424,21 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
     const todas = await page.evaluate(() => ({ tipo: window.S.tipoHoja, clubes: document.querySelectorAll('.hoja .bj-club').length, filas: document.querySelectorAll('.hoja .bj .fila').length, on: (document.querySelector('.hoja .bj-tab.on') || {}).textContent || '', titulo: (document.querySelector('.hoja h2') || {}).textContent || '', err: !!document.querySelector('.hoja .error-c') }));
     if (todas.err || !todas.tipo || todas.tipo[0] !== 'bajas' || todas.tipo[1] !== 'todas' || todas.clubes < 1 || todas.filas < 3 || !/Todas/.test(todas.on) || todas.titulo !== 'Bajas') mal(`${nombre}: la hoja desde la cruz: ${JSON.stringify(todas)}`);
     else bien(`${nombre}: la cruz abre la hoja en «Todas», ${todas.filas} bajas en ${todas.clubes} clubes`);
+    // (27 nov, Domy) por club y por puntos, y cada club se pliega: en «Todas», abiertos solo los que tienen a alguno de tu
+    // liga; plegar uno se recuerda al cambiar de pestaña y volver
+    const grupos = await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-g')].map((g) => ({ open: g.open, liga: !!g.querySelector('.bj-club small'), pts: [...g.querySelectorAll('.fila .fila-s')].map((e) => Number((e.textContent.match(/(-?\d+) pts/) || [])[1])) })));
+    const ordenOk = grupos.every((g) => g.pts.every((p, i) => Number.isFinite(p) && (i === 0 || g.pts[i - 1] >= p)));
+    const plegOk = grupos.length && grupos.every((g) => g.open === g.liga);
+    const abierto = await page.evaluate(() => { const g = [...document.querySelectorAll('.hoja .bj-g')].find((x) => x.open); if (!g) return null; g.querySelector('summary').click(); return g.querySelector('summary').dataset.k; });
+    await page.waitForTimeout(200);
+    await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-tab')].find((b) => /Libres/.test(b.textContent)).click());
+    await page.waitForTimeout(300);
+    const libresG = await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-g')].map((g) => g.open));
+    await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-tab')].find((b) => /Todas/.test(b.textContent)).click());
+    await page.waitForTimeout(300);
+    const sigue = await page.evaluate((k) => { const s = document.querySelector(`.hoja .bj-club[data-k="${k}"]`); return s ? s.parentElement.open : null; }, abierto);
+    if (!ordenOk || !plegOk || !abierto || sigue !== false || !libresG.every(Boolean)) mal(`${nombre}: por club y plegables: ${JSON.stringify({ ordenOk, plegOk, abierto, sigue, libresG, grupos: grupos.slice(0, 4) })}`);
+    else bien(`${nombre}: ${grupos.length} clubes, cada uno por puntos; abiertos solo los de tu liga, y plegar uno se recuerda`);
     await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-tab')].find((b) => /Tu liga/.test(b.textContent)).click());
     await page.waitForTimeout(500);
     const liga = await page.evaluate((ids) => {
