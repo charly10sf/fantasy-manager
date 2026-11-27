@@ -3448,7 +3448,8 @@
    "SPORT|136940118": 1795802506000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000,
    "SPORT|136943137": 1795804483000,
-   "SPORT|136943358": 1795804802000
+   "SPORT|136943358": 1795804802000,
+   "SPORT|136941303": 1795806344000
   },
   "hechos": [
    {
@@ -3991,11 +3992,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136941303",
+    "medio": "SPORT",
+    "t": 1795806344000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a estar disponible ante el Deportivo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -4916,17 +4929,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 149721,
-  "salida": 26258,
+  "entrada": 151760,
+  "salida": 26908,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.291362,
+  "dolares": 0.291891,
   "reservado": 0
  },
  "recientes": {
@@ -9995,13 +10008,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7042,
+   "ok": 7044,
    "fallos": 0,
-   "ejecuciones": 5783,
+   "ejecuciones": 5784,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:06:15.336Z"
+   "ultima": "2026-11-27T20:11:10.215Z"
   }
  },
  "ptsDirecto": {},
@@ -10018,27 +10031,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:06:19.537Z"
+   "ultimaBien": "2026-11-27T20:11:19.286Z"
   }
  },
  "avisos": [
