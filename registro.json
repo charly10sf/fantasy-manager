@@ -3402,7 +3402,9 @@
    "SPORT|136913311": 1795767754000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261127/1004256110/mourinho-vinicius-diomande-no-son-competencia.html": 1795771750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256129/oportunidad-reenganchar-jonathan-david.html": 1795770375000,
-   "MARCA|https://www.marca.com/futbol/alaves/2026/11/27/mariano-renacido.html": 1795774639000
+   "MARCA|https://www.marca.com/futbol/alaves/2026/11/27/mariano-renacido.html": 1795774639000,
+   "SPORT|136916910": 1795771450000,
+   "Europa Press|https://www.europapress.es/deportes/motociclismo-00311/noticia-marc-marquez-anuncia-retirada-20261127105434.html": 1795773274000
   },
   "hechos": [
    {
@@ -3795,11 +3797,23 @@
     "nums": [
      16
     ]
+   },
+   {
+    "guid": "SPORT|136916910",
+    "medio": "SPORT",
+    "t": 1795771450000,
+    "id": "2784",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Marc Bernal no entrena por ligeras molestias físicas",
+    "motivo": "molestias físicas por carga de trabajo acumulada",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4722,17 +4736,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 29274,
-  "salida": 4329,
+  "entrada": 31503,
+  "salida": 4544,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.057533,
+  "dolares": 0.057863,
   "reservado": 0
  },
  "recientes": {
@@ -9801,13 +9815,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6924,
+   "ok": 6925,
    "fallos": 0,
-   "ejecuciones": 5666,
+   "ejecuciones": 5667,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:26:14.076Z"
+   "ultima": "2026-11-27T10:31:29.440Z"
   }
  },
  "ptsDirecto": {},
@@ -9824,15 +9838,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:26:25.393Z"
+   "ultimaBien": "2026-11-27T10:31:40.608Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:26:25.393Z"
+   "ultimaBien": "2026-11-27T10:31:40.608Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:26:25.393Z"
+   "ultimaBien": "2026-11-27T10:31:40.608Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9840,11 +9854,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:26:25.393Z"
+   "ultimaBien": "2026-11-27T10:31:40.608Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:26:25.393Z"
+   "ultimaBien": "2026-11-27T10:31:40.608Z"
   }
  },
  "avisos": [
