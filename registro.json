@@ -4913,33 +4913,32 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795776392000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795779064000,
-   "SPORT|136940333": 1795799657000
+   "SPORT|136940333": 1795799657000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256389/surrealista-dos-pilares-atleti-perder-camp-nou-vieron-ultimas-tarjetas-barca.html": 1795808696000,
+   "SPORT|136944096": 1795806071000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256389/surrealista-dos-pilares-atleti-perder-camp-nou-vieron-ultimas-tarjetas-barca.html": 1795809975336,
-   "SPORT|136944096": 1795809975336
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 151760,
-  "salida": 26908,
+  "entrada": 153809,
+  "salida": 27069,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.291891,
+  "dolares": 0.292176,
   "reservado": 0
  },
  "recientes": {
@@ -10008,13 +10007,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7050,
+   "ok": 7052,
    "fallos": 0,
-   "ejecuciones": 5787,
+   "ejecuciones": 5788,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:26:12.620Z"
+   "ultima": "2026-11-27T20:31:13.579Z"
   }
  },
  "ptsDirecto": {},
@@ -10031,27 +10030,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:26:15.974Z"
+   "ultimaBien": "2026-11-27T20:31:20.548Z"
   }
  },
  "avisos": [
