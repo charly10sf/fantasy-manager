@@ -2559,7 +2559,7 @@
   "2528": "out_of_league",
   "2529": "injured",
   "2530": "ok",
-  "2531": "ok",
+  "2531": "doubtful",
   "2532": "out_of_league",
   "2533": "ok",
   "2534": "ok",
@@ -4702,7 +4702,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795529875000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
@@ -9840,13 +9839,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6943,
+   "ok": 6944,
    "fallos": 0,
-   "ejecuciones": 5685,
+   "ejecuciones": 5686,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:01:14.074Z"
+   "ultima": "2026-11-27T12:06:21.954Z"
   }
  },
  "ptsDirecto": {},
@@ -9863,15 +9862,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:01:28.779Z"
+   "ultimaBien": "2026-11-27T12:06:29.444Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:01:28.779Z"
+   "ultimaBien": "2026-11-27T12:06:29.444Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:01:28.779Z"
+   "ultimaBien": "2026-11-27T12:06:29.444Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9879,11 +9878,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:01:28.779Z"
+   "ultimaBien": "2026-11-27T12:06:29.444Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:01:28.779Z"
+   "ultimaBien": "2026-11-27T12:06:29.444Z"
   }
  },
  "avisos": [
