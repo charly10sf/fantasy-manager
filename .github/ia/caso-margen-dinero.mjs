@@ -4,6 +4,8 @@
 //  (b) si lo que pesa es que faltan movimientos (tu base no cuadra) o subidas de cláusula que no se miden, lo dicen la
 //      casilla, la explicación (con sus cifras) y lo que lee la IA
 //  (c) con lo que te dijo en un tramo, «por lo que te dijo»
+//  (d) si el ± crece por lo que apunta la gente en todas las ligas (lo que le pasaba a Carlos: 7,3 M de su cuenta y
+//      13,9 M más por 10 apuntes de otras ligas), «por lo que falla en otras ligas», con cuántos apuntes y entre qué cifras
 // Uso: PW_MODULO=… node .github/ia/caso-margen-dinero.mjs   (sale con 1 si algo falla)
 import { pagina, cerrar } from './banco.mjs';
 
@@ -29,6 +31,9 @@ const r = await page.evaluate(async () => {
   out.b2 = { casilla: casilla(), largo: Co.dineroLargo(riv.dinero), ia: ia() };
   riv.dinero = { v: 40e6, exacto: false, margen: 3e6, partes: { fija: 0.3e6, rec: 0.7e6, dicho: 2e6 }, fiable: 'alta', dicho: { v: 40e6, min: 38e6, max: 42e6, r: 2e6, t: Date.now() - 3600e3 }, desdeDicho: 0 };
   out.c = { casilla: casilla(), largo: Co.dineroLargo(riv.dinero), ia: ia() };
+  // (d) lo de Carlos de verdad: 7,3 M de la cuenta (1 + 6,3) y 13,9 M más por 10 apuntes de otras ligas
+  riv.dinero = { ...orig, margen: 21.2e6, partes: { fija: 1e6, rec: 6.3e6, dudas: 0, desvio: 0, raros: 0, todos: 13.9e6 }, todosDe: { n: 10, p10: -69.8e6, p90: 56.1e6, w: 0.25 }, correccion: { v: -2.4e6, propio: false, n: 0, todos: 13 } };
+  out.d = { casilla: casilla(), largo: Co.dineroLargo(riv.dinero), ia: ia() };
   riv.dinero = orig;
   return out;
 });
@@ -42,6 +47,8 @@ else {
   ok(/el ± es por movimientos que faltan y la recompensa diaria/.test(r.b.ia), `(b) y lo lee la IA: «${r.b.ia.slice(-90)}»`);
   ok(/por subidas de cláusula/.test(r.b2.casilla) && /El ± son 9,20 M de subidas de cláusula que no se pueden medir, 7,50 M de la recompensa diaria/.test(r.b2.largo) && /el ± es por subidas de cláusula y la recompensa diaria/.test(r.b2.ia), `(b) subidas de cláusula que no se miden: «${r.b2.casilla}»`);
   ok(/por lo que te dijo/.test(r.c.casilla) && /El ± son 2,00 M de lo que te dijo, que era un tramo y no una cifra/.test(r.c.largo) && /el ± es por lo que te dijo/.test(r.c.ia), `(c) con lo que te dijo en un tramo: «${r.c.casilla}»`);
+  ok(/± 21,20 M por lo que falla en otras ligas/.test(r.d.casilla) && !/recompensa/.test(r.d.casilla), `(d) si el ± crece por lo de todas las ligas, lo dice: «${r.d.casilla}»`);
+  ok(/El ± son 13,90 M de lo que falla esta cuenta en otras ligas \(10 apuntes de la gente: ahí falla entre −69,80 M y \+56,10 M\), 6,30 M de la recompensa diaria/.test(r.d.largo) && !/el ± es por/.test(r.d.ia), `(d) la explicación, con los apuntes y entre qué cifras, y a la IA no se le repite en cada rival: «…${r.d.largo.slice(r.d.largo.indexOf('El ±'), r.d.largo.indexOf('El ±') + 150)}…»`);
 }
 await cerrar();
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');

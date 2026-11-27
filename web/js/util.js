@@ -34,6 +34,7 @@ const MARGEN_POR = {
   desvio: ['movimientos que faltan', 'movimientos que faltan (tu cuenta no cuadra con tu saldo, y la suya sale de la tuya)'],
   raros: ['movimientos sin cifra', 'movimientos de un tipo que no se sabe leer'],
   dicho: ['lo que te dijo', 'lo que te dijo, que era un tramo y no una cifra'],
+  todos: ['lo que falla en otras ligas', 'lo que falla esta cuenta en otras ligas'],
 };
 export function margenPartes(d) {
   const p = (d && d.partes) || null;
@@ -52,7 +53,8 @@ export function margenLargo(d) {
   const ps = margenPartes(d);
   if (!ps.length) return '';
   const fija = num(d.partes.fija), suma = ps.reduce((t, x) => t + x.v, 0) + fija, cuadra = Math.abs(suma - num(d.margen)) <= 2e5;
-  const l = ps.map((x) => `${cuadra ? `${eur(x.v)} de ` : ''}${x.largo}`);
+  const t = d.todosDe, deTodos = t ? ` (${t.n} apuntes de la gente: ahí falla entre ${eur(t.p10, { signo: true })} y ${eur(t.p90, { signo: true })})` : '';
+  const l = ps.map((x) => `${cuadra ? `${eur(x.v)} de ` : ''}${x.largo}${x.k === 'todos' ? deTodos : ''}`);
   if (cuadra && fija >= 1e5) l.push(`${eur(fija)} de holgura`);
   return `El ± ${cuadra ? 'son' : 'sale de'} ${l.length > 1 ? `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}` : l[0]}.`;
 }

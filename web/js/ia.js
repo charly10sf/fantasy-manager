@@ -562,8 +562,8 @@ const dineroCat = (d, valor) => {
 // (22 nov, Carlos) rival a rival: el dinero se abre para UN rival viendo sus anuncios; ese va con su cifra (y se le puede
 // decir) y los demás siguen sin ella
 const dineroDe = (d, valor, tid = null) => (bloqueada('dineroRivales', tid) ? dineroCat(d, valor) : `${dineroTxt(d)}${tid != null && bloqueada('dineroRivales') ? ' (el de este rival lo tiene ABIERTO: su cifra sí se la puedes decir)' : ''}`);
-/** (27 nov) de qué sale el ± cuando no es la recompensa diaria (lo de siempre ya lo dice la cabecera: no se repite) */
-const margenOtro = (d) => { const ps = margenPartes(d); return ps.length && ps[0].k !== 'rec' ? `; el ± es ${margenPor(d)}` : ''; };
+/** (27 nov) de qué sale el ± cuando no es la recompensa diaria ni lo de todas las ligas (eso ya lo dice la cabecera de RIVALES: no se repite en cada rival) */
+const margenOtro = (d) => { const ps = margenPartes(d); return ps.length && !['rec', 'todos'].includes(ps[0].k) ? `; el ± es ${margenPor(d)}` : ''; };
 const dineroTxt = (d) => (!d || d.v == null ? `dinero: no se sabe${d && d.motivo ? ` (${d.motivo})` : ''}` : d.exacto ? `dinero ${eur(d.v)} (exacto)` : d.dicho ? `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (me dijo lo que tenía ${cuando(d.dicho.t)}, más lo que ha movido desde entonces${margenOtro(d)})` : `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (estimado con todos sus movimientos y sus subidas de cláusula${d.correccion ? `; corregido con ${d.correccion.propio ? 'lo que me dijo él' : [d.correccion.n ? 'lo que me han dicho otros rivales' : '', d.correccion.todos ? 'lo que apunta la gente en todas las ligas' : ''].filter(Boolean).join(' y ')}` : ''}${margenOtro(d)})`);
 /** quién puede pagar una cláusula tuya. (25 nov, B13) en el chat, con «quién paga» cerrado, nada: «no le llega a ningún
  * rival» era contarlo por la puerta de atrás («¿quién me puede pagar la cláusula de Raphinha?» → «a ninguno le llega») */

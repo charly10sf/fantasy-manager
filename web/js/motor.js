@@ -1078,7 +1078,7 @@ export function analizar(D, H, c, extra = {}) {
     const dl = c.desde ? (ahora - c.desde) / DIA : 0;
     const tr = (calD.porDias || []).find((x) => dl >= x.desde && dl < x.hasta && x.n >= CAL_MIN);
     const b = tr || calD;
-    return { v: num(b.med), w: Math.min(1, b.n / 40), margen: Math.max(5e5, (num(b.p90) - num(b.p10)) / 2), n: calD.n };
+    return { v: num(b.med), w: Math.min(1, b.n / 40), margen: Math.max(5e5, (num(b.p90) - num(b.p10)) / 2), n: calD.n, nt: b.n, p10: num(b.p10), p90: num(b.p90) };
   };
   /** la cuenta con los movimientos, corregida con lo que te han dicho (el suyo o el de todos) y con lo de todas las ligas */
   M.dineroCuenta = (tid) => {
@@ -1098,6 +1098,11 @@ export function analizar(D, H, c, extra = {}) {
     const cc = Math.abs(corr) < 1e5 ? 0 : corr;
     if (!cc && !centro && margen === c.margen) return c;
     const out = { ...c, v: c.v + cc + centro, margen, centro };
+    /* (27 nov, Carlos: «¿de dónde sale esa discrepancia de 13 M? Todos en mi liga tienen ese más menos») lo que el margen
+       crece por lo de todas las ligas va como una parte más (`todos`), con cuántos apuntes y entre qué cifras falla la
+       cuenta ahí: en su liga el ± era 7,3 M (1 fijo y 6,3 de recompensas) y salía 21,2 M por 10 apuntes de otras ligas que
+       van de −69,8 M a +56,1 M, y la ficha decía «por la recompensa diaria» */
+    if (wg && c.partes && margen > c.margen) { out.partes = { ...c.partes, todos: margen - c.margen }; out.todosDe = { n: g.nt, p10: g.p10, p90: g.p90, w: wg }; }
     if (cc || margen !== c.margen) out.correccion = { v: Math.round(cc), propio: !!propio, n: errores.length, todos: wg ? g.n : 0 };
     return out;
   };
