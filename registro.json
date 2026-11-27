@@ -3238,7 +3238,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/asturias/2026/11/24/no-descarto-que-raul-dimita-antes-de-que-le-echen-sanedrin-del-real-oviedo-radio-asturias/": 1795533671000,
    "AS|https://as.com/futbol/condenan-a-casi-16-anos-de-carcel-a-un-exojeador-de-osasuna-por-abusar-de-menores-f202611-n/": 1795534730000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000,
@@ -3435,7 +3434,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/27/arbeloa-vuelve-pescar-madrid.html": 1795786635000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-podra-contar-vivian-imga-maroan-prefiere-20261127145306-nt.html": 1795787587000,
    "AS|https://as.com/futbol/primera/blanco-leschuk-fichaje-de-relumbron-del-juventud-de-torremolinos-f202611-n/": 1795787932000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-necesitaba-salir-casa-volver-vida-intentando-volver-normalidad-20261127_3483952.html": 1795789684000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-necesitaba-salir-casa-volver-vida-intentando-volver-normalidad-20261127_3483952.html": 1795789684000,
+   "SPORT|136932552": 1795788839000
   },
   "hechos": [
    {
@@ -3894,7 +3894,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -4813,17 +4813,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 106490,
-  "salida": 18517,
+  "entrada": 108575,
+  "salida": 18609,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.20913,
+  "dolares": 0.209384,
   "reservado": 0
  },
  "recientes": {
@@ -9892,13 +9892,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6982,
+   "ok": 6983,
    "fallos": 0,
-   "ejecuciones": 5724,
+   "ejecuciones": 5725,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T15:16:12.876Z"
+   "ultima": "2026-11-27T15:21:19.879Z"
   }
  },
  "ptsDirecto": {},
@@ -9915,15 +9915,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:16:22.430Z"
+   "ultimaBien": "2026-11-27T15:21:35.239Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:16:22.430Z"
+   "ultimaBien": "2026-11-27T15:21:35.239Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:16:22.430Z"
+   "ultimaBien": "2026-11-27T15:21:35.239Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9931,11 +9931,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:16:22.430Z"
+   "ultimaBien": "2026-11-27T15:21:35.239Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T15:16:22.430Z"
+   "ultimaBien": "2026-11-27T15:21:35.239Z"
   }
  },
  "avisos": [
