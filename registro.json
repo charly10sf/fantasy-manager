@@ -4689,7 +4689,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000,
@@ -4734,12 +4733,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -4747,17 +4747,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 21331,
-  "salida": 2445,
+  "entrada": 23107,
+  "salida": 2531,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.055796,
+  "dolares": 0.056017,
   "reservado": 0
  },
  "recientes": {
@@ -9826,13 +9826,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6907,
+   "ok": 6908,
    "fallos": 0,
-   "ejecuciones": 5649,
+   "ejecuciones": 5650,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T09:01:19.884Z"
+   "ultima": "2026-11-27T09:06:15.142Z"
   }
  },
  "ptsDirecto": {},
@@ -9849,15 +9849,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:01:32.077Z"
+   "ultimaBien": "2026-11-27T09:06:28.760Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:01:32.077Z"
+   "ultimaBien": "2026-11-27T09:06:28.760Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:01:32.077Z"
+   "ultimaBien": "2026-11-27T09:06:28.760Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9865,11 +9865,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:01:32.077Z"
+   "ultimaBien": "2026-11-27T09:06:28.760Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:01:32.077Z"
+   "ultimaBien": "2026-11-27T09:06:28.760Z"
   }
  },
  "avisos": [
