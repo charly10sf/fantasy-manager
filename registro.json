@@ -3218,7 +3218,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
    "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
@@ -3407,18 +3406,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256129/oportunidad-reenganchar-jonathan-david.html": 1795770375000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795513279000,
-    "id": "3182",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Thomas Lemar se lesiona y será baja ante el Atlético",
-    "motivo": "nueva lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136787219",
     "medio": "SPORT",
@@ -9827,13 +9814,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6915,
+   "ok": 6916,
    "fallos": 0,
-   "ejecuciones": 5657,
+   "ejecuciones": 5658,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T09:41:16.084Z"
+   "ultima": "2026-11-27T09:46:14.324Z"
   }
  },
  "ptsDirecto": {},
@@ -9850,15 +9837,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:41:25.608Z"
+   "ultimaBien": "2026-11-27T09:46:27.946Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:41:25.608Z"
+   "ultimaBien": "2026-11-27T09:46:27.946Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:41:25.608Z"
+   "ultimaBien": "2026-11-27T09:46:27.946Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9866,11 +9853,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:41:25.608Z"
+   "ultimaBien": "2026-11-27T09:46:27.946Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T09:41:25.608Z"
+   "ultimaBien": "2026-11-27T09:46:27.946Z"
   }
  },
  "avisos": [
