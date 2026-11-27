@@ -4193,19 +4193,21 @@ html.lq:not(.escritorio) .nav-in::before { content: ''; position: absolute; z-in
   background: var(--gota); box-shadow: var(--gota-canto); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio) .nav-in:not([data-i])::before { opacity: 0; }
 /* encogida al bajar por una lista: solo iconos; vuelve al subir, arriba del todo o al tocarla */
-html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav-in { max-width: 304px; height: 52px; --barra-h: 52px; }
+html.lq:not(.escritorio):not(.con-hoja) .nav.nav-min .nav-in { max-width: 304px; height: 52px; --barra-h: 52px; }
 /* el cambio de tamaño no se anima maquetando en cada fotograma (costaba el doble de hilo principal al desplazar): la
-   barra pasa de golpe a su tamaño y lo que se ve es una escala desde el tamaño de antes (solo transform). html.nav-anim
-   la pone liquid.js la primera vez que la barra cambia, para que no se anime al pintarse */
-html.lq.nav-anim:not(.escritorio).nav-min:not(.con-hoja) .nav-in { animation: nav-encoge var(--muelle-ms) var(--muelle); }
-html.lq.nav-anim:not(.escritorio):not(.nav-min) .nav-in { animation: nav-crece var(--muelle-ms) var(--muelle); }
-html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav button { font-size: 0; gap: 0; }
-html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav .gl { top: 1px; }
+   barra pasa de golpe a su tamaño y lo que se ve es una escala desde el tamaño de antes (solo transform). .nav-anim la pone
+   liquid.js la primera vez que la barra cambia, para que no se anime al pintarse. Las dos clases (.nav-min, .nav-anim)
+   van en la propia barra (.nav), no en <html>: puestas arriba, cada vez que la barra se encogía el navegador volvía a
+   mirar todos los botones de la página */
+html.lq:not(.escritorio):not(.con-hoja) .nav.nav-anim.nav-min .nav-in { animation: nav-encoge 240ms var(--hoja-curva); }
+html.lq:not(.escritorio) .nav.nav-anim:not(.nav-min) .nav-in { animation: nav-crece 240ms var(--hoja-curva); } /* corta: mientras dura, el navegador recalcula la barra en cada fotograma */
+html.lq:not(.escritorio):not(.con-hoja) .nav.nav-min button { font-size: 0; gap: 0; }
+html.lq:not(.escritorio):not(.con-hoja) .nav.nav-min .gl { top: 1px; }
 /* no cabe (320 px con la letra grande, o el texto del sistema al 130-160 %): la etiqueta solo en la activa, al lado del
    icono, y las demás con el icono solo. Nunca texto cortado. La clase la pone quien mide (liquid.js) */
 html.lq:not(.escritorio).nav-justa .nav button { font-size: 0; gap: 0; flex: 1 1 0; }
 html.lq:not(.escritorio).nav-justa .nav button.activo { flex: 0 0 auto; flex-direction: row; gap: 6px; padding: 0 14px 0 12px; font-size: 12px; }
-html.lq:not(.escritorio).nav-justa.nav-min:not(.con-hoja) .nav button.activo { font-size: 0; gap: 0; padding: 0 12px; }
+html.lq:not(.escritorio).nav-justa:not(.con-hoja) .nav.nav-min button.activo { font-size: 0; gap: 0; padding: 0 12px; }
 html.lq:not(.escritorio).nav-justa .nav-in::before { left: 0; width: var(--gw, 60px); transform: translateX(var(--gx, 4px)); transition: transform var(--muelle-ms) var(--muelle), width var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio).nav-justa .nav .gl { top: 4px; left: 28px; }
 /* debajo de la barra, el contenido se apaga hacia el borde (el «borde de scroll» de iOS 26): más suave detrás de la barra
@@ -4272,7 +4274,7 @@ html.lq #tiron { background: var(--cristal); -webkit-backdrop-filter: var(--cris
 html.lq :is(.pleg, .eq2-t, .eq2-at, .radar, .club-card, .fav-btn, .busca-j, .chat [data-sugerencia]) { border-color: transparent; }
 html.lq .busca-j { background: var(--s2); border-radius: 16px; }
 /* aire: 32 px entre secciones y filas algo más altas */
-html.lq .sec:not(.btn):not(button):not(a) { margin-top: var(--e6); } /* (.sec es también la clase del botón secundario: a esos, nada) */
+html.lq:not(.escritorio) .sec:not(.btn):not(button):not(a) { margin-top: var(--e6); } /* (.sec es también la clase del botón secundario: a esos, nada) */
 html.lq .plan { margin-top: 28px; }
 html.lq .fase { margin-top: 22px; }
 html.lq #vista .fila { padding-top: 16px; padding-bottom: 16px; }
@@ -4320,7 +4322,7 @@ html.lq:not(.escritorio) .sup-liga { display: grid; grid-template-columns: minma
 html.lq:not(.escritorio) .sup-nombre { grid-column: 1; grid-row: 1; width: 0; min-width: 100%; text-align: left; }
 html.lq:not(.escritorio) .sup-liga b { font-size: 17.5px; }
 html.lq:not(.escritorio) #supEstado { grid-column: 1 / -1; grid-row: 2; justify-self: start; font-size: 13.5px; white-space: nowrap; }
-html.lq:not(.escritorio) #supEstado > .sup-tx { flex: none; overflow: visible; }
+html.lq:not(.escritorio) #supEstado > .sup-tx { flex: none; overflow: visible; font-size: calc(var(--t-sec2) * var(--est-f, 1)); } /* --est-f: liquid.js achica el estado antes de cortarlo */
 html.lq:not(.escritorio) .sup-queda { grid-column: 1 / -1; }
 html.lq:not(.escritorio) .sup-pos { position: relative; grid-column: 2; grid-row: 1; display: inline-flex; align-items: center; min-height: 0; padding: 2px 7px 1px; border-radius: 9px; background: rgba(255, 255, 255, 0.13); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); color: var(--texto); font: 700 15px/1.1 var(--cond); }
 html.lq:not(.escritorio) .sup-pts { grid-column: 1 / -1; grid-row: 2; justify-self: end; display: block; color: rgba(244, 242, 243, 0.86); font: 600 12.5px/1 'Barlow', sans-serif; white-space: nowrap; cursor: pointer; }

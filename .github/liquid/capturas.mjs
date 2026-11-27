@@ -78,7 +78,7 @@ await p.evaluate(() => {
     if (pa === 'top') clic('#vista [data-accion="bloqueada"]');
     if (['ficha', 'rival', 'ajustes', 'top'].includes(pa)) for (let i = 0; i < 25 && !document.querySelector('.hoja.on'); i++) await espera(80);
     await espera(420);
-    if (y) { await desplazar(); if (pa !== 'barra') { await espera(60); html.classList.remove('nav-min'); } }
+    if (y) { await desplazar(); if (pa !== 'barra') { await espera(60); document.querySelector('.nav').classList.remove('nav-min'); } }
     // (solo capturas) el cristal de las dos cápsulas de la cabecera, en dos elementos sueltos alargados y recortados
     if (html.classList.contains('fm-captura') && !html.classList.contains('escritorio')) {
       const liga = document.querySelector('.sup-liga'), btns = document.querySelector('.sup-btns');

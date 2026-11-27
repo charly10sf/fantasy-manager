@@ -1,8 +1,8 @@
 // (0.9, 27 nov) Lo que se mueve del diseño «Liquid» y el CSS no puede hacer solo. No sabe nada de la liga ni decide nada:
 // solo pone clases en <html> y medidas en variables, para la sección «0.9 · EL REDISEÑO LIQUID» del final de app.css.
-//   · al desplazarse: html.desplazada (el apagado de detrás de la cabecera), html.nav-min (la barra de abajo se encoge al
+//   · al desplazarse: html.desplazada (el apagado de detrás de la cabecera), .nav-min en la barra de abajo (se encoge al
 //     bajar y vuelve al subir, arriba del todo o al tocarla) y html.tabs-pegada (el selector, pegado bajo la cabecera).
-//     En cada fotograma solo se lee el scroll; nada se mide ahí
+//     En cada fotograma solo se lee el scroll; nada se mide ahí, y las clases que pone esto no vuelven a lanzar nada
 //   · html.escribiendo: el teclado en pantalla en Pregunta (la barra se aparta y la caja baja hasta el teclado)
 //   · la píldora que se desliza en los selectores de sección al cambiar de pestaña dentro de uno (.tabs-in.con-pil)
 //   · las hojas: .hoja-media (flota con margen, de cristal) o .hoja-entera (opaca, pegada a los bordes) y .hoja-baja
@@ -46,19 +46,32 @@ export function iniciarLiquid() {
 
   // ---- 1. al desplazarse. En cada fotograma solo se lee window.scrollY: dónde se pega el selector se mide una vez por
   //         repintado (`medirTabs`, abajo), no aquí (medir en cada fotograma costaba el doble de hilo principal) ----
-  let y0 = 0, pend = false, acum = 0, mudo = 0, tabsY = -1;
+  let y0 = 0, acum = 0, mudo = 0, tabsY = -1;
+  const dAncla = new Map();
   const medirTabs = () => {
     const t = movil() && document.querySelector('#vista .tabs'), sp = document.querySelector('.sup');
-    // a qué scroll queda el selector pegado bajo la cabecera (su sitio en la página menos el alto de la cabecera)
-    tabsY = t && sp ? Math.max(0, t.offsetTop - sp.offsetHeight) : -1;
+    if (!t || !sp) { tabsY = -1; return; }
+    // a qué scroll queda el selector pegado bajo la cabecera: su sitio en la página menos el alto de la cabecera. OJO: el
+    // selector es `sticky` y, ya pegado, su offsetTop es el del sitio donde está pegado, no el suyo (medido así, al subir
+    // la clase iba y venía en cada fotograma y el selector parpadeaba). Sin pegar se mide tal cual, y se apunta a cuánto
+    // queda del ancla de alto 0 que lleva delante (.tabs-ancla, la de `volverAPestanas`), que no se pega; pegado, su
+    // sitio es el del ancla más eso (de esa pantalla; si aún no se ha visto sin pegar, su margen)
+    const a = t.previousElementSibling && t.previousElementSibling.classList.contains('tabs-ancla') ? t.previousElementSibling : null;
+    const alto = sp.offsetHeight, y = t.offsetTop - alto, act = document.querySelector('.nav-in button.activo'), clave = (act && act.dataset.ir) || '';
+    if (y > Math.max(0, window.scrollY) + 1) { tabsY = Math.max(0, y); if (a) dAncla.set(clave, t.offsetTop - a.offsetTop); return; }
+    if (a) tabsY = Math.max(0, a.offsetTop + (dAncla.has(clave) ? dAncla.get(clave) : parseFloat(getComputedStyle(t).marginTop) || 0) - alto);
+    else if (tabsY < 0) tabsY = Math.max(0, y);
   };
+  // (.nav-min y .nav-anim van en la barra, no en <html>: así el navegador solo vuelve a mirar la barra)
+  let navEl = null;
   const encoger = (si) => {
-    if (html.classList.contains('nav-min') === si) return;
-    html.classList.add('nav-anim'); // desde ahora, el cambio de tamaño de la barra se anima (solo transform)
-    html.classList.toggle('nav-min', si);
+    if (!navEl || !navEl.isConnected) navEl = document.querySelector('.nav');
+    if (!navEl || navEl.classList.contains('nav-min') === si) return;
+    navEl.classList.add('nav-anim'); // desde ahora, el cambio de tamaño de la barra se anima (solo transform)
+    navEl.classList.toggle('nav-min', si);
+    if (html.classList.contains('nav-justa')) { gota(); setTimeout(gota, 440); }
   };
   const mirar = () => {
-    pend = false;
     const y = Math.max(0, window.scrollY);
     html.classList.toggle('desplazada', y > 6);
     html.classList.toggle('tabs-pegada', tabsY >= 0 && y > 6 && y >= tabsY - 1);
@@ -71,7 +84,8 @@ export function iniciarLiquid() {
     if (acum > 28) encoger(true);
     else if (acum < -18) encoger(false);
   };
-  window.addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(mirar); } }, { passive: true });
+  // (el navegador ya manda este aviso una vez por fotograma como mucho: se mira ahí mismo, sin pedir otro turno)
+  window.addEventListener('scroll', mirar, { passive: true });
 
   // ---- 2. escribiendo en Pregunta: la barra se aparta SOLO con el teclado en pantalla (con el cursor en la caja pero sin
   //         teclado —Android al cerrarlo con «Atrás», un teclado físico— la barra se queda). El teclado se nota en que
@@ -210,15 +224,20 @@ export function iniciarLiquid() {
     if (clave === cabeAntes) return;
     cabeAntes = clave;
     html.classList.remove('sin-pts', 'sin-pos', 'est-corta');
-    if (est) est.style.fontSize = '';
+    if (est) est.style.removeProperty('--est-f');
     if (pts && est && est.getBoundingClientRect().right + 8 > pts.getBoundingClientRect().left) html.classList.add('sin-pts');
     // (con la letra del móvil grande ni solo cabía: «Actualizand…») antes de cortarlo, la letra del estado se achica
-    // hasta que quepa entero, como mucho al 60 %; solo si ni así cabe, se corta
+    // hasta que quepa entero, como mucho a la mitad; solo si ni así cabe, se corta. El tamaño va con --est-f, que multiplica
+    // la letra del texto (.sup-tx, que lleva la suya: ponérsela a #supEstado no hacía nada) sea cual sea el agrandado
     const sobra = () => (est ? est.getBoundingClientRect().right - liga.getBoundingClientRect().right : 0);
-    if (est && sobra() > 0.5) {
-      const base = parseFloat(getComputedStyle(est).fontSize) || 13.5, hueco = liga.getBoundingClientRect().right - est.getBoundingClientRect().left, ancho = est.getBoundingClientRect().width;
-      const f = Math.max(0.6, Math.min(1, (hueco - 1) / ancho));
-      est.style.fontSize = `${Math.floor(base * f * 10) / 10}px`;
+    const tx = est && est.querySelector('.sup-tx');
+    // (el tope: la mitad, y nunca por debajo de unos 10,5 px de letra)
+    const fMin = tx ? Math.max(0.5, 10.5 / (parseFloat(getComputedStyle(tx).fontSize) || 14)) : 1;
+    for (let f = 1, v = 0; tx && v < 3 && sobra() > 0.5 && f > fMin; v++) {
+      const ancho = tx.getBoundingClientRect().width, hueco = ancho - sobra() - 1;
+      if (!(ancho > 0) || !(hueco > 0)) break;
+      f = Math.max(fMin, Math.floor(f * Math.min(0.98, hueco / ancho) * 100) / 100);
+      est.style.setProperty('--est-f', String(f));
     }
     if (sup.scrollWidth > sup.clientWidth + 1 || sobra() > 1) html.classList.add('est-corta');
     const nom = liga.querySelector('#supLiga b');
@@ -229,7 +248,12 @@ export function iniciarLiquid() {
   const todo = () => { pte = false; try { html.classList.toggle('lq', dentro()); medirTabs(); pildoras(); hojas(); vigilarNav(); cabecera(); mirar(); } catch (e) { /* lo de adorno no rompe nada */ } };
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true, characterData: true });
-  new MutationObserver(() => { gota(); setTimeout(gota, 440); pedir(); }).observe(html, { attributes: true, attributeFilter: ['class', 'style'] });
+  // lo que cambie en <html> desde fuera (el ancho de ordenador, sin fotos, el alto de la cabecera) también cuenta, pero NO
+  // las clases que pone esto mismo: con ellas dentro, cada clase puesta al desplazar lanzaba otra vez todo lo de arriba
+  const MIAS = new Set(['lq', 'sin-cristal', 'desplazada', 'tabs-pegada', 'escribiendo', 'con-hoja', 'nav-justa', 'sin-pts', 'sin-pos', 'est-corta']);
+  const firmaDe = () => `${[...html.classList].filter((c) => !MIAS.has(c)).join(' ')}|${html.getAttribute('style') || ''}`;
+  let firma = firmaDe();
+  new MutationObserver(() => { const f = firmaDe(); if (f === firma) return; firma = f; pedir(); }).observe(html, { attributes: true, attributeFilter: ['class', 'style'] });
   const otraVez = () => { sinPildoras(); cabeAntes = ''; pedir(); barra(); };
   window.addEventListener('resize', otraVez);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(otraVez).catch(() => {});
