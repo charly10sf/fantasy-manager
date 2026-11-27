@@ -2328,6 +2328,13 @@
     "clase": "mercado",
     "chollo": "2565"
    }
+  },
+  {
+   "clave": "noticias|3208:buena|2026-11-27",
+   "tipo": "noticias",
+   "jornada": 14,
+   "id": "2126270172067451170",
+   "t": "2026-11-27T11:01:28.254Z"
   }
  ],
  "estados": {
@@ -4760,16 +4767,16 @@
   "dia": "2026-11-27",
   "llamadas": {
    "clasificar": 16,
-   "redactar": 4,
-   "revisar": 4,
+   "redactar": 5,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 48889,
-  "salida": 7307,
-  "cacheLee": 20480,
+  "entrada": 51769,
+  "salida": 7508,
+  "cacheLee": 30720,
   "cacheEscribe": 19822,
-  "dolares": 0.135028,
+  "dolares": 0.143822,
   "reservado": 0
  },
  "recientes": {
@@ -4885,10 +4892,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T18:31:47.168Z",
-    "texto": "👀 Olmo vuelve a entrenar con el grupo, según Mundo Deportivo y SPORT.\n\nEl centrocampista del Barça lleva 1 gol y 3 asistencias en la liga, así que su regreso es una buena noticia si lo tienes. Con la liga parada, el partido que importa es el del domingo 22 de noviembre, tras el parón, contra el Villarreal 🚢, que va 8º. Aún no se sabe si llega con sitio en el once."
-   },
-   {
     "t": "2026-11-16T19:06:24.613Z",
     "texto": "❌ Vivian vuelve a la enfermería con una lesión moderada en el sóleo, según Mundo Deportivo, la Cadena SER y El Correo.\n\nEl defensa del Athletic 🦁 venía de sumar 27 puntos en las tres últimas jornadas, así que la baja duele. Se pierde los partidos con su selección y no hay plazo para saber si llega al Athletic-Espanyol del viernes 20, tras el parón. Si lo tienes, ve pensando en un recambio."
    },
@@ -4903,6 +4906,10 @@
    {
     "t": "2026-11-26T12:01:49.457Z",
     "texto": "El Cuti vuelve a entrenar poco a poco con el Atleti, según AS y Mundo Deportivo.\n\nEl central ha dejado la portería a cero en cuatro de los seis partidos que ha jugado, un buen aval para su vuelta. El sábado a las 18:30 el Atleti visita al Elche en el Martínez Valero, que va 19º de 20: un partido asequible para el portero y los defensas rojiblancos. De momento no está claro que llegue a tiempo."
+   },
+   {
+    "t": "2026-11-27T11:01:28.255Z",
+    "texto": "✅ Rodri vuelve a entrenar con el grupo del Barça, según SPORT y la Cadena SER.\n\nEl centrocampista vale 55,7 M tras perder 39,6 M en el último mes, así que su vuelta puede ser un buen momento para fijarse en él si te interesa.\n\nSi llega a tiempo, el Barça visita al Deportivo en Riazor el domingo a las 16:15. Los deportivistas van 12º, un partido de nivel medio."
    }
   ],
   "directo": [
@@ -5413,13 +5420,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "noticias|3208:buena|2026-11-27": {
-   "n": 1,
-   "t": "2026-11-27T10:56:41.986Z",
-   "ultima": "2026-11-27T10:56:41.986Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9844,13 +9845,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6930,
+   "ok": 6931,
    "fallos": 0,
-   "ejecuciones": 5672,
+   "ejecuciones": 5673,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:56:13.994Z"
+   "ultima": "2026-11-27T11:01:11.888Z"
   }
  },
  "ptsDirecto": {},
@@ -9867,15 +9868,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:56:44.242Z"
+   "ultimaBien": "2026-11-27T11:01:30.201Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:56:44.242Z"
+   "ultimaBien": "2026-11-27T11:01:30.201Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:56:44.242Z"
+   "ultimaBien": "2026-11-27T11:01:30.201Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9883,11 +9884,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:56:44.242Z"
+   "ultimaBien": "2026-11-27T11:01:30.201Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:56:44.242Z"
+   "ultimaBien": "2026-11-27T11:01:30.201Z"
   }
  },
  "avisos": [
