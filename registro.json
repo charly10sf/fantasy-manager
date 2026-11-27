@@ -3252,7 +3252,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/24/mourinho-vestuario-vegas-pasa-vegas-queda-vegas.html": 1795559768000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255140/posible-once-barca-baku-flick-estrenara-tridente-dia-rotaciones.html": 1795586400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255201/portada-md-bizkaia-araba-hoy-miercoles.html": 1795562595000,
@@ -4909,7 +4908,10 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256389/surrealista-dos-pilares-atleti-perder-camp-nou-vieron-ultimas-tarjetas-barca.html": 1795809975336,
+   "SPORT|136944096": 1795809975336
+  }
  },
  "ia": {
   "dia": "2026-11-27",
@@ -9993,13 +9995,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7040,
+   "ok": 7042,
    "fallos": 0,
-   "ejecuciones": 5782,
+   "ejecuciones": 5783,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:01:10.842Z"
+   "ultima": "2026-11-27T20:06:15.336Z"
   }
  },
  "ptsDirecto": {},
@@ -10016,29 +10018,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:01:15.514Z"
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:01:15.514Z"
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:01:15.514Z"
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 1,
-   "ultimaBien": "2026-11-23T22:27:08.193Z",
-   "desde": "2026-11-27T20:01:15.514Z",
-   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
+   "seguidas": 0,
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:01:15.514Z"
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:01:15.514Z"
+   "ultimaBien": "2026-11-27T20:06:19.537Z"
   }
  },
  "avisos": [
