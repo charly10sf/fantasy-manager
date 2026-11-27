@@ -3418,7 +3418,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/27/alerta-guido-paterna-entrenamiento-valencia-136918798.html": 1795777600000,
    "AS|https://as.com/futbol/primera/simeone-con-bajas-arriba-pero-con-el-cuti-romero-mas-cerca-f202611-n/": 1795778023000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000,
+   "SPORT|136921750": 1795777969000
   },
   "hechos": [
    {
@@ -3823,7 +3824,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4747,17 +4748,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 7,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 68297,
-  "salida": 10074,
+  "entrada": 70341,
+  "salida": 10376,
   "cacheLee": 48609,
   "cacheEscribe": 20797,
-  "dolares": 0.170851,
+  "dolares": 0.171206,
   "reservado": 0
  },
  "recientes": {
@@ -9826,13 +9827,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6945,
+   "ok": 6946,
    "fallos": 0,
-   "ejecuciones": 5687,
+   "ejecuciones": 5688,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:11:26.090Z"
+   "ultima": "2026-11-27T12:16:11.792Z"
   }
  },
  "ptsDirecto": {},
@@ -9849,15 +9850,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:11:39.562Z"
+   "ultimaBien": "2026-11-27T12:16:24.774Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:11:39.562Z"
+   "ultimaBien": "2026-11-27T12:16:24.774Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:11:39.562Z"
+   "ultimaBien": "2026-11-27T12:16:24.774Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9865,11 +9866,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:11:39.562Z"
+   "ultimaBien": "2026-11-27T12:16:24.774Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:11:39.562Z"
+   "ultimaBien": "2026-11-27T12:16:24.774Z"
   }
  },
  "avisos": [
