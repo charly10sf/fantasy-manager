@@ -2728,7 +2728,7 @@
   "2780": "ok",
   "2782": "out_of_league",
   "2783": "ok",
-  "2784": "ok",
+  "2784": "doubtful",
   "2785": "suspended",
   "2786": "out_of_league",
   "2788": "out_of_league",
@@ -3224,9 +3224,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
    "SPORT|136790672": 1795518790000,
-   "SPORT|136786855": 1795518496000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
    "SPORT|136795046": 1795521999000,
@@ -3411,49 +3409,10 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/juega-betis-tabla-partido-rayo_0_2008596882.html": 1795776167000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/": 1795776541000,
    "SPORT|136918464": 1795773211000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256173/rodri-empieza-trabajar-grupo.html": 1795776315000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256173/rodri-empieza-trabajar-grupo.html": 1795776315000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/27/alerta-guido-paterna-entrenamiento-valencia-136918798.html": 1795777600000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795518516000,
-    "id": "74",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Yuri sigue sin trabajar con el grupo en Lezama",
-    "motivo": "molestias",
-    "plazo": "",
-    "nums": [
-     1
-    ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795518516000,
-    "id": "927",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Berenguer se reincorpora a los entrenamientos del Athletic",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     1
-    ]
-   },
-   {
-    "guid": "SPORT|136786855",
-    "medio": "SPORT",
-    "t": 1795518496000,
-    "id": "2562",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Marc Pubill entrena con el grupo tras superar su lesión",
-    "motivo": "esguince de tobillo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/",
     "medio": "Cadena SER",
@@ -3856,7 +3815,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4348,8 +4307,8 @@
     "t": 0
    },
    "2784": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1795777875859
    },
    "2789": {
     "e": "out_of_league",
@@ -4781,17 +4740,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 5,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 53759,
-  "salida": 7966,
+  "entrada": 55778,
+  "salida": 8462,
   "cacheLee": 30720,
   "cacheEscribe": 19822,
-  "dolares": 0.14425,
+  "dolares": 0.1447,
   "reservado": 0
  },
  "recientes": {
@@ -9860,13 +9819,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6932,
+   "ok": 6933,
    "fallos": 0,
-   "ejecuciones": 5674,
+   "ejecuciones": 5675,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T11:06:11.765Z"
+   "ultima": "2026-11-27T11:11:15.859Z"
   }
  },
  "ptsDirecto": {},
@@ -9883,15 +9842,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:06:23.583Z"
+   "ultimaBien": "2026-11-27T11:11:29.646Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:06:23.583Z"
+   "ultimaBien": "2026-11-27T11:11:29.646Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:06:23.583Z"
+   "ultimaBien": "2026-11-27T11:11:29.646Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9899,11 +9858,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:06:23.583Z"
+   "ultimaBien": "2026-11-27T11:11:29.646Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T11:06:23.583Z"
+   "ultimaBien": "2026-11-27T11:11:29.646Z"
   }
  },
  "avisos": [
