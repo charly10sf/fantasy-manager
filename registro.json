@@ -2342,6 +2342,13 @@
    "jornada": 14,
    "id": "2126282760356515865",
    "t": "2026-11-27T11:51:29.554Z"
+  },
+  {
+   "clave": "noticias|3264:mala|2026-11-27",
+   "tipo": "noticias",
+   "jornada": 14,
+   "id": "2126295362340098420",
+   "t": "2026-11-27T12:41:33.857Z"
   }
  ],
  "estados": {
@@ -3234,7 +3241,6 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
-   "SPORT|136797133": 1795524053000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/koke-sobre-record-victorias-simeone-laliga-le-dimos-enhorabuena-increible-tantos-anos-club-grande-haber-cambiado-mentalidad-club-20261124_3481262.html": 1795529745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000,
    "Cadena SER|https://cadenaser.com/asturias/2026/11/24/no-descarto-que-raul-dimita-antes-de-que-le-echen-sanedrin-del-real-oviedo-radio-asturias/": 1795533671000,
@@ -3419,7 +3425,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000,
    "SPORT|136921750": 1795777969000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-celso-problemas-rodilla-ceballos_0_2008598333.html": 1795782052000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-celso-problemas-rodilla-ceballos_0_2008598333.html": 1795782052000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/27/celso-dani-ceballos-llegan-partido-frente-rayo.html": 1795782938000
   },
   "hechos": [
    {
@@ -3832,11 +3839,23 @@
     "motivo": "problemas en la columna",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/27/celso-dani-ceballos-llegan-partido-frente-rayo.html",
+    "medio": "MARCA",
+    "t": 1795782938000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos no llega a tiempo al partido del Rayo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -4701,7 +4720,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795529875000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
@@ -4759,17 +4777,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 24,
-   "redactar": 7,
-   "revisar": 7,
+   "clasificar": 25,
+   "redactar": 10,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 74139,
-  "salida": 10850,
-  "cacheLee": 48609,
-  "cacheEscribe": 20797,
-  "dolares": 0.171823,
+  "entrada": 83765,
+  "salida": 12145,
+  "cacheLee": 74643,
+  "cacheEscribe": 22580,
+  "dolares": 0.203671,
   "reservado": 0
  },
  "recientes": {
@@ -4885,10 +4903,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T19:06:24.613Z",
-    "texto": "❌ Vivian vuelve a la enfermería con una lesión moderada en el sóleo, según Mundo Deportivo, la Cadena SER y El Correo.\n\nEl defensa del Athletic 🦁 venía de sumar 27 puntos en las tres últimas jornadas, así que la baja duele. Se pierde los partidos con su selección y no hay plazo para saber si llega al Athletic-Espanyol del viernes 20, tras el parón. Si lo tienes, ve pensando en un recambio."
-   },
-   {
     "t": "2026-11-16T20:21:40.531Z",
     "texto": "🚨 Marc Pubill sufre un esguince leve de tobillo, según ha comunicado el club.\n\nEl defensa del Atleti suma 19 puntos en las tres últimas jornadas. Su próximo partido es tras el parón, el domingo 22 de noviembre."
    },
@@ -4903,6 +4917,10 @@
    {
     "t": "2026-11-27T11:01:28.255Z",
     "texto": "✅ Rodri vuelve a entrenar con el grupo del Barça, según SPORT y la Cadena SER.\n\nEl centrocampista vale 55,7 M tras perder 39,6 M en el último mes, así que su vuelta puede ser un buen momento para fijarse en él si te interesa.\n\nSi llega a tiempo, el Barça visita al Deportivo en Riazor el domingo a las 16:15. Los deportivistas van 12º, un partido de nivel medio."
+   },
+   {
+    "t": "2026-11-27T12:41:33.860Z",
+    "texto": "🚨 Ceballos no llega a tiempo al partido contra el Rayo por problemas en la columna, según MARCA y Diario de Sevilla.\n\nEl centrocampista del Betis suma 21 puntos en las tres últimas jornadas. El Betis recibe al Rayo mañana a las 14:00."
    }
   ],
   "directo": [
@@ -9838,13 +9856,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6950,
+   "ok": 6951,
    "fallos": 0,
-   "ejecuciones": 5692,
+   "ejecuciones": 5693,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:36:16.753Z"
+   "ultima": "2026-11-27T12:41:11.910Z"
   }
  },
  "ptsDirecto": {},
@@ -9861,15 +9879,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:36:31.711Z"
+   "ultimaBien": "2026-11-27T12:41:35.304Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:36:31.711Z"
+   "ultimaBien": "2026-11-27T12:41:35.304Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:36:31.711Z"
+   "ultimaBien": "2026-11-27T12:41:35.304Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9877,11 +9895,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:36:31.711Z"
+   "ultimaBien": "2026-11-27T12:41:35.304Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:36:31.711Z"
+   "ultimaBien": "2026-11-27T12:41:35.304Z"
   }
  },
  "avisos": [
