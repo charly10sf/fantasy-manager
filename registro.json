@@ -3426,7 +3426,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000,
    "SPORT|136921750": 1795777969000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-celso-problemas-rodilla-ceballos_0_2008598333.html": 1795782052000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/27/celso-dani-ceballos-llegan-partido-frente-rayo.html": 1795782938000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/27/celso-dani-ceballos-llegan-partido-frente-rayo.html": 1795782938000,
+   "AS|https://as.com/futbol/terzic-tenemos-un-periodo-crucial-antes-de-navidad-f202611-n/": 1795782546000,
+   "AS|https://as.com/futbol/primera/abde-llega-a-tiempo-y-ceballos-tendra-que-esperar-f202611-n/": 1795783205000,
+   "SPORT|136925243": 1795779337000
   },
   "hechos": [
    {
@@ -3851,11 +3854,37 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/terzic-tenemos-un-periodo-crucial-antes-de-navidad-f202611-n/",
+    "medio": "AS",
+    "t": 1795782546000,
+    "id": "2314",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Vivian se pierde el partido en La Rosaleda",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     17
+    ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/abde-llega-a-tiempo-y-ceballos-tendra-que-esperar-f202611-n/",
+    "medio": "AS",
+    "t": 1795783205000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos no estará disponible para el Rayo Vallecano",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4777,17 +4806,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 83765,
-  "salida": 12145,
+  "entrada": 86113,
+  "salida": 13313,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.203671,
+  "dolares": 0.20449,
   "reservado": 0
  },
  "recientes": {
@@ -9856,13 +9885,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6951,
+   "ok": 6952,
    "fallos": 0,
-   "ejecuciones": 5693,
+   "ejecuciones": 5694,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:41:11.910Z"
+   "ultima": "2026-11-27T12:46:11.012Z"
   }
  },
  "ptsDirecto": {},
@@ -9879,15 +9908,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:41:35.304Z"
+   "ultimaBien": "2026-11-27T12:46:26.549Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:41:35.304Z"
+   "ultimaBien": "2026-11-27T12:46:26.549Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:41:35.304Z"
+   "ultimaBien": "2026-11-27T12:46:26.549Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9895,11 +9924,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:41:35.304Z"
+   "ultimaBien": "2026-11-27T12:46:26.549Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:41:35.304Z"
+   "ultimaBien": "2026-11-27T12:46:26.549Z"
   }
  },
  "avisos": [
