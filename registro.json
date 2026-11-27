@@ -3217,7 +3217,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
    "SPORT|136790672": 1795518790000,
    "SPORT|136786855": 1795518496000,
@@ -3403,7 +3402,8 @@
    "Europa Press|https://www.europapress.es/deportes/motociclismo-00311/noticia-marc-marquez-anuncia-retirada-20261127105434.html": 1795773274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256150/owono-intentando-volver-normalidad-decir-asi.html": 1795774761000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/juega-betis-tabla-partido-rayo_0_2008596882.html": 1795776167000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/": 1795776541000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/27/rodri-torna-als-entrenaments-amb-el-barca-mentre-christensen-continua-al-marge-sercat/": 1795776541000,
+   "SPORT|136918464": 1795773211000
   },
   "hechos": [
    {
@@ -3820,11 +3820,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136918464",
+    "medio": "SPORT",
+    "t": 1795773211000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a entrenar con el grupo tras su lesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -4747,17 +4759,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 15,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 16,
+   "redactar": 4,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 37367,
-  "salida": 5821,
-  "cacheLee": 0,
-  "cacheEscribe": 9582,
-  "dolares": 0.059088,
+  "entrada": 48889,
+  "salida": 7307,
+  "cacheLee": 20480,
+  "cacheEscribe": 19822,
+  "dolares": 0.135028,
   "reservado": 0
  },
  "recientes": {
@@ -5401,7 +5413,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "noticias|3208:buena|2026-11-27": {
+   "n": 1,
+   "t": "2026-11-27T10:56:41.986Z",
+   "ultima": "2026-11-27T10:56:41.986Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9826,13 +9844,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6929,
+   "ok": 6930,
    "fallos": 0,
-   "ejecuciones": 5671,
+   "ejecuciones": 5672,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:51:14.670Z"
+   "ultima": "2026-11-27T10:56:13.994Z"
   }
  },
  "ptsDirecto": {},
@@ -9849,15 +9867,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:51:30.049Z"
+   "ultimaBien": "2026-11-27T10:56:44.242Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:51:30.049Z"
+   "ultimaBien": "2026-11-27T10:56:44.242Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:51:30.049Z"
+   "ultimaBien": "2026-11-27T10:56:44.242Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9865,11 +9883,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:51:30.049Z"
+   "ultimaBien": "2026-11-27T10:56:44.242Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:51:30.049Z"
+   "ultimaBien": "2026-11-27T10:56:44.242Z"
   }
  },
  "avisos": [
