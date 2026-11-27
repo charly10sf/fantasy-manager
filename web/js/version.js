@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5b';
+export const VERSION = '0.8.5d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,22 @@ export const VERSION = '0.8.5b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (27 nov, Carlos: «quita el aviso de "es el último plan de hoy a las xx.xx, puede que no esté al día"; que solo salga si han
+    // pasado 13 h desde el último plan») vistas.js, rama `esIA` de `planHTML`: solo con 13 h o más desde `P.t`.
+    v: '0.8.5d', f: '2026-11-27', h: '16:44', t: 'El aviso del plan, solo cuando hace falta',
+    cosas: [
+      { tipo: 'mejora', d: 'reloj', t: 'El aviso del plan, solo cuando hace falta', x: 'El aviso de «es el último plan de la IA, puede que no esté al día» ya no sale a cada rato: solo aparece si han pasado 13 horas o más desde el último plan.', menor: true },
+    ],
+  },
+  {
+    // (27 nov, Domy no entendía el «1» de Equipo en la barra de abajo) el globo de Equipo solo cuenta cláusulas en riesgo
+    // alto que ya están abiertas y lleva a Equipo → Cláusulas (app.js, junto a `#gl-equipo`).
+    v: '0.8.5c', f: '2026-11-27', h: '14:09', t: 'El aviso de Equipo, más claro',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'escudo', t: 'El aviso de Equipo, más claro', x: 'El número rojo de Equipo en la barra de abajo solo sale cuando tienes una cláusula abierta que te pueden pagar. Al tocarlo te lleva directo a tus cláusulas.' },
+    ],
+  },
   {
     // (27 nov, Carlos: «recomienda pujas muy a la baja… no tiene sentido recomendar una puja que pierde»; la medida, en
     // claude/medida-puja-27nov.md del proyecto) la puja de un libre es la que gana unas 7-8 de cada 10 veces (motor.js,

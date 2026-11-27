@@ -1186,8 +1186,14 @@ function pintarSup() {
   pintarNumAvisos();
   const pend = S.plan ? V.cuentaPasos(S, S.plan).pend : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
-  const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
+  // (27 nov, Domy: «no entiendo qué es eso») el globo de Equipo solo cuenta lo que hay que hacer YA: tuyos con la
+  // cláusula en riesgo alto y ya abierta (la protegida no se puede pagar todavía), y al tocarlo lleva a Cláusulas
+  const ga = S.M.mias.filter((x) => x.riesgo === 'alto' && x.abierta && x.clausula).length;
   const ge = $('#gl-equipo'); ge.textContent = ga; ge.classList.toggle('oculto', !ga);
+  for (const b of $$('.nav button[data-ir="equipo"]')) {
+    if (ga) { b.dataset.seg = 'equipo:clausulas'; b.setAttribute('aria-label', `Equipo: ${ga} ${ga === 1 ? 'cláusula abierta' : 'cláusulas abiertas'} en riesgo`); }
+    else { delete b.dataset.seg; b.removeAttribute('aria-label'); }
+  }
   // (21) en el parón, el botón de Directo es «Parón», con la bandera (la pestaña lleva dentro el Directo de siempre)
   const modo = Pz.hayParon(S.M) ? 'paron' : 'directo';
   for (const b of $$('.nav button[data-ir="directo"]')) {
