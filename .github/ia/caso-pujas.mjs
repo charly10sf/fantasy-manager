@@ -105,7 +105,15 @@ try {
     const PVc = conCal.pagaLiga(vC.j.valor, pidDe.Valverde);
     const todas = { sin: vS.pujaGana, con: vC.pujaGana, txt: conCal.pagaTxt(PVc), todos: PVc && PVc.todos, n: PVc && PVc.n };
     L.push(`LIGA SIN COMPRAS: Valverde, sin lo de todas las ligas ${eur(vS.pujaGana)}; con ello ${eur(vC.pujaGana)} (${todas.txt})`);
-    return { L, filas, todas, plan: (R.ops || []).filter((o) => !o.descartada).map((o) => ({ accion: o.accion, jugador: o.jugador, puja: o.puja_max, objetivo: o.objetivo, motivo: o.motivo })), mirados: (R.descartes || []).map((d) => `${d.jugador}: ${d.motivo}`) };
+    // (27 nov, Carlos: «que dependa de la liga de cada uno») la misma liga pagando un 15 % más por cada libre: su curva lo
+    // nota (gana menos con lo mismo) y las pujas suben; y un 10 % menos, bajan
+    const conPago = (k) => { const Dx = JSON.parse(JSON.stringify(D)); for (const a of Dx.actividad) if (a.clase === 'compra' && !a.otroId && !a.otro && a.importe) a.importe = Math.round(Math.abs(+a.importe) * k) * Math.sign(+a.importe || 1); return Mo.analizar(Dx, H, S.c, { ...ext, calPujas: window.__calPujas }); };
+    const Mmas = conPago(1.15), Mmenos = conPago(0.9), Mbase = conPago(1);
+    const pj = (MM, n) => (MM.mercado.find((x) => x.pid === pidDe[n]) || {}).puja;
+    const ligas = Object.fromEntries(['Valverde', 'Unai López', 'Pepe'].map((n) => [n, { menos: pj(Mmenos, n), base: pj(Mbase, n), mas: pj(Mmas, n) }]));
+    const curva = { base: Mbase.calGanaTxt(), mas: Mmas.calGanaTxt() };
+    L.push(`LIGAS QUE PAGAN DISTINTO: ${Object.entries(ligas).map(([n, x]) => `${n} ${eur(x.menos)} / ${eur(x.base)} / ${eur(x.mas)}`).join(' · ')} (curva: ${curva.base})`);
+    return { L, filas, todas, ligas, plan: (R.ops || []).filter((o) => !o.descartada).map((o) => ({ accion: o.accion, jugador: o.jugador, puja: o.puja_max, objetivo: o.objetivo, motivo: o.motivo })), mirados: (R.descartes || []).map((d) => `${d.jugador}: ${d.motivo}`) };
   });
   console.log(r.L.join('\n'));
   const ok = (c, t) => { console.log(`${c ? 'BIEN' : 'MAL '} ${t}`); if (!c) mal++; };
@@ -118,5 +126,6 @@ try {
   for (const n of ['Valverde', 'Unai López', 'Pepe']) ok(enPlan(n), `${n} sale en el plan o en «Mirados» con sus cuentas`);
   ok(r.plan.concat(r.mirados.map((m) => ({ motivo: m }))).some((o) => /tenerlo|recuper|Aguantándolo/.test(o.motivo || '')), 'el plan dice si sale a cuenta tenerlo');
   ok(r.todas.todos >= 8 && r.todas.n === 0 && r.todas.con > r.todas.sin * 1.08 && /todas las ligas/.test(r.todas.txt), `una liga sin compras tira de todas las ligas (Valverde ${r.todas.sin} → ${r.todas.con})`);
+  for (const [n, x] of Object.entries(r.ligas)) ok(x.mas > x.base && x.base > x.menos, `${n}: en una liga que paga más se puja más y en una que paga menos, menos (${x.menos} < ${x.base} < ${x.mas})`);
 } finally { await P.cerrar(); await cerrar(); }
 process.exit(mal ? 1 : 0);
