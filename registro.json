@@ -3447,7 +3447,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/dani-olmo-disipa-dudas-sobre-futuro-quiero-mi-sueno-seguir-ganando-titulos-barca-20261127_3484114.html": 1795804722000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/27/once-elegidos-luis-castro-medirse-136941169.html": 1795805732000,
    "SPORT|136940118": 1795802506000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/27/6b097ebce85ecebb7e8b4589.html": 1795807240000,
+   "SPORT|136943137": 1795804483000
   },
   "hechos": [
    {
@@ -3978,11 +3979,23 @@
     "motivo": "última lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136943137",
+    "medio": "SPORT",
+    "t": 1795804483000,
+    "id": "356",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Gerard vuelve a entrenar con sus compañeros en el Villarreal",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -4900,17 +4913,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 13,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 145671,
-  "salida": 26045,
+  "entrada": 147694,
+  "salida": 26166,
   "cacheLee": 94308,
   "cacheEscribe": 33864,
-  "dolares": 0.29085,
+  "dolares": 0.291113,
   "reservado": 0
  },
  "recientes": {
@@ -9979,13 +9992,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7035,
+   "ok": 7036,
    "fallos": 0,
-   "ejecuciones": 5777,
+   "ejecuciones": 5778,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T19:36:11.347Z"
+   "ultima": "2026-11-27T19:41:10.831Z"
   }
  },
  "ptsDirecto": {},
@@ -10002,15 +10015,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:36:17.613Z"
+   "ultimaBien": "2026-11-27T19:41:22.039Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:36:17.613Z"
+   "ultimaBien": "2026-11-27T19:41:22.039Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:36:17.613Z"
+   "ultimaBien": "2026-11-27T19:41:22.039Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10018,11 +10031,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:36:17.613Z"
+   "ultimaBien": "2026-11-27T19:41:22.039Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:36:17.613Z"
+   "ultimaBien": "2026-11-27T19:41:22.039Z"
   }
  },
  "avisos": [
