@@ -1,10 +1,11 @@
 /* TEMPORAL (rediseño «Liquid», 27 nov): las capas de web/maqueta-liquid.html. No es parte de la app y no se publica.
-   Cada dirección es una clase en <html> (dA, dB, dC, dD; dM, «Mezcla», no pone nada: es la app de hoy). Las tres con cristal
-   (A, B y C) llevan además dL, lo común: la barra flotante, la cabecera, los selectores, las hojas, la caja del chat y las
+   Cada dirección es una clase en <html> (dA, dB, dC, dD y dM, la mezcla; d0 no pone nada: es la app de hoy). Las que llevan
+   cristal (A, B, C y la mezcla) llevan además dL, lo común: la barra flotante, la cabecera, los selectores, las hojas, la caja del chat y las
    salidas del cristal. app.css no se toca: todo va encima.
 
    Índice: 0 el marco de la maqueta · 1 materiales, radios y muelles · 2 lo común del cristal (dL) · 3 las salidas
-   · 4 la refracción (nivel 2) · 5 la limpieza minimalista (A, B, C y D) · 6 A Cristal · 7 B Grafito · 8 C Estadio · 9 D Base */
+   · 4 la refracción (nivel 2) · 5 la limpieza minimalista (A, B, C y D) · 6 A Cristal · 7 B Grafito · 8 C Estadio · 9 D Base
+   · 10 Mezcla (27 nov, 12:44: Carlos prefiere la C, «más liquid, más transparente», con lo bueno de la A) */
 
 /* =====================================================================================================================
    0 · EL MARCO (la página sin ?dentro=1): un móvil con la app dentro y, abajo, fuera de la app, el selector
@@ -74,7 +75,7 @@ html.dL {
 }
 @supports (transition-timing-function: linear(0, 1)) {
   html.dL { --muelle: linear(0, 0.097, 0.297, 0.509, 0.69, 0.826, 0.918, 0.974, 1.004, 1.017, 1.02, 1.018, 1.014, 1.01, 1.006, 1.003, 1); }
-  html.dC { --muelle: linear(0, 0.121, 0.385, 0.67, 0.905, 1.06, 1.134, 1.146, 1.121, 1.08, 1.039, 1.007, 0.987, 0.979, 0.979, 0.984, 0.99, 0.996, 1, 1.002, 1.003, 1.003, 1); }
+  html.dC, html.dM { --muelle: linear(0, 0.121, 0.385, 0.67, 0.905, 1.06, 1.134, 1.146, 1.121, 1.08, 1.039, 1.007, 0.987, 0.979, 0.979, 0.984, 0.99, 0.996, 1, 1.002, 1.003, 1.003, 1); }
 }
 
 /* =====================================================================================================================
@@ -151,7 +152,7 @@ html.dL .tabs button.tab-oro:not(.activo) { background: none; box-shadow: inset 
 html.dL .hoja .tabs::before, html.dL .hoja .tabs::after { display: none; }
 html.dL .hoja .tabs-in { background: var(--s2); }
 html.dL .tabs.club-tabs { background: var(--s1); }
-html:is(.dA, .dB, .dC, .dD) .hoja .eq2-t { background: var(--s2); }
+html:is(.dA, .dB, .dC, .dD, .dM) .hoja .eq2-t { background: var(--s2); }
 
 /* ---- las hojas: a media altura flotan con margen y son de cristal; a pantalla completa, opacas y pegadas a los bordes ---- */
 html.dL .velo { background: rgba(0, 0, 0, 0.5); }
@@ -201,9 +202,9 @@ html.dL.maq-captura .escribe::before { inset: -60px -10px; clip-path: inset(59px
 /* la cabecera: pegada al borde de arriba no hay de dónde alargar, así que en las capturas su cristal lo pone un elemento
    aparte (#maq-sup-cristal, de maqueta-liquid.js), alargado solo hacia abajo, y lo de más arriba se apaga a negro */
 #maq-sup-cristal { display: none; }
-html.dL.maq-captura:not(.dB) #maq-sup-cristal { display: block; position: fixed; z-index: 19; left: 0; right: 0; top: 0; height: calc(var(--sup-h, 68px) + 60px); clip-path: inset(0 0 60px); background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); opacity: 0; pointer-events: none; transition: opacity 180ms linear; }
-html.dL.maq-captura.desplazada #maq-sup-cristal { opacity: 1; }
-html.dL.maq-captura:not(.dB) .sup::before { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html.dL.maq-captura:not(.dB):not(.dM) #maq-sup-cristal { display: block; position: fixed; z-index: 19; left: 0; right: 0; top: 0; height: calc(var(--sup-h, 68px) + 60px); clip-path: inset(0 0 60px); background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); opacity: 0; pointer-events: none; transition: opacity 180ms linear; }
+html.dL.maq-captura.desplazada:not(.dB):not(.dM) #maq-sup-cristal { opacity: 1; }
+html.dL.maq-captura:not(.dB):not(.dM) .sup::before { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html.dL.maq-captura.desplazada:not(.dB) body::after { content: ''; position: fixed; z-index: 18; left: 0; right: 0; top: 0; height: 30px; background: linear-gradient(#050506 30%, rgba(5, 5, 6, 0)); pointer-events: none; }
 html.dL.maq-captura .hoja.hoja-entera .asa::before { inset: -60px 0 -48px; clip-path: inset(60px 0 60px round var(--r-hoja) var(--r-hoja) 0 0); }
 
@@ -245,38 +246,38 @@ html.dL.sin-cristal .sup::before, html.dL.sin-cristal #maq-sup-cristal { backgro
    5 · LA LIMPIEZA MINIMALISTA (A, B, C y D): menos cajas, más aire. Sin tocar textos ni cifras.
    ===================================================================================================================== */
 /* superficies en vez de bordes: la tarjeta es una superficie, no un recuadro */
-html:is(.dA, .dB, .dC, .dD) :is(.pleg, .eq2-t, .eq2-at, .radar, .club-card, .fav-btn, .busca-j, .chat [data-sugerencia]) { border-color: transparent; }
-html:is(.dA, .dB, .dC, .dD) .busca-j { background: var(--s2); border-radius: 16px; }
+html:is(.dA, .dB, .dC, .dD, .dM) :is(.pleg, .eq2-t, .eq2-at, .radar, .club-card, .fav-btn, .busca-j, .chat [data-sugerencia]) { border-color: transparent; }
+html:is(.dA, .dB, .dC, .dD, .dM) .busca-j { background: var(--s2); border-radius: 16px; }
 /* aire: 32 px entre secciones y filas algo más altas */
-html:is(.dA, .dB, .dC, .dD) .sec { margin-top: var(--e6); }
-html:is(.dA, .dB, .dC, .dD) .plan { margin-top: 28px; }
-html:is(.dA, .dB, .dC, .dD) .fase { margin-top: 22px; }
-html:is(.dA, .dB, .dC, .dD) #vista .fila { padding-top: 16px; padding-bottom: 16px; }
+html:is(.dA, .dB, .dC, .dD, .dM) .sec { margin-top: var(--e6); }
+html:is(.dA, .dB, .dC, .dD, .dM) .plan { margin-top: 28px; }
+html:is(.dA, .dB, .dC, .dD, .dM) .fase { margin-top: 22px; }
+html:is(.dA, .dB, .dC, .dD, .dM) #vista .fila { padding-top: 16px; padding-bottom: 16px; }
 /* el aviso de la liga de ejemplo y las bandas, sin caja: una línea */
-html:is(.dA, .dB, .dC, .dD) .banda { background: none; padding: 2px 2px 6px; }
+html:is(.dA, .dB, .dC, .dD, .dM) .banda { background: none; padding: 2px 2px 6px; }
 /* los pasos del plan: la raya de color ya dice qué es; fuera el segundo recuadro */
-html:is(.dA, .dB, .dC, .dD) .paso2 { border-radius: var(--r-ctl); }
-html:is(.dA, .dB, .dC, .dD) .op-pie { border-top-color: transparent; }
+html:is(.dA, .dB, .dC, .dD, .dM) .paso2 { border-radius: var(--r-ctl); }
+html:is(.dA, .dB, .dC, .dD, .dM) .op-pie { border-top-color: transparent; }
 
 /* =====================================================================================================================
    6 · A · CRISTAL. Liquid Glass fiel: lo que flota es de cristal y el contenido, opaco y en listas. Barlow en todo y la
    condensada solo en las cifras. Sin franja ni mayúsculas en los títulos (en iOS 26 los títulos de sección van así).
    ===================================================================================================================== */
 html.dA { --luz: radial-gradient(90% 100% at 50% 0%, rgba(238, 28, 60, 0.13), transparent 72%); --r-tarj: 22px; --r-ctl: 14px; }
-html.dA .titulo { font: 700 32px/1.08 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.4px; }
-html.dA .titulo::before, html.dA .sec h2::before, html.dA .hoja-cab h2::before { display: none; }
-html.dA .sec h2, html.dA .fase-tx b { font: 700 19px/1.2 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.1px; }
-html.dA .plan-titular { font: 700 25px/1.14 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.3px; }
-html.dA .ficha-top h2 { font: 700 30px/1.05 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.4px; }
-html.dA .hoja:not(:has(> .aj-busca)) .hoja-cab h2 { font: 700 24px/1.1 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.2px; }
-html.dA .sup-liga b { font: 600 15.5px/1.15 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; }
-html.dA .fase-n { transform: none; border-radius: 50%; width: 26px; height: 26px; background: rgba(255, 255, 255, 0.10); color: var(--texto); }
-html.dA .fase-n > * { transform: none; }
+html:is(.dA, .dM:not(.tit-c)) .titulo { font: 700 32px/1.08 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.4px; }
+html:is(.dA, .dM:not(.tit-c)) .titulo::before, html:is(.dA, .dM:not(.tit-c)) .sec h2::before, html:is(.dA, .dM:not(.tit-c)) .hoja-cab h2::before { display: none; }
+html:is(.dA, .dM:not(.tit-c)) .sec h2, html:is(.dA, .dM:not(.tit-c)) .fase-tx b { font: 700 19px/1.2 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.1px; }
+html:is(.dA, .dM:not(.tit-c)) .plan-titular { font: 700 25px/1.14 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.3px; }
+html:is(.dA, .dM:not(.tit-c)) .ficha-top h2 { font: 700 30px/1.05 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.4px; }
+html:is(.dA, .dM:not(.tit-c)) .hoja:not(:has(> .aj-busca)) .hoja-cab h2 { font: 700 24px/1.1 'Barlow', sans-serif; text-transform: none; letter-spacing: -0.2px; }
+html:is(.dA, .dM:not(.tit-c)) .sup-liga b { font: 600 15.5px/1.15 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; }
+html:is(.dA, .dM:not(.tit-c)) .fase-n { transform: none; border-radius: 50%; width: 26px; height: 26px; background: rgba(255, 255, 255, 0.10); color: var(--texto); }
+html:is(.dA, .dM:not(.tit-c)) .fase-n > * { transform: none; }
 /* el marcador: una superficie con un hilo rojo (sigue remarcado, como pidió Carlos el 11 nov, pero sin el relleno) */
-html.dA .marcador { background: var(--s1); box-shadow: inset 0 0 0 1px rgba(238, 28, 60, 0.42); border-radius: 26px; }
+html:is(.dA, .dM) .marcador { background: var(--s1); box-shadow: inset 0 0 0 1px rgba(238, 28, 60, 0.42); border-radius: 26px; }
 /* botones secundarios con aspecto de cristal (sin desenfoque: van sobre el contenido, que es opaco) */
-html.dA .btn.sec { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.10); }
-html.dA .sup .b-ico:not(.b-inv):not(.b-preg) { background: rgba(255, 255, 255, 0.06); }
+html:is(.dA, .dM) .btn.sec { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.10); }
+html:is(.dA, .dM) .sup .b-ico:not(.b-inv):not(.b-preg) { background: rgba(255, 255, 255, 0.06); }
 /* la cabecera se funde por abajo, como el borde de scroll de iOS 26, en vez de acabar en una raya */
 html.dA .sup::before { box-shadow: none; }
 html.dA .sup::after { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 100%; height: 18px; background: linear-gradient(rgba(22, 22, 27, 0.58), rgba(22, 22, 27, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
@@ -333,9 +334,9 @@ html.dC { --luz: radial-gradient(70% 90% at 22% 0%, rgba(238, 28, 60, 0.30), tra
   --gota: linear-gradient(180deg, rgba(255, 60, 90, 0.42), rgba(238, 28, 60, 0.22)); --gota-canto: inset 0 0 0 1px rgba(255, 110, 130, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 16px rgba(238, 28, 60, 0.35);
   --muelle-ms: 460ms; --r-tarj: 20px; }
 html.dC body::before { height: 520px; }
-html.dC .titulo::before { width: 6px; height: 24px; }
-html.dC .sec h2::before { width: 3px; height: 15px; }
-html.dC .fase-n { border-radius: 2px; width: 22px; }
+html:is(.dC, .dM.tit-c) .titulo::before { width: 6px; height: 24px; }
+html:is(.dC, .dM.tit-c) .sec h2::before { width: 3px; height: 15px; }
+html:is(.dC, .dM.tit-c) .fase-n { border-radius: 2px; width: 22px; }
 html.dC .marcador { background: linear-gradient(160deg, rgba(238, 28, 60, 0.16), rgba(17, 17, 20, 0.9) 55%); }
 html.dC .nav button.activo .ic { color: #fff; fill: rgba(255, 255, 255, 0.2); }
 html.dC .tabs-in.con-pil::before, html.dC .tabs button.activo { background: rgba(255, 255, 255, 0.15); }
@@ -349,3 +350,53 @@ html.dC .hoja.hoja-entera { background: linear-gradient(180deg, #1a1216, var(--s
    ===================================================================================================================== */
 html.dD .tabs-in { background: var(--s1); }
 html.dD .marcador { border-radius: 22px; }
+
+/* =====================================================================================================================
+   10 · MEZCLA. El cristal de C llevado más lejos (más transparente, con el canto más brillante y más sitios donde se ve)
+   y la lectura limpia de A (Barlow sin mayúsculas ni franja, el marcador con un hilo, los números de fase neutros: van
+   arriba, en el apartado 6, compartidos). html.tit-c le devuelve los títulos condensados de C, para comparar.
+   Lo que añade de suyo: la cabecera ya no es una banda, son dos cápsulas de cristal que flotan (el logo con la liga, y
+   Invitar, Pregunta y Ajustes juntos, como las barras de iOS 26); la luz de fondo ocupa toda la pantalla y las tarjetas
+   del contenido son translúcidas (sin desenfoque: no cuestan) para que la dejen pasar; la gota es una lente clara.
+   ===================================================================================================================== */
+html.dM { --luz: radial-gradient(80% 46% at 14% 0%, rgba(238, 28, 60, 0.34), transparent 72%), radial-gradient(60% 34% at 98% 5%, rgba(255, 120, 70, 0.15), transparent 72%), radial-gradient(90% 40% at 88% 100%, rgba(238, 28, 60, 0.13), transparent 72%);
+  --cristal: rgba(30, 24, 30, 0.36); --cristal-grueso: rgba(24, 18, 24, 0.68); --cristal-desenfoque: blur(18px) saturate(200%); --cristal-borde: rgba(255, 255, 255, 0.07);
+  --cristal-brillo: inset 1px 1px 0 rgba(255, 255, 255, 0.30), inset -1px -1px 0 rgba(255, 255, 255, 0.10), inset 0 0 16px rgba(255, 255, 255, 0.045);
+  --gota: linear-gradient(180deg, rgba(255, 255, 255, 0.21), rgba(255, 255, 255, 0.08)); --gota-canto: inset 1px 1px 0 rgba(255, 255, 255, 0.34), inset -1px -1px 0 rgba(255, 255, 255, 0.10), 0 2px 10px rgba(0, 0, 0, 0.25);
+  --muelle-ms: 440ms; --r-tarj: 22px; --r-ctl: 14px; }
+html.dM body::before { height: 100%; }
+/* las tarjetas del contenido, translúcidas sobre la luz (en las hojas siguen opacas) */
+html.dM main { --s1: rgba(255, 255, 255, 0.05); --s2: rgba(255, 255, 255, 0.085); --s3: rgba(255, 255, 255, 0.125); }
+html.dM .marcador { background: linear-gradient(150deg, rgba(238, 28, 60, 0.14), rgba(255, 255, 255, 0.045) 60%); box-shadow: inset 0 0 0 1px rgba(255, 82, 105, 0.30), inset 1px 1px 0 rgba(255, 255, 255, 0.10); }
+html.dM .hoja.hoja-entera { background: linear-gradient(180deg, #1c1318, var(--s1) 280px); }
+/* la barra: las etiquetas un punto más claras, que detrás pasa más luz */
+html.dM .nav button { color: rgba(244, 242, 243, 0.80); }
+html.dM .nav button.activo { color: #fff; }
+html.dM .tabs-in.con-pil::before, html.dM .tabs button.activo { background: linear-gradient(180deg, rgba(255, 255, 255, 0.19), rgba(255, 255, 255, 0.09)); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.26), inset -1px -1px 0 rgba(255, 255, 255, 0.08); }
+html.dM .tabs-in.con-pil button.activo { background: none; box-shadow: none; }
+html.dM .tabs-in.con-pil.pil-oro::before { background: #ffc547; box-shadow: none; }
+/* la cabecera: sin banda; dos cápsulas de cristal y, al desplazarse, un apagado suave detrás */
+html.dM .sup::before { display: none; }
+html.dM .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -20px; background: linear-gradient(rgba(5, 5, 6, 0.62), rgba(5, 5, 6, 0.30) 60%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
+html.dM.desplazada .sup::after { opacity: 1; }
+html.dM .sup-liga, html.dM .sup-btns { position: relative; z-index: 0; }
+html.dM .sup-liga { flex: 0 1 auto; min-width: 0; margin-right: auto; }
+html.dM .sup-marca { z-index: 1; }
+html.dM .sup-liga::before, html.dM .sup-btns::before { content: ''; position: absolute; z-index: -1; border-radius: 24px; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
+html.dM .sup-liga::after, html.dM .sup-btns::after { content: ''; position: absolute; z-index: -1; border-radius: 24px; border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), 0 6px 18px rgba(0, 0, 0, 0.32); pointer-events: none; }
+html.dM .sup-liga::before, html.dM .sup-liga::after { inset: -5px -12px -5px -54px; }
+html.dM .sup-btns::before, html.dM .sup-btns::after { inset: 0 -6px 0 -4px; }
+html.dM .sup .b-ico, html.dM .sup .b-ico:not(.b-inv):not(.b-preg) { background: none; box-shadow: none; border-radius: 20px; }
+html.dM .sup-toca, html.dM .sup-tx { color: var(--texto-2); } /* «Al día» sobre el cristal: con el gris de antes se quedaba en 3,7:1 */
+html.dM .sup .sup-beta { box-shadow: 0 0 0 2px rgba(26, 18, 22, 0.92); }
+html.dM.sin-cristal .sup::after { background: var(--negro); inset: 0; }
+html.dM.sin-cristal main { --s1: #111114; --s2: #19191e; --s3: #24242b; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  html.dM .sup::after { background: var(--negro); inset: 0; }
+  html.dM main { --s1: #111114; --s2: #19191e; --s3: #24242b; }
+}
+/* capturas sin tarjeta gráfica (ver el apartado 2): el cristal de las dos cápsulas lo ponen dos elementos aparte
+   (.maq-capsula, de maqueta-liquid.js), alargados y recortados; dentro de la cabecera pegajosa no se dejaban alargar */
+.maq-capsula { display: none; }
+html.dM.maq-captura .maq-capsula { display: block; position: fixed; z-index: 19; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); pointer-events: none; }
+html.dM.maq-captura .sup-liga::before, html.dM.maq-captura .sup-btns::before { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }

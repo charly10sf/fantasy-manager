@@ -11,17 +11,17 @@
        que hace ni de lo que dice. app.css y el JS de la app no se tocan. Esta página hace de dos cosas: sin «dentro» en la
        dirección es el marco (un móvil con la app dentro y, abajo, fuera de la app, el selector de dirección y de pantalla);
        con «?dentro=1» es la app con la capa puesta, a pantalla completa (lo que abren las capturas y los vídeos).
-       ?d=A|B|C|D|M  dirección      ?p=hoy|equipo|directo|rivales|mercado|clubes|ficha|rival|pregunta|ajustes|carga|top|barra
+       ?d=A|B|C|D|M|0  dirección (M, la mezcla; 0, la app de hoy)      ?p=hoy|equipo|directo|rivales|mercado|clubes|ficha|rival|pregunta|ajustes|carga|top|barra
        ?y=1  desplazada      ?top=1  funciones top abiertas      ?sc=1  sin cristal      ?n=2  refracción (solo Chromium, solo A)
-       ?tx=160  texto al 160 % -->
+       ?tx=160  texto al 160 %      ?tc=1  la mezcla con los títulos condensados -->
   <script>
     var Q = new URLSearchParams(location.search), DENTRO = Q.get('dentro') === '1';
     document.documentElement.classList.add(DENTRO ? 'maq-dentro' : 'maq-fuera');
     if (DENTRO) {
       document.write('<link rel="stylesheet" href="css/app.css">');
-      var D0 = (Q.get('d') || 'A').toUpperCase();
+      var D0 = (Q.get('d') || 'M').toUpperCase();
       document.documentElement.classList.add('d' + D0);
-      if ('ABC'.indexOf(D0) >= 0) document.documentElement.classList.add('dL');
+      if ('ABCM'.indexOf(D0) >= 0) document.documentElement.classList.add('dL');
       if (Q.get('sc') === '1') document.documentElement.classList.add('sin-cristal');
       if (Q.get('n') === '2') document.documentElement.classList.add('nivel-2');
     }

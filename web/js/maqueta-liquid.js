@@ -7,7 +7,7 @@ const Q = new URLSearchParams(location.search);
 const DENTRO = Q.get('dentro') === '1';
 const html = document.documentElement;
 
-export const DIRS = [['A', 'A · Cristal'], ['B', 'B · Grafito'], ['C', 'C · Estadio'], ['D', 'D · Base'], ['M', 'Mezcla']];
+export const DIRS = [['A', 'A · Cristal'], ['B', 'B · Grafito'], ['C', 'C · Estadio'], ['D', 'D · Base'], ['M', 'Mezcla · C + A'], ['0', 'Hoy']];
 export const PANTS = [['hoy', 'Hoy'], ['equipo', 'Equipo'], ['directo', 'Directo'], ['rivales', 'Rivales · parte'], ['mercado', 'Mercado'], ['clubes', 'Clubes'],
   ['ficha', 'Ficha de jugador'], ['rival', 'Ficha de rival'], ['pregunta', 'Pregunta · teclado'], ['ajustes', 'Ajustes'], ['carga', 'La carga'], ['top', 'Función top'], ['barra', 'Barra encogida']];
 const TECLADO = 300;
@@ -36,6 +36,7 @@ async function dentro() {
     };
   }
   if (Q.get('tx')) texto(Q.get('tx'));
+  if (Q.get('tc') === '1') html.classList.add('tit-c'); // la mezcla, con los títulos condensados de C
   // ?bl=12: probar con menos desenfoque (para las medidas)
   if (Q.get('bl')) { const st = document.createElement('style'); st.textContent = `html.dL { --cristal-desenfoque: blur(${+Q.get('bl')}px) saturate(170%) !important; }`; document.head.append(st); }
   if (Q.get('cap') === '1') { html.classList.add('maq-captura'); const g = document.createElement('div'); g.id = 'maq-sup-cristal'; document.body.append(g); } // el cristal, como lo pinta un móvil, en un Chromium sin tarjeta gráfica
@@ -91,8 +92,8 @@ async function dentro() {
   }
   window.maq = { ver, desplazar, dir: poner, S };
   function poner(d) {
-    html.classList.remove('dA', 'dB', 'dC', 'dD', 'dM', 'dL');
-    html.classList.add(`d${d}`); if ('ABC'.includes(d)) html.classList.add('dL');
+    html.classList.remove('dA', 'dB', 'dC', 'dD', 'dM', 'd0', 'dL');
+    html.classList.add(`d${d}`); if ('ABCM'.includes(d)) html.classList.add('dL');
     window.dispatchEvent(new Event('resize')); // la app vuelve a medir la cabecera y la barra (--sup-h, --nav-h)
     requestAnimationFrame(() => window.dispatchEvent(new Event('maq-capa')));
   }
@@ -140,7 +141,7 @@ function movimiento() {
     const b = e.target.closest && e.target.closest('.nav [data-ir]'); if (!b) return;
     const bs = [...b.parentNode.children], de = bs.findIndex((x) => x.classList.contains('activo')), a = bs.indexOf(b);
     html.classList.remove('nav-min');
-    if (de < 0 || a === de || !html.classList.contains('dC')) return;
+    if (de < 0 || a === de || !(html.classList.contains('dC') || html.classList.contains('dM'))) return;
     const gota = b.parentNode;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !gota.animate) return;
     // la gota se estira hacia donde va y se recoge al llegar (solo transform: no cuesta)
@@ -238,8 +239,22 @@ function movimiento() {
     html.classList.add('con-mapa');
   };
 
+  // 7. solo en las capturas (?cap=1) de la mezcla: el cristal de las dos cápsulas de la cabecera, en dos elementos
+  //    sueltos puestos justo detrás, alargados hasta 60 px por donde hay pantalla y recortados a la forma de la cápsula
+  let capsulas = null;
+  const capsulasCaptura = () => {
+    if (!html.classList.contains('maq-captura') || !html.classList.contains('dM')) return;
+    const liga = document.querySelector('.sup-liga'), btns = document.querySelector('.sup-btns'); if (!liga || !btns) return;
+    if (!capsulas) capsulas = [0, 1].map(() => { const d = document.createElement('div'); d.className = 'maq-capsula'; document.body.append(d); return d; });
+    const a = liga.getBoundingClientRect(), b = btns.getBoundingClientRect(), W = window.innerWidth;
+    [[a.left - 54, a.top - 5, a.right + 12, a.bottom + 5], [b.left - 4, b.top, b.right + 6, b.bottom]].forEach(([x0, y0, x1, y1], i) => {
+      const iz = Math.min(60, Math.max(0, x0)), de = Math.min(60, Math.max(0, W - x1)), ar = Math.min(60, Math.max(0, y0)), ab = 60;
+      capsulas[i].style.cssText = `left:${x0 - iz}px;top:${y0 - ar}px;width:${x1 - x0 + iz + de}px;height:${y1 - y0 + ar + ab}px;clip-path:inset(${ar}px ${de}px ${ab}px ${iz}px round 24px)`;
+    });
+  };
+
   let pte = false;
-  const todo = () => { pte = false; pildoras(); hojas(); vigilarNav(); mapa(); };
+  const todo = () => { pte = false; pildoras(); hojas(); vigilarNav(); mapa(); capsulasCaptura(); };
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('maq-capa', () => { pedir(); barra(); });
@@ -250,10 +265,10 @@ function movimiento() {
    FUERA: el marco, con el selector de dirección y de pantalla debajo de la app
    ===================================================================================================================== */
 function fuera() {
-  let dir = (Q.get('d') || 'A').toUpperCase(), pant = Q.get('p') || 'hoy', y = Q.get('y') === '1';
-  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '' };
+  let dir = (Q.get('d') || 'M').toUpperCase(), pant = Q.get('p') || 'hoy', y = Q.get('y') === '1';
+  const op = { top: Q.get('top') === '1', sc: Q.get('sc') === '1', n2: Q.get('n') === '2', tx: Q.get('tx') || '', w: Q.get('w') || '', tc: Q.get('tc') === '1' };
   const marco = document.getElementById('marco');
-  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}`;
+  const dirDe = () => `?dentro=1&d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}`;
   marco.innerHTML = `
     <div class="mq-movil"><div class="mq-pant"><iframe id="mq-app" title="La app con la dirección elegida" src="maqueta-liquid.html${dirDe()}"></iframe>
       <div class="mq-teclado" aria-hidden="true">${teclado()}</div></div></div>
@@ -265,10 +280,10 @@ function fuera() {
     document.getElementById('mq-sel').innerHTML = `
       <div class="mq-fila"><b>Dirección</b>${DIRS.map(([k, t]) => b('d', k, t, dir === k)).join('')}</div>
       <div class="mq-fila"><b>Pantalla</b>${PANTS.map(([k, t]) => b('p', k, t, pant === k)).join('')}</div>
-      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
+      <div class="mq-fila"><b>Ver</b>${b('o', 'y', 'Desplazada', y)}${b('o', 'tc', 'Títulos condensados (mezcla)', op.tc)}${b('o', 'top', 'Funciones top abiertas', op.top)}${b('o', 'sc', 'Sin cristal', op.sc)}${b('o', 'n2', 'Refracción (solo Android)', op.n2)}${b('o', 'tx', 'Texto al 160 %', op.tx === '160')}
         <span class="mq-anchos">${['320', '360', '', '430'].map((w) => b('w', w, w || '390', op.w === w)).join('')}</span>
         <a class="mq-entera" href="maqueta-liquid.html${dirDe()}">Pantalla completa ↗</a></div>`;
-    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.w ? `&w=${op.w}` : ''}`);
+    history.replaceState(null, '', `?d=${dir}&p=${pant}${y ? '&y=1' : ''}${op.top ? '&top=1' : ''}${op.sc ? '&sc=1' : ''}${op.n2 ? '&n=2' : ''}${op.tx ? `&tx=${op.tx}` : ''}${op.tc ? '&tc=1' : ''}${op.w ? `&w=${op.w}` : ''}`);
     marco.classList.toggle('con-teclado', pant === 'pregunta');
     marco.style.setProperty('--mq-w', `${op.w || 390}px`);
     marco.dataset.w = op.w || '390';
@@ -280,6 +295,7 @@ function fuera() {
     if (d.p) { pant = d.p; manda({ maq: 'ver', p: pant, y: pant === 'barra' ? 1 : (y ? 1 : 0) }); }
     if (d.w != null && 'w' in d) op.w = d.w;
     if (d.o === 'y') { y = !y; manda({ maq: 'ver', p: pant, y: y ? 1 : 0 }); }
+    if (d.o === 'tc') { op.tc = !op.tc; manda({ maq: 'clase', c: 'tit-c', si: op.tc }); }
     if (d.o === 'sc') { op.sc = !op.sc; manda({ maq: 'clase', c: 'sin-cristal', si: op.sc }); }
     if (d.o === 'n2') { op.n2 = !op.n2; manda({ maq: 'clase', c: 'nivel-2', si: op.n2 }); }
     if (d.o === 'tx') { op.tx = op.tx ? '' : '160'; manda({ maq: 'texto', v: op.tx }); }

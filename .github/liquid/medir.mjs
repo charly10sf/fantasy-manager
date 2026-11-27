@@ -1,13 +1,13 @@
-// (rediseño «Liquid», maqueta) rendimiento con la CPU frenada ×6, en cada dirección y en la app de hoy (M, la capa vacía):
+// (rediseño «Liquid», maqueta) rendimiento con la CPU frenada ×6, en cada dirección y en la app de hoy (0, sin capa):
 //  1. el cambio de pestaña, como en el overhaul (claude/overhaul.md, tanda 8): 80 cambios seguidos entre Hoy, Equipo,
 //     Mercado y Rivales; mediana del tiempo hasta el segundo fotograma y tiempo de CPU por cambio (Performance.getMetrics);
 //  2. los fotogramas por segundo desplazando Mercado con la barra encima (requestAnimationFrame), 4 s bajando y subiendo.
-//   node .github/liquid/medir.mjs [dirs=M,D,B,A,C] [opciones de la dirección, p. ej. bl=12 o sc=1] [densidad=2]
+//   node .github/liquid/medir.mjs [dirs=0,D,B,A,C,M] [opciones de la dirección, p. ej. bl=12 o sc=1] [densidad=2]
 // OJO: aquí Chromium compone por software (sin tarjeta gráfica): el desenfoque lo paga la CPU y sale MÁS caro que en un
 // móvil, donde lo hace la GPU. Vale para comparar direcciones entre sí, no como cifra de un móvil.
 const PW = process.env.PW_MODULO || '/opt/npm-tools/node_modules/playwright/index.mjs';
 const { chromium } = await import(PW);
-const [, , dirsA = 'M,D,B,A,C', extra = '', dsf = '2'] = process.argv;
+const [, , dirsA = '0,D,B,A,C,M', extra = '', dsf = '2'] = process.argv;
 const BASE = process.env.BASE || 'http://127.0.0.1:8765';
 const nav = await chromium.launch();
 const mediana = (a) => { const b = [...a].sort((x, y) => x - y); return b[Math.floor(b.length / 2)]; };
