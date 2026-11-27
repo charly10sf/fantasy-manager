@@ -2356,6 +2356,21 @@
    "jornada": 14,
    "id": "2126391016869527853",
    "t": "2026-11-27T19:01:39.949Z"
+  },
+  {
+   "clave": "directo|135|Iván Romero|gol1",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126417353139265615",
+   "t": "2026-11-27T20:46:18.956Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "135",
+    "equipo": "1538",
+    "min": 42,
+    "extra": 0,
+    "jugador": "Iván Romero"
+   }
   }
  ],
  "estados": {
@@ -4929,16 +4944,16 @@
   "dia": "2026-11-27",
   "llamadas": {
    "clasificar": 54,
-   "redactar": 13,
+   "redactar": 14,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 153809,
-  "salida": 27069,
+  "entrada": 155469,
+  "salida": 27187,
   "cacheLee": 94308,
-  "cacheEscribe": 33864,
-  "dolares": 0.292176,
+  "cacheEscribe": 41327,
+  "dolares": 0.326528,
   "reservado": 0
  },
  "recientes": {
@@ -5076,10 +5091,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T20:31:19.305Z",
-    "texto": "⚽ El Atlético se va 0-2 en el Coliseum: Johnny la mete en el 30' y silencia al Getafe.\n\nEs su primer gol en Liga, Champions o Copa, y ya suma 6 puntos. Pone el pase Julián Alvarez, que de momento se lleva 4 y llega en racha."
-   },
-   {
     "t": "2026-11-22T22:26:29.778Z",
     "texto": "🟥 Roja para Djene en el 90': el Getafe termina con diez en el Coliseum y pierde 0-2 con el Atlético.\n\nEl defensa se queda en -6 puntos. Si lo tenías, la jornada se le ha torcido del todo."
    },
@@ -5094,6 +5105,10 @@
    {
     "t": "2026-11-23T21:51:27.444Z",
     "texto": "⚽ ¡EN EL 88'! Requena enganchó una volea y el Levante empata con el Elche en el Ciutat de València: 1-1.\n\nEl centrocampista lleva 6 puntos de momento, casi el doble de su media. Olasagasti, que hace el pase, suma 2."
+   },
+   {
+    "t": "2026-11-27T20:46:18.959Z",
+    "texto": "⚽ Se rompe el partido en el Ciutat de València: el Levante se adelanta en el 42' y es 1-0 al Racing.\n\nIván Romero marca y lleva 4 puntos. Es su cuarto gol entre Liga, Champions y Copa. Rey, que lo asiste, también va por 4."
    }
   ],
   "novedades": [
@@ -10003,20 +10018,49 @@
    "w": "2026-11-23T21:46:22Z",
    "f": "2026-11-23T21:51:16.118Z",
    "rf": "92:05"
+  },
+  "fm|135|1209441|42": {
+   "j": "Iván Romero",
+   "m": "42'",
+   "f": "2026-11-27T20:46:11.451Z",
+   "rf": "44:17",
+   "casado": true
+  },
+  "directo|135|Iván Romero|gol1": {
+   "j": "Iván Romero",
+   "m": "42'",
+   "e": "2026-11-27T20:46:11.451Z",
+   "re": "45'",
+   "w": "2026-11-27T20:43:22Z",
+   "f": "2026-11-27T20:46:11.451Z",
+   "rf": "44:17"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7056,
+   "ok": 7058,
    "fallos": 0,
-   "ejecuciones": 5790,
+   "ejecuciones": 5791,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T20:41:12.368Z"
+   "ultima": "2026-11-27T20:46:11.451Z"
   }
  },
- "ptsDirecto": {},
+ "ptsDirecto": {
+  "14|135|2303": {
+   "p": 4,
+   "g": 1,
+   "a": 0,
+   "t": 1795812371451
+  },
+  "14|135|2628": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795812371451
+  }
+ },
  "golesAnulados": {
   "directo|119|Pablo Durán|gol1": "2026-11-08T18:06:11.103Z"
  },
@@ -10030,27 +10074,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T20:41:16.660Z"
+   "ultimaBien": "2026-11-27T20:46:23.267Z"
   }
  },
  "avisos": [
