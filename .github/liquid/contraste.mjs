@@ -19,7 +19,7 @@ for (const pa of pantsA.split(',')) {
   await p.evaluate((x) => { window.scrollTo(0, 0); document.querySelector(`.nav [data-ir="${x}"]`).click(); }, pa);
   await p.waitForTimeout(900);
   const tope = await p.evaluate(() => document.scrollingElement.scrollHeight - innerHeight);
-  for (let y = 0, i = 0; y <= Math.min(tope, 2600); y += 130, i++) {
+  for (let y = 0, i = 0; y <= Math.min(tope, +(process.env.HASTA || 2600)); y += +(process.env.PASO || 130), i++) {
     await p.evaluate((yy) => { window.scrollTo(0, yy); document.documentElement.classList.remove('nav-min'); }, y);
     await p.waitForTimeout(160);
     await p.evaluate(() => {

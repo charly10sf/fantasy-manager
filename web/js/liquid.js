@@ -1,8 +1,9 @@
 // (0.9, 27 nov) Lo que se mueve del diseño «Liquid» y el CSS no puede hacer solo. No sabe nada de la liga ni decide nada:
 // solo pone clases en <html> y medidas en variables, para la sección «0.9 · EL REDISEÑO LIQUID» del final de app.css.
 //   · al desplazarse: html.desplazada (el apagado de detrás de la cabecera), html.nav-min (la barra de abajo se encoge al
-//     bajar y vuelve al subir, arriba del todo o al tocarla) y html.tabs-pegada (el selector, pegado bajo la cabecera)
-//   · html.escribiendo: el teclado abierto en Pregunta (la barra se aparta y la caja baja hasta el teclado)
+//     bajar y vuelve al subir, arriba del todo o al tocarla) y html.tabs-pegada (el selector, pegado bajo la cabecera).
+//     En cada fotograma solo se lee el scroll; nada se mide ahí
+//   · html.escribiendo: el teclado en pantalla en Pregunta (la barra se aparta y la caja baja hasta el teclado)
 //   · la píldora que se desliza en los selectores de sección al cambiar de pestaña dentro de uno (.tabs-in.con-pil)
 //   · las hojas: .hoja-media (flota con margen, de cristal) o .hoja-entera (opaca, pegada a los bordes) y .hoja-baja
 //   · la barra de abajo cuando una etiqueta no cabe (html.nav-justa: la etiqueta, solo en la pestaña activa)
@@ -25,6 +26,7 @@ export function cristalTxt() {
   const sin = html.classList.contains('sin-cristal');
   const sinFiltro = typeof CSS !== 'undefined' && CSS.supports && !(CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'));
   const rt = typeof matchMedia === 'function' && (matchMedia('(prefers-reduced-transparency: reduce)').matches || matchMedia('(prefers-contrast: more)').matches);
+  // (Safari y la app del iPhone no dicen si está puesto «Reducir transparencia»: ahí solo se quita con «Aumentar contraste»)
   return `${sin ? 'apagado (móvil justo)' : sinFiltro ? 'apagado (el navegador no lo pinta)' : rt ? 'apagado (lo pide el sistema)' : 'sí'} · memoria ${navigator.deviceMemory || '?'} GB · ${navigator.hardwareConcurrency || '?'} núcleos`;
 }
 
@@ -42,37 +44,61 @@ export function iniciarLiquid() {
   try { guardado = localStorage.getItem('fm-cristal'); } catch (e) { /* nada */ }
   html.classList.toggle('sin-cristal', !cristalDe(navigator, guardado));
 
-  // ---- 1. al desplazarse ----
-  let y0 = 0, pend = false, acum = 0;
-  const pegada = () => {
-    const t = document.querySelector('#vista .tabs'), s = document.querySelector('.sup');
-    html.classList.toggle('tabs-pegada', !!(t && s && movil() && window.scrollY > 6 && t.getBoundingClientRect().top <= s.getBoundingClientRect().bottom + 1));
+  // ---- 1. al desplazarse. En cada fotograma solo se lee window.scrollY: dónde se pega el selector se mide una vez por
+  //         repintado (`medirTabs`, abajo), no aquí (medir en cada fotograma costaba el doble de hilo principal) ----
+  let y0 = 0, pend = false, acum = 0, mudo = 0, tabsY = -1;
+  const medirTabs = () => {
+    const t = movil() && document.querySelector('#vista .tabs'), sp = document.querySelector('.sup');
+    // a qué scroll queda el selector pegado bajo la cabecera (su sitio en la página menos el alto de la cabecera)
+    tabsY = t && sp ? Math.max(0, t.offsetTop - sp.offsetHeight) : -1;
+  };
+  const encoger = (si) => {
+    if (html.classList.contains('nav-min') === si) return;
+    html.classList.add('nav-anim'); // desde ahora, el cambio de tamaño de la barra se anima (solo transform)
+    html.classList.toggle('nav-min', si);
   };
   const mirar = () => {
     pend = false;
     const y = Math.max(0, window.scrollY);
     html.classList.toggle('desplazada', y > 6);
-    pegada();
+    html.classList.toggle('tabs-pegada', tabsY >= 0 && y > 6 && y >= tabsY - 1);
     const d = y - y0; y0 = y;
-    if (y < 40 || !movil()) { html.classList.remove('nav-min'); acum = 0; return; }
-    // un salto de golpe (la app baja sola al final del chat, o vuelve arriba al cambiar de pestaña) no es bajar con el dedo
-    if (Math.abs(d) > 300) { acum = 0; return; }
+    if (y < 40 || !movil()) { encoger(false); acum = 0; return; }
+    // un salto de golpe (la app baja sola al final del chat, o vuelve arriba) y lo que se mueve justo al cambiar de
+    // pantalla no es bajar con el dedo
+    if (Math.abs(d) > 300 || performance.now() < mudo) { acum = 0; return; }
     acum = (Math.sign(d) === Math.sign(acum) ? acum : 0) + d;
-    if (acum > 28) html.classList.add('nav-min');
-    else if (acum < -18) html.classList.remove('nav-min');
+    if (acum > 28) encoger(true);
+    else if (acum < -18) encoger(false);
   };
   window.addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(mirar); } }, { passive: true });
 
-  // ---- 2. escribiendo en Pregunta ----
-  const escribe = () => html.classList.toggle('escribiendo', !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('.escribe')));
+  // ---- 2. escribiendo en Pregunta: la barra se aparta SOLO con el teclado en pantalla (con el cursor en la caja pero sin
+  //         teclado —Android al cerrarlo con «Atrás», un teclado físico— la barra se queda). El teclado se nota en que
+  //         lo que se ve mide bastante menos que la ventana de siempre con ese ancho ----
+  let altoBase = 0, anchoBase = 0;
+  const altoVisto = () => Math.min(window.innerHeight, window.visualViewport ? window.visualViewport.height : window.innerHeight);
+  const escribe = () => {
+    if (window.innerWidth !== anchoBase) { anchoBase = window.innerWidth; altoBase = 0; }
+    const a = altoVisto();
+    if (a > altoBase) altoBase = a;
+    const enCaja = !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('.escribe'));
+    html.classList.toggle('escribiendo', enCaja && a < altoBase - 120);
+  };
   document.addEventListener('focusin', escribe);
   document.addEventListener('focusout', () => setTimeout(escribe, 0));
+  window.addEventListener('resize', escribe);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', escribe);
+  escribe();
 
   // ---- 3. la gota de la barra: al tocar una pestaña la barra vuelve a su tamaño y la gota se estira hacia donde va ----
   document.addEventListener('click', (e) => {
-    const b = e.target.closest && e.target.closest('.nav [data-ir]');
+    const ir = e.target.closest && e.target.closest('[data-ir]');
+    if (!ir) return;
+    // al cambiar de pantalla la barra vuelve a su tamaño, y lo que la página se mueva sola al pintarse no la encoge
+    encoger(false); acum = 0; mudo = performance.now() + 700;
+    const b = ir.closest('.nav [data-ir]');
     if (!b) return;
-    html.classList.remove('nav-min'); acum = 0;
     if (!movil() || html.classList.contains('nav-justa') || quieto()) return;
     const bs = [...b.parentNode.children], de = bs.findIndex((x) => x.classList.contains('activo')), a = bs.indexOf(b);
     if (de < 0 || a === de || !b.parentNode.animate) return;
@@ -184,14 +210,23 @@ export function iniciarLiquid() {
     if (clave === cabeAntes) return;
     cabeAntes = clave;
     html.classList.remove('sin-pts', 'sin-pos', 'est-corta');
+    if (est) est.style.fontSize = '';
     if (pts && est && est.getBoundingClientRect().right + 8 > pts.getBoundingClientRect().left) html.classList.add('sin-pts');
-    if (sup.scrollWidth > sup.clientWidth + 1 || (est && est.getBoundingClientRect().right > liga.getBoundingClientRect().right + 1)) html.classList.add('est-corta');
+    // (con la letra del móvil grande ni solo cabía: «Actualizand…») antes de cortarlo, la letra del estado se achica
+    // hasta que quepa entero, como mucho al 60 %; solo si ni así cabe, se corta
+    const sobra = () => (est ? est.getBoundingClientRect().right - liga.getBoundingClientRect().right : 0);
+    if (est && sobra() > 0.5) {
+      const base = parseFloat(getComputedStyle(est).fontSize) || 13.5, hueco = liga.getBoundingClientRect().right - est.getBoundingClientRect().left, ancho = est.getBoundingClientRect().width;
+      const f = Math.max(0.6, Math.min(1, (hueco - 1) / ancho));
+      est.style.fontSize = `${Math.floor(base * f * 10) / 10}px`;
+    }
+    if (sup.scrollWidth > sup.clientWidth + 1 || sobra() > 1) html.classList.add('est-corta');
     const nom = liga.querySelector('#supLiga b');
     if (pos && nom && nom.clientWidth < nom.scrollWidth * 0.6) html.classList.add('sin-pos');
   };
 
   let pte = false;
-  const todo = () => { pte = false; try { html.classList.toggle('lq', dentro()); pildoras(); hojas(); vigilarNav(); cabecera(); } catch (e) { /* lo de adorno no rompe nada */ } };
+  const todo = () => { pte = false; try { html.classList.toggle('lq', dentro()); medirTabs(); pildoras(); hojas(); vigilarNav(); cabecera(); mirar(); } catch (e) { /* lo de adorno no rompe nada */ } };
   const pedir = () => { if (!pte) { pte = true; requestAnimationFrame(todo); } };
   new MutationObserver(pedir).observe(document.body, { childList: true, subtree: true, characterData: true });
   new MutationObserver(() => { gota(); setTimeout(gota, 440); pedir(); }).observe(html, { attributes: true, attributeFilter: ['class', 'style'] });

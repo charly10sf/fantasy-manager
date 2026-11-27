@@ -5417,7 +5417,8 @@ function pasosTour() {
   const demo = enDemo(), conClave = puedeChat(demo), conIA = puedePlanIA(demo);
   const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
   // en el ordenador, Pregunta está en la barra de la izquierda, no arriba
-  const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón rojo de arriba';
+  // (0.9) en el móvil Pregunta ya no es un botón con el contorno rojo: va en la cápsula de arriba, con su icono rojo
+  const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón de arriba, el del icono rojo';
   return [
     { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día la app te dice qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Quieres ver lo básico o todo?` },
     { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, hasta dónde puedes quedarte en negativo (contando tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },

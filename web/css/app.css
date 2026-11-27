@@ -4161,6 +4161,8 @@ html.lq {
   /* movimiento: 150 ms al tocar y un muelle corto, con algo de rebote, para la gota y las hojas. Solo se anima transform
      (lo compone la tarjeta gráfica): animar colores obligaba a recalcular estilos en cada fotograma del cambio de pestaña */
   --toque: 150ms; --muelle-ms: 440ms; --muelle: cubic-bezier(0.25, 1.15, 0.45, 1);
+  /* las hojas suben frenando, sin pasarse: el rebote, en un recorrido de toda la pantalla, las sacaba 100 px de su sitio */
+  --hoja-ms: 400ms; --hoja-curva: cubic-bezier(0.22, 1, 0.36, 1);
   /* la luz de fondo, a toda la pantalla: sobre el negro plano el cristal no se ve */
   --luz: radial-gradient(80% 46% at 14% 0%, rgba(238, 28, 60, 0.34), transparent 72%), radial-gradient(60% 34% at 98% 5%, rgba(255, 120, 70, 0.15), transparent 72%), radial-gradient(90% 40% at 88% 100%, rgba(238, 28, 60, 0.13), transparent 72%);
 }
@@ -4175,10 +4177,10 @@ html.lq body::before { content: ''; position: fixed; z-index: -1; left: 0; right
 html.lq:not(.escritorio) .nav { left: 0; right: 0; bottom: calc(var(--flota) + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); padding: 0 var(--flota); background: none; border: 0; pointer-events: none; transition: transform var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio) .nav-in { position: relative; z-index: 0; pointer-events: auto; box-sizing: border-box; width: 100%; max-width: 460px; height: var(--barra-h); padding: var(--barra-m); border-radius: var(--barra-r);
   border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), var(--cristal-sombra);
-  transition: max-width var(--muelle-ms) var(--muelle), height var(--muelle-ms) var(--muelle); }
+  transform-origin: 50% 100%; }
 /* el cristal va en un pseudoelemento (así el borde, el brillo y la sombra quedan fuera del recorte de las capturas, abajo) */
 html.lq:not(.escritorio) .nav-in::after { content: ''; position: absolute; z-index: -1; inset: -1px; border-radius: inherit; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); }
-html.lq:not(.escritorio) .nav button { z-index: 1; min-height: 0; height: 100%; padding: 0; justify-content: center; gap: 2px; border-radius: var(--barra-ri); font: 600 11px/1.1 'Barlow'; letter-spacing: 0; color: rgba(244, 242, 243, 0.80); white-space: nowrap; transition: transform var(--toque), font-size var(--muelle-ms) var(--muelle); }
+html.lq:not(.escritorio) .nav button { z-index: 1; min-height: 0; height: 100%; padding: 0; justify-content: center; gap: 2px; border-radius: var(--barra-ri); font: 600 11px/1.1 'Barlow'; letter-spacing: 0; color: rgba(244, 242, 243, 0.80); white-space: nowrap; transition: transform var(--toque); }
 html.lq:not(.escritorio) .nav button:active { transform: scale(0.94); }
 html.lq:not(.escritorio) .nav button .ic { width: 23px; height: 23px; stroke-width: 1.75; }
 html.lq:not(.escritorio) .nav button.activo { color: #fff; font-weight: 600; }
@@ -4191,7 +4193,12 @@ html.lq:not(.escritorio) .nav-in::before { content: ''; position: absolute; z-in
   background: var(--gota); box-shadow: var(--gota-canto); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio) .nav-in:not([data-i])::before { opacity: 0; }
 /* encogida al bajar por una lista: solo iconos; vuelve al subir, arriba del todo o al tocarla */
-html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav-in { max-width: 268px; height: 46px; --barra-h: 46px; }
+html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav-in { max-width: 304px; height: 52px; --barra-h: 52px; }
+/* el cambio de tamaño no se anima maquetando en cada fotograma (costaba el doble de hilo principal al desplazar): la
+   barra pasa de golpe a su tamaño y lo que se ve es una escala desde el tamaño de antes (solo transform). html.nav-anim
+   la pone liquid.js la primera vez que la barra cambia, para que no se anime al pintarse */
+html.lq.nav-anim:not(.escritorio).nav-min:not(.con-hoja) .nav-in { animation: nav-encoge var(--muelle-ms) var(--muelle); }
+html.lq.nav-anim:not(.escritorio):not(.nav-min) .nav-in { animation: nav-crece var(--muelle-ms) var(--muelle); }
 html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav button { font-size: 0; gap: 0; }
 html.lq:not(.escritorio).nav-min:not(.con-hoja) .nav .gl { top: 1px; }
 /* no cabe (320 px con la letra grande, o el texto del sistema al 130-160 %): la etiqueta solo en la activa, al lado del
@@ -4233,7 +4240,7 @@ html.lq .hoja .eq2-t { background: var(--s2); }
 
 /* ---- las hojas: a media altura flotan con margen y son de cristal; a pantalla completa, opacas y pegadas a los bordes ---- */
 html.lq .velo { background: rgba(0, 0, 0, 0.5); }
-html.lq:not(.escritorio) .hoja { border-radius: var(--r-hoja) var(--r-hoja) 0 0; box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.07), 0 -18px 50px rgba(0, 0, 0, 0.6); transition: transform var(--muelle-ms) var(--muelle); }
+html.lq:not(.escritorio) .hoja { border-radius: var(--r-hoja) var(--r-hoja) 0 0; box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.07), 0 -18px 50px rgba(0, 0, 0, 0.6); transition: transform var(--hoja-ms) var(--hoja-curva); }
 html.lq:not(.escritorio) .hoja.hoja-media { left: var(--hoja-m); right: var(--hoja-m); bottom: calc(var(--hoja-m) + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); max-width: calc(620px - var(--hoja-m) * 2); border-radius: var(--r-hoja);
   background: var(--cristal-grueso); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); border: 1px solid var(--cristal-borde); box-shadow: var(--cristal-brillo), var(--cristal-sombra); padding-bottom: 20px; }
 html.lq:not(.escritorio) .hoja.hoja-media:not(.on) { transform: translateY(calc(100% + 30px)); }
@@ -4265,7 +4272,7 @@ html.lq #tiron { background: var(--cristal); -webkit-backdrop-filter: var(--cris
 html.lq :is(.pleg, .eq2-t, .eq2-at, .radar, .club-card, .fav-btn, .busca-j, .chat [data-sugerencia]) { border-color: transparent; }
 html.lq .busca-j { background: var(--s2); border-radius: 16px; }
 /* aire: 32 px entre secciones y filas algo más altas */
-html.lq .sec { margin-top: var(--e6); }
+html.lq .sec:not(.btn):not(button):not(a) { margin-top: var(--e6); } /* (.sec es también la clase del botón secundario: a esos, nada) */
 html.lq .plan { margin-top: 28px; }
 html.lq .fase { margin-top: 22px; }
 html.lq #vista .fila { padding-top: 16px; padding-bottom: 16px; }
@@ -4276,8 +4283,8 @@ html.lq .banda:not(.mal):not(.banda-play):not(.plan-cambio):not(.banda-actualiza
 html.lq .paso2 { border-radius: var(--r-ctl); }
 html.lq .op-pie { border-top-color: transparent; }
 html.lq .btn.sec { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.10); }
-html.lq .titulo::before { width: 6px; height: 24px; }
-html.lq .sec h2::before { width: 3px; height: 15px; }
+html.lq .titulo::before { width: 0.18em; height: 0.74em; }
+html.lq .sec h2::before { width: 0.16em; height: 0.78em; }
 html.lq .fase-n { border-radius: 2px; width: 22px; }
 /* las tarjetas del contenido, translúcidas sobre la luz (en las hojas siguen opacas) */
 html.lq main { --s1: rgba(255, 255, 255, 0.05); --s2: rgba(255, 255, 255, 0.085); --s3: rgba(255, 255, 255, 0.125); }
@@ -4295,7 +4302,7 @@ html.lq .tabs button.tab-oro:not(.activo) { background: none; box-shadow: none; 
 html.lq .tabs .tab-n { top: 1px; right: 1px; min-width: 15px; height: 15px; padding: 0 3px; font: 700 10.5px/15px 'Barlow'; background: rgba(255, 255, 255, 0.18); color: var(--texto); }
 html.lq .tabs .tab-n.rojo { background: var(--rojo-btn); color: #fff; }
 /* la cabecera: sin banda; dos cápsulas de cristal y, al desplazarse, un apagado suave detrás */
-html.lq:not(.escritorio) .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -24px; background: linear-gradient(rgba(5, 5, 6, 0.84), rgba(5, 5, 6, 0.56) 42%, rgba(5, 5, 6, 0.26) 76%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
+html.lq:not(.escritorio) .sup::after { content: ''; position: absolute; z-index: -1; inset: 0 0 -24px; background: linear-gradient(rgba(5, 5, 6, 0.86), rgba(5, 5, 6, 0.68) 50%, rgba(5, 5, 6, 0.42) 78%, rgba(5, 5, 6, 0)); opacity: 0; transition: opacity 180ms linear; pointer-events: none; }
 html.lq:not(.escritorio).desplazada .sup::after { opacity: 1; }
 html.lq:not(.escritorio) .sup-liga, html.lq:not(.escritorio) .sup-btns { position: relative; z-index: 0; }
 html.lq:not(.escritorio) .sup-marca { z-index: 1; }
@@ -4316,7 +4323,7 @@ html.lq:not(.escritorio) #supEstado { grid-column: 1 / -1; grid-row: 2; justify-
 html.lq:not(.escritorio) #supEstado > .sup-tx { flex: none; overflow: visible; }
 html.lq:not(.escritorio) .sup-queda { grid-column: 1 / -1; }
 html.lq:not(.escritorio) .sup-pos { position: relative; grid-column: 2; grid-row: 1; display: inline-flex; align-items: center; min-height: 0; padding: 2px 7px 1px; border-radius: 9px; background: rgba(255, 255, 255, 0.13); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); color: var(--texto); font: 700 15px/1.1 var(--cond); }
-html.lq:not(.escritorio) .sup-pts { grid-column: 1 / -1; grid-row: 2; justify-self: end; display: block; color: var(--texto-2); font: 600 12.5px/1 'Barlow', sans-serif; white-space: nowrap; cursor: pointer; }
+html.lq:not(.escritorio) .sup-pts { grid-column: 1 / -1; grid-row: 2; justify-self: end; display: block; color: rgba(244, 242, 243, 0.86); font: 600 12.5px/1 'Barlow', sans-serif; white-space: nowrap; cursor: pointer; }
 /* el puesto es pequeño: su zona de toque se agranda hasta los 44 px, y el foco del teclado se ve */
 html.lq:not(.escritorio) .sup-pos::after { content: ''; position: absolute; inset: -10px -10px -24px -12px; }
 html.lq:not(.escritorio) .sup-pos:focus-visible, html.lq:not(.escritorio) .inv-oro:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
@@ -4347,16 +4354,22 @@ html.lq .inv-oro:active { transform: scale(0.98); }
 .inv-oro-tx b { font: 700 16px/1.2 'Barlow', sans-serif; color: #ffd676; }
 .inv-oro-tx small { font: 500 13px/1.3 'Barlow', sans-serif; color: var(--texto-2); }
 .inv-oro-ir { flex: none; padding: 9px 14px; border-radius: 16px; background: #ffc547; color: #1a1420; font: 700 14px/1 'Barlow', sans-serif; }
-html.lq:not(.escritorio) .sup-toca, html.lq:not(.escritorio) .sup-tx { color: var(--texto-2); } /* «Al día» sobre el cristal: con el gris de antes se quedaba en 3,7:1 */
+html.lq:not(.escritorio) .sup-toca, html.lq:not(.escritorio) .sup-tx, html.lq:not(.escritorio) .sup .b-ico { color: rgba(244, 242, 243, 0.88); } /* «Al día» sobre el cristal: con el gris de antes se quedaba en 3,7:1 */
 html.lq:not(.escritorio) .sup .sup-beta { box-shadow: 0 0 0 2px rgba(26, 18, 22, 0.92); }
 /* con el selector de sección pegado bajo la cabecera, lo que asoma entre las dos cápsulas se apaga (html.tabs-pegada, de liquid.js) */
 html.lq:not(.escritorio).tabs-pegada .tabs { background: linear-gradient(rgba(5, 5, 6, 0.30), rgba(5, 5, 6, 0.16) 12px, rgba(5, 5, 6, 0) 34px); }
+/* pegado, el contenido le pasa por detrás (el césped del once, una pastilla blanca): ahí, el cristal grueso, para que las
+   pestañas se lean con cualquier cosa detrás (medido con paso fino: la activa bajaba a 3,7:1) */
+html.lq:not(.escritorio).tabs-pegada .tabs::before { background: var(--cristal-grueso); }
 /* la cifra de la caja de cierre del plan se partía en dos líneas: «5,42» y «M» */
 html.lq .cierre .v { white-space: nowrap; flex: none; }
 
+@keyframes nav-encoge { from { transform: scale(1.2); } to { transform: none; } }
+@keyframes nav-crece { from { transform: scale(0.84); } to { transform: none; } }
+
 /* ---- movimiento reducido: todo en fundidos, nada de muelles ni de escalas al tocar ---- */
 @media (prefers-reduced-motion: reduce) {
-  html.lq .nav-in, html.lq .nav-in::before, html.lq .tabs-in.con-pil::before, html.lq .hoja, html.lq .nav, html.lq .nav button, html.lq .escribe { transition-duration: 1ms !important; }
+  html.lq .nav-in, html.lq .nav-in::before, html.lq .tabs-in.con-pil::before, html.lq .hoja, html.lq .nav, html.lq .nav button, html.lq .escribe { transition-duration: 1ms !important; animation: none !important; }
   html.lq .btn:active, html.lq .nav button:active, html.lq .tabs button:active, html.lq .inv-oro:active { transform: none; }
 }
 

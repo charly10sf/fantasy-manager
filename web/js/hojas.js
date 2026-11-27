@@ -1065,7 +1065,7 @@ export function ajustes(S) {
   // elegir, el contador o el premio) y sale en los mismos casos: con tu liga y con las invitaciones en marcha
   if (!enDemo() && ses && invitarOn()) {
     const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
-    h += `<button class="inv-oro" data-accion="invitarAmigo"><span class="inv-oro-ic">${icono('estrella')}</span><span class="inv-oro-tx"><b>Invita a un amigo</b><small>${pe ? 'Tienes rivales por elegir' : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales'}</small></span><span class="inv-oro-ir">${pe ? 'Elegir' : 'Invitar'}</span></button>`;
+    h += `<button class="inv-oro" data-accion="invitarAmigo"><span class="inv-oro-ic">${icono('estrella')}</span><span class="inv-oro-tx"><b>Invita a un amigo</b><small>${pe ? 'Tienes rivales por elegir' : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales'}</small></span><span class="inv-oro-ir">Invitar</span></button>`;
   }
   // el buscador; debajo, avisar de un fallo y el tutorial (lo del fallo va arriba desde el 25 oct, lo pidió Carlos)
   h += `<div class="aj-busca">${icono('buscar')}<input id="buscaAj" type="search" placeholder="Buscar en Ajustes" aria-label="Buscar en Ajustes" autocomplete="off" value="${esc(S.ajBusca || '')}"></div>`;
