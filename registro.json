@@ -3246,7 +3246,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000,
-   "SPORT|136810666": 1795544869000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261124/1004255072/aramburu-luka-sucic-margen-zubieta-dos-dias-partido-londres.html": 1795548702000,
    "SPORT|136809414": 1795547078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000,
@@ -4798,7 +4797,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136810666": 1795544869000,
    "SPORT|136811655": 1795554036000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
@@ -9932,13 +9930,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7020,
+   "ok": 7021,
    "fallos": 0,
-   "ejecuciones": 5762,
+   "ejecuciones": 5763,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:26:11.453Z"
+   "ultima": "2026-11-27T18:28:51.225Z"
   }
  },
  "ptsDirecto": {},
@@ -9955,15 +9953,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:26:18.524Z"
+   "ultimaBien": "2026-11-27T18:29:00.390Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:26:18.524Z"
+   "ultimaBien": "2026-11-27T18:29:00.390Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:26:18.524Z"
+   "ultimaBien": "2026-11-27T18:29:00.390Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9971,11 +9969,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:26:18.524Z"
+   "ultimaBien": "2026-11-27T18:29:00.390Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:26:18.524Z"
+   "ultimaBien": "2026-11-27T18:29:00.390Z"
   }
  },
  "avisos": [
