@@ -3430,7 +3430,8 @@
    "AS|https://as.com/futbol/primera/abde-llega-a-tiempo-y-ceballos-tendra-que-esperar-f202611-n/": 1795783205000,
    "SPORT|136925243": 1795779337000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/27/inigo-perez-debemos-aprovechar-la-inercia-de-la-victoria-radio-castellon/": 1795783617000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-recibir-rayo-vallecano_0_2008598760.html": 1795783283000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-recibir-rayo-vallecano_0_2008598760.html": 1795783283000,
+   "SPORT|136926613": 1795780219000
   },
   "hechos": [
    {
@@ -3887,7 +3888,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4809,17 +4810,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 88183,
-  "salida": 14222,
+  "entrada": 90280,
+  "salida": 14314,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.205152,
+  "dolares": 0.205408,
   "reservado": 0
  },
  "recientes": {
@@ -9888,13 +9889,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6954,
+   "ok": 6955,
    "fallos": 0,
-   "ejecuciones": 5696,
+   "ejecuciones": 5697,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:56:12.165Z"
+   "ultima": "2026-11-27T13:01:16.365Z"
   }
  },
  "ptsDirecto": {},
@@ -9911,15 +9912,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:56:20.211Z"
+   "ultimaBien": "2026-11-27T13:01:30.002Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:56:20.211Z"
+   "ultimaBien": "2026-11-27T13:01:30.002Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:56:20.211Z"
+   "ultimaBien": "2026-11-27T13:01:30.002Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9927,11 +9928,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:56:20.211Z"
+   "ultimaBien": "2026-11-27T13:01:30.002Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:56:20.211Z"
+   "ultimaBien": "2026-11-27T13:01:30.002Z"
   }
  },
  "avisos": [
