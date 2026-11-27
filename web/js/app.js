@@ -1461,6 +1461,8 @@ function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
   if (S.vista !== vista) nativo.toque();
+  // (27 nov) al dejar Rivales, lo visto del parte se guarda para marcar lo nuevo la próxima vez
+  if (S.vista === 'rivales' && vista !== 'rivales') V.guardarParteVisto();
   S.vista = vista;
   if (location.hash !== '#' + vista) history.replaceState(null, '', '#' + vista);
   pintar({ arriba });

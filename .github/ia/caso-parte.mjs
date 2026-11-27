@@ -111,7 +111,7 @@ try {
       const PG = parteDe(G), PE = parteDe(G0);
       const vg = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ve = Pa.visibles(PE, { abierto: true, dineroAbierto: () => false });
       const va = Pa.visibles(PG, { abierto: true, dineroAbierto: (t) => t === tid });
-      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: (() => { const l = (vg.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && l.dato === '' && l.sinCifra === true && !/30,0|estimado/.test(JSON.stringify(vg)); })(), ordenIgual: !JSON.stringify(ve).includes('"rojo"'), primero: va[0].tid === tid && vg[0].tid === tid,
+      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: (() => { const l = (vg.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && l.dato === '' && l.sinCifra === true && !/30,0|estimado/.test(JSON.stringify(vg)); })(), ordenIgual: !ve.some((x) => x.lineas.some((l) => l.tipo === 'rojo') || (x.ficha && (x.ficha.firma.rojo || x.ficha.estado.some((e) => e.k === 'rojo' || e.k === 'saldo')))) && JSON.stringify(ve.map((x) => x.tid)) === JSON.stringify(Pa.visibles(PE, { abierto: true, dineroAbierto: () => false }).map((x) => x.tid)), primero: va[0].tid === tid && vg[0].tid === tid,
         abierto: (() => { const l = (va.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && /^[-−]30/.test(l.dato) && !l.sinCifra; })() };
       window.__G = G; window.__G0 = G0;
     }

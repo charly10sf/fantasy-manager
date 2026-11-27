@@ -18,7 +18,7 @@ import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos, origenFichaje } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
-import { parte, visibles } from './parte.js';
+import { parte, visibles, novedades, firmaParte } from './parte.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -1402,9 +1402,18 @@ export function parteVisto(S) {
   try {
     const P = parte(S.M, S.D);
     const abierto = !bloqueada('parteRivales');
-    return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }) };
+    const rivales = visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) });
+    // (27 nov) lo nuevo desde la última vez que miraste el parte: se compara con lo guardado al salir de él
+    let nuevo = [], visto = null;
+    if (abierto && P.toca) { visto = LS.get(K('parte-visto'), null); nuevo = novedades(visto, rivales, P.jornada); parteFirma = firmaParte(P.jornada, rivales); }
+    return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales, nuevo, vistoT: visto && visto.t };
   } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
 }
+/* (27 nov) lo que se ve del parte se guarda al dejar de mirarlo (otra pestaña de Rivales u otra vista, o la app a segundo
+   plano): la próxima vez, lo que haya cambiado sale marcado como nuevo */
+let parteFirma = null;
+export function guardarParteVisto() { if (parteFirma) { LS.set(K('parte-visto'), parteFirma); parteFirma = null; } }
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (document.hidden) guardarParteVisto(); });
 const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', 'oro'], blindajes: ['escudo', 'azul'] };
 const PARTE_POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 /** el resumen de arriba: cuántos rivales hay de cada cosa, contando SOLO lo que se ve */
@@ -1427,6 +1436,19 @@ function parteCampo(ps) {
   const txt = ps.map((x) => `${PARTE_POS[x.p]} ${x.n}${x.falta ? ` (falta${x.falta > 1 ? 'n' : ''} ${x.falta})` : ''}`).join(', ');
   return `<svg class="parte-campo" viewBox="0 0 304 108" role="img" aria-label="${esc(txt)}"><rect class="pc-c" x="1" y="1" width="302" height="88" rx="10"/><path class="pc-l" d="M152 1v88M1 23h30v44H1M303 23h-30v44h30"/><circle class="pc-l" cx="152" cy="45" r="15"/>${fig}</svg>`;
 }
+/** (27 nov) la ficha de un rival: su estado en una línea de pastillas (en negativo o su saldo, sus blindajes, su plantilla y
+    dónde va corto) y, debajo, como mucho tres hechos cortos (lo suyo que te llega por cláusula, lo que vende y sus bajas) */
+function parteFicha(f) {
+  if (!f) return '';
+  const pills = f.estado.map((e) => {
+    if (e.k === 'escudos') return `<span class="pill parte-esc2${e.quedan === 0 ? ' cero' : ''}" title="${esc(e.txt)}">${[0, 1].map((i) => `<i class="${i < e.quedan ? 'si' : ''}">${icono('escudo')}</i>`).join('')}<b>${e.quedan}</b>/2</span>`;
+    const cl = e.k === 'rojo' ? 'abierta' : e.tono === 'oro' ? 'pronto' : e.tono === 'rojo' ? 'abierta' : '';
+    const ic = e.k === 'rojo' || e.k === 'saldo' ? 'euro' : e.k === 'plantilla' ? 'usuario' : e.k === 'corto' ? 'alerta' : '';
+    return `<span class="pill ${cl}">${ic ? icono(ic) : ''}${esc(e.txt)}</span>`;
+  }).join('');
+  const hs = f.hechos.map((x) => { const c = `${icono(x.ic)}<span>${esc(x.txt)}</span>`; return x.pid ? `<button class="parte-h" data-j="${esc(x.pid)}">${c}</button>` : `<div class="parte-h">${c}</div>`; }).join('');
+  return `<div class="parte-est">${pills}</div>${hs}`;
+}
 /** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que te cambia los planes, con su acción.
     CORTO (Carlos, 26 nov, 18:10: «menos texto y más sintetizado y entendible»): arriba, cuándo empieza la jornada y cuántos
     rivales hay de cada cosa; de cada línea, el hecho en negrita con su cifra, UNA frase con lo que puedes hacer y, en «le
@@ -1442,11 +1464,16 @@ function parteHTML(S, PV) {
   if (PV.rivales.length) {
     const res = PARTE_RES.map(([t, uno, varios, col]) => { const n = PV.rivales.filter((x) => x.lineas.some((l) => l.tipo === t)).length; return n ? `<span class="pill parte-c ${col}"><b>${n}</b> ${n === 1 ? uno : varios}</span>` : ''; }).join('');
     h += `<div class="parte-res">${res}</div>`;
-    h += PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
+    if (PV.nuevo && PV.nuevo.length) {
+      const nom = (tid) => { const x = PV.rivales.find((r) => r.tid === tid); return x ? x.e.manager || x.e.nombre || x.nombre : 'Un rival'; };
+      h += `<div class="parte-nuevo"><span class="pill parte-nv">Nuevo</span><span>${PV.nuevo.slice(0, 4).map((n) => `<b>${esc(nom(n.tid))}</b> ${esc(n.txt)}`).join(' · ')}${PV.nuevo.length > 4 ? ` · y ${PV.nuevo.length - 4} más` : ''}</span></div>`;
+    }
+    h += PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div>${(PV.nuevo || []).some((n) => n.tid === x.tid) ? '<span class="pill parte-nv">Nuevo</span>' : ''}<span class="posn">${esc(x.e.pos || '')}º</span></button>
+    ${parteFicha(x.ficha)}
     ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0];
       const cuerpo = `${icono(ic)}<div><span class="parte-t"><b>${esc(l.txt)}</b>${l.tipo === 'blindajes' ? `<span class="parte-esc" title="${esc(l.dato || '')}">${icono('escudo')}${icono('escudo')}</span>` : l.dato ? `<span class="parte-d">${esc(l.dato)}</span>` : ''}</span>${l.puestos ? parteCampo(l.puestos) : ''}<span class="parte-a">${esc(l.accion)}</span>${l.nota ? `<span class="parte-n">${esc(l.nota)}</span>` : ''}</div>`;
       return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('');
-  } else h += nada('Hoy no hay nada de tus rivales que te cambie los planes.');
+  } else h += nada('Aún no hay datos de tus rivales para esta jornada.');
   // quién está en negativo ya se ve; por cuánto, solo con su dinero abierto: el candado sale si a alguno de los que salen le falta la cifra
   if (PV.rivales.some((x) => x.lineas.some((l) => l.sinCifra))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con su dinero abierto, sale también por cuánto.</span></div>`;
   return h;
@@ -1457,8 +1484,10 @@ export function rivales(S) {
   const seg = S.seg.rivales || 'clasif';
   // (0.8.5; Carlos, 26 nov, 23:13: «que salga a la derecha de Rivales, en dorado… el parte como función top», y no entre las
   // pestañas) el parte va en un botón dorado al lado del título; su número, solo con la llave abierta
+  if (seg !== 'parte') guardarParteVisto();
   const PV = parteVisto(S);
-  const nParte = PV.abierto ? PV.rivales.length : 0;
+  // (27 nov) el número del botón: los que tienen algo que hacer, no todos (ahora todos salen con su ficha)
+  const nParte = PV.abierto ? PV.rivales.filter((x) => x.lineas.length).length : 0;
   let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo riv-tit">Rivales<button type="button" class="parte-top${seg === 'parte' ? ' activo' : ''}" data-seg="rivales:parte" aria-pressed="${seg === 'parte'}">${icono(PV.abierto ? 'corona' : 'candado')}<span>Parte</span><small>Top</small>${nParte ? `<span class="tab-n oro">${nParte}</span>` : ''}</button></h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
