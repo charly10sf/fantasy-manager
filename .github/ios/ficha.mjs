@@ -314,7 +314,26 @@ async function estado() {
   ok(d && d.demoAccountRequired && d.demoAccountName, 'cuenta de LaLiga para el revisor (Carlos: secretos REVISOR_USUARIO y REVISOR_CLAVE)');
   ok(build && build.data, `compilación elegida para enviar${build && build.data ? ` (${build.data.attributes.version})` : ' (falta: commit con «[app-store]»)'}`);
   ok(!!app.data.attributes.contentRightsDeclaration, `derechos de contenido (Carlos, a mano): ${app.data.attributes.contentRightsDeclaration || 'sin marcar'}`);
-  lineas.push('❔ «Privacidad de la app» y la condición de comerciante (DSA): Carlos, a mano en App Store Connect (la API no las deja ver)');
+  // (iOS 5, 27 nov) La API no tiene nada para la condición de comerciante (DSA), pero la disponibilidad de cada país
+  // dice por qué no se puede vender allí (`contentStatuses`): en los 27 de la UE, algo con «TRADER» mientras Apple no
+  // la ha aprobado. Se cuentan los estados de la UE tal cual vienen, para no adivinar los nombres.
+  const UE = ['AUT', 'BEL', 'BGR', 'HRV', 'CYP', 'CZE', 'DNK', 'EST', 'FIN', 'FRA', 'DEU', 'GRC', 'HUN', 'IRL', 'ITA', 'LVA', 'LTU', 'LUX', 'MLT', 'NLD', 'POL', 'PRT', 'ROU', 'SVK', 'SVN', 'ESP', 'SWE'];
+  try {
+    const disp = await api('GET', `/v1/apps/${APP}/appAvailabilityV2`);
+    const ta = await todo(`/v2/appAvailabilities/${disp.data.id}/territoryAvailabilities?include=territory&limit=200`);
+    const cuenta = {};
+    let vistos = 0;
+    for (const t of ta) {
+      const terr = t.relationships && t.relationships.territory && t.relationships.territory.data && t.relationships.territory.data.id;
+      if (!UE.includes(terr)) continue;
+      vistos++;
+      for (const s of (t.attributes.contentStatuses || ['(sin estado)'])) cuenta[s] = (cuenta[s] || 0) + 1;
+    }
+    const resumen = Object.entries(cuenta).map(([s, n]) => `${s} ×${n}`).join(', ') || 'nada';
+    const comerciante = Object.keys(cuenta).filter((s) => /TRADER/.test(s));
+    ok(vistos > 0 && !comerciante.length, `comerciante (DSA), visto por los países de la UE: ${comerciante.length ? `SIN APROBAR (${comerciante.join(', ')})` : vistos ? 'nada lo frena' : 'no salen los países'} · ${vistos} países: ${resumen}`);
+  } catch (e) { lineas.push(`❔ comerciante (DSA): no he podido leer la disponibilidad por países (${e.message})`); }
+  lineas.push('❔ «Privacidad de la app»: Carlos, a mano en App Store Connect (la API no la deja ver)');
   const txt = `Ficha de la App Store, versión ${v.attributes.versionString} (${estadoDe(v.attributes)}):\n${lineas.join('\n')}`;
   console.log(txt);
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## ${txt.replace(/\n/, '\n\n').replace(/\n(?=[✅❌❔])/g, '\n- ')}\n`);
