@@ -9993,13 +9993,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7039,
+   "ok": 7040,
    "fallos": 0,
-   "ejecuciones": 5781,
+   "ejecuciones": 5782,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T19:56:12.538Z"
+   "ultima": "2026-11-27T20:01:10.842Z"
   }
  },
  "ptsDirecto": {},
@@ -10016,27 +10016,29 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:56:21.481Z"
+   "ultimaBien": "2026-11-27T20:01:15.514Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:56:21.481Z"
+   "ultimaBien": "2026-11-27T20:01:15.514Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:56:21.481Z"
+   "ultimaBien": "2026-11-27T20:01:15.514Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:27:08.193Z"
+   "seguidas": 1,
+   "ultimaBien": "2026-11-23T22:27:08.193Z",
+   "desde": "2026-11-27T20:01:15.514Z",
+   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:56:21.481Z"
+   "ultimaBien": "2026-11-27T20:01:15.514Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T19:56:21.481Z"
+   "ultimaBien": "2026-11-27T20:01:15.514Z"
   }
  },
  "avisos": [
