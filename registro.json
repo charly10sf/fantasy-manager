@@ -4733,32 +4733,31 @@
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256042/jugador-besiktas-coloca-bandera-palestina-sobre-logo-uefa.html": 1795734014000,
    "Europa Press|https://www.europapress.es/nacional/noticia-av-jec-ordena-consignar-votos-no-escrutables-emitidos-afectados-ley-nietos-20261127091844.html": 1795767524000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795776392000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261127/1004256171/rayo-jugara-cuatro-partidos-doce-dias-athletic-puerta-cerrada.html": 1795776392000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795779064000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795780874074
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 7,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 70341,
-  "salida": 10376,
+  "entrada": 72151,
+  "salida": 10464,
   "cacheLee": 48609,
   "cacheEscribe": 20797,
-  "dolares": 0.171206,
+  "dolares": 0.171431,
   "reservado": 0
  },
  "recientes": {
@@ -9827,13 +9826,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6946,
+   "ok": 6947,
    "fallos": 0,
-   "ejecuciones": 5688,
+   "ejecuciones": 5689,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:16:11.792Z"
+   "ultima": "2026-11-27T12:21:15.100Z"
   }
  },
  "ptsDirecto": {},
@@ -9850,15 +9849,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:16:24.774Z"
+   "ultimaBien": "2026-11-27T12:21:31.006Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:16:24.774Z"
+   "ultimaBien": "2026-11-27T12:21:31.006Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:16:24.774Z"
+   "ultimaBien": "2026-11-27T12:21:31.006Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9866,11 +9865,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:16:24.774Z"
+   "ultimaBien": "2026-11-27T12:21:31.006Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:16:24.774Z"
+   "ultimaBien": "2026-11-27T12:21:31.006Z"
   }
  },
  "avisos": [
