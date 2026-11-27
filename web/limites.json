@@ -15,10 +15,8 @@
   "bloqueadas": [
     "dineroRivales",
     "quienPaga",
-    "inercia",
     "quienPuja",
-    "parteRivales"
-  ],
+    "parteRivales"],
   "todoAbierto": [
     "667015"
   ],

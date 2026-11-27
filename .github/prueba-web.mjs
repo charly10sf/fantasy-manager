@@ -458,11 +458,12 @@ for (const [nombre, init, conLista] of [['web', '', true], ['app', "window.Fanta
     const D2 = { ...S.D, dinero: 0, mercado: [...(S.D.mercado || [])] };
     const b = P.cuentasParon({ ...S, M: M2, D: D2 });
     const vend = b.espNo.filter((e) => e.vendiendo);
-    const okVenta = b.venta === rico.j.valor && vend.every((e) => e.falta <= b.venta) && b.espNo.filter((e) => !e.vendiendo).every((e) => e.falta > b.venta);
+    // (27 nov) con la inercia gratis, lo que sacas vendiendo suma también lo que está en lo alto (`altos`), no solo lo de revender
+    const okVenta = b.ventas.some((x) => x.pid === rico.pid) && b.venta === b.ventas.reduce((t, x) => t + x.j.valor, 0) && vend.every((e) => e.falta <= b.venta) && b.espNo.filter((e) => !e.vendiendo).every((e) => e.falta > b.venta);
     // la plantilla llena: «Puedes ganar» con lo que cabe (aquí, solo el hueco que hace la venta)
     for (let i = 0; i < P.PLANTILLA_MAX; i++) D2.mercado.push({ id: `f${i}`, pid: `x${i}`, tipo: 'liga', miPuja: 1 });
     const c = P.cuentasParon({ ...S, M: M2, D: D2 });
-    const okLlena = c.plazas === 0 && c.caben === 1 && c.gana === (c.esp[0] ? c.esp[0].beneficio : 0);
+    const okLlena = c.plazas === 0 && c.caben === c.ventas.length && c.gana === c.esp.slice(0, Math.min(3, c.caben)).reduce((t, e) => t + e.beneficio, 0);
     return { base, okVenta, okLlena, n: [a.tengo, b.espNo.length, vend.length] };
   });
   await page.evaluate(() => { const S = window.S; for (let i = 0; i < 25; i++) S.D.mercado.push({ id: `g${i}`, pid: `y${i}`, tipo: 'liga', miPuja: 1 }); document.querySelector('.nav button[data-ir="directo"]').click(); });
@@ -1668,7 +1669,7 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
       }
     }
     const malos = Object.entries(vistos).filter(([k, x]) => !x || x.play || /Google Play/.test(x.t) || (k === 'dineroRivales' ? !/se abre invitando a un amigo/.test(x.t) : /invitando/.test(x.t) || !/de momento, no se puede abrir/.test(x.t)));
-    if (!vistos.dineroRivales || Object.keys(vistos).length < 2 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
+    if (!vistos.dineroRivales || Object.keys(vistos).length < 1 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
     else bien(`iPhone, los candados dicen la verdad: ${Object.keys(vistos).join(', ')} (invitando, solo el dinero; sin Google Play)`);
     if (errores.length) mal(`iPhone, los candados: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   } catch (e) { mal(`iPhone, los candados: ${e.message.split('\n')[0]}`); }

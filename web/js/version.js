@@ -46,7 +46,8 @@ export const NOVEDADES = [
     // (02:51, Carlos: «lo del parte, mételo en Rivales, donde iría lo de cláusulas, en dorado» y «Cláusulas a tiro, quítalo o quita
     // Todas») la pestaña Cláusulas de Rivales se quita (cada rival tiene la suya en su ficha), el parte pasa a ser la tercera
     // pestaña, en dorado (`tab-oro`), y «Cláusulas a tiro» del ordenador se quita (repetía el plan). (03:29) Las funciones top,
-    // solo con la corona (opción A de Carlos: ni candado ni «TOP»), y quién paga, 12 h con un anuncio (`horasQuien`)
+    // solo con la corona (opción A de Carlos: ni candado ni «TOP»), y quién paga, 12 h con un anuncio (`horasQuien`). (04:35) La inercia, gratis (fuera de `BLOQUEADAS` y de
+    // «bloqueadas» de limites.json)
     v: '0.8.5a', f: '2026-11-27', h: '', t: 'El parte, más completo',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'El parte de los rivales, más completo', x: 'Ahora sale cada rival con su ficha: su plantilla, dónde va corto, sus blindajes si ha gastado alguno, lo suyo que te llega por cláusula, lo que vende y sus bajas. Su saldo, solo si tienes su dinero abierto. Lo que ha cambiado desde la última vez que lo miraste sale marcado como nuevo.' },
@@ -54,6 +55,7 @@ export const NOVEDADES = [
       { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'Al día mientras lo miras', x: 'Con el parte abierto en pantalla, la app mira cada 10 minutos si ha pasado algo en tu liga y, si es así, lo pone al día.' },
       { para: 'dueño', tipo: 'mejora', d: 'pizarra', menor: true, t: 'El parte, en las pestañas de Rivales', x: 'El parte pasa a ser la tercera pestaña de Rivales, en dorado, donde estaba Cláusulas. Las cláusulas de cada rival siguen en su ficha y el plan te dice a quién clausular.' },
       { para: 'dueño', tipo: 'mejora', d: 'corona', menor: true, t: 'Las funciones top, con su corona', x: 'Todo lo que se abre viendo anuncios lleva ahora la misma corona dorada, sin candado ni más etiquetas. Y «Quién puede pagar tu cláusula» queda abierto 12 horas con un anuncio, en vez de 5.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Cuándo vender, gratis', x: 'Que un jugador tuyo ha dejado de subir o ha girado, y cuándo venderlo, ya no se abre con anuncios: sale para todos, igual que el radar de los que más van a subir.' },
       { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'Avisos del parte', x: 'Con el parte abierto, la app te avisa aunque esté cerrada cuando un rival se queda en negativo, gasta su último blindaje o se queda corto de un puesto que te afecta. Tres avisos al día como mucho; se quitan en Ajustes → Avisos.' },
     ],
   },

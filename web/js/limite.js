@@ -79,15 +79,16 @@ function esDe(yo) {
    - El dinero de un rival (dineroRivales), POR RIVAL: 2 anuncios seguidos lo abren 5 MINUTOS; como mucho 2 veces por
      jornada. «top» en limites.json: { "rivales": 2, "anuncios": 2, "minutos": 5 }.
    - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 12 HORAS («horasQuien»: 12; Carlos, 27 nov: «durante 12 horas en vez de durante 5»). Sin tope.
-   - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
-     hasta las 00:00 de Madrid.
+   - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): GRATIS desde el 27 nov (Carlos: «la
+     pasamos a gratis»; es consejo del plan sobre tus jugadores, no algo de los rivales). Antes, con cualquier anuncio
+     visto hoy, hasta las 00:00 de Madrid.
    Antes (0.6.3a-0.7.11f) las de los rivales iban por función: 2 anuncios, 2 veces por jornada y 1 hora, y a un amigo
    de Carlos le salieron dos rondas seguidas para ver a un solo rival.
    Si no hay anuncio que enseñar, se abre igual lo que pedías (un rival, que cuenta como una de las 2; quién paga y
    cuándo gira, media hora), pero solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga
    limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin
    un servidor, y no compensa). */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'quienPuja', 'parteRivales'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'quienPuja', 'parteRivales'];
 /** las que van por rival (y unas veces por jornada): solo el dinero */
 export const POR_JORNADA = ['dineroRivales'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
