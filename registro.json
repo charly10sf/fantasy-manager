@@ -3239,7 +3239,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
-   "SPORT|136799014": 1795538348000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000,
    "SPORT|136805812": 1795539246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000,
@@ -4778,7 +4777,6 @@
  },
  "liga": {
   "vistas": {
-   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
    "SPORT|136810666": 1795544869000,
    "SPORT|136811655": 1795554036000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
@@ -9911,13 +9909,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6998,
+   "ok": 6999,
    "fallos": 0,
-   "ejecuciones": 5740,
+   "ejecuciones": 5741,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T16:36:15.345Z"
+   "ultima": "2026-11-27T16:41:21.153Z"
   }
  },
  "ptsDirecto": {},
@@ -9934,15 +9932,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:36:23.483Z"
+   "ultimaBien": "2026-11-27T16:41:30.787Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:36:23.483Z"
+   "ultimaBien": "2026-11-27T16:41:30.787Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:36:23.483Z"
+   "ultimaBien": "2026-11-27T16:41:30.787Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9950,11 +9948,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:36:23.483Z"
+   "ultimaBien": "2026-11-27T16:41:30.787Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T16:36:23.483Z"
+   "ultimaBien": "2026-11-27T16:41:30.787Z"
   }
  },
  "avisos": [
