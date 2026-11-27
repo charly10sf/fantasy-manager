@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5';
+export const VERSION = '0.8.5a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,19 @@ export const VERSION = '0.8.5';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (27 nov, claude/prompt-parte-ideas.md del proyecto; Carlos: «una persona que va a ver 2 anuncios, darle una cosa así tan
+    // pobre… puede generar una mala impresión») EL PARTE, MÁS COMPLETO: la ficha de cada rival (`fichaRival` en parte.js,
+    // `parteFicha` en vistas.js), lo nuevo desde la última vez (`novedades`), al día mientras lo miras (`cambiosLigeros` de
+    // datos.js y `parteAlDia` de app.js) y los avisos con la app cerrada (`avisosParte`, `avisosDelParte`, el interruptor
+    // `parte` de los avisos). Las tres predicciones medidas no pasan (.github/ia/medir-predicciones.mjs). La hora, al publicar.
+    v: '0.8.5a', f: '2026-11-27', h: '', t: 'El parte, más completo',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'El parte de los rivales, más completo', x: 'Ahora sale cada rival con su ficha: su plantilla, dónde va corto, sus blindajes si ha gastado alguno, lo suyo que te llega por cláusula, lo que vende y sus bajas. Su saldo, solo si tienes su dinero abierto. Lo que ha cambiado desde la última vez que lo miraste sale marcado como nuevo.' },
+      { para: 'dueño', tipo: 'mejora', d: 'pizarra', t: 'Al día mientras lo miras', x: 'Con el parte abierto en pantalla, la app mira cada 10 minutos si ha pasado algo en tu liga y, si es así, lo pone al día.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'Avisos del parte', x: 'Con el parte abierto, la app te avisa aunque esté cerrada cuando un rival se queda en negativo, gasta su último blindaje o se queda corto de un puesto que te afecta. Tres avisos al día como mucho; se quitan en Ajustes → Avisos.' },
+    ],
+  },
   {
     // (26 nov, Carlos: «vamos a hacer lo de las funciones del fantasy premium despacito…»; claude/nota-premium.md del proyecto)
     // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad
