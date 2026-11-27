@@ -3238,7 +3238,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/koke-sobre-record-victorias-simeone-laliga-le-dimos-enhorabuena-increible-tantos-anos-club-grande-haber-cambiado-mentalidad-club-20261124_3481262.html": 1795529745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000,
@@ -3432,7 +3431,9 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/27/inigo-perez-debemos-aprovechar-la-inercia-de-la-victoria-radio-castellon/": 1795783617000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-recibir-rayo-vallecano_0_2008598760.html": 1795783283000,
    "SPORT|136926613": 1795780219000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256244/betis-recupera-morante-rayo.html": 1795783576000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256244/betis-recupera-morante-rayo.html": 1795783576000,
+   "SPORT|136927120": 1795780924000,
+   "SPORT|136927125": 1795780864000
   },
   "hechos": [
    {
@@ -3889,7 +3890,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -4811,17 +4812,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 92304,
-  "salida": 14820,
+  "entrada": 94676,
+  "salida": 16090,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.205863,
+  "dolares": 0.206735,
   "reservado": 0
  },
  "recientes": {
@@ -9890,13 +9891,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6956,
+   "ok": 6957,
    "fallos": 0,
-   "ejecuciones": 5698,
+   "ejecuciones": 5699,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T13:06:22.681Z"
+   "ultima": "2026-11-27T13:11:15.498Z"
   }
  },
  "ptsDirecto": {},
@@ -9913,15 +9914,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:06:32.936Z"
+   "ultimaBien": "2026-11-27T13:11:34.970Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:06:32.936Z"
+   "ultimaBien": "2026-11-27T13:11:34.970Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:06:32.936Z"
+   "ultimaBien": "2026-11-27T13:11:34.970Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9929,11 +9930,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:06:32.936Z"
+   "ultimaBien": "2026-11-27T13:11:34.970Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T13:06:32.936Z"
+   "ultimaBien": "2026-11-27T13:11:34.970Z"
   }
  },
  "avisos": [
