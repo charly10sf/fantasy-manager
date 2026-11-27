@@ -1,6 +1,6 @@
 {
  "J": 14,
- "generada": 1795736876279,
+ "generada": 1795823279200,
  "equipos": [
   {
    "id": "11",
@@ -507,7 +507,7 @@
      "id": "2429",
      "nombre": "Fran García",
      "pos": 2,
-     "p": 80
+     "p": 79
     },
     {
      "id": "2414",
@@ -584,6 +584,13 @@
      "p": 25
     },
     {
+     "id": "3264",
+     "nombre": "Ceballos",
+     "pos": 3,
+     "p": 23,
+     "duda": true
+    },
+    {
      "id": "2711",
      "nombre": "Á. Ortiz",
      "pos": 2,
@@ -593,12 +600,6 @@
      "id": "2609",
      "nombre": "Valentín Gómez",
      "pos": 2,
-     "p": 16
-    },
-    {
-     "id": "3276",
-     "nombre": "Morante",
-     "pos": 4,
      "p": 16
     }
    ],
@@ -619,16 +620,7 @@
     }
    ],
    "fuera": [],
-   "vuelven": [
-    {
-     "id": "3276",
-     "nombre": "Morante",
-     "dias": 14,
-     "lesion": "Contusión en la cadera",
-     "antes": 0,
-     "p": 16
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -690,7 +682,7 @@
      "id": "2383",
      "nombre": "Pathé I. Ciss",
      "pos": 3,
-     "p": 80
+     "p": 79
     },
     {
      "id": "1029",
@@ -708,7 +700,7 @@
      "id": "886",
      "nombre": "De Frutos",
      "pos": 4,
-     "p": 78
+     "p": 79
     },
     {
      "id": "3198",
@@ -789,7 +781,7 @@
     {
      "id": "1103",
      "nombre": "Óscar Valentín",
-     "dias": 26,
+     "dias": 28,
      "lesion": "Contusión en la rodilla",
      "antes": 36,
      "p": 20
@@ -904,7 +896,7 @@
      "id": "3070",
      "nombre": "Chupe",
      "pos": 4,
-     "p": 74
+     "p": 73
     }
    ],
    "suplentes": [
@@ -924,7 +916,7 @@
      "id": "3059",
      "nombre": "Pastor",
      "pos": 2,
-     "p": 45
+     "p": 46
     },
     {
      "id": "3034",
@@ -968,7 +960,7 @@
      "b": {
       "id": "3059",
       "nombre": "Pastor",
-      "p": 45
+      "p": 46
      },
      "pa": 51
     },
@@ -1074,16 +1066,16 @@
      "p": 93
     },
     {
-     "id": "3065",
-     "nombre": "Laporte",
-     "pos": 2,
-     "p": 93
-    },
-    {
      "id": "74",
      "nombre": "Yuri",
      "pos": 2,
      "p": 93
+    },
+    {
+     "id": "3065",
+     "nombre": "Laporte",
+     "pos": 2,
+     "p": 92
     },
     {
      "id": "3184",
@@ -1131,7 +1123,7 @@
      "id": "91",
      "nombre": "Iñaki Williams",
      "pos": 4,
-     "p": 81
+     "p": 80
     }
    ],
    "suplentes": [
@@ -1166,13 +1158,6 @@
      "p": 18
     },
     {
-     "id": "2319",
-     "nombre": "Maroan",
-     "pos": 4,
-     "p": 18,
-     "duda": true
-    },
-    {
      "id": "2645",
      "nombre": "Rego",
      "pos": 3,
@@ -1183,6 +1168,12 @@
      "nombre": "Jauregizar",
      "pos": 3,
      "p": 16
+    },
+    {
+     "id": "3295",
+     "nombre": "Vizcay",
+     "pos": 4,
+     "p": 15
     }
    ],
    "dudas": [
@@ -1207,7 +1198,7 @@
      "nombre": "Vivian",
      "estado": "lesionado",
      "lesion": "Lesión en el sóleo",
-     "hasta": "mediados de diciembre"
+     "hasta": "principios de diciembre"
     }
    ],
    "vuelven": [],
@@ -1451,7 +1442,7 @@
      "id": "3193",
      "nombre": "Kang-In Lee",
      "pos": 3,
-     "p": 72
+     "p": 71
     },
     {
      "id": "2326",
@@ -1596,7 +1587,8 @@
      "id": "2531",
      "nombre": "Trent",
      "pos": 2,
-     "p": 43
+     "p": 26,
+     "duda": true
     },
     {
      "id": "3101",
@@ -1632,7 +1624,7 @@
      "id": "3143",
      "nombre": "Diomande",
      "pos": 4,
-     "p": 83
+     "p": 82
     }
    ],
    "suplentes": [
@@ -1646,7 +1638,7 @@
      "id": "3102",
      "nombre": "Vini Jr.",
      "pos": 4,
-     "p": 60
+     "p": 61
     },
     {
      "id": "1300",
@@ -1676,7 +1668,7 @@
      "id": "2428",
      "nombre": "Rüdiger",
      "pos": 2,
-     "p": 19
+     "p": 18
     },
     {
      "id": "3080",
@@ -1934,13 +1926,13 @@
      "id": "302",
      "nombre": "Gayá",
      "pos": 2,
-     "p": 84
+     "p": 83
     },
     {
      "id": "3206",
      "nombre": "Maffeo",
      "pos": 2,
-     "p": 72
+     "p": 71
     },
     {
      "id": "3236",
@@ -1961,16 +1953,16 @@
      "p": 78
     },
     {
-     "id": "3128",
-     "nombre": "Guido Rodríguez",
-     "pos": 3,
-     "p": 71
-    },
-    {
      "id": "581",
      "nombre": "Rioja",
      "pos": 3,
      "p": 57
+    },
+    {
+     "id": "3239",
+     "nombre": "Mayol",
+     "pos": 3,
+     "p": 45
     },
     {
      "id": "2588",
@@ -1987,16 +1979,17 @@
    ],
    "suplentes": [
     {
-     "id": "3239",
-     "nombre": "Mayol",
+     "id": "3128",
+     "nombre": "Guido Rodríguez",
      "pos": 3,
-     "p": 45
+     "p": 42,
+     "duda": true
     },
     {
      "id": "3120",
      "nombre": "De Haas",
      "pos": 2,
-     "p": 42
+     "p": 41
     },
     {
      "id": "2560",
@@ -2039,16 +2032,16 @@
     {
      "linea": 3,
      "a": {
-      "id": "581",
-      "nombre": "Rioja",
-      "p": 57
-     },
-     "b": {
       "id": "3239",
       "nombre": "Mayol",
       "p": 45
      },
-     "pa": 56
+     "b": {
+      "id": "3128",
+      "nombre": "Guido Rodríguez",
+      "p": 42
+     },
+     "pa": 52
     }
    ],
    "fuera": [],
@@ -2065,12 +2058,23 @@
       "pos": 2
      },
      {
+      "id": "3239",
+      "nombre": "Mayol",
+      "pos": 3
+     },
+     {
       "id": "2588",
       "nombre": "Danjuma",
       "pos": 4
      }
     ],
     "salen": [
+     {
+      "id": "3128",
+      "nombre": "Guido Rodríguez",
+      "pos": 3,
+      "por": "duda"
+     },
      {
       "id": "2403",
       "nombre": "Copete",
@@ -2144,7 +2148,7 @@
      "id": "637",
      "nombre": "Moncayola",
      "pos": 3,
-     "p": 71
+     "p": 70
     },
     {
      "id": "2338",
@@ -2162,7 +2166,7 @@
      "id": "2923",
      "nombre": "Raúl Moro",
      "pos": 4,
-     "p": 43
+     "p": 42
     }
    ],
    "suplentes": [
@@ -2235,7 +2239,7 @@
      "a": {
       "id": "2923",
       "nombre": "Raúl Moro",
-      "p": 43
+      "p": 42
      },
      "b": {
       "id": "3183",
@@ -2458,16 +2462,7 @@
     }
    ],
    "fuera": [],
-   "vuelven": [
-    {
-     "id": "2980",
-     "nombre": "Eddahchouri",
-     "dias": 63,
-     "lesion": "Fractura de muñeca",
-     "antes": 0,
-     "p": 18
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -2540,7 +2535,7 @@
      "id": "2757",
      "nombre": "Gerard Martín",
      "pos": 2,
-     "p": 79
+     "p": 80
     },
     {
      "id": "2354",
@@ -2561,17 +2556,17 @@
      "p": 64
     },
     {
-     "id": "2784",
-     "nombre": "Marc Bernal",
-     "pos": 3,
-     "p": 58
-    },
-    {
      "id": "3208",
      "nombre": "Rodri",
      "pos": 3,
-     "p": 52,
+     "p": 51,
      "duda": true
+    },
+    {
+     "id": "3092",
+     "nombre": "Olmo",
+     "pos": 3,
+     "p": 51
     },
     {
      "id": "3104",
@@ -2612,10 +2607,11 @@
      "p": 51
     },
     {
-     "id": "3092",
-     "nombre": "Olmo",
+     "id": "2784",
+     "nombre": "Marc Bernal",
      "pos": 3,
-     "p": 51
+     "p": 35,
+     "duda": true
     },
     {
      "id": "3224",
@@ -2661,16 +2657,16 @@
     {
      "linea": 3,
      "a": {
-      "id": "3208",
-      "nombre": "Rodri",
-      "p": 52
-     },
-     "b": {
       "id": "3092",
       "nombre": "Olmo",
       "p": 51
      },
-     "pa": 50
+     "b": {
+      "id": "2784",
+      "nombre": "Marc Bernal",
+      "p": 35
+     },
+     "pa": 59
     },
     {
      "linea": 4,
@@ -2701,7 +2697,16 @@
      "hasta": "mediados de diciembre"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "3208",
+     "nombre": "Rodri",
+     "dias": 25,
+     "lesion": "Lesión en el bíceps femoral",
+     "antes": 80,
+     "p": 51
+    }
+   ],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -2719,6 +2724,11 @@
       "pos": 3
      },
      {
+      "id": "3092",
+      "nombre": "Olmo",
+      "pos": 3
+     },
+     {
       "id": "3210",
       "nombre": "Gordon",
       "pos": 4
@@ -2730,6 +2740,12 @@
       "nombre": "Cancelo",
       "pos": 2,
       "por": null
+     },
+     {
+      "id": "2784",
+      "nombre": "Marc Bernal",
+      "pos": 3,
+      "por": "duda"
      },
      {
       "id": "1715",
@@ -2902,7 +2918,7 @@
       "nombre": "Pablo Durán",
       "p": 59
      },
-     "pa": 57
+     "pa": 56
     }
    ],
    "fuera": [
@@ -2990,7 +3006,7 @@
      "id": "2934",
      "nombre": "Freeman",
      "pos": 2,
-     "p": 70
+     "p": 71
     },
     {
      "id": "2614",
@@ -3134,7 +3150,7 @@
     {
      "id": "356",
      "nombre": "Gerard",
-     "dias": 27,
+     "dias": 29,
      "lesion": "Molestias sin determinar",
      "antes": 36,
      "p": 47
@@ -3201,7 +3217,7 @@
      "id": "3238",
      "nombre": "M. Sarr",
      "pos": 2,
-     "p": 71
+     "p": 72
     },
     {
      "id": "1989",
@@ -3285,6 +3301,12 @@
      "p": 31
     },
     {
+     "id": "2438",
+     "nombre": "Aihen",
+     "pos": 2,
+     "p": 28
+    },
+    {
      "id": "2955",
      "nombre": "Ochieng",
      "pos": 4,
@@ -3295,12 +3317,6 @@
      "nombre": "Marchal",
      "pos": 3,
      "p": 19
-    },
-    {
-     "id": "2446",
-     "nombre": "Zakharyan",
-     "pos": 3,
-     "p": 17
     }
    ],
    "dudas": [
@@ -3461,7 +3477,7 @@
      "id": "3145",
      "nombre": "Robbie Ure",
      "pos": 4,
-     "p": 36
+     "p": 35
     },
     {
      "id": "3138",
@@ -3545,7 +3561,7 @@
      "id": "2565",
      "nombre": "A. Fortuño",
      "pos": 1,
-     "p": 79
+     "p": 80
     },
     {
      "id": "1930",
@@ -3587,7 +3603,7 @@
      "id": "3161",
      "nombre": "Javi Hernández",
      "pos": 3,
-     "p": 66
+     "p": 65
     },
     {
      "id": "1938",
@@ -3602,8 +3618,8 @@
      "p": 93
     },
     {
-     "id": "3237",
-     "nombre": "Bryan",
+     "id": "2623",
+     "nombre": "Dolan",
      "pos": 4,
      "p": 42
     }
@@ -3616,8 +3632,8 @@
      "p": 53
     },
     {
-     "id": "2623",
-     "nombre": "Dolan",
+     "id": "3237",
+     "nombre": "Bryan",
      "pos": 4,
      "p": 42
     },
@@ -3690,20 +3706,29 @@
     {
      "linea": 4,
      "a": {
-      "id": "3237",
-      "nombre": "Bryan",
+      "id": "2623",
+      "nombre": "Dolan",
       "p": 42
      },
      "b": {
-      "id": "2623",
-      "nombre": "Dolan",
+      "id": "3237",
+      "nombre": "Bryan",
       "p": 42
      },
      "pa": 50
     }
    ],
    "fuera": [],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "3077",
+     "nombre": "Edu Expósito",
+     "dias": 10,
+     "lesion": "Molestias sin determinar",
+     "antes": 92,
+     "p": 93
+    }
+   ],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -3726,8 +3751,8 @@
       "pos": 3
      },
      {
-      "id": "3237",
-      "nombre": "Bryan",
+      "id": "2623",
+      "nombre": "Dolan",
       "pos": 4
      }
     ],
@@ -3787,7 +3812,7 @@
      "id": "3135",
      "nombre": "Andrés Garcia",
      "pos": 2,
-     "p": 84
+     "p": 85
     },
     {
      "id": "3150",
