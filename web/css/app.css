@@ -4102,3 +4102,9 @@ button.parte-h { cursor: pointer; }
 .parte-adelanto { margin: 0 0 10px; }
 .parte-adelanto .t2 { display: block; margin: 0 0 6px; }
 .parte-adelanto .parte-res { margin: 0; }
+/* (27 nov) el sello TOP de siempre, también en la pestaña del parte y en los candados pequeños */
+.tabs button.tab-oro .top-b { margin-left: 5px; font-size: 9px; line-height: 14px; padding: 0 5px 0 4px; }
+.tabs button.tab-oro .top-b .ic { width: 9px; height: 9px; margin: 0; }
+.tabs button.tab-oro.activo .top-b { background: #1a1420; color: #ffc547; }
+.bloq-p .top-b { margin: 0 4px 0 2px; font-size: 9px; line-height: 14px; padding: 0 5px 0 4px; }
+.bloq-p .top-b .ic { width: 9px; height: 9px; }

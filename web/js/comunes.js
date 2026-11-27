@@ -420,7 +420,8 @@ export function colaCandadoLarga(clave, rid = null) {
 /** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  return `<button type="button" class="pill bloq-p dorado" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${esc(texto || t)}</button>`;
+  // (27 nov, Carlos: «si pone top, que ponga top en todas… que sea la misma corona en todas») también lleva el sello
+  return `<button type="button" class="pill bloq-p dorado" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${selloTop()}${esc(texto || t)}</button>`;
 }
 /**
  * los candados de una misma pantalla, juntos en una tarjeta (al final): [clave] o [clave, como]. Con uno solo, su caja

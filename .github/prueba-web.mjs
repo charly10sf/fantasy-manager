@@ -1523,7 +1523,7 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           if (enDirecto) mal('Por jornada sigue en Directo');
           await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
           await page.waitForTimeout(600);
-          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
+          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+|TOP/g, '').trim()));
           // (27 nov) la pestaña Cláusulas se quita y el parte va en su sitio, en dorado; «Cláusulas a tiro» ya no está
           const parteOro = await page.evaluate(() => !!document.querySelector('.tabs button.tab-oro[data-seg="rivales:parte"]'));
           const aTiro = await page.evaluate(() => /Cláusulas a tiro/.test(document.body.innerText) || !!document.querySelector('[data-seg="rivales:clausulas"]'));
