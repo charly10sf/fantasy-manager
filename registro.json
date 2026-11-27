@@ -2401,6 +2401,35 @@
     "extra": 0,
     "jugador": "Yassir Zabiri"
    }
+  },
+  {
+   "clave": "directo|135|Pablo García|gol2",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126442532314005870",
+   "t": "2026-11-27T22:26:22.156Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "135",
+    "equipo": "87",
+    "min": 90,
+    "extra": 5,
+    "jugador": "Pablo García"
+   }
+  },
+  {
+   "clave": "final|135",
+   "tipo": "final",
+   "jornada": 14,
+   "id": "2126442636710134081",
+   "t": "2026-11-27T22:26:47.050Z"
+  },
+  {
+   "clave": "mvp|135",
+   "tipo": "mvp",
+   "jornada": 14,
+   "id": "2126442661834011012",
+   "t": "2026-11-27T22:26:52.960Z"
   }
  ],
  "estados": {
@@ -4974,16 +5003,16 @@
   "dia": "2026-11-27",
   "llamadas": {
    "clasificar": 55,
-   "redactar": 18,
-   "revisar": 11,
+   "redactar": 24,
+   "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 164692,
-  "salida": 28042,
-  "cacheLee": 124160,
-  "cacheEscribe": 41327,
-  "dolares": 0.349037,
+  "entrada": 189633,
+  "salida": 29636,
+  "cacheLee": 170494,
+  "cacheEscribe": 47180,
+  "dolares": 0.442903,
   "reservado": 0
  },
  "recientes": {
@@ -5011,10 +5040,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-22T15:26:50.093Z",
-    "texto": "🏁 El Barça remonta un 0-2 en diez minutos y gana 3-2 al Villarreal 🚢, que se había puesto por delante con goles de Buchanan en el 5' y de Oluwaseyi en el 7'.\n\nGerard Martín recortó en el 57', Fermín empató en el 61' y el 3-2 fue en propia puerta de Pau Navarro en el 67'. Pedri es el que más puntos ha sacado de los dos equipos, 11, casi el doble de su media. Gerard Martín suma 10 y Fermín 9.\n\nLa nota mala es para Pau Navarro, con -3 y expulsado en el 90+3'. Buchanan se lleva 8 aunque el Villarreal pierde."
-   },
-   {
     "t": "2026-11-22T17:41:31.567Z",
     "texto": "🏁 El Racing ⚓ le gana 3-2 a la Real Sociedad en El Sardinero, con dos goles de Zabiri en los primeros ocho minutos.\n\nYassir Zabiri se va a 16 puntos, más del doble de su media de 7,2, y es el mejor de los dos equipos. La Real se levantó del 2-0: Oyarzabal recortó en el 45+1' y Guedes empató en el 60'. Guedes suma 11 y Oyarzabal 10.\n\nEl Racing lo ganó de penalti: Canales, en el 68'."
    },
@@ -5029,13 +5054,13 @@
    {
     "t": "2026-11-23T22:26:48.654Z",
     "texto": "🏁 Reparto de puntos en el Ciutat de València: el Levante empata 1-1 con el Elche en un duelo entre el 18º y el 19º antes de jugar.\n\nRevivo puso por delante a los franjiverdes en el 62' y se va a 15 puntos, el que más saca de los dos equipos y mucho más de lo que acostumbra, con una media de 7,1. Requena empató en el 88' y suma 10, también muy por encima de lo habitual en él. Olasagasti, con 8, completa lo mejor del Levante."
+   },
+   {
+    "t": "2026-11-27T22:26:47.053Z",
+    "texto": "El Racing remonta en el Ciutat de València y gana 1-3 al Levante, que se había puesto por delante con un gol de Romero en el 42'.\n\nPablo García empató en el 66' y cerró el marcador en el 90+5': 14 puntos y el que más saca entre los dos equipos. Zabiri puso el 1-2 en el 81' y suma 11, los mismos que Iñigo Vicente.\n\nDel Levante, 15º antes de jugar, puntúa Olasagasti: 8 aunque pierde."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-22T15:26:56.455Z",
-    "texto": "⭐ Pedri es el mejor del Barça-Villarreal 🚢: 11 puntos, casi el doble de su media de 6,1. El Barça le dio la vuelta al 0-2 con tres goles entre el 57' y el 67' y acabó ganando 3-2.\n\nVale 80,5 M y en la jornada 14 visita al Deportivo. Con el partido que ha hecho, es de los que se quedan en el once sin discusión."
-   },
    {
     "t": "2026-11-22T17:46:40.697Z",
     "texto": "⭐ Yassir Zabiri es el MVP del Racing ⚓ 3-2 Real Sociedad: marcó el 1-0 en el 6' y el 2-0 en el 8', y se va a 16 puntos.\n\nPuntúa más del doble de lo que suele y vale 61,7 M. El viernes a las 21:00 visita al Levante 🐸, y con este partido, si lo tienes, no se toca."
@@ -5051,6 +5076,10 @@
    {
     "t": "2026-11-23T22:31:43.382Z",
     "texto": "⭐ MVP fantasy del Levante 1-1 Elche: Revivo se lleva el partido con 15 puntos y llega a 71 en la temporada.\n\nVale 11,5 M en el mercado y vuelve a jugar el sábado a las 18:30, contra el Atlético."
+   },
+   {
+    "t": "2026-11-27T22:26:52.962Z",
+    "texto": "⭐ Pablo García es el mejor del Levante-Racing con 14 puntos: empató en el 66' y puso el 1-3 en el 90+5'.\n\nEl delantero del Racing llega a 52 en la temporada y vale 3,2 M. En la jornada 15 recibe al Deportivo, un partido que en casa invita a pensar en él como fichaje barato."
    }
   ],
   "mercado": [
@@ -5121,10 +5150,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-23T21:26:21.967Z",
-    "texto": "⚽ El Elche pasa por delante en el Ciutat de València: Revivo la manda dentro en el 62' y es el 0-1 al Levante.\n\nEl defensa israelí lleva 7 puntos de momento. Germán V. da el pase y por ahora se lleva 3."
-   },
-   {
     "t": "2026-11-23T21:51:27.444Z",
     "texto": "⚽ ¡EN EL 88'! Requena enganchó una volea y el Levante empata con el Elche en el Ciutat de València: 1-1.\n\nEl centrocampista lleva 6 puntos de momento, casi el doble de su media. Olasagasti, que hace el pase, suma 2."
    },
@@ -5139,6 +5164,10 @@
    {
     "t": "2026-11-27T21:41:26.004Z",
     "texto": "⚽ ¡LE DA LA VUELTA! Zabiri marca en el 81' y los racinguistas ganan 1-2 en el Ciutat de València.\n\nEl delantero marroquí lleva 5 puntos de momento. Iñigo Vicente, que le habilita el gol, va por 4."
+   },
+   {
+    "t": "2026-11-27T22:26:22.158Z",
+    "texto": "⚽ ¡GOLAZO DE LEJOS! Pablo García la engancha desde unos 22 metros en el 90+5' y hace su doblete: el Racing ya gana 1-3 al Levante en el Ciutat de València.\n\nEl delantero va por 14 puntos, más del triple de su media. Jorge Salinas, que le pone el balón, suma 9."
    }
   ],
   "novedades": [
@@ -10104,17 +10133,31 @@
    "f": "2026-11-27T21:46:17.219Z",
    "rf": "87:17",
    "casado": true
+  },
+  "fm|135|1662379|90": {
+   "j": "Pablo García",
+   "m": "90'",
+   "f": "2026-11-27T22:26:12.389Z",
+   "casado": true
+  },
+  "directo|135|Pablo García|gol2": {
+   "j": "Pablo García",
+   "m": "90'+5'",
+   "e": "2026-11-27T22:26:12.389Z",
+   "re": "90'+7'",
+   "w": "2026-11-27T21:53:15Z",
+   "f": "2026-11-27T22:26:12.389Z"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7096,
+   "ok": 7098,
    "fallos": 0,
-   "ejecuciones": 5810,
+   "ejecuciones": 5811,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T22:21:14.002Z"
+   "ultima": "2026-11-27T22:26:12.389Z"
   }
  },
  "ptsDirecto": {
@@ -10131,10 +10174,10 @@
    "t": 1795812371451
   },
   "14|135|2712": {
-   "p": 5,
-   "g": 1,
+   "p": 14,
+   "g": 2,
    "a": 0,
-   "t": 1795814783052
+   "t": 1795818372389
   },
   "14|135|1529": {
    "p": 4,
@@ -10153,6 +10196,12 @@
    "g": 0,
    "a": 1,
    "t": 1795815673286
+  },
+  "14|135|3011": {
+   "p": 9,
+   "g": 0,
+   "a": 1,
+   "t": 1795818372389
   }
  },
  "golesAnulados": {
@@ -10168,23 +10217,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T22:21:16.030Z"
+   "ultimaBien": "2026-11-27T22:26:53.048Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T22:21:16.030Z"
+   "ultimaBien": "2026-11-27T22:26:53.048Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T22:21:16.030Z"
+   "ultimaBien": "2026-11-27T22:26:53.048Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T22:21:16.030Z"
+   "ultimaBien": "2026-11-27T22:26:53.048Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T22:21:16.030Z"
+   "ultimaBien": "2026-11-27T22:26:53.048Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
