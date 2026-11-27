@@ -33,7 +33,7 @@ import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, parteFin, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -1400,7 +1400,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const deRival = rid != null && POR_JORNADA.includes(clave);
       const hasta = abiertaHasta(clave, rid);
-      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto 24 horas' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
+      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? `El parte, abierto ${parteFin() ? 'hasta que empiece la jornada' : '24 horas'}` : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -1678,7 +1678,7 @@ async function avisosInvitarFondo() {
     return [{ k: `inv:${r.est.entran}`, titulo: r.nuevos > 1 ? `${r.nuevos} amigos tuyos han entrado` : 'Tu amigo ya ha entrado', texto: `Elige ${c.rivales} rivales y mira su dinero: tienes ${c.horas} h. Está en Ajustes → Invita a un amigo`, hash: 'hoy' }];
   } catch (e) { return []; }
 }
-/* (27 nov) EL PARTE CON LA APP CERRADA (solo Android, como el parte): con el parte abierto (su llave de 24 h) y su aviso
+/* (27 nov) EL PARTE CON LA APP CERRADA (solo Android, como el parte): con el parte abierto (su llave: hasta que empiece la jornada) y su aviso
    encendido en Ajustes, una pasada cada hora de 8:00 a 23:30 (`programarFondo`, y la liga se lee entera aunque se leyera
    hace menos de 2 h y media) y un aviso cuando un rival pasa a estar en negativo seguro, gasta su último blindaje o le
    sale «le falta» (que ya solo sale si te toca). Como mucho TOPE_AVISOS al día. Lo que se ve en la app no se avisa después

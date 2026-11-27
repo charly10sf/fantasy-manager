@@ -4102,3 +4102,7 @@ button.parte-h { cursor: pointer; }
 .parte-nv { background: #ffc547; color: #1a1420; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; font-size: 10px; padding: 2px 7px; }
 .parte-nuevo { display: flex; gap: 10px; align-items: baseline; margin: 0 0 14px; padding: 10px 12px; border-radius: 12px; background: linear-gradient(135deg, rgba(255, 197, 71, 0.12), rgba(255, 197, 71, 0.03)); box-shadow: inset 0 0 0 1px rgba(255, 197, 71, 0.35); font-size: var(--t-sec2); line-height: 1.4; }
 .parte-nuevo .pill { flex: none; }
+/* (0.8.5a) el adelanto del parte cerrado */
+.parte-adelanto { margin: 0 0 10px; }
+.parte-adelanto .t2 { display: block; margin: 0 0 6px; }
+.parte-adelanto .parte-res { margin: 0; }

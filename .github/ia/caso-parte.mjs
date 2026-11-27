@@ -157,7 +157,8 @@ try {
       const antes = Li.bloqueada('parteRivales'), f0 = Li.faltanAnuncios('parteRivales');
       const a1 = Li.anuncioTopVisto('parteRivales'), medio = Li.bloqueada('parteRivales'), f1 = Li.faltanAnuncios('parteRivales');
       const a2 = Li.anuncioTopVisto('parteRivales'), despues = Li.bloqueada('parteRivales');
-      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Math.abs(Li.abiertaHasta('parteRivales') - Date.now() - 24 * 3600e3) < 5000, cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= Date.now() + 24 * 3600e3 + 5000, dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
+      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Math.abs(Li.abiertaHasta('parteRivales') - (Li.parteFin() || Date.now() + 24 * 3600e3)) < 5000 && (!Li.parteFin() || Li.parteFin() - Date.now() <= 5 * DIA), cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= (Li.parteFin() || Date.now() + 24 * 3600e3) + 5000,
+        hastaJornada: (() => { const ant = Li.inicioJornada(); Li.fijarJornada(9, Date.now() + 2 * DIA); const a = Li.parteFin(); Li.fijarJornada(9, Date.now() + 9 * DIA); const b = Li.parteFin(); Li.fijarJornada(9, ant); return Math.abs(a - Date.now() - 2 * DIA) < 5000 && b === 0; })(), dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
       const raro = (v) => { U.LS.set('top-parte', v); return Li.bloqueada('parteRivales') && Li.faltanAnuncios('parteRivales') >= 1 && Li.faltanAnuncios('parteRivales') <= 2 && Li.abiertaHasta('parteRivales') === 0; };
       out.llave.raros = raro({ hasta: 'Infinity', n: -5, t: Date.now() }) && raro({ hasta: 1e300, n: 99, t: Date.now() }) && raro({ hasta: Date.now() + 40 * DIA }) && raro('x') && raro([1]);
       U.LS.set('top-parte', { hasta: 0, n: 1, t: Date.now() }); Li.abrirTopGratis('parteRivales');
@@ -193,7 +194,8 @@ try {
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
       const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d|parte-est|parte-h|parte-nuevo/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
-        cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
+        cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada.replace(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/, ''))),
+        adelanto: (() => { const m = cerrada.match(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/); if (!m) return false; const nombres = G.D.clasif.flatMap((e) => [e.nombre, e.manager]).filter((x) => x && x.length > 2); return /<b>1<\/b> en negativo/.test(m[0]) && !nombres.some((x) => m[0].includes(x)) && !/M<|\d,\d+ M/.test(m[0]); })(), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
         igualCerrado: !/>En negativo<|en negativo<|parte-pie/.test(abierta0),
         conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero),
@@ -284,14 +286,16 @@ try {
   ok(r.llave.antes && r.llave.f0 === 2, 'el parte está cerrado y pide 2 anuncios');
   ok(r.llave.a1 === false && r.llave.medio && r.llave.f1 === 1, 'con el primer anuncio sigue cerrado y falta 1');
   ok(r.llave.a2 === true && !r.llave.despues, 'con el segundo se abre');
-  ok(r.llave.hasta && r.llave.cierre, 'abierto 24 horas');
+  ok(r.llave.hasta && r.llave.cierre, '(0.8.5a) abierto hasta que empiece la jornada (sin saberla, 24 horas)');
+  ok(r.llave.hastaJornada, 'con la jornada a 2 días, hasta su inicio; a más de 5 días, 24 horas');
   ok(r.llave.dineroSigue && r.llave.pagaSigue, 'abrir el parte no abre el dinero de los rivales ni quién paga');
   ok(r.llave.raros, 'con valores raros en lo guardado sigue cerrado y pide 1 o 2 anuncios');
   ok(r.llave.gratis, 'si no hay anuncio se abre media hora');
   ok(r.llave.cerradaOtraVez, 'sin lo guardado, cerrado otra vez');
   ok(r.pantalla.pestaña, 'Rivales tiene el botón dorado del Parte');
   ok(r.pantalla.fuera, 'antes de los 4 días dice cuándo sale, sin candado y sin nada de dentro');
-  ok(r.pantalla.cerrada, 'cerrado: el candado y ni una palabra de lo de dentro');
+  ok(r.pantalla.cerrada, 'cerrado: el candado y, fuera del adelanto, ni una palabra de lo de dentro');
+  ok(r.pantalla.adelanto, '(0.8.5a) cerrado, el adelanto: cuántos hay de cada cosa, sin nombres ni cifras');
   ok(r.pantalla.sinNumero, 'cerrado, el botón no lleva número');
   ok(r.pantalla.igualCerrado, 'con ese rival en positivo, ni «En negativo» ni el candado del dinero al pie');
   ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: «En negativo» sin cifra y el candado del dinero al pie');

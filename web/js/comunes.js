@@ -2,7 +2,7 @@
 import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
 import { enApp, enIPhone } from './puente.js';
 import { mini } from './graficos.js';
-import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien } from './limite.js';
+import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien, parteFin } from './limite.js';
 import { esFav } from './favoritos.js';
 import { aviso } from './avisos-ficha.js';
 
@@ -379,7 +379,7 @@ export const BLOQUEO = {
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
   quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
-  parteRivales: ['Parte de la jornada', 'Qué le falta a cada rival y qué puedes hacer tú con eso.'],
+  parteRivales: ['Parte de la jornada', 'La ficha de cada rival, lo que ha cambiado y qué puedes hacer tú.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
@@ -411,7 +411,7 @@ export function colaCandado(clave, rid = null) {
 export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
-  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo 24 horas con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
+  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo ${parteFin() ? 'hasta que empiece la jornada' : '24 horas'} con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
   if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;
