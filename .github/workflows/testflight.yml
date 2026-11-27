@@ -73,7 +73,7 @@ jobs:
           git push -q origin HEAD:${GITHUB_REF_NAME}
 
   subir:
-    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && !contains(github.event.head_commit.message, '[estado]') && !contains(github.event.head_commit.message, '[retirar]') && !contains(github.event.head_commit.message, '[publicar]') }}
     # Xcode 27 (SDK de iOS 27): Apple lo exige desde abril de 2027 (aviso ITMS-90725 del 27 nov 2026)
     runs-on: xcode-27
     timeout-minutes: 60
@@ -231,7 +231,7 @@ jobs:
 
   configurar:
     needs: [clave, subir]
-    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && !contains(github.event.head_commit.message, '[enviar]') && !contains(github.event.head_commit.message, '[estado]') && !contains(github.event.head_commit.message, '[retirar]') && !contains(github.event.head_commit.message, '[publicar]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -298,3 +298,25 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: node .github/ios/ficha.mjs enviar
+
+  # (27 nov, la 0.9) sin compilar: «[estado]» dice en qué está cada versión y cada envío a revisión y el DSA (no toca
+  # nada); «[retirar]» quita de la revisión lo enviado; «[publicar]» publica la versión aprobada si el DSA está aprobado
+  # (solo con el «publica» de Carlos). Si van varias en el mismo mensaje, en este orden.
+  revision:
+    if: ${{ contains(github.event.head_commit.message, '[estado]') || contains(github.event.head_commit.message, '[retirar]') || contains(github.event.head_commit.message, '[publicar]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: La revisión de la App Store
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          RETIRAR: ${{ contains(github.event.head_commit.message, '[retirar]') && 'si' || '' }}
+          PUBLICAR: ${{ contains(github.event.head_commit.message, '[publicar]') && 'si' || '' }}
+          SOLO: "0.9"
+        run: |
+          if [ -n "$RETIRAR" ]; then node .github/ios/ficha.mjs retirar
+          elif [ -n "$PUBLICAR" ]; then node .github/ios/ficha.mjs publicar
+          else node .github/ios/ficha.mjs situacion; fi
