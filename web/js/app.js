@@ -4278,7 +4278,10 @@ function vigilarBarraIOS() {
     if (nav && nav.offsetHeight && !campo() && getComputedStyle(nav).position === 'fixed') {
       // (dónde la pone Safari sin el arreglo y dónde acaba lo que dice que se ve: con el fallo, una de las dos se queda
       // a la altura del teclado y window.innerHeight sigue siendo el alto de verdad)
-      const sin = nav.getBoundingClientRect().bottom - dy, vista = vv.offsetTop + vv.height;
+      // (0.9) la barra flota: se separa del borde lo que diga su `bottom` (el margen más la zona segura del iPhone, unos
+      // 44 px). Eso es diseño, no el fallo de Safari: se descuenta, o la barra acabaría pegada abajo del todo
+      const hueco = Math.max(0, (parseFloat(getComputedStyle(nav).bottom) || 0) + dy);
+      const sin = nav.getBoundingClientRect().bottom - dy + hueco, vista = vv.offsetTop + vv.height;
       const d = Math.round(window.innerHeight - Math.min(sin, vista));
       if (d > 40 && d < window.innerHeight * 0.75) nuevo = d;
     }
