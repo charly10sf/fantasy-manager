@@ -3419,7 +3419,8 @@
    "AS|https://as.com/futbol/primera/simeone-con-bajas-arriba-pero-con-el-cuti-romero-mas-cerca-f202611-n/": 1795778023000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261127/1004256193/buenas-noticias-beticismo.html": 1795777949000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261127/1004256212/preocupacion-guido-rodriguez.html": 1795780111000,
-   "SPORT|136921750": 1795777969000
+   "SPORT|136921750": 1795777969000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-celso-problemas-rodilla-ceballos_0_2008598333.html": 1795782052000
   },
   "hechos": [
    {
@@ -3820,11 +3821,23 @@
     "motivo": "molestias musculares",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-celso-problemas-rodilla-ceballos_0_2008598333.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795782052000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos no podrá jugar ante el Rayo Vallecano por su columna",
+    "motivo": "problemas en la columna",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4747,17 +4760,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 7,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 72151,
-  "salida": 10464,
+  "entrada": 74139,
+  "salida": 10850,
   "cacheLee": 48609,
   "cacheEscribe": 20797,
-  "dolares": 0.171431,
+  "dolares": 0.171823,
   "reservado": 0
  },
  "recientes": {
@@ -9826,13 +9839,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6948,
+   "ok": 6949,
    "fallos": 0,
-   "ejecuciones": 5690,
+   "ejecuciones": 5691,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T12:26:14.230Z"
+   "ultima": "2026-11-27T12:31:11.466Z"
   }
  },
  "ptsDirecto": {},
@@ -9849,15 +9862,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:26:25.046Z"
+   "ultimaBien": "2026-11-27T12:31:26.504Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:26:25.046Z"
+   "ultimaBien": "2026-11-27T12:31:26.504Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:26:25.046Z"
+   "ultimaBien": "2026-11-27T12:31:26.504Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9865,11 +9878,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:26:25.046Z"
+   "ultimaBien": "2026-11-27T12:31:26.504Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T12:26:25.046Z"
+   "ultimaBien": "2026-11-27T12:31:26.504Z"
   }
  },
  "avisos": [
