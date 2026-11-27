@@ -3219,7 +3219,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
-   "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
    "SPORT|136790672": 1795518790000,
    "SPORT|136786855": 1795518496000,
@@ -3403,7 +3402,8 @@
    "MARCA|https://www.marca.com/futbol/alaves/2026/11/27/mariano-renacido.html": 1795774639000,
    "SPORT|136916910": 1795771450000,
    "Europa Press|https://www.europapress.es/deportes/motociclismo-00311/noticia-marc-marquez-anuncia-retirada-20261127105434.html": 1795773274000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256150/owono-intentando-volver-normalidad-decir-asi.html": 1795774761000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261127/1004256150/owono-intentando-volver-normalidad-decir-asi.html": 1795774761000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/juega-betis-tabla-partido-rayo_0_2008596882.html": 1795776167000
   },
   "hechos": [
    {
@@ -3812,7 +3812,7 @@
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -4735,17 +4735,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 33507,
-  "salida": 4806,
+  "entrada": 35469,
+  "salida": 5481,
   "cacheLee": 0,
   "cacheEscribe": 9582,
-  "dolares": 0.058194,
+  "dolares": 0.058728,
   "reservado": 0
  },
  "recientes": {
@@ -9814,13 +9814,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6927,
+   "ok": 6928,
    "fallos": 0,
-   "ejecuciones": 5669,
+   "ejecuciones": 5670,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T10:41:14.519Z"
+   "ultima": "2026-11-27T10:46:13.038Z"
   }
  },
  "ptsDirecto": {},
@@ -9837,15 +9837,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:41:25.180Z"
+   "ultimaBien": "2026-11-27T10:46:27.000Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:41:25.180Z"
+   "ultimaBien": "2026-11-27T10:46:27.000Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:41:25.180Z"
+   "ultimaBien": "2026-11-27T10:46:27.000Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9853,11 +9853,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:41:25.180Z"
+   "ultimaBien": "2026-11-27T10:46:27.000Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T10:41:25.180Z"
+   "ultimaBien": "2026-11-27T10:46:27.000Z"
   }
  },
  "avisos": [
