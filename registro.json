@@ -4760,7 +4760,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
    "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
    "SPORT|136810666": 1795544869000,
    "SPORT|136811655": 1795554036000,
@@ -9894,13 +9893,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6977,
+   "ok": 6978,
    "fallos": 0,
-   "ejecuciones": 5719,
+   "ejecuciones": 5720,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T14:51:12.831Z"
+   "ultima": "2026-11-27T14:56:13.765Z"
   }
  },
  "ptsDirecto": {},
@@ -9917,15 +9916,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:51:22.591Z"
+   "ultimaBien": "2026-11-27T14:56:25.745Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:51:22.591Z"
+   "ultimaBien": "2026-11-27T14:56:25.745Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:51:22.591Z"
+   "ultimaBien": "2026-11-27T14:56:25.745Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9933,11 +9932,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:51:22.591Z"
+   "ultimaBien": "2026-11-27T14:56:25.745Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T14:51:22.591Z"
+   "ultimaBien": "2026-11-27T14:56:25.745Z"
   }
  },
  "avisos": [
