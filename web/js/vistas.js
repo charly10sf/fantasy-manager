@@ -1419,8 +1419,7 @@ export function parteVisto(S) {
     if (!abierto && P.toca) {
       const R = visibles(P, { abierto: true });
       const n = (f) => R.filter(f).length;
-      adelanto = { rojo: n((x) => x.lineas.some((l) => l.tipo === 'rojo')), blind: n((x) => x.ficha && x.ficha.firma.quedan === 0), falta: n((x) => x.lineas.some((l) => l.tipo === 'falta')),
-        cls: n((x) => x.ficha && x.ficha.hechos.some((h) => h.k === 'clausula')), venta: n((x) => x.ficha && x.ficha.hechos.some((h) => h.k === 'venta' && /pts por jornada/.test(h.txt))), total: R.length };
+      adelanto = { rojo: n((x) => x.lineas.some((l) => l.tipo === 'rojo')), blind: n((x) => x.ficha && x.ficha.firma.quedan === 0), falta: n((x) => x.lineas.some((l) => l.tipo === 'falta')) };
     }
     return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales, nuevo, vistoT: visto && visto.t, adelanto };
   } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
@@ -1453,11 +1452,13 @@ function parteCampo(ps) {
   return `<svg class="parte-campo" viewBox="0 0 304 108" role="img" aria-label="${esc(txt)}"><rect class="pc-c" x="1" y="1" width="302" height="88" rx="10"/><path class="pc-l" d="M152 1v88M1 23h30v44H1M303 23h-30v44h30"/><circle class="pc-l" cx="152" cy="45" r="15"/>${fig}</svg>`;
 }
 /** (0.8.5a) el adelanto del parte cerrado: «Hoy en el parte» y una pastilla por cosa, solo con número (nunca quién) */
-const PARTE_ADEL = [['rojo', 'en negativo', 'en negativo', ''], ['blind', 'sin blindajes', 'sin blindajes', 'azul'], ['falta', 'corto de un puesto', 'cortos de un puesto', 'oro'], ['cls', 'con cláusula que te llega', 'con cláusulas que te llegan', ''], ['venta', 'vende algo que te mejora', 'venden algo que te mejora', '']];
+// (Carlos, 27 nov, 02:19: «lo de las cláusulas que te llegan, ¿eso no está ya en otro lado?») solo lo que da el parte y nada
+// más: las cláusulas que te llegan ya las cuenta Cláusulas y lo que venden, Mercado. Sin nada de esto, solo el candado
+const PARTE_ADEL = [['rojo', 'en negativo', 'en negativo', ''], ['blind', 'sin blindajes', 'sin blindajes', 'azul'], ['falta', 'corto de un puesto', 'cortos de un puesto', 'oro']];
 function parteAdelanto(a) {
-  if (!a || !a.total) return '';
+  if (!a) return '';
   const p = PARTE_ADEL.map(([k, uno, varios, col]) => (a[k] ? `<span class="pill parte-c ${col}"><b>${a[k]}</b> ${a[k] === 1 ? uno : varios}</span>` : '')).join('');
-  return `<div class="parte-adelanto"><span class="t2 peq">Hoy en el parte</span><div class="parte-res">${p || `<span class="pill parte-c"><b>${a.total}</b> fichas de tus rivales</span>`}</div></div>`;
+  return p ? `<div class="parte-adelanto"><span class="t2 peq">Hoy en el parte</span><div class="parte-res">${p}</div></div>` : '';
 }
 /** (27 nov) la ficha de un rival: su estado en una línea de pastillas (en negativo o su saldo, sus blindajes, su plantilla y
     dónde va corto) y, debajo, como mucho tres hechos cortos (lo suyo que te llega por cláusula, lo que vende y sus bajas) */

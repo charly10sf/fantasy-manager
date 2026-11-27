@@ -177,6 +177,15 @@ try {
       S.D = G.D; S.M = G.M; S.seg.rivales = 'parte';
       const fuera = Vi.rivales(S); // a la hora de verdad de la escena (martes por la mañana): aún no toca
       const cerrada = pinta(G);
+      // sin nada que solo dé el parte (nadie en negativo, sin blindajes ni corto que te toque): sin adelanto, solo el candado
+      const G00 = montar((D) => {
+        D.dineros = {}; for (const m of D.mercado) m.miPuja = null; D.actividad = (D.actividad || []).filter((a) => a.clase !== 'blindaje');
+        // a todos los rivales, plantilla de sobra en cada puesto (en la liga de ejemplo a todos les falta algo)
+        let k = 0;
+        for (const e of D.clasif) { if (e.teamId === yo) continue; for (const [p, n] of [[1, 2], [2, 5], [3, 5], [4, 3]]) { const mol = Object.values(D.maestro).find((j) => j.pos === p && j.estado === 'ok' && j.valor > 2e6); for (let i = 0; i < n; i++) { const id = `t00-${k++}`; D.maestro[id] = { ...mol, id, nombre: `Relleno ${k}` }; D.plantillas[e.teamId].push({ pid: id, clausula: mol.valor * 3 }); } } }
+      });
+      const P00 = Pa.parte(G00.M, G00.D, { ahora: T }), nadaExcl = !P00.rivales.some((x) => x.lineas.length || (x.ficha && x.ficha.firma.quedan === 0));
+      const cerrada0 = nadaExcl ? pinta(G00) : "parte-adelanto (escena sin nada exclusivo no conseguida)";
       U.LS.set('top-parte', { hasta: T + DIA, n: 0, t: T });
       const abierta = pinta(G), abierta0 = pinta(G0);
       // (27 nov) lo nuevo desde la última vez: lo guardado dice que ese rival no estaba en negativo
@@ -195,7 +204,7 @@ try {
       const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Ha gastado sus 2 blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d|parte-est|parte-h|parte-nuevo/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
         cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada.replace(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/, ''))),
-        adelanto: (() => { const m = cerrada.match(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/); if (!m) return false; const nombres = G.D.clasif.flatMap((e) => [e.nombre, e.manager]).filter((x) => x && x.length > 2); return /<b>1<\/b> en negativo/.test(m[0]) && !nombres.some((x) => m[0].includes(x)) && !/M<|\d,\d+ M/.test(m[0]); })(), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
+        adelanto: (() => { const m = cerrada.match(/<div class="parte-adelanto">[\s\S]*?<\/div><\/div>/); if (!m) return false; const nombres = G.D.clasif.flatMap((e) => [e.nombre, e.manager]).filter((x) => x && x.length > 2); return /<b>1<\/b> en negativo/.test(m[0]) && !/cláusula|vende/.test(m[0]) && !nombres.some((x) => m[0].includes(x)) && !/M<|\d,\d+ M/.test(m[0]); })() && !/parte-adelanto/.test(cerrada0), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
         igualCerrado: !/>En negativo<|en negativo<|parte-pie/.test(abierta0),
         conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero),
