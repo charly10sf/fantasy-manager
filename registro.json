@@ -3437,7 +3437,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261127/1004256343/adeyemi-kerolin-aleixandri-sorprenden-barca-academy-estados-unidos.html": 1795800537000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261127/1004256339/terzic-convoca-todos-disponibles-visitar-manana-malaga.html": 1795800212000,
    "AS|https://as.com/futbol/terzic-se-lleva-a-todos-los-disponibles-a-malaga-f202611-n/": 1795800933000,
-   "SPORT|136938642": 1795799520000
+   "SPORT|136938642": 1795799520000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html": 1795803302000
   },
   "hechos": [
    {
@@ -3928,11 +3929,39 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795803302000,
+    "id": "3197",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cuti Romero no viaja a Elche por lesión",
+    "motivo": "baja por lesión",
+    "plazo": "",
+    "nums": [
+     22
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256352/atletico-viaja-elche-tres-puntales.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795803302000,
+    "id": "3079",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Lookman no viaja a Elche por lesión",
+    "motivo": "baja por lesión",
+    "plazo": "",
+    "nums": [
+     22
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-27",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4851,17 +4880,17 @@
  "ia": {
   "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 10,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 121188,
-  "salida": 22624,
+  "entrada": 123205,
+  "salida": 23537,
   "cacheLee": 74643,
   "cacheEscribe": 22580,
-  "dolares": 0.212653,
+  "dolares": 0.213311,
   "reservado": 0
  },
  "recientes": {
@@ -9930,13 +9959,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7021,
+   "ok": 7022,
    "fallos": 0,
-   "ejecuciones": 5763,
+   "ejecuciones": 5764,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-27T18:28:51.225Z"
+   "ultima": "2026-11-27T18:31:11.492Z"
   }
  },
  "ptsDirecto": {},
@@ -9953,15 +9982,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:29:00.390Z"
+   "ultimaBien": "2026-11-27T18:31:25.301Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:29:00.390Z"
+   "ultimaBien": "2026-11-27T18:31:25.301Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:29:00.390Z"
+   "ultimaBien": "2026-11-27T18:31:25.301Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9969,11 +9998,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:29:00.390Z"
+   "ultimaBien": "2026-11-27T18:31:25.301Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T18:29:00.390Z"
+   "ultimaBien": "2026-11-27T18:31:25.301Z"
   }
  },
  "avisos": [
