@@ -1,6 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
+import { diagAnuncios } from './intersticial.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { lineaPaso, pujaLinea, noCompensaTxt, vecesCorto, pujaDe } from './puja-txt.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
@@ -1839,6 +1840,8 @@ export function textoDiagnostico(S) {
     ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; const ios = nativo.canal() === 'ios'; return `Web al día sola: ${ios ? 'app' : 'APK'} con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : (ios ? 'usa la de la app' : 'usa la del APK')} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte ${ios ? 'iOS' : 'Android'} ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
     // (21 nov) por dónde entra la app en LaLiga: con Auth Tab Android no pregunta «Abrir con»
     ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.canal() === 'ios' ? 'por la ventana de inicio de sesión del iPhone' : nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'sesion-ios' ? 'por la ventana del iPhone' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
+    // (27 nov, iOS 5) por qué salen o no los anuncios de la app (intersticial.js)
+    ...(enApp ? [(() => { try { return diagAnuncios(); } catch (e) { return `Anuncios (app): ✗ ${e.message}`; } })()] : []),
     // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
     (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,

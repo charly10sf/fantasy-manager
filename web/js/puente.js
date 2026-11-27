@@ -328,4 +328,7 @@ export const nativo = {
   cancelarAnuncio: () => llamar('cancelarAnuncio'),
   hayPrivacidadAnuncios: () => !!(N && typeof N.hayPrivacidadAnuncios === 'function' && llamar('hayPrivacidadAnuncios')),
   privacidadAnuncios: () => llamar('privacidadAnuncios'),
+  // (27 nov, iOS 5) cómo están los anuncios en la parte nativa (para el diagnóstico): consentimiento, rastreo, qué hay
+  // cargado y el último fallo. Solo la app de iOS lo tiene; en las demás, null
+  estadoAnuncios: () => { const x = llamar('estadoAnuncios'); if (x && typeof x === 'object') return x; try { return x ? JSON.parse(x) : null; } catch (e) { return null; } },
 };

@@ -19,9 +19,9 @@
    Los números, en «intersticial» de limites.json (intersticialCfg de limite.js), para cambiarlos sin sacar versión.
    Android (Anuncios.java de src/play) vuelve a comprobar lo suyo (la app a la vista, sin teclado, sin la IA trabajando,
    un mínimo de tiempo entre dos) y contesta con intersticialVisto(ok, motivo). */
-import { LS, diaDe, MIN } from './util.js';
+import { LS, diaDe, MIN, horaDe } from './util.js';
 import { enApp, nativo } from './puente.js';
-import { intersticialCfg, intersticialParaMi } from './limite.js';
+import { intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 
 const TICK = 10e3;
 // una vuelta a la app tras media hora o más fuera es otra visita: vuelve el minuto sin anuncio del principio
@@ -75,6 +75,12 @@ export const bonificadoVisto = () => LS.set('inter-bonif', Date.now());
  * pensando, sin tutorial, sesión de tu liga iniciada…). Devuelve el motivo por el que no (para las pruebas) o '' si lo pide.
  */
 export function quizaIntersticial(pantallaLibre) {
+  const m = decidirIntersticial(pantallaLibre);
+  ultimaPausa = { m: m || 'pedido', t: Date.now() };
+  return m;
+}
+let ultimaPausa = null;
+function decidirIntersticial(pantallaLibre) {
   if (!enApp || !nativo.hayIntersticial()) return 'sin intersticiales';
   const c = intersticialCfg();
   if (!c.on) return 'apagado';
@@ -99,6 +105,7 @@ export function quizaIntersticial(pantallaLibre) {
 /** la vuelta de Android: si se ha visto, cuenta para el tope y el tiempo entre uno y otro */
 window.intersticialVisto = (ok, motivo) => {
   enCurso = false;
+  LS.set('inter-ult', { ok: !!ok, m: String(motivo || '').slice(0, 80), t: Date.now() });
   if (!ok) return;
   const h = hoy();
   LS.set('inter', { dia: h.dia, n: h.n + 1, t: Date.now(), uso: 0 });
@@ -117,6 +124,7 @@ export function aperturaToca() {
   return !(a && a.dia === d);
 }
 window.aperturaVista = (ok, motivo) => {
+  LS.set('ap-ult', { ok: !!ok, m: String(motivo || '').slice(0, 80), t: Date.now() });
   if (ok) LS.set('apertura', { dia: diaDe(), t: Date.now() });
   window.dispatchEvent(new CustomEvent('apertura-vista', { detail: { ok: !!ok, motivo } }));
 };
@@ -125,3 +133,30 @@ window.aperturaVista = (ok, motivo) => {
 export const estadoIntersticial = () => ({ usoSesion, enCurso, ...hoy() });
 /** para las pruebas: hace como si llevara ms de uso */
 export const sumarUso = (ms) => sumar(ms);
+
+/* (27 nov, iOS 5; Domy: «no me ha saltado ningún anuncio») una línea para el diagnóstico con por qué sale o no sale cada
+   anuncio: a esta cuenta sí o no, lo de hoy, la última pausa (y por qué no tocó), lo último que contestó la parte nativa y,
+   en la app de iOS, cómo está por dentro (consentimiento, rastreo, cargados y el último fallo) */
+export function diagAnuncios() {
+  if (!enApp) return 'Anuncios (app): no es la app';
+  if (!nativo.hayAnuncios()) return 'Anuncios (app): esta app no lleva';
+  const cfg = intersticialCfg(), apCfg = aperturaCfg(), paraMi = intersticialParaMi(), hora = horaDe;
+  const h = hoy(), mi = (ms) => Math.round(ms / 60e3);
+  const r = (x) => (x ? `${x.ok ? 'visto' : `no (${x.m || '?'})`} ${hora(x.t)}` : 'ninguna');
+  const p = [
+    `intersticial ${!cfg.on ? 'apagado' : paraMi ? 'sí' : 'no a esta cuenta'}`,
+    `hoy ${h.n}/${cfg.maxDia}, ${mi(h.uso)} de ${mi(cfg.cada)} min de uso, sesión ${mi(usoSesion)} min`,
+    `última pausa: ${ultimaPausa ? `${ultimaPausa.m} ${hora(ultimaPausa.t)}` : 'ninguna'}`,
+    `última respuesta: ${r(LS.get('inter-ult', null))}`,
+    `apertura ${!apCfg.on ? 'apagada' : !paraMi ? 'no a esta cuenta' : aperturaHoy()} · ${r(LS.get('ap-ult', null))}`,
+  ];
+  const n = nativo.estadoAnuncios();
+  if (n) p.push(`por dentro: ${n.listo ? 'listo' : n.iniciado ? 'empezando' : 'sin empezar'}, consentimiento ${n.consentimiento ?? '?'}${n.puede ? '' : ' (no deja pedir)'}, rastreo ${n.rastreo ?? '?'}, cargados ${['bonificado', 'intersticial', 'apertura'].filter((k) => n[k]).join('+') || 'ninguno'}${n.fallo ? `, fallo: ${n.fallo}` : ''}`);
+  return `Anuncios (app): ${p.join(' · ')}`;
+}
+/** sin apuntar nada (aperturaToca apunta el primer día): si hoy toca el de apertura y, si no, por qué */
+function aperturaHoy() {
+  const d = diaDe(), desde = LS.get('ap-desde', null), a = LS.get('apertura', null);
+  if (!desde || desde === d) return 'no toca (primer día)';
+  return a && a.dia === d ? 'ya visto hoy' : 'toca hoy';
+}
