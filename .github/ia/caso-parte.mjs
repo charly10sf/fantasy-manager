@@ -237,6 +237,7 @@ try {
         mismoOrden: JSON.stringify(cerr.map((x) => x.tid)) === JSON.stringify(ab.map((x) => x.tid)),
         escudos: !conEsc(2).estado.some((e) => e.k === 'escudos') && conEsc(1).estado.some((e) => e.k === 'escudos' && e.quedan === 1) && conEsc(0).estado.some((e) => e.k === 'escudos' && e.quedan === 0),
         hechosCortos: cerr.every((x) => x.ficha.hechos.length <= 3 && x.ficha.hechos.every((f) => f.txt.length <= 90)),
+        sinRepetir: (() => { const vg = Pa.visibles(parteDe(window.__G), { abierto: true }); return vg.every((x) => { const ps = new Set(x.lineas.flatMap((l) => [l.pid, ...(l.pids || [])]).filter(Boolean).map(String)); return x.ficha.hechos.every((f) => !f.pid || !ps.has(String(f.pid))) && !(x.lineas.some((l) => l.tipo === 'rojo') && x.ficha.estado.some((e) => /negativo/i.test(e.txt))) && !(x.lineas.some((l) => l.tipo === 'blindajes') && x.ficha.estado.some((e) => e.k === 'escudos')); }); })(),
         nov: nov({}, { rojo: true }).join() === 'rojo' && nov({ quedan: 2 }, { quedan: 1 }).join() === 'escudos' && nov({}, { lleno: true }).join() === 'plantilla' && nov({}, { corto: [2] }).join() === 'corto'
           && nov({}, { venta: { 9: 'X' } }).join() === 'venta' && nov({}, { abiertas: { 9: 'X' } }).join() === 'clausula' && nov({}, {}).length === 0 && nov({}, { rojo: true }, 6).length === 0
           && nov({ rojo: true }, { rojo: false }).length === 0 && Pa.novedades(null, riv({ rojo: true }), 5).length === 0,
@@ -310,6 +311,7 @@ try {
   ok(r.ficha.mismoOrden, 'el orden no cambia con el dinero abierto o cerrado');
   ok(r.ficha.escudos, 'los blindajes solo salen si ha gastado alguno (1 o 0)');
   ok(r.ficha.hechosCortos, 'como mucho tres hechos por rival, cortos');
+  ok(r.ficha.sinRepetir, 'lo que ya dice una línea (en negativo, el jugador que nombra) no se repite en la ficha');
   ok(r.ficha.nov, 'lo nuevo: negativo, blindaje, plantilla llena, corto, en venta y cláusula abierta; nada con otra jornada ni si no ha cambiado');
 } finally { await cerrar(); }
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');
