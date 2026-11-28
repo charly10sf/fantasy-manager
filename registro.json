@@ -3529,7 +3529,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261128/1004256545/laliga-vuelve-cruzar-simeone-revivo-30-anos.html": 1795862979000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256539/entrenamiento-barcelona-deportivo-coruna.html": 1795862874000,
    "SPORT|136955243": 1795859539000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000,
+   "SPORT|136954502": 1795863636000
   },
   "hechos": [
    {
@@ -4136,7 +4137,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -5052,17 +5053,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 3,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 31490,
-  "salida": 7664,
+  "entrada": 33614,
+  "salida": 7756,
   "cacheLee": 16838,
   "cacheEscribe": 12409,
-  "dolares": 0.085856,
+  "dolares": 0.086114,
   "reservado": 0
  },
  "recientes": {
@@ -10217,13 +10218,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7300,
+   "ok": 7301,
    "fallos": 0,
-   "ejecuciones": 5976,
+   "ejecuciones": 5977,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:01:17.118Z"
+   "ultima": "2026-11-28T12:06:11.349Z"
   }
  },
  "ptsDirecto": {
@@ -10283,15 +10284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:01:44.301Z"
+   "ultimaBien": "2026-11-28T12:06:18.386Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:01:44.301Z"
+   "ultimaBien": "2026-11-28T12:06:18.386Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:01:44.301Z"
+   "ultimaBien": "2026-11-28T12:06:18.386Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10299,11 +10300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:01:44.301Z"
+   "ultimaBien": "2026-11-28T12:06:18.386Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:01:44.301Z"
+   "ultimaBien": "2026-11-28T12:06:18.386Z"
   }
  },
  "avisos": [
