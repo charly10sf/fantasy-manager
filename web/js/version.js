@@ -27,7 +27,7 @@ export const NOVEDADES = [
     // (28 nov, aviso de Neoplatel: «en las ligas donde estén desactivadas las cláusulas, que no te notifique blindar ni pagar
     // cláusulas rivales») LIGA SIN CLÁUSULAS: `config.features.buyoutClause` a false (normalizar.js `clausulasDe`) y
     // `M.sinClausulas` en el motor, que lo corta de raíz; lo demás, en CLAUDE.md («LIGA SIN CLÁUSULAS»). Sin tarjeta.
-    v: '0.9e', f: '2026-11-28', h: '14:45', t: 'Ligas sin cláusulas',
+    v: '0.9e', f: '2026-11-28', h: '14:46', t: 'Ligas sin cláusulas',
     cosas: [
       { tipo: 'arreglo', d: 'escudo', t: 'Ligas sin cláusulas', x: 'Si el administrador de tu liga ha quitado las cláusulas, la app ya no te propone clausular, blindar ni proteger a nadie, ni te avisa de cláusulas que se abren.' },
     ],
