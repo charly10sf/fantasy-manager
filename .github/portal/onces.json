@@ -629,7 +629,76 @@
     "entran": [],
     "salen": []
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2541",
+     "nombre": "Á. Valles",
+     "pos": 1
+    },
+    {
+     "id": "2543",
+     "nombre": "Natan",
+     "pos": 2
+    },
+    {
+     "id": "2627",
+     "nombre": "Junior",
+     "pos": 2
+    },
+    {
+     "id": "2414",
+     "nombre": "Bellerín",
+     "pos": 2
+    },
+    {
+     "id": "121",
+     "nombre": "Bartra",
+     "pos": 2
+    },
+    {
+     "id": "3099",
+     "nombre": "Fornals",
+     "pos": 3
+    },
+    {
+     "id": "2418",
+     "nombre": "Marc Roca",
+     "pos": 3
+    },
+    {
+     "id": "3090",
+     "nombre": "Isco",
+     "pos": 3
+    },
+    {
+     "id": "2217",
+     "nombre": "Cucho",
+     "pos": 4
+    },
+    {
+     "id": "3089",
+     "nombre": "Ez Abde",
+     "pos": 4
+    },
+    {
+     "id": "2770",
+     "nombre": "Antony",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2541",
+    "2543",
+    "121",
+    "2429",
+    "2414",
+    "2419",
+    "3090",
+    "3099",
+    "2418",
+    "3089",
+    "2770"
+   ]
   },
   {
    "id": "14",
@@ -819,7 +888,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "3267",
+     "nombre": "Emil Audero",
+     "pos": 1
+    },
+    {
+     "id": "1056",
+     "nombre": "Pedrosa",
+     "pos": 2
+    },
+    {
+     "id": "2383",
+     "nombre": "Pathé I. Ciss",
+     "pos": 3
+    },
+    {
+     "id": "3081",
+     "nombre": "Ratiu",
+     "pos": 2
+    },
+    {
+     "id": "3082",
+     "nombre": "Lejeune",
+     "pos": 2
+    },
+    {
+     "id": "2384",
+     "nombre": "Unai Lopez",
+     "pos": 3
+    },
+    {
+     "id": "3244",
+     "nombre": "G. Bouaré",
+     "pos": 3
+    },
+    {
+     "id": "2382",
+     "nombre": "Isi",
+     "pos": 3
+    },
+    {
+     "id": "886",
+     "nombre": "De Frutos",
+     "pos": 4
+    },
+    {
+     "id": "2387",
+     "nombre": "Camello",
+     "pos": 4
+    },
+    {
+     "id": "1029",
+     "nombre": "Álvaro García",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "3267",
+    "3081",
+    "3082",
+    "3260",
+    "1056",
+    "2384",
+    "2383",
+    "1029",
+    "2387",
+    "886",
+    "3198"
+   ]
   },
   {
    "id": "12",
