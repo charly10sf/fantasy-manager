@@ -2520,6 +2520,21 @@
     "extra": 0,
     "jugador": "Oihan Sancet"
    }
+  },
+  {
+   "clave": "directo|134|Álex Berenguer|gol1",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126705506823581732",
+   "t": "2026-11-28T15:51:20.167Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "134",
+    "equipo": "93",
+    "min": 34,
+    "extra": 0,
+    "jugador": "Álex Berenguer"
+   }
   }
  ],
  "estados": {
@@ -3416,7 +3431,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000,
    "SPORT|136846515": 1795622552000,
@@ -5119,16 +5133,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 21,
-   "redactar": 39,
+   "redactar": 41,
    "revisar": 25,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 170908,
-  "salida": 25526,
-  "cacheLee": 342112,
+  "entrada": 174312,
+  "salida": 25738,
+  "cacheLee": 357038,
   "cacheEscribe": 26414,
-  "dolares": 0.520516,
+  "dolares": 0.530936,
   "reservado": 0
  },
  "recientes": {
@@ -5266,10 +5280,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-27T21:26:32.053Z",
-    "texto": "⚽ Pablo García empata para el Racing en el 66': Levante 1-1 Racing. Pablo García va por 5 puntos de momento y Almeida, que da el pase, por 4."
-   },
-   {
     "t": "2026-11-27T21:41:26.004Z",
     "texto": "⚽ ¡LE DA LA VUELTA! Zabiri marca en el 81' y los racinguistas ganan 1-2 en el Ciutat de València.\n\nEl delantero marroquí lleva 5 puntos de momento. Iñigo Vicente, que le habilita el gol, va por 4."
    },
@@ -5284,6 +5294,10 @@
    {
     "t": "2026-11-28T15:46:19.944Z",
     "texto": "⚽ Oihan Sancet abre el marcador en el 27': Málaga 0-1 Athletic. Oihan Sancet lleva 6 puntos; el pase es de Nico Williams, que suma 3."
+   },
+   {
+    "t": "2026-11-28T15:51:20.170Z",
+    "texto": "⚽ Berenguer amplía la ventaja del Athletic en el 34': Málaga 0-2 Athletic. Lleva 5 puntos de momento."
    }
   ],
   "novedades": [
@@ -10317,17 +10331,32 @@
    "w": "2026-11-28T15:42:43Z",
    "f": "2026-11-28T15:46:10.613Z",
    "rf": "29:57"
+  },
+  "fm|134|574629|34": {
+   "j": "Alex Berenguer",
+   "m": "34'",
+   "f": "2026-11-28T15:51:11.761Z",
+   "rf": "34:58",
+   "casado": true
+  },
+  "directo|134|Álex Berenguer|gol1": {
+   "j": "Álex Berenguer",
+   "m": "34'",
+   "e": "2026-11-28T15:51:11.761Z",
+   "re": "35'",
+   "f": "2026-11-28T15:51:11.761Z",
+   "rf": "34:58"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7375,
+   "ok": 7377,
    "fallos": 0,
-   "ejecuciones": 6021,
+   "ejecuciones": 6022,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:46:10.613Z"
+   "ultima": "2026-11-28T15:51:11.761Z"
   }
  },
  "ptsDirecto": {
@@ -10390,6 +10419,12 @@
    "g": 0,
    "a": 1,
    "t": 1795880770613
+  },
+  "14|134|927": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795881071761
   }
  },
  "golesAnulados": {
@@ -10405,27 +10440,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:46:23.991Z"
+   "ultimaBien": "2026-11-28T15:51:25.193Z"
   }
  },
  "avisos": [
