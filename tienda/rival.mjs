@@ -13,6 +13,16 @@ const ctx = await nav.newContext({ viewport: { width: +W, height: +H }, deviceSc
 await ctx.addInitScript((c) => { localStorage.setItem('fm-prueba', '1'); localStorage.setItem('fm-sin-tema', '1'); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', String(Date.now())); localStorage.setItem('fm-beta-aviso', String(Date.now())); if (c) localStorage.setItem('fm-caras-demo', c); }, modo === 'sinfotos' ? null : caras);
 await ctx.clock.install({ time: new Date(process.env.RELOJ || '2026-11-27T17:40:00Z') });
 const pg = await ctx.newPage();
+// (solo para la foto) el equipo con otro nombre y unas semanas de mercado más, para que su saldo tenga historia
+const NOMBRE = process.env.NOMBRE || 'FC Bayern de los Caídos';
+await pg.route('**/js/demo.js*', async (route) => { const r = await route.fetch(); let t = await r.text();
+  t = t.replace("['Rayo Vallekano', 'Iván']", `['${NOMBRE}', 'Iván']`);
+  t = t.replace('  void nombres;', `  { const q = clasif.find((e) => e.nombre === '${NOMBRE}'); if (q) { const suyos = plantillas[q.teamId] || [];
+    const plan = [[13.6, 31, 0], [12.2, 33, 1], [11.1, 31, 1], [9.8, 33, 2], [8.4, 32, 2], [7.3, 33, 3], [6.1, 31, 3], [5.2, 33, 4]];
+    plan.forEach(([d, tipo, k], j) => { const baratos = libresDemo.filter((p) => maestro[p].valor < 12e6); const pid = tipo === 33 ? baratos[(k * 7 + 3) % baratos.length] : suyos[k % suyos.length].pid; const otro = tipo === 32 ? clasif.find((e) => e !== q && !e.esYo) : null;
+      actividad.push({ id: 'fb' + j, t: ahora - d * DIA - 3 * HORA, tipo, clase: { 31: 'compra', 32: 'clausula', 33: 'venta' }[tipo], quien: q.manager, quienId: q.userId, otro: otro ? otro.manager : '', otroId: otro ? otro.userId : '', pid, jugador: maestro[pid].nombre, importe: Math.round(maestro[pid].valor * (tipo === 33 ? 1 : 1.12)), texto: '' }); }); } }
+  void nombres;`);
+  return route.fulfill({ response: r, body: t }); });
 pg.on('pageerror', (e) => console.log('ERROR', e.message));
 await pg.goto('http://127.0.0.1:8765/index.html');
 await pg.waitForFunction(() => window.S && window.S.M && document.querySelector('.nav'), null, { timeout: 90000 });

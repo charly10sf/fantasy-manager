@@ -14,7 +14,7 @@ const ICONO = b64(`${WEB}/img/icono-180.png`);
 // [archivo, titular (lo de <em>, en rojo), línea]
 // el orden lo puso Carlos (28 nov, 01:05): primero el dinero de los rivales, «el gamechanger de la app», por delante del plan
 export const TARJETAS = [
-  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Cuánto tiene y todos sus movimientos', 'El dinero de cada <em>rival</em>'],
+  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Cuánto tiene, con el ± de la recompensa diaria, y todos sus movimientos', 'El dinero de cada <em>rival</em>'],
   ['hoy', 'Tu plan<br>de <em>hoy</em>', 'Qué fichar, vender y alinear, paso a paso'],
   ['parte', 'El parte de<br>tus <em>rivales</em>', 'Quién va corto, sin blindajes o en negativo'],
   ['mercado', 'Los que<br>más <em>suben</em>', 'Ficha antes de que se revaloricen', 'Los que más <em>suben</em>'],
@@ -73,7 +73,6 @@ const pag = (img, tit, sub) => `<!doctype html><html><head><meta charset="utf-8"
 const pag2 = (imgA, imgB, tit, sub, eA, eB) => pag(imgA, tit, sub).replace(/<div class="tel">[\s\S]*?<\/div>\n/, `<div class="dos">
     <div class="tel b"><img src="data:image/png;base64,${imgB}"></div>
     <div class="tel a"><img src="data:image/png;base64,${imgA}"></div>
-    <div class="eti ea">${eA}</div><div class="eti eb">${eB}</div>
   </div>
 `).replace('</style>', `
   .dos { position: relative; flex: none; width: 100%; margin-top: calc(var(--u) * ${PLAY ? 4.2 : 5.5}); }
@@ -100,9 +99,6 @@ const ajustar2 = () => {
   a.style.width = `${wa}px`; b.style.width = `${wb}px`;
   b.style.top = `${alto(wa) * BAJA}px`;
   d.style.height = `${total(wa)}px`;
-  const ea = d.querySelector('.ea'), eb = d.querySelector('.eb');
-  ea.style.right = `${3 * u}px`; ea.style.top = `${alto(wa) * 0.335}px`;
-  eb.style.left = `${Math.max(3 * u, b.offsetLeft - eb.offsetWidth * 0.62)}px`; eb.style.top = `${alto(wa) * BAJA + alto(wb) * 0.40}px`;
   return { wa: Math.round(wa), wb: Math.round(wb), libre: Math.round(libre) };
 };
 
