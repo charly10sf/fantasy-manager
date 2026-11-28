@@ -121,24 +121,44 @@ final class PruebasUI: XCTestCase {
 
     /// baja la lista de avisos del iPhone (desde el borde de arriba)
     private func bajarAvisos() {
-        let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.0))
-        arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+        // desde el borde de arriba, a la izquierda de la isla (en iOS 27, empezar en el centro a veces abre la búsqueda)
+        let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.005))
+        arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.9)))
         Thread.sleep(forTimeInterval: 1.5)
+    }
+
+    /// Saca la app al inicio. En el simulador de iOS 27 el botón de inicio a veces se pierde y `app.state` dice siempre
+    /// «a la vista», así que no se puede comprobar: se pulsa dos veces (la segunda, ya en el inicio, no hace nada)
+    private func salir() {
+        XCUIDevice.shared.press(.home)
+        Thread.sleep(forTimeInterval: 2)
+        XCUIDevice.shared.press(.home)
+        Thread.sleep(forTimeInterval: 1)
     }
 
     /// Busca un aviso del iPhone por lo que pone, lo toca y espera a que la app llegue a donde tiene que llegar (`llega`).
     /// La tira de arriba dura unos segundos: si el toque llega cuando ya se iba (y cae en lo de debajo), se vuelve al
     /// inicio, se baja la lista de avisos y se toca ahí. Dice si la app ha llegado
+    /// si el último `tocarAviso` llegó a ver el aviso en pantalla (aunque el toque no abriera la app)
+    private var avisoVisto = false
+    /// En el simulador de iOS 27 de GitHub, salir de la app deja la pantalla bloqueada, y ahí tocar un aviso no abre la
+    /// app hasta deslizar, gesto que la prueba no consigue hacer. Que tocar un aviso abre su pestaña ya lo mira test5Avisos
+    /// (con la app abierta): en test6 basta con que el aviso salga
+    private var bloqueaAlSalir: Bool { ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 }
+
     private func tocarAviso(_ texto: String, _ segundos: TimeInterval, captura nombre: String, llega: @escaping ([String: Any]) -> Bool) -> Bool {
+        avisoVisto = false
         let aviso = sistema.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", texto)).firstMatch
         let fin = Date().addingTimeInterval(segundos)
         var capturado = false, bajada = false
         while Date() < fin {
             if aviso.exists && aviso.isHittable {
-                if !capturado { capturado = true; captura(nombre) }
+                if !capturado { capturado = true; avisoVisto = true; captura(nombre) }
                 if aviso.exists && aviso.isHittable {
-                    aviso.tap()
-                    if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
+                    // por su sitio: si la tira se va justo entre mirarla y tocarla, el toque no hace fallar la prueba
+                    let marco = aviso.frame
+                    sistema.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: marco.midX, dy: marco.midY)).tap()
+                    if llega(esperar("la app tras tocar el aviso", 10, falla: false, llega)) { return true }
                     print("=== tocar el aviso === el toque no ha abierto la app: a la lista de avisos")
                 }
                 XCUIDevice.shared.press(.home)
@@ -376,8 +396,9 @@ final class PruebasUI: XCTestCase {
     func test6AvisoDelServidor() {
         abrirHaciendo("pregunta")
         var s = esperar("la pregunta en marcha", 20) { self.pasos($0).contains("en marcha") }
-        XCUIDevice.shared.press(.home)
-        let visto = tocarAviso("director deportivo", 50, captura: "10-aviso-respuesta") { ($0["hash"] as? String) == "#ia" }
+        salir()
+        var visto = tocarAviso("director deportivo", 50, captura: "10-aviso-respuesta") { ($0["hash"] as? String) == "#ia" }
+        if !visto && avisoVisto && bloqueaAlSalir { print("=== aviso de la respuesta === visto; el toque no abre la app con la pantalla bloqueada (iOS 27)"); visto = true; app.activate() }
         s = sonda()
         apuntar("10-respuesta", s)
         XCTAssertTrue(visto, "con la app fuera, al llegar la respuesta tiene que salir el aviso «Tu director deportivo ha contestado» y, al tocarlo, abrirse la IA")
@@ -388,8 +409,9 @@ final class PruebasUI: XCTestCase {
         // el aviso del servidor: con la app abierta no se enseña (ya está en pantalla); con la app fuera, sí
         Thread.sleep(forTimeInterval: 8)
         captura("10-abierta-sin-aviso")
-        XCUIDevice.shared.press(.home)
-        let servidor = tocarAviso("Tu plan de hoy está listo", 50, captura: "10-aviso-servidor") { ($0["hash"] as? String) == "#hoy" }
+        salir()
+        var servidor = tocarAviso("Tu plan de hoy está listo", 50, captura: "10-aviso-servidor") { ($0["hash"] as? String) == "#hoy" }
+        if !servidor && avisoVisto && bloqueaAlSalir { print("=== aviso del servidor === visto; el toque no abre la app con la pantalla bloqueada (iOS 27)"); servidor = true }
         apuntar("10-servidor", sonda())
         XCTAssertTrue(servidor, "con la app fuera, el aviso del servidor tiene que verse y, al tocarlo, abrirse Hoy")
         app.terminate()
@@ -416,7 +438,7 @@ final class PruebasUI: XCTestCase {
             let fin = esperar("la respuesta del bonificado", 15, falla: false) { self.haz($0)["anuncio"] is [String: Any] }
             apuntar("11-bonificado-visto", ["anuncio": haz(fin)["anuncio"] ?? "sin respuesta"])
         } else {
-            print("=== bonificado === no encuentro el botón de cerrar. Botones: \(app.buttons.allElementsBoundByIndex.prefix(12).map { $0.label })")
+            print("=== bonificado === no encuentro el botón de cerrar. Botones: \(app.buttons.debugDescription.prefix(1500))")
         }
         app.terminate()
     }

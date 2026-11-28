@@ -3268,7 +3268,7 @@ export function dineroPreguntado(pregunta, D, M, antes = '') {
   return { cerrados: de(true), abiertos: de(false), quien: pagar };
 }
 // (25 nov) en el iPhone no hay Google Play: el dinero de un rival se abre invitando a un amigo (2 rivales por amigo)
-const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : enIPhone ? 'en el iPhone se abre invitando a un amigo, con el botón Invitar de arriba' : 'se abre viendo un anuncio en la app de Google Play');
+const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : enIPhone ? 'en el iPhone se abre invitando a un amigo, con Invitar, arriba del todo de Ajustes' : 'se abre viendo un anuncio en la app de Google Play');
 // «quién puede pagar tus cláusulas» se abre en la ficha de tu jugador, con un anuncio
 // (en el iPhone, invitando solo se abre el dinero de los rivales: quién paga, de momento, no; como dondeTop de comunes.js)
 const comoSeAbreQuien = () => (topConAnuncio() ? 'se abre en la ficha de tu jugador, tocando su candado y viendo un anuncio corto' : enIPhone ? 'en el iPhone, de momento, no se puede abrir' : 'se abre viendo un anuncio en la app de Google Play');

@@ -55,6 +55,7 @@ import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenAc
 import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
+import { iniciarLiquid } from './liquid.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
@@ -1105,10 +1106,12 @@ function marco() {
   const invBoton = vInv === 'a' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
     : vInv === 'd' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
     : vInv === 'b' ? `<button class="b-ico b-inv lleno" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo: por cada uno que entra, el dinero de 2 rivales" data-et="Invitar">${icono('estrella')}<span class="inv-mas" aria-hidden="true">+2</span></button>` : '';
-  const botones = `<div class="sup-btns">${invBoton}<button class="b-ico" id="bRefrescar"${vInv === 'd' ? ' hidden' : ''} data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
+  // (0.9; Carlos, 27 nov, 13:31) en el móvil Invitar sale de la cabecera: va en Ajustes, en una tarjeta dorada arriba del
+  // todo (hojas.js, `.inv-oro`). En el ordenador sigue en la columna de la izquierda, como estaba
+  const botones = `<div class="sup-btns">${anchoYa ? invBoton : ''}<button class="b-ico" id="bRefrescar"${vInv === 'd' ? ' hidden' : ''} data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="beta" aria-label="${avisosGuardados().admin ? 'Versión beta: quién usa la app' : 'Versión beta: reportar un fallo o proponer una idea'}">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"${vInv === 'd' ? ' class="sup-toca" data-accion="recargar" role="button" tabindex="0" title="Actualizar la liga"' : ''}></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="beta" aria-label="${avisosGuardados().admin ? 'Versión beta: quién usa la app' : 'Versión beta: reportar un fallo o proponer una idea'}">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"${vInv === 'd' ? ' class="sup-toca" data-accion="recargar" role="button" tabindex="0" title="Actualizar la liga"' : ''}></span><span id="supQueda" class="sup-queda" hidden></span>${anchoYa ? '' : '<button id="supPos" class="sup-pos" data-ir="rivales" hidden></button><span id="supPts" class="sup-pts" data-ir="rivales" aria-hidden="true" hidden></span>'}</div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -1116,6 +1119,7 @@ function marco() {
 /** el ordenador: la clase en <html> para el CSS y, al pasar de un tamaño a otro, todo se vuelve a pintar */
 function ponerTamano() { document.documentElement.classList.toggle('escritorio', V.ancho()); }
 ponerTamano();
+iniciarLiquid(); // (0.9) lo que se mueve del diseño «Liquid»: la barra que se encoge, la píldora de los selectores, las hojas…
 /* Las subpestañas «llenas» (Equipo) reparten el ancho a partes iguales. Con la letra grande del móvil (130 % o más)
    «Jornadas», «Cláusulas» o «Beneficio» no caben y se montan unas encima de otras: si alguna no cabe, esa barra pasa a
    deslizarse de lado, como las demás. */
@@ -1181,6 +1185,19 @@ function pintarSup() {
       else st.innerHTML = `<span class="sup-tx">${htmlEstado}</span>${conGiro ? `<i class="sup-gir" aria-hidden="true">${icono('refrescar')}</i>` : ''}`;
     } }
   $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
+  // (0.9; Carlos, 27 nov, 13:31: la cápsula de la liga, «más grande… añadir ahí algo más de info») tu puesto, al lado del
+  // nombre, y tus puntos, al lado del estado; al tocarlos, Rivales. Si no caben, liquid.js los quita: el estado manda
+  { const sp = $('#supPos'), st = $('#supPts'), yo = S.M && S.M.yo;
+    if (sp && st) {
+      const hay = !!(yo && yo.pos);
+      sp.hidden = st.hidden = !hay;
+      if (hay) {
+        const pts = String(Math.round(yo.puntos || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'), n = D && D.clasif && D.clasif.length;
+        if (sp.textContent !== `${yo.pos}º`) sp.textContent = `${yo.pos}º`;
+        if (st.textContent !== `${pts} pts`) st.textContent = `${pts} pts`;
+        sp.setAttribute('aria-label', `Vas ${yo.pos}º${n ? ` de ${n}` : ''} con ${pts} puntos: ver la clasificación`);
+      }
+    } }
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   { const st = $('#supEstado'); if (st) st.classList.toggle('girando', !!S.cargando); }
   pintarNumAvisos();
@@ -4273,7 +4290,10 @@ function vigilarBarraIOS() {
     if (nav && nav.offsetHeight && !campo() && getComputedStyle(nav).position === 'fixed') {
       // (dónde la pone Safari sin el arreglo y dónde acaba lo que dice que se ve: con el fallo, una de las dos se queda
       // a la altura del teclado y window.innerHeight sigue siendo el alto de verdad)
-      const sin = nav.getBoundingClientRect().bottom - dy, vista = vv.offsetTop + vv.height;
+      // (0.9) la barra flota: se separa del borde lo que diga su `bottom` (el margen más la zona segura del iPhone, unos
+      // 44 px). Eso es diseño, no el fallo de Safari: se descuenta, o la barra acabaría pegada abajo del todo
+      const hueco = Math.max(0, (parseFloat(getComputedStyle(nav).bottom) || 0) + dy);
+      const sin = nav.getBoundingClientRect().bottom - dy + hueco, vista = vv.offsetTop + vv.height;
       const d = Math.round(window.innerHeight - Math.min(sin, vista));
       if (d > 40 && d < window.innerHeight * 0.75) nuevo = d;
     }
@@ -5409,7 +5429,8 @@ function pasosTour() {
   const demo = enDemo(), conClave = puedeChat(demo), conIA = puedePlanIA(demo);
   const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
   // en el ordenador, Pregunta está en la barra de la izquierda, no arriba
-  const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón rojo de arriba';
+  // (0.9) en el móvil Pregunta ya no es un botón con el contorno rojo: va en la cápsula de arriba, con su icono rojo
+  const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón de arriba, el del icono rojo';
   return [
     { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día la app te dice qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Quieres ver lo básico o todo?` },
     { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, hasta dónde puedes quedarte en negativo (contando tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },

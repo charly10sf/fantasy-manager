@@ -85,6 +85,11 @@ export const DIBUJOS = {
   movil: `<rect class="d-l" x="44" y="6" width="72" height="108" rx="14"/><rect class="d-s" x="55" y="20" width="16" height="16" rx="5"/><rect class="d-s" x="78" y="20" width="16" height="16" rx="5"/><rect class="d-s" x="55" y="44" width="16" height="16" rx="5"/>
     <rect class="d-a" x="78" y="44" width="16" height="16" rx="5"/><rect class="d-s" x="55" y="68" width="16" height="16" rx="5"/><rect class="d-s" x="78" y="68" width="16" height="16" rx="5"/><path class="d-l" d="M68 102h24"/>
     <circle class="d-a" cx="122" cy="28" r="15"/><path class="d-w" d="M122 20v16M114 28h16"/>`,
+  // (0.9) el diseño nuevo: un móvil con las dos cápsulas de arriba, tarjetas y la barra de abajo en cápsula con su gota
+  cristal: `<rect class="d-l" x="42" y="6" width="76" height="108" rx="16"/><rect class="d-s" x="50" y="15" width="34" height="11" rx="5.5"/><rect class="d-s" x="88" y="15" width="22" height="11" rx="5.5"/>
+    <rect class="d-s" x="50" y="33" width="60" height="22" rx="7"/><path class="d-l" d="M56 41h22M56 48h34"/><rect class="d-s" x="50" y="60" width="60" height="14" rx="6"/>
+    <rect class="d-l" x="48" y="88" width="64" height="18" rx="9"/><rect class="d-a" x="51" y="91" width="18" height="12" rx="6"/><circle class="d-s" cx="79" cy="97" r="3"/><circle class="d-s" cx="90" cy="97" r="3"/><circle class="d-s" cx="101" cy="97" r="3"/>
+    <path class="d-al" d="M132 22v14M125 29h14M24 76v10M19 81h10"/>`,
   compartir: `<path class="d-l" d="M56 54H44a6 6 0 0 0-6 6v46a6 6 0 0 0 6 6h72a6 6 0 0 0 6-6V60a6 6 0 0 0-6-6h-12"/><rect class="d-s" x="38" y="54" width="84" height="58" rx="6"/><path class="d-al" d="M80 82V12M62 30l18-18 18 18"/>`,
   balanza: `<path class="d-l" d="M80 14v86M50 104h60M30 34h100"/><path class="d-s" d="M30 34L12 70a18 11 0 0 0 36 0z"/><path class="d-l" d="M30 34L12 70a18 11 0 0 0 36 0zM130 34l-18 36a18 11 0 0 0 36 0z"/><path class="d-a" d="M130 34l-18 36a18 11 0 0 0 36 0z"/><circle class="d-a" cx="80" cy="14" r="6"/>`,
   bandera: `<path class="d-l" d="M42 8v104"/><path class="d-s" d="M42 18h74l-16 26 16 26H42z"/><path class="d-a" d="M42 18h74l-16 26 16 26H42z" style="opacity:.9"/><circle class="d-w" cx="68" cy="44" r="8"/>`,

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5e';
+export const VERSION = '0.9a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -30,8 +30,9 @@ export const NOVEDADES = [
     // (todos: true) con la tarjeta pequeña (aviso). La cuenta: motor.js, «CÓMO PONE LALIGA LAS CLÁUSULAS»; lo medido, en
     // claude/nota-cuenta-dinero.md del proyecto. LA HORA Y EL DÍA, AL PUBLICAR. Lo de proteger, el cierre y el blindaje
     // (27 nov) va en `cosas`
-    v: '0.8.5e', f: '2026-11-28', h: '00:00', t: 'El dinero de tus rivales, más exacto', todos: true,
-    // (01:15) de los cuatro diseños eligió el animado: la cuenta pieza a pieza con un ejemplo y al final la barra del ±
+    v: '0.9a', f: '2026-11-28', h: '02:10', t: 'El dinero de tus rivales, más exacto', todos: true,
+    // (01:15) de los cuatro diseños eligió el animado: la cuenta pieza a pieza con un ejemplo y al final la barra del ±;
+    // (02:00) sin la línea de «¿Te dice lo que tiene?»: «eso quítalo y publicamos»
     aviso: {
       d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, afinado y mucho más exacto',
       x: 'La cuenta se ha rehecho a fondo. Así sale ahora la cifra de cada rival:',
@@ -43,7 +44,6 @@ export const NOVEDADES = [
       ],
       rango: { eti: 'En este ejemplo', desde: 100000000, hasta: 98510000, entero: true, margen: '± 6.810.000', de: 'No recoge ninguna', a: 'Entra a diario' },
       mas: 'Si entra a diario, quédate con la parte alta',
-      nota: '¿Te dice lo que tiene? Apúntalo en su ficha y su cifra pasa a ser la suya.',
       ir: { v: 'rivales', txt: 'Ver a mis rivales' },
     },
     cosas: [
@@ -52,6 +52,21 @@ export const NOVEDADES = [
       { tipo: 'arreglo', d: 'reloj', t: 'Blindar el día de la jornada', x: 'El día de la jornada el plan ya avisa de blindar antes de que empiece, cuando la cláusula se reabre al acabar.' },
       { tipo: 'arreglo', d: 'peligro', menor: true, t: 'El peligro de cada rival, mejor repartido', x: 'Un rival con poco dinero ya no sale con el mismo peligro que los que más pueden pagar.' },
       { tipo: 'arreglo', d: 'porteria', menor: true, t: 'Ni vender ni blindar de más', x: 'La ficha ya no manda vender a un jugador que el plan aguanta, y el blindaje gratis solo se propone cuando de verdad te lo pueden quitar.' },
+    ],
+  },
+  {
+    // (27 nov, Carlos: «un rediseño completo… mucho más minimalista, que denote más calidad y con diseño y funciones tipo
+    // Liquid»; lo decidido, en claude/rediseno-liquid-afinado.md del proyecto) EL REDISEÑO «LIQUID»: la sección «0.9» del
+    // final de app.css (con la clase `lq` de <html>) y liquid.js (lo que se mueve). La barra de abajo flota en una cápsula
+    // de cristal, con la gota en la pestaña activa, y se encoge al bajar; la cabecera son dos cápsulas (la de la liga, con tu
+    // puesto y tus puntos, no se recoge); Invitar sale de la cabecera del móvil y va en una tarjeta dorada arriba de Ajustes
+    // (hojas.js, `.inv-oro`); el ordenador lleva el mismo material. El cristal se quita solo donde no toca (sin ajuste).
+    // ESTA VERSIÓN SE CUENTA A TODOS con la tarjeta pequeña (Carlos, 27 nov: «la 0.9, la del rediseño gordo»), una línea.
+    v: '0.9', f: '2026-11-28', h: '00:52', t: 'Nuevo diseño', todos: true,
+    aviso: { d: 'cristal', eti: 'Novedades', t: 'Nuevo diseño', x: 'La app estrena aspecto: más limpia, con la barra y los menús de cristal. Todo sigue donde estaba.' },
+    cosas: [
+      { tipo: 'nuevo', d: 'cristal', t: 'Nuevo diseño', x: 'La app estrena aspecto en el móvil y en el ordenador: la barra de abajo y los menús flotan como un cristal, las fichas son más limpias y en la cabecera ves tu puesto y tus puntos. Todo sigue donde estaba.', importante: true },
+      { tipo: 'mejora', d: 'regalo', t: 'Invitar, en Ajustes', x: 'Invitar a un amigo está ahora arriba del todo de Ajustes, en una tarjeta dorada.' },
     ],
   },
   {

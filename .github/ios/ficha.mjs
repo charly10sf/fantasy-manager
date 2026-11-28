@@ -6,8 +6,13 @@
 //                                                 si CAPTURAS apunta a una carpeta con 61/ y 67/, las capturas
 //   node .github/ios/ficha.mjs version <build>    pone en la ficha la versión de esa compilación y la elige para enviar
 //   node .github/ios/ficha.mjs estado             qué falta para poder enviar (también lo dice al final de los otros)
+//   node .github/ios/ficha.mjs enviar             publicación manual y la versión a la revisión de la App Store
+//   node .github/ios/ficha.mjs situacion          en qué está cada versión y cada envío, y el DSA (no toca nada)
+//   node .github/ios/ficha.mjs retirar            quita de la revisión lo enviado (la versión vuelve a poder editarse)
+//   node .github/ios/ficha.mjs publicar           publica la versión aprobada, solo con el DSA aprobado (SOLO=0.9: solo esa)
 //
-// NO ENVÍA NADA A REVISIÓN: eso solo con el «envía» de Carlos (otra orden, aún no escrita a propósito).
+// `enviar` solo con el «envía» de Carlos (27 nov): lo lanza el trabajo «enviar» de testflight.yml con «[enviar]».
+// La publicación queda en MANUAL: aprobada, no sale hasta que Carlos la publica en App Store Connect.
 // Lo que no se puede hacer por la API, y hace Carlos en App Store Connect: «Privacidad de la app», la condición de
 // comerciante (DSA) y la casilla de derechos de contenido. Todo es idempotente.
 //
@@ -238,8 +243,9 @@ async function capturas(vl) {
   const sets = await todo(`/v1/appStoreVersionLocalizations/${vl.id}/appScreenshotSets?limit=50`);
   for (const [sub, tipo] of [['61', 'APP_IPHONE_61'], ['67', 'APP_IPHONE_67']]) {
     const d = path.join(dir, sub);
-    const archivos = fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /\.(png|jpe?g)$/i.test(f)).sort().slice(0, 10) : [];
-    if (!archivos.length) { console.log(`capturas ${tipo}: ninguna en ${sub}/`); continue; }
+    // solo las de la prueba Tienda («1-hoy.png»…): nunca la de un fallo («fallo.png»); sin las cinco, no se toca ese tamaño
+    const archivos = fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /^\d+-[a-z]+\.(png|jpe?g)$/i.test(f)).sort().slice(0, 10) : [];
+    if (archivos.length < 5) { console.log(`capturas ${tipo}: ${archivos.length} buenas en ${sub}/; no se tocan las que hay`); continue; }
     let set = sets.find((s) => s.attributes.screenshotDisplayType === tipo);
     if (!set) set = (await api('POST', '/v1/appScreenshotSets', { data: { type: 'appScreenshotSets', attributes: { screenshotDisplayType: tipo }, relationships: { appStoreVersionLocalization: { data: { type: 'appStoreVersionLocalizations', id: vl.id } } } } })).data;
     for (const viejo of await todo(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=50`)) await api('DELETE', `/v1/appScreenshots/${viejo.id}`);
@@ -287,7 +293,8 @@ async function estado() {
   const v = await versionEditable();
   const info = await infoEditable();
   const lineas = [];
-  const ok = (bien, txt) => lineas.push(`${bien ? '✅' : '❌'} ${txt}`);
+  const faltan = [];
+  const ok = (bien, txt) => { lineas.push(`${bien ? '✅' : '❌'} ${txt}`); if (!bien) faltan.push(txt); };
   const [vls, ils, app, det, build] = await Promise.all([
     todo(`/v1/appStoreVersions/${v.id}/appStoreVersionLocalizations`),
     todo(`/v1/appInfos/${info.id}/appInfoLocalizations`),
@@ -313,10 +320,147 @@ async function estado() {
   ok(d && d.demoAccountRequired && d.demoAccountName, 'cuenta de LaLiga para el revisor (Carlos: secretos REVISOR_USUARIO y REVISOR_CLAVE)');
   ok(build && build.data, `compilación elegida para enviar${build && build.data ? ` (${build.data.attributes.version})` : ' (falta: commit con «[app-store]»)'}`);
   ok(!!app.data.attributes.contentRightsDeclaration, `derechos de contenido (Carlos, a mano): ${app.data.attributes.contentRightsDeclaration || 'sin marcar'}`);
-  lineas.push('❔ «Privacidad de la app» y la condición de comerciante (DSA): Carlos, a mano en App Store Connect (la API no las deja ver)');
+  // (iOS 5, 27 nov) La API no tiene nada para la condición de comerciante (DSA), pero la disponibilidad de cada país
+  // dice por qué no se puede vender allí (`contentStatuses`): en los 27 de la UE, algo con «TRADER» mientras Apple no
+  // la ha aprobado. Se cuentan los estados de la UE tal cual vienen, para no adivinar los nombres.
+  const UE = ['AUT', 'BEL', 'BGR', 'HRV', 'CYP', 'CZE', 'DNK', 'EST', 'FIN', 'FRA', 'DEU', 'GRC', 'HUN', 'IRL', 'ITA', 'LVA', 'LTU', 'LUX', 'MLT', 'NLD', 'POL', 'PRT', 'ROU', 'SVK', 'SVN', 'ESP', 'SWE'];
+  try {
+    const disp = await api('GET', `/v1/apps/${APP}/appAvailabilityV2`);
+    const ta = await todo(`/v2/appAvailabilities/${disp.data.id}/territoryAvailabilities?include=territory&limit=200`);
+    const cuenta = {};
+    let vistos = 0;
+    for (const t of ta) {
+      const terr = t.relationships && t.relationships.territory && t.relationships.territory.data && t.relationships.territory.data.id;
+      if (!UE.includes(terr)) continue;
+      vistos++;
+      for (const s of (t.attributes.contentStatuses || ['(sin estado)'])) cuenta[s] = (cuenta[s] || 0) + 1;
+    }
+    const resumen = Object.entries(cuenta).map(([s, n]) => `${s} ×${n}`).join(', ') || 'nada';
+    const comerciante = Object.keys(cuenta).filter((s) => /TRADER/.test(s));
+    ok(vistos > 0 && !comerciante.length, `comerciante (DSA), visto por los países de la UE: ${comerciante.length ? `SIN APROBAR (${comerciante.join(', ')})` : vistos ? 'nada lo frena' : 'no salen los países'} · ${vistos} países: ${resumen}`);
+  } catch (e) { lineas.push(`❔ comerciante (DSA): no he podido leer la disponibilidad por países (${e.message})`); }
+  lineas.push('❔ «Privacidad de la app»: Carlos, a mano en App Store Connect (la API no la deja ver)');
   const txt = `Ficha de la App Store, versión ${v.attributes.versionString} (${estadoDe(v.attributes)}):\n${lineas.join('\n')}`;
   console.log(txt);
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## ${txt.replace(/\n/, '\n\n').replace(/\n(?=[✅❌❔])/g, '\n- ')}\n`);
+  return { v, faltan };
+}
+
+/** al resumen de la Action y al registro */
+function decir(txt) {
+  console.log(txt);
+  if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${txt}\n\n`);
+}
+
+/** (27 nov, el «envía» de Carlos) publicación manual y la versión editable a la revisión de la App Store. Lo que falte
+ * según `estado` para, salvo el DSA: ese lo decide Apple al enviar (si no deja, se dice tal cual lo que contesta). */
+async function enviar() {
+  const { v, faltan } = await estado();
+  const bloquean = faltan.filter((t) => !/comerciante/.test(t));
+  if (bloquean.length) throw new Error(`No envío: falta ${bloquean.join(' · ')}`);
+  if (faltan.length) decir(`⚠️ Lo intento con el DSA sin aprobar: si Apple no deja enviar por eso, lo dirá ahora.`);
+  if (v.attributes.releaseType !== 'MANUAL') {
+    await api('PATCH', `/v1/appStoreVersions/${v.id}`, { data: { type: 'appStoreVersions', id: v.id, attributes: { releaseType: 'MANUAL' } } });
+  }
+  decir(`publicación: manual (antes ${v.attributes.releaseType || 'sin poner'})`);
+  // un envío ya hecho o a medias de antes: no se repite
+  const abiertos = await todo(`/v1/reviewSubmissions?filter[app]=${APP}&filter[platform]=IOS&filter[state]=READY_FOR_REVIEW,WAITING_FOR_REVIEW,IN_REVIEW,UNRESOLVED_ISSUES&limit=20`);
+  const yaEnviado = abiertos.find((x) => x.attributes.state !== 'READY_FOR_REVIEW');
+  if (yaEnviado) { decir(`Ya hay un envío en ${yaEnviado.attributes.state} (${yaEnviado.id}): no envío otro.`); return; }
+  let sub = abiertos[0];
+  if (!sub) sub = (await api('POST', '/v1/reviewSubmissions', { data: { type: 'reviewSubmissions', attributes: { platform: 'IOS' }, relationships: { app: { data: { type: 'apps', id: APP } } } } })).data;
+  const items = await todo(`/v1/reviewSubmissions/${sub.id}/items?include=appStoreVersion&limit=50`);
+  const dentro = items.some((i) => i.relationships && i.relationships.appStoreVersion && i.relationships.appStoreVersion.data && i.relationships.appStoreVersion.data.id === v.id);
+  const fallo = (paso, e) => {
+    const dsa = /trader|dsa|comerciante|digital services/i.test(e.message);
+    decir(`❌ ${paso}: ${e.message}${dsa ? '\n\n**Apple no deja enviar por la condición de comerciante (DSA) pendiente.**' : ''}`);
+    throw e;
+  };
+  if (!dentro) {
+    try {
+      await api('POST', '/v1/reviewSubmissionItems', { data: { type: 'reviewSubmissionItems', relationships: { reviewSubmission: { data: { type: 'reviewSubmissions', id: sub.id } }, appStoreVersion: { data: { type: 'appStoreVersions', id: v.id } } } } });
+    } catch (e) { fallo('meter la versión en el envío', e); }
+  }
+  let r;
+  try {
+    r = await api('PATCH', `/v1/reviewSubmissions/${sub.id}`, { data: { type: 'reviewSubmissions', id: sub.id, attributes: { submitted: true } } });
+  } catch (e) { fallo('enviar a revisión', e); }
+  const v2 = await api('GET', `/v1/appStoreVersions/${v.id}`);
+  decir(`✅ ENVIADA a la revisión de la App Store: versión ${v2.data.attributes.versionString}, envío ${sub.id} (${r.data.attributes.state}), la versión en ${estadoDe(v2.data.attributes)}, publicación ${v2.data.attributes.releaseType}.`);
+}
+
+// ---------- (27 nov, la 0.9) cómo va la revisión, retirar un envío y publicar ----------
+const UE27 = ['AUT', 'BEL', 'BGR', 'HRV', 'CYP', 'CZE', 'DNK', 'EST', 'FIN', 'FRA', 'DEU', 'GRC', 'HUN', 'IRL', 'ITA', 'LVA', 'LTU', 'LUX', 'MLT', 'NLD', 'POL', 'PRT', 'ROU', 'SVK', 'SVN', 'ESP', 'SWE'];
+/** la condición de comerciante (DSA), vista por la disponibilidad de los 27 de la UE: { ok, txt } */
+async function dsaUE() {
+  try {
+    const disp = await api('GET', `/v1/apps/${APP}/appAvailabilityV2`);
+    const ta = await todo(`/v2/appAvailabilities/${disp.data.id}/territoryAvailabilities?include=territory&limit=200`);
+    const cuenta = {};
+    let vistos = 0;
+    for (const t of ta) {
+      const terr = t.relationships && t.relationships.territory && t.relationships.territory.data && t.relationships.territory.data.id;
+      if (!UE27.includes(terr)) continue;
+      vistos++;
+      for (const s of (t.attributes.contentStatuses || ['(sin estado)'])) cuenta[s] = (cuenta[s] || 0) + 1;
+    }
+    const frena = Object.keys(cuenta).filter((s) => /TRADER/.test(s));
+    return { ok: vistos > 0 && !frena.length, txt: `${vistos} países de la UE: ${Object.entries(cuenta).map(([s, n]) => `${s} ×${n}`).join(', ') || 'nada'}` };
+  } catch (e) { return { ok: false, txt: `no he podido leerla (${e.message})` }; }
+}
+const ABIERTOS = ['READY_FOR_REVIEW', 'WAITING_FOR_REVIEW', 'IN_REVIEW', 'UNRESOLVED_ISSUES'];
+const envios = () => todo(`/v1/reviewSubmissions?filter[app]=${APP}&filter[platform]=IOS&limit=20`);
+const versiones = () => todo(`/v1/apps/${APP}/appStoreVersions?filter[platform]=IOS&limit=20`);
+
+/** en qué está cada versión y cada envío a revisión, y el DSA. No toca nada. */
+async function situacion() {
+  const [vs, es, dsa] = await Promise.all([versiones(), envios(), dsaUE()]);
+  const lin = ['## La App Store ahora', ''];
+  for (const v of vs) {
+    const b = await api('GET', `/v1/appStoreVersions/${v.id}/build`).catch(() => null);
+    lin.push(`- versión ${v.attributes.versionString}: ${estadoDe(v.attributes)} · publicación ${v.attributes.releaseType || 'sin poner'} · compilación ${b && b.data ? b.data.attributes.version : 'sin elegir'} · creada ${String(v.attributes.createdDate || '').slice(0, 16)}`);
+  }
+  if (!vs.length) lin.push('- no hay ninguna versión');
+  for (const e of es.slice(0, 8)) {
+    const items = await todo(`/v1/reviewSubmissions/${e.id}/items?limit=50`).catch(() => []);
+    lin.push(`- envío ${e.id}: ${e.attributes.state}${e.attributes.submittedDate ? ` · enviado ${String(e.attributes.submittedDate).slice(0, 16)}` : ''} · ${items.map((i) => i.attributes.state).join(', ') || 'sin nada dentro'}`);
+  }
+  if (!es.length) lin.push('- no hay ningún envío a revisión');
+  lin.push(`- comerciante (DSA): ${dsa.ok ? 'APROBADO (nada lo frena)' : 'SIN APROBAR'} · ${dsa.txt}`);
+  decir(lin.join('\n'));
+}
+
+/** retira de la revisión lo que esté enviado (la versión vuelve a poder editarse). Sin nada enviado, no hace nada. */
+async function retirar() {
+  const es = (await envios()).filter((e) => ABIERTOS.includes(e.attributes.state));
+  if (!es.length) { decir('No hay ningún envío abierto: nada que retirar.'); return situacion(); }
+  for (const e of es) {
+    if (e.attributes.state === 'READY_FOR_REVIEW') { decir(`envío ${e.id} sin enviar (READY_FOR_REVIEW): se queda`); continue; }
+    try {
+      const r = await api('PATCH', `/v1/reviewSubmissions/${e.id}`, { data: { type: 'reviewSubmissions', id: e.id, attributes: { canceled: true } } });
+      decir(`envío ${e.id} (${e.attributes.state}): retirado → ${r.data.attributes.state}`);
+    } catch (err) { decir(`❌ no he podido retirar el envío ${e.id} (${e.attributes.state}): ${err.message}`); throw err; }
+  }
+  // Apple tarda un poco en dejar la versión editable otra vez
+  for (let i = 0; i < 40; i++) {
+    const vs = await versiones();
+    if (vs.some((x) => EDITABLES.includes(estadoDe(x.attributes)))) break;
+    await new Promise((r) => setTimeout(r, 15e3));
+  }
+  await situacion();
+}
+
+/** publica la versión aprobada que espera al desarrollador, solo si el DSA está aprobado (Carlos, 27 nov) */
+async function publicar() {
+  const vs = await versiones();
+  const v = vs.find((x) => estadoDe(x.attributes) === 'PENDING_DEVELOPER_RELEASE');
+  if (!v) { decir('No publico: no hay ninguna versión aprobada esperando la publicación.'); return situacion(); }
+  if (process.env.SOLO && v.attributes.versionString !== process.env.SOLO) { decir(`No publico: la aprobada es la ${v.attributes.versionString}, no la ${process.env.SOLO}.`); return situacion(); }
+  const dsa = await dsaUE();
+  if (!dsa.ok) { decir(`No publico: la ${v.attributes.versionString} está aprobada, pero el DSA sigue sin aprobar (${dsa.txt}).`); return situacion(); }
+  await api('POST', '/v1/appStoreVersionReleaseRequests', { data: { type: 'appStoreVersionReleaseRequests', relationships: { appStoreVersion: { data: { type: 'appStoreVersions', id: v.id } } } } });
+  decir(`✅ PUBLICADA la ${v.attributes.versionString} en la App Store (puede tardar unas horas en verse).`);
+  await situacion();
 }
 
 async function ficha() {
@@ -340,4 +484,8 @@ const [modo, a1] = process.argv.slice(2);
 if (modo === 'ficha') await ficha();
 else if (modo === 'version') { await version(a1 || process.env.BUILD); await estado(); }
 else if (modo === 'estado') await estado();
-else { console.error('modo: ficha | version <build> | estado'); process.exit(2); }
+else if (modo === 'enviar') await enviar();
+else if (modo === 'situacion') await situacion();
+else if (modo === 'retirar') await retirar();
+else if (modo === 'publicar') await publicar();
+else { console.error('modo: ficha | version <build> | estado | enviar'); process.exit(2); }

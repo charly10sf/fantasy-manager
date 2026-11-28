@@ -197,7 +197,7 @@ const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.i
 function listaNov(a) {
   return `<ul class="nvt-lista">${a.lista.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
 }
-/* (0.8.5e; Carlos, 28 nov, 01:15, de cuatro diseños eligió el animado: «que el pop-up en sí sea una animación donde van
+/* (0.9a; Carlos, 28 nov, 01:15, de cuatro diseños eligió el animado: «que el pop-up en sí sea una animación donde van
    saliendo todos los datos») la tarjeta que cuenta una cuenta: `pasos` (una fila por pieza: el nombre, qué es y su cifra del
    ejemplo, `v`; van entrando una detrás de otra) y `rango` (lo que sale: la cifra cuenta de `desde` a `hasta`, con su ±, y la
    barra de lo que no se sabe, de `de` a `a`, con el punto en la parte alta). Todo por CSS (los retrasos van en `--r`) menos

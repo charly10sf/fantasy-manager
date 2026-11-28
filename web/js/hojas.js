@@ -2,6 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { diagAnuncios } from './intersticial.js';
+import { cristalTxt } from './liquid.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe, margenPor } from './util.js';
 import { lineaPaso, pujaLinea, noCompensaTxt, vecesCorto, pujaDe } from './puja-txt.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
@@ -1063,6 +1064,13 @@ export function ajustes(S) {
   const abiertas = S.ajAbiertas || {};
   const dueno = avisosGuardados().admin;
   let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  // (0.9; Carlos, 27 nov, 13:31: Invitar «dentro de Ajustes, pero bien a la vista, no dentro de ningún submenú») la tarjeta
+  // dorada de invitar, arriba del todo, encima del buscador. Dice lo mismo que decía su fila de «Cuenta y liga» (rivales por
+  // elegir, el contador o el premio) y sale en los mismos casos: con tu liga y con las invitaciones en marcha
+  if (!enDemo() && ses && invitarOn()) {
+    const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
+    h += `<button class="inv-oro" data-accion="invitarAmigo"><span class="inv-oro-ic">${icono('estrella')}</span><span class="inv-oro-tx"><b>Invita a un amigo</b><small>${pe ? 'Tienes rivales por elegir' : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales'}</small></span><span class="inv-oro-ir">Invitar</span></button>`;
+  }
   // el buscador; debajo, avisar de un fallo y el tutorial (lo del fallo va arriba desde el 25 oct, lo pidió Carlos)
   h += `<div class="aj-busca">${icono('buscar')}<input id="buscaAj" type="search" placeholder="Buscar en Ajustes" aria-label="Buscar en Ajustes" autocomplete="off" value="${esc(S.ajBusca || '')}"></div>`;
   {
@@ -1101,9 +1109,9 @@ export function ajustes(S) {
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
   // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
   if (!enDemo() && ses && invitarOn()) {
-    const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
+    const uid = S.D && S.D.yo && S.D.yo.userId;
     if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Pon el código de quien te pasó la app', btnA('ponerCodigo', 'Poner código', { sec: false }), 'codigo invitacion amigo');
-    c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
+    // («Invita a un amigo» ya no es una fila de aquí: desde la 0.9 es la tarjeta dorada de arriba del todo de Ajustes)
   }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
   /* ---- (0.8a) apodos de los rivales ---- */
@@ -1846,6 +1854,8 @@ export function textoDiagnostico(S) {
     ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.canal() === 'ios' ? 'por la ventana de inicio de sesión del iPhone' : nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'sesion-ios' ? 'por la ventana del iPhone' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
     // (27 nov, iOS 5) por qué salen o no los anuncios de la app (intersticial.js)
     ...(enApp ? [(() => { try { return diagAnuncios(); } catch (e) { return `Anuncios (app): ✗ ${e.message}`; } })()] : []),
+    // (0.9) el cristal del diseño nuevo en este dispositivo: sirve para poner el corte de «móvil justo» con datos de verdad
+    (() => { try { return `Cristal: ${cristalTxt()}`; } catch (e) { return 'Cristal: ¿?'; } })(),
     // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
     (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
