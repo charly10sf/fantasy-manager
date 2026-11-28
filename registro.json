@@ -2492,7 +2492,7 @@
   "1197": "ok",
   "1210": "ok",
   "1215": "ok",
-  "1218": "doubtful",
+  "1218": "injured",
   "1219": "ok",
   "1221": "ok",
   "1251": "injured",
@@ -2841,7 +2841,7 @@
   "2780": "ok",
   "2782": "out_of_league",
   "2783": "ok",
-  "2784": "doubtful",
+  "2784": "injured",
   "2785": "suspended",
   "2786": "out_of_league",
   "2788": "out_of_league",
@@ -3341,7 +3341,14 @@
   "3317": "out_of_league",
   "3318": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2784",
+   "que": "lesion",
+   "antes": "doubtful",
+   "t": 1795868175187
+  }
+ ],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
@@ -4629,8 +4636,8 @@
     "t": 0
    },
    "2784": {
-    "e": "doubtful",
-    "t": 1795777875859
+    "e": "injured",
+    "t": 1795868175187
    },
    "2789": {
     "e": "out_of_league",
@@ -5054,16 +5061,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 10,
-   "redactar": 3,
-   "revisar": 2,
+   "redactar": 6,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 33614,
-  "salida": 7756,
-  "cacheLee": 16838,
-  "cacheEscribe": 12409,
-  "dolares": 0.086114,
+  "entrada": 42934,
+  "salida": 9104,
+  "cacheLee": 45223,
+  "cacheEscribe": 13916,
+  "dolares": 0.127099,
   "reservado": 0
  },
  "recientes": {
@@ -5723,7 +5730,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "novedades|2784:lesion|2026-11-28": {
+   "n": 1,
+   "t": "2026-11-28T12:16:37.400Z",
+   "ultima": "2026-11-28T12:16:37.400Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -10218,13 +10231,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7302,
+   "ok": 7303,
    "fallos": 0,
-   "ejecuciones": 5978,
+   "ejecuciones": 5979,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:11:11.119Z"
+   "ultima": "2026-11-28T12:16:15.187Z"
   }
  },
  "ptsDirecto": {
@@ -10284,15 +10297,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:11:15.901Z"
+   "ultimaBien": "2026-11-28T12:16:37.540Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:11:15.901Z"
+   "ultimaBien": "2026-11-28T12:16:37.540Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:11:15.901Z"
+   "ultimaBien": "2026-11-28T12:16:37.540Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10300,11 +10313,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:11:15.901Z"
+   "ultimaBien": "2026-11-28T12:16:37.540Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:11:15.901Z"
+   "ultimaBien": "2026-11-28T12:16:37.540Z"
   }
  },
  "avisos": [
