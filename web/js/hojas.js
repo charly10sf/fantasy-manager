@@ -1051,7 +1051,7 @@ export function filtrarAjustes(raiz, q) {
     hay += n;
   });
   const v = raiz.querySelector('#aj-nada');
-  if (v) { v.hidden = !b || hay > 0; v.textContent = b && !hay ? `Nada con «${String(q).trim()}». Prueba con otra palabra (avisos, clave, versión, borrar…).` : ''; }
+  if (v) { v.hidden = !b || hay > 0; v.textContent = b && !hay ? `Nada con «${String(q).trim()}». Prueba con otra palabra (avisos, ${enDemo() ? '' : 'clave, '}versión, borrar…).` : ''; }
 }
 export function plegarAjuste(S, k, abierto) { S.ajAbiertas ||= {}; if (abierto) S.ajAbiertas[k] = 1; else delete S.ajAbiertas[k]; }
 
@@ -1242,7 +1242,7 @@ export function ajustes(S) {
   h += sec('datos', 'escudo', 'Datos y privacidad', 'Borrar datos, privacidad y condiciones', c5, 'legal');
 
   h += `<p id="aj-nada" class="t2 aj-nada" hidden></p>`;
-  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
+  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Tu sesión${enDemo() ? '' : ' y tu clave'} se ${enDemo() ? 'queda' : 'quedan'} en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
   return h;
 }
 

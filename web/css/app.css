@@ -4498,6 +4498,13 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 html.lq .velo { transition: opacity var(--hoja-ms) var(--hoja-curva); }
 html.lq .velo.sale { transition: opacity 260ms cubic-bezier(0.32, 0, 0.67, 0); }
 html.lq .hoja.sale, html.lq:not(.escritorio) .hoja.sale { transition: transform 280ms cubic-bezier(0.32, 0, 0.67, 0); }
+/* la que se va ya no recibe toques: lo de detrás se puede tocar desde el primer fotograma */
+.velo.sale, .hoja.sale { pointer-events: none; }
+/* Ajustes, de alto fijo en el móvil (al plegar una sección, la hoja no cambia de alto ni salta al acabar) */
+html.lq:not(.escritorio) .hoja.hoja-alta { height: 92vh; }
+/* lo que entra al cambiar de pestaña lleva dentro el selector: mientras se mueve, su cristal sin desenfoque (arriba del todo
+   solo tiene detrás la luz de fondo, que es un degradado: se ve igual) */
+html.lq .entrando .tabs::before { -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* Ajustes, con su botón en la cápsula de arriba, entra bajando un poco desde arriba con un fundido y se va por donde vino
    (`ajustes-entra` = abajo en LS: como las demás hojas). Si se cierra arrastrando, se va hacia abajo (gestoHoja le quita
    la clase) */
@@ -4508,11 +4515,12 @@ html.lq:not(.escritorio) .hoja.hoja-arriba.sale { transition: transform 240ms cu
 /* ---- Ajustes: las secciones, tarjetas de cristal sin desenfoque (están dentro de una hoja opaca); la abierta, con la lente
    de las pestañas elegidas y el icono en su gota; la flecha gira. El abrir y cerrar lo mueve app.js (`plegarConMovimiento`):
    lo de dentro baja con un fundido y las secciones de debajo se desplazan con transform, sin animar alturas ---- */
-html.lq .aj-sec { margin: 0 0 10px; border: 0; border-radius: var(--r-tarj); background: rgba(255, 255, 255, 0.055); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+html.lq .aj-sec { margin: 0 0 10px; border: 0; border-radius: var(--r-tarj); background: #232026; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+/* (opacas: al plegar, las de debajo pasan por encima de lo de dentro y no se tiene que transparentar) */
 html.lq .aj-sec > summary { padding: 14px 14px 14px 12px; border-radius: var(--r-tarj); }
 html.lq .aj-sec > summary > .ic:first-child { box-sizing: content-box; width: 20px; height: 20px; padding: 9px; border-radius: 50%; background: rgba(238, 28, 60, 0.12); color: var(--rojo-texto, #ff5269); }
 html.lq .aj-sec .av-fl { transition: transform 300ms var(--hoja-curva); }
-html.lq .aj-sec[open] { background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05) 76px, rgba(255, 255, 255, 0.04)); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 0 rgba(255, 255, 255, 0.06); }
+html.lq .aj-sec[open] { background: linear-gradient(180deg, #312d33, #252228 76px, #232026); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 0 rgba(255, 255, 255, 0.06); }
 html.lq .aj-sec[open] > summary > .ic:first-child { background: linear-gradient(180deg, rgba(238, 28, 60, 0.42), rgba(238, 28, 60, 0.2)); box-shadow: inset 1px 1px 0 rgba(255, 160, 175, 0.45), inset 0 0 0 1px rgba(255, 82, 105, 0.35); color: #fff; }
 html.lq .aj-sec[open] > summary .aj-tx b { color: #fff; }
 html.lq .aj-sec[open] > summary .av-fl { color: var(--texto); }

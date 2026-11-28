@@ -32,7 +32,7 @@ export const NOVEDADES = [
     // LA HORA, AL PUBLICAR
     v: '0.9b', f: '2026-11-28', h: '00:00', t: 'La app se mueve mejor',
     cosas: [
-      { tipo: 'mejora', d: 'deslizar', t: 'La app se mueve mejor', x: 'Cada pantalla entra desde el lado al que vas: las pestañas de abajo y las secciones, de lado; Pregunta y Ajustes, desde arriba. Las fichas se cierran del todo hacia abajo y, si abres una desde otra, entra desde la derecha; «Volver» te lleva hacia atrás.' },
+      { tipo: 'mejora', d: 'deslizar', t: 'La app se mueve mejor', x: 'Cada pantalla entra desde el lado al que vas, al cambiar de pestaña y de sección; Pregunta, desde arriba. Si abres una ficha desde otra, la nueva entra de lado y «Volver» te lleva hacia atrás, y al cerrarlas se van del todo.' },
       { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, más limpio', x: 'Las secciones de Ajustes se abren hacia abajo y se cierran hacia arriba, y la que tienes abierta se distingue de un vistazo.' },
     ],
   },

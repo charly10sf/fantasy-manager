@@ -3486,6 +3486,8 @@ function abrirHoja(html, modo = 'sube') {
   const hoja = document.createElement('div'); hoja.className = 'hoja';
   if (tam) hoja.classList.add(tam);
   if (modo === 'arriba') hoja.classList.add('hoja-arriba');
+  // (0.9b) Ajustes, de alto fijo en el móvil: al plegar una sección, la hoja no cambia de alto ni da un salto al acabar
+  if (/class="aj-busca"/.test(html)) hoja.classList.add('hoja-alta');
   // (sin transición: se pone la clase antes de que el navegador la vea sin ella)
   if (enSitio) { velo.classList.add('on'); hoja.classList.add('on'); }
   hoja.setAttribute('role', 'dialog'); hoja.setAttribute('aria-modal', 'true'); hoja.tabIndex = -1;
@@ -3782,26 +3784,31 @@ async function pintarTarjeta() {
 const plegando = new Map();
 function plegarConMovimiento(det) {
   const abrir = !(det.open && !det.classList.contains('cerrando'));
-  const antes = plegando.get(det);
-  if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); if (!antes.abrir) det.open = false; }
   const cuerpo = det.querySelector('.aj-cuerpo');
-  if (quietoMov() || !det.animate || !cuerpo) { det.open = abrir; return abrir; }
+  if (quietoMov() || !det.animate || !cuerpo) {
+    const antes = plegando.get(det); if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); }
+    det.open = abrir; return abrir;
+  }
   const sigs = [];
   for (let n = det.nextElementSibling; n; n = n.nextElementSibling) if (!n.hidden) sigs.push(n);
-  const curva = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  // dónde se ven ahora (con lo que se esté moviendo): si se da la vuelta a mitad, se sigue desde ahí, sin saltos
+  const y0 = sigs.map((n) => n.getBoundingClientRect().top);
+  const op0 = det.open ? Number(getComputedStyle(cuerpo).opacity) : 0;
+  const antes = plegando.get(det);
+  if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); if (!antes.abrir) det.open = false; }
+  const curva = 'cubic-bezier(0.22, 1, 0.36, 1)', sale = 'cubic-bezier(0.4, 0, 0.2, 1)';
   const anims = [];
   if (abrir) {
-    const y0 = det.offsetHeight;
     det.open = true;
-    const dy = det.offsetHeight - y0;
-    anims.push(cuerpo.animate([{ opacity: 0, transform: 'translateY(-12px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: curva }));
-    if (dy > 0) for (const n of sigs) anims.push(n.animate([{ transform: `translateY(${-dy}px)` }, { transform: 'none' }], { duration: 340, easing: curva }));
+    const y1 = sigs.map((n) => n.getBoundingClientRect().top);
+    anims.push(cuerpo.animate([{ opacity: op0, transform: `translateY(${-12 * (1 - op0)}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: curva }));
+    sigs.forEach((n, i) => { const d = y0[i] - y1[i]; if (Math.abs(d) > 0.5) anims.push(n.animate([{ transform: `translateY(${d}px)` }, { transform: 'none' }], { duration: 340, easing: curva })); });
   } else {
-    const dy = cuerpo.offsetHeight;
+    // (abierta, en su sitio final: de ahí suben las de debajo lo que mide lo de dentro)
+    const y1 = sigs.map((n) => n.getBoundingClientRect().top), dy = cuerpo.offsetHeight;
     det.classList.add('cerrando');
-    const sale = 'cubic-bezier(0.4, 0, 0.2, 1)';
-    anims.push(cuerpo.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }], { duration: 200, easing: sale, fill: 'forwards' }));
-    for (const n of sigs) anims.push(n.animate([{ transform: 'none' }, { transform: `translateY(${-dy}px)` }], { duration: 260, easing: sale, fill: 'forwards' }));
+    anims.push(cuerpo.animate([{ opacity: op0, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }], { duration: 200, easing: sale, fill: 'forwards' }));
+    sigs.forEach((n, i) => anims.push(n.animate([{ transform: `translateY(${y0[i] - y1[i]}px)` }, { transform: `translateY(${-dy}px)` }], { duration: 260, easing: sale, fill: 'forwards' })));
   }
   const ya = { abrir, anims };
   plegando.set(det, ya);
@@ -5578,7 +5585,7 @@ function pasosTour() {
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },
-    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? `${rojo[0].toUpperCase()}${rojo.slice(1)}, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.` : `${rojo[0].toUpperCase()}${rojo.slice(1)}: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. ${enAppIos() ? 'En la liga de ejemplo no contesta: hace falta entrar con tu cuenta.' : 'Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.'}` },
+    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? `${rojo[0].toUpperCase()}${rojo.slice(1)}, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.` : `${rojo[0].toUpperCase()}${rojo.slice(1)}: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. ${enAppIos() || demo ? 'En la liga de ejemplo no contesta: hace falta entrar con tu cuenta.' : 'Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.'}` },
     demo
       ? { v: 'hoy', b: true, t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }
       : { v: 'hoy', b: true, t: 'Para empezar', x: () => `${itemsEmpezar().some((y) => !y.ok) ? 'Esto se hace una vez (si no, lo tienes en Ajustes). Después, empieza por el paso 1 de tu plan de hoy.' : 'Ya lo tienes todo. Empieza por el paso 1 de tu plan de hoy.'} ${T_BASICO() ? 'El tutorial entero, con el resto de pestañas, está en Ajustes.' : 'El tutorial queda en Ajustes por si quieres repetirlo.'}`, lista: itemsEmpezar, fin: 'Ver mi plan', finAccion: 'plan' },

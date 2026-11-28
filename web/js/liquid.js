@@ -280,7 +280,9 @@ export function entra(el, desde) {
     const a = el.animate([{ transform: t, opacity: 0 }, { opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }],
       { duration: largo() ? 340 : 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
     vivas.push(a);
-    a.onfinish = a.oncancel = () => { vivas = vivas.filter((x) => x !== a); };
+    // (mientras entra, el cristal del selector que va dentro, sin desenfoque: nada de desenfoque en lo que se mueve)
+    el.classList.add('entrando');
+    a.onfinish = a.oncancel = () => { vivas = vivas.filter((x) => x !== a); if (!vivas.some((x) => x.effect && x.effect.target === el)) el.classList.remove('entrando'); };
     return a;
   } catch (e) { return null; }
 }
