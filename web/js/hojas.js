@@ -474,7 +474,10 @@ export function fichaJugador(S, pid) {
     }
     if (suya) {
       const dueno = esc(suya.rival.manager || suya.rival.nombre);
-      if (suya.abierta && suya.meLlega) h += aviso(S, { k: 'clausular', pid, cls: 'verde', ico: 'diana', t: 'Puedes clausularlo ya', l: `${eur(suya.clausula)} a ${dueno}: te quedas con ${eur(suya.teQueda)}` });
+      // (28 nov, Carlos, con Iñigo Vicente: arriba «Abierta ya», el plan «no lo clausules» por 24 M de más y debajo, en verde,
+      // «Puedes clausularlo ya»: «no tiene sentido… quítalo de todos los jugadores») si el plan lo descarta, la verde no sale
+      if (suya.abierta && suya.meLlega && dpl) { /* ya lo dicen «Abierta ya» y el plan */ }
+      else if (suya.abierta && suya.meLlega) h += aviso(S, { k: 'clausular', pid, cls: 'verde', ico: 'diana', t: 'Puedes clausularlo ya', l: `${eur(suya.clausula)} a ${dueno}: te quedas con ${eur(suya.teQueda)}` });
       else if (suya.abierta) h += aviso(S, { k: 'clausular', pid, ico: 'candado', t: 'Cláusula abierta, pero no te llega', l: `Te faltan ${eur(suya.clausula - num(S.D.dinero))}`, d: parrafos(`Es de ${dueno}. Una cláusula solo se paga con saldo, sin deuda.`) });
       else h += aviso(S, { k: 'clausular', pid, cls: 'oro', ico: 'reloj', t: `Es de ${dueno}`,
         l: `Su cláusula ${suya.veda ? 'se puede pagar' : 'se abre'} ${esc(cuando(suya.protegidoHasta))} (en ${cuenta(suya.protegidoHasta)})`,

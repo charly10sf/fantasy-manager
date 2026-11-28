@@ -31,10 +31,19 @@ export const NOVEDADES = [
     // claude/nota-cuenta-dinero.md del proyecto. LA HORA Y EL DÍA, AL PUBLICAR. Lo de proteger, el cierre y el blindaje
     // (27 nov) va en `cosas`
     v: '0.8.5e', f: '2026-11-28', h: '00:00', t: 'El dinero de tus rivales, más exacto', todos: true,
+    // (01:15) de los cuatro diseños eligió el animado: la cuenta pieza a pieza con un ejemplo y al final la barra del ±
     aviso: {
-      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, más exacto',
-      x: 'La cuenta se ha afinado: ahora sabe al euro lo que cada rival ha pagado por subir cláusulas, también las de jugadores que ya no tiene. Lo único que no se puede saber son las recompensas diarias que ha recogido: de ahí sale el ±.',
-      mas: 'Si un rival entra a diario, quédate con la parte alta. Si te dice lo que tiene, apúntalo en su ficha.',
+      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, afinado y mucho más exacto',
+      x: 'La cuenta se ha rehecho a fondo. Así sale ahora la cifra de cada rival:',
+      pasos: [
+        { c: 'De salida', x: 'Todos empiezan con lo mismo', v: '100 M' },
+        { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9,7 M', cls: 'mas' },
+        { c: 'Cláusulas', tag: 'Nuevo', x: 'Lo que paga por subirlas, al euro y con su día', v: '−17,5 M', cls: 'menos' },
+        { c: 'Recompensas diarias', x: 'Lo único que nadie puede ver: va la mitad', v: '+6,3 M', cls: 'duda' },
+      ],
+      rango: { eti: 'En este ejemplo', desde: 100, hasta: 98.5, margen: '± 6,8 M', de: 'No recoge ninguna', a: 'Entra a diario' },
+      mas: 'Si entra a diario, quédate con la parte alta',
+      nota: '¿Te dice lo que tiene? Apúntalo en su ficha y su cifra pasa a ser la suya.',
       ir: { v: 'rivales', txt: 'Ver a mis rivales' },
     },
     cosas: [

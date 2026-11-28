@@ -197,18 +197,51 @@ const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.i
 function listaNov(a) {
   return `<ul class="nvt-lista">${a.lista.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
 }
+/* (0.8.5e; Carlos, 28 nov, 01:15, de cuatro diseños eligió el animado: «que el pop-up en sí sea una animación donde van
+   saliendo todos los datos») la tarjeta que cuenta una cuenta: `pasos` (una fila por pieza: el nombre, qué es y su cifra del
+   ejemplo, `v`; van entrando una detrás de otra) y `rango` (lo que sale: la cifra cuenta de `desde` a `hasta`, con su ±, y la
+   barra de lo que no se sabe, de `de` a `a`, con el punto en la parte alta). Todo por CSS (los retrasos van en `--r`) menos
+   la cifra que cuenta; con «reducir movimiento» sale todo puesto */
+const numNov = (x) => x.toFixed(1).replace('.', ',');
+function pasosNov(a) {
+  return `<ol class="nvt-pasos">${a.pasos.map((c, i) => `<li style="--r:${(0.5 + i * 0.6).toFixed(2)}s"><b>${esc(c.c)}${tagNov(c)}</b><span>${esc(c.x)}</span>${c.v ? `<em class="np-v${c.cls ? ` ${esc(c.cls)}` : ''}">${esc(c.v)}</em>` : ''}</li>`).join('')}</ol>`;
+}
+function rangoNov(a) {
+  const r = a.rango, t0 = a.pasos ? 0.5 + a.pasos.length * 0.6 + 0.2 : 0.4;
+  return `<div class="nvt-rango" style="--r:${t0.toFixed(2)}s">${r.eti ? `<span class="nr-eti">${esc(r.eti)}</span>` : ''}
+    <div class="nr-cifra">≈ <span class="nr-n" data-de="${r.desde != null ? r.desde : r.hasta}" data-a="${r.hasta}">${numNov(r.hasta)}</span> M <i>${esc(r.margen || '')}</i></div>
+    <div class="nr-barra" aria-hidden="true"><i></i><b></b></div><div class="nr-pies"><span>${esc(r.de)}</span><span>${esc(r.a)}</span></div></div>`;
+}
+function contarNov(capa) {
+  const n = capa.querySelector('.nr-n');
+  if (!n || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const de = Number(n.dataset.de), a = Number(n.dataset.a), caja = capa.querySelector('.nvt-rango');
+  if (!(de !== a) || !window.requestAnimationFrame) return;
+  const espera = (parseFloat(getComputedStyle(caja).getPropertyValue('--r')) || 0) * 1000 + 250, dura = 900, t0 = performance.now();
+  n.textContent = numNov(de);
+  const paso = (t) => {
+    if (!n.isConnected) return;
+    const k = Math.min(1, Math.max(0, (t - t0 - espera) / dura)), s = 1 - (1 - k) ** 3;
+    n.textContent = numNov(de + (a - de) * s);
+    if (k < 1) window.requestAnimationFrame(paso);
+  };
+  window.requestAnimationFrame(paso);
+}
 export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
   const capa = document.createElement('div');
   capa.className = 'nvt-capa';
   capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
-    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}${a.pasos ? ' nvt-cuenta' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
       <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
       <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
       <h2 id="nvt-t">${esc(a.t)}</h2>
       ${a.x ? `<p>${esc(a.x)}</p>` : ''}
       ${a.lista && a.lista.length ? listaNov(a) : ''}
+      ${a.pasos && a.pasos.length ? pasosNov(a) : ''}
+      ${a.rango ? rangoNov(a) : ''}
       ${a.mas ? `<span class="nvt-mas">${esc(a.mas)}</span>` : ''}
+      ${a.nota ? `<small class="nvt-nota">${esc(a.nota)}</small>` : ''}
       ${a.ir ? `<button type="button" class="btn ancho" data-nvt="ir">${esc(a.ir.txt || 'Verlo')}</button>` : ''}
       <button type="button" class="nvt-no" data-nvt="no">${a.ir ? 'Ahora no' : 'Vale'}</button>
     </div>`;
@@ -224,6 +257,7 @@ export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {})
     if (b.dataset.nvt === 'ir') { cerrar(true); alIr(a.ir); } else cerrar();
   });
   document.body.append(capa);
+  contarNov(capa);
   abierta = cerrar;
   const bt = capa.querySelector('[data-nvt="ir"]') || capa.querySelector('.nvt-no');
   if (bt) bt.focus({ preventScroll: true });

@@ -3527,6 +3527,37 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt-velo { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); animation: nvt-velo 0.25s ease both; }
 .nvt { position: relative; width: 100%; max-width: 360px; padding: 22px 20px 14px; border-radius: 24px; background: #1a1420; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6); text-align: center; --acc: var(--rojo); --dl: #f4f2f3; animation: nvt-sube 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 .nvt .dib { display: block; width: 120px; height: 90px; margin: 0 auto 6px; }
+/* (0.8.5e) la tarjeta que cuenta una cuenta (presentacion.js, `pasos` y `rango`): las filas entran una detrás de otra, cada
+   cifra salta al llegar, y al final la caja de lo que sale, con su barra. Los retrasos van en --r */
+.nvt-cuenta { max-height: calc(100dvh - 28px); overflow-y: auto; padding-top: 16px; }
+.nvt-cuenta .dib { width: 84px; height: 62px; margin-bottom: 2px; }
+.nvt-cuenta p { margin: 6px 0 4px; font-size: 14px; }
+.nvt-pasos { list-style: none; margin: 6px 0 10px; padding: 0; text-align: left; }
+.nvt-pasos li { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.07); opacity: 0; transform: translateY(10px); animation: nvt-paso 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) var(--r, 0s) forwards; }
+.nvt-pasos li:last-child { border-bottom: 0; }
+.nvt-pasos b { grid-column: 1; font: 700 16px var(--cond); letter-spacing: 0.3px; text-transform: uppercase; color: var(--texto); }
+.nvt-pasos span { grid-column: 1; font: 400 13px/1.25 'Barlow'; color: var(--texto-2); }
+.nvt-pasos .np-v { grid-column: 2; grid-row: 1 / span 2; font: 700 18px var(--cond); font-style: normal; color: var(--texto); white-space: nowrap; opacity: 0; transform: scale(0.6); animation: nvt-salta 0.4s cubic-bezier(0.2, 1.7, 0.4, 1) calc(var(--r, 0s) + 0.22s) forwards; }
+.nvt-pasos .np-v.menos { color: #ff6b7d; }
+.nvt-pasos .np-v.mas { color: #6fe0a0; }
+.nvt-pasos .np-v.duda { color: #ffc547; }
+.nvt-rango { margin: 2px 0 12px; padding: 10px 14px 10px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.09); opacity: 0; transform: translateY(10px); animation: nvt-paso 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--r, 0s) forwards; }
+.nvt-rango .nr-eti { display: block; font: 600 11px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--texto-2); }
+.nvt-rango .nr-cifra { margin: 2px 0 10px; font: 700 26px var(--cond); color: var(--texto); font-variant-numeric: tabular-nums; }
+.nvt-rango .nr-cifra i { font-style: normal; font-size: 18px; color: #ffc547; margin-left: 4px; }
+.nvt-rango .nr-barra { position: relative; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); overflow: visible; }
+.nvt-rango .nr-barra::before { content: ''; position: absolute; inset: 0; border-radius: 99px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), #ffc547); transform-origin: left center; transform: scaleX(0); animation: nvt-barra 0.8s ease-out calc(var(--r, 0s) + 0.35s) forwards; }
+.nvt-rango .nr-barra i { position: absolute; left: 50%; top: -4px; width: 2px; height: 16px; background: #fff; border-radius: 2px; transform: translateX(-1px); }
+.nvt-rango .nr-barra b { position: absolute; right: -2px; top: -5px; width: 18px; height: 18px; border-radius: 50%; background: #ffc547; box-shadow: 0 0 0 4px rgba(255, 197, 71, 0.22); transform: scale(0); animation: nvt-salta 0.45s cubic-bezier(0.2, 1.7, 0.4, 1) calc(var(--r, 0s) + 1.1s) forwards; }
+.nvt-rango .nr-pies { display: flex; justify-content: space-between; margin-top: 9px; font: 500 12px 'Barlow'; color: var(--texto-2); }
+.nvt-rango .nr-pies span:last-child { color: #ffc547; }
+.nvt-nota { display: block; margin: -6px 0 14px; font: 400 12.5px/1.3 'Barlow'; color: var(--texto-2); }
+/* en un móvil bajo: sin el dibujo ni la letra pequeña, y más apretada, para que el botón quepa sin bajar */
+@media (max-height: 780px) { .nvt-cuenta .dib, .nvt-cuenta .nvt-nota { display: none; } .nvt-cuenta { padding-bottom: 8px; } .nvt-cuenta h2 { font-size: 21px; } .nvt-cuenta p { font-size: 13px; margin: 4px 0 2px; } .nvt-pasos { margin: 4px 0 8px; } .nvt-pasos li { padding: 5px 0; } .nvt-pasos span { font-size: 12.5px; } .nvt-rango { padding: 8px 12px; margin-bottom: 10px; } .nvt-rango .nr-cifra { font-size: 23px; margin-bottom: 8px; } .nvt-cuenta .nvt-mas { margin-bottom: 10px; } }
+@keyframes nvt-paso { to { opacity: 1; transform: none; } }
+@keyframes nvt-salta { to { opacity: 1; transform: scale(1); } }
+@keyframes nvt-barra { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .nvt-pasos li, .nvt-pasos .np-v, .nvt-rango, .nvt-rango .nr-barra::before, .nvt-rango .nr-barra b { animation: none; opacity: 1; transform: none; } }
 .nvt-eti { display: block; font: 700 12px 'Barlow'; letter-spacing: 1.5px; text-transform: uppercase; color: #ff4fa3; }
 .nvt h2 { margin: 4px 0 0; font: 700 24px var(--cond); text-transform: uppercase; line-height: 1.05; color: var(--texto); }
 .nvt p { margin: 8px 0 14px; font: 400 15px 'Barlow'; line-height: 1.35; color: var(--texto-2); }
