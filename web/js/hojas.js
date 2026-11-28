@@ -1189,7 +1189,8 @@ export function ajustes(S) {
   // (iOS 3) en la app de iOS no hay clave de Google; en su lugar, el permiso para mandar tu liga a la IA
   const permIA = enAppIos() ? permisoIA() : null;
   if (permIA !== null) c3 += fila('Mandar tu liga a la IA', permIA === 'si' ? 'Sí: para el plan con la IA y tus preguntas (los rivales, con otro nombre)' : permIA === 'no' ? 'No: no se manda nada y el plan sale sin la IA' : 'Se te pregunta antes del primer plan o pregunta', permIA === 'si' ? btnA('quitarPermisoIA', 'Apagar') : btnA('permisoIA', 'Activar', { sec: false }), 'permiso privacidad datos ia');
-  else c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  // (0.9b) en la liga de ejemplo, ni rastro de la clave (salvo para quitar una que ya estuviera puesta)
+  else if (!enDemo() || k) c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';

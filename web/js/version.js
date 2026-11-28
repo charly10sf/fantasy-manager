@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9a';
+export const VERSION = '0.9b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,19 @@ export const VERSION = '0.9a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia la derecha, hacia la
+    // izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas») EL MOVIMIENTO: `entra` de liquid.js (la vista
+    // nueva entra desde el lado al que vas, en un elemento, solo transform y opacity), las hojas en abrirHoja/cerrarHoja de
+    // app.js (se quitan al acabar de irse; una encima de otra, desde la derecha; Ajustes, desde arriba) y las secciones de
+    // Ajustes (`plegarConMovimiento`). La sección «0.9b» del final de app.css. Sin tarjeta para nadie (no lleva `todos`).
+    // LA HORA, AL PUBLICAR
+    v: '0.9b', f: '2026-11-28', h: '00:00', t: 'La app se mueve mejor',
+    cosas: [
+      { tipo: 'mejora', d: 'deslizar', t: 'La app se mueve mejor', x: 'Cada pantalla entra desde el lado al que vas: las pestañas de abajo y las secciones, de lado; Pregunta y Ajustes, desde arriba. Las fichas se cierran del todo hacia abajo y, si abres una desde otra, entra desde la derecha; «Volver» te lleva hacia atrás.' },
+      { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, más limpio', x: 'Las secciones de Ajustes se abren hacia abajo y se cierran hacia arriba, y la que tienes abierta se distingue de un vistazo.' },
+    ],
+  },
   {
     // (28 nov, 00:19, Carlos: «que en la actualización salga un pop-up… que se ha perfeccionado y afinado el valor del dinero
     // de los rivales, teniendo en cuenta las cláusulas… y que la única variable que falta son las recompensas diarias, que no se
