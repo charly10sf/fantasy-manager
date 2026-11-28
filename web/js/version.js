@@ -33,17 +33,18 @@ export const NOVEDADES = [
     // la de la 0.9a no le sale (`noSiVisto`, `novAvisoPedir` en app.js), salvo al dueño, que la quiere ver
     v: '0.9b', f: '2026-11-28', h: '', todos: true,
     aviso: {
-      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, más exacto y a la vista',
-      x: 'Ahora sale lo primero en la ficha de cada rival, con el desglose de todo lo que ha movido. Así sale la cifra:',
+      // (04:46, Carlos: lo de la ficha, «arriba del todo», y el ejemplo con «cifras de mi liga»: un rival de su liga el 28 nov,
+      // al euro, sin lo que dijo; y lo que dijo él después, 104.698.038, para que se vea que cae dentro del margen)
+      d: 'dinero', eti: 'Novedades', t: 'El dinero de cada rival, lo primero de su ficha',
+      x: 'Abre a un rival y toca «Ver el desglose»: todo lo que ha movido, sus cláusulas y su saldo. Y la cuenta del dinero de tus rivales, más exacta. Un rival de una liga real:',
       pasos: [
         { c: 'De salida', x: 'Todos empiezan con lo mismo', v: '100.000.000' },
-        { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9.700.000', cls: 'mas' },
+        { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9.698.031', cls: 'mas' },
         { c: 'Cláusulas', tag: 'Nuevo', x: 'Lo que paga por subirlas, al euro y con su día', v: '−17.500.000', cls: 'menos' },
-        { c: 'Recompensas diarias', x: 'Lo único que nadie puede ver: va la mitad', v: '+6.310.000', cls: 'duda' },
+        { c: 'Recompensas diarias', x: 'Lo único que nadie puede ver: va la mitad', v: '+6.318.868', cls: 'duda' },
       ],
-      rango: { eti: 'En este ejemplo', desde: 100000000, hasta: 98510000, entero: true, margen: '± 6.810.000', de: 'No recoge ninguna', a: 'Entra a diario' },
-      mas: 'Si entra a diario, quédate con la parte alta',
-      nota: 'En su ficha, toca «Ver el desglose»: movimientos, cláusulas y su saldo día a día.',
+      rango: { eti: 'Lo que calcula la app', desde: 100000000, hasta: 98516899, entero: true, margen: '± 6.800.000', de: 'No recoge ninguna', a: 'Entra a diario' },
+      mas: 'Él dijo que tenía 104.698.038: dentro, en la parte alta',
       ir: { v: 'rivales', txt: 'Ver a mis rivales' },
       noSiVisto: '0.9a',
     },
