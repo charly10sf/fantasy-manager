@@ -1,0 +1,5 @@
+Puente.java: 54 métodos con @JavascriptInterface
+app-github-release.apk: 7,621,295 bytes · 1,624 clases · puente 54/54 con nombre, 54/54 con la anotación · clases por nombre 7/7
+app-play-release.apk: 9,601,886 bytes · 5,318 clases · puente 54/54 con nombre, 54/54 con la anotación · clases por nombre 5/5
+app-play-release.aab: mapping dentro sí
+R8: todo bien
