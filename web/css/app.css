@@ -4521,10 +4521,9 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 .dn-ver .ic { width: 16px; height: 16px; }
 .dn-ver:active { transform: scale(.98); }
 .dn-desg { margin-top: 6px; }
-/* lo último que ha hecho, en la tarjeta antes de abrir el desglose (28 nov) */
-.dn-ult { margin-top: 12px; }
-.dn-ult-t { margin: 0 0 2px; font: 600 12.5px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--texto-3); }
-.dn-ult .dn-mov:last-child { border-bottom: 0; }
+/* la gráfica de su saldo, siempre a la vista, y sus movimientos en su desplegable (28 nov, 11:26) */
+.dn-graf { margin-top: 14px; }
+.dn-movs { margin-top: 6px; }
 .dn-ocultar { margin-top: 14px; }
 .dn-ocultar .ic { transform: rotate(180deg); }
 .dn-sec { margin-top: 16px; }
@@ -4548,7 +4547,6 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 .dn-mov > b { font: 600 15px/1 var(--cond); white-space: nowrap; }
 .dn-ic.subida { color: var(--oro); background: var(--oro-s); }
 .dn-ic.premio { color: var(--oro); }
-.dn-todos { display: block; margin: 10px auto 0; }
 .dn-pie { margin: 4px 0 0; }
 .g-banda .g-bd { fill: rgba(255, 197, 71, .16); }
 .g-cero { stroke: var(--linea); stroke-dasharray: 3 4; }

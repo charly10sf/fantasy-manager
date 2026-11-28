@@ -730,7 +730,7 @@ function dnAbierta(S, r, tid) {
     return `<section class="dn-card">${cab}<div class="dn-cifra"><b>${d && d.v != null ? esc(dineroCorto(d)) : '?'}</b>${d && d.margen ? `<span>± ${eur(d.margen)}</span>` : ''}</div>
       <p class="dn-por">${esc(d && d.v == null ? `No se sabe todavía: ${d.motivo || 'faltan datos'}.` : d && d.exacto ? 'Exacto.' : 'Sin sus movimientos desde el principio no hay desglose.')}</p>${d && d.exacto ? '' : fichaDichoHTML(tid, { cerrado: false })}</section>`;
   }
-  const R = g.resumen, abierto = !!(S.dnAbierto && S.dnAbierto[tid]);
+  const R = g.resumen, abierto = !!(S.dnAbierto && S.dnAbierto[tid]), movsA = !!(S.dnMovs && S.dnMovs[tid]);
   // el ± y de qué sale, de la ficha del rival (r.dinero, la misma cuenta del motor que `g.d`)
   const dm = d && d.v != null ? d : g.d, por = g.exacto ? 'exacto' : margenPor(dm), mg = g.exacto ? 0 : num(dm.margen);
   const tres = [
@@ -744,14 +744,14 @@ function dnAbierta(S, r, tid) {
     <div class="dn-cifra-f"><div class="dn-cifra"><b>${g.exacto ? '' : '≈ '}${eur(g.total)}</b>${mg ? `<span>± ${eur(mg)}</span>` : ''}</div></div>
     ${por ? `<p class="dn-por">${g.exacto ? 'Exacto' : `El ± es ${esc(por)}`}</p>` : ''}
     <div class="dn-tres">${tres.map(([v, t]) => `<div><b class="${v.startsWith('−') ? 'baja' : v.startsWith('+') ? 'sube' : ''}">${v}</b><span>${t}</span></div>`).join('')}</div>
-    ${!abierto && g.movs.length ? `<div class="dn-ult"><div class="dn-ult-t">Lo último que ha hecho</div>${g.movs.slice(0, ULTIMOS_DN).map((m) => movDinero(S, m)).join('')}</div>` : ''}
-    <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose completo'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
-    ${abierto ? `<div class="dn-desg">${desgloseCuerpo(S, tid, g)}<button type="button" class="dn-ver dn-ocultar" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="true">Ocultar el desglose${icono('abajo')}</button></div>` : ''}
+    ${g.saldo && g.saldo.length > 1 ? `<div class="dn-graf">${banda(g.saldo)}<p class="t2 peq dn-pie">Su saldo, estimado día a día; la franja es el ±.</p></div>` : ''}
+    <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
+    ${abierto ? `<div class="dn-desg">${desgloseCuerpo(S, tid, g)}</div>` : ''}
+    ${g.movs.length ? `<button type="button" class="dn-ver dn-movs-b" data-accion="dnMovs" data-tid="${esc(tid)}" aria-expanded="${movsA}">${movsA ? 'Ocultar sus movimientos' : `Sus movimientos · ${g.movs.length}`}${icono(movsA ? 'abajo' : 'flecha')}</button>` : ''}
+    ${movsA ? `<div class="dn-movs">${movsDinero(S, g)}<button type="button" class="dn-ver dn-ocultar" data-accion="dnMovs" data-tid="${esc(tid)}" aria-expanded="true">Ocultar sus movimientos${icono('abajo')}</button></div>` : ''}
     ${dc ? fichaDichoHTML(tid, { cerrado: false }) : ''}${antes}
   </section>`;
 }
-/** cuántos movimientos salen en la tarjeta antes de abrir el desglose (Carlos, 28 nov: «las últimas 6 operaciones») */
-const ULTIMOS_DN = 6;
 /** la tarjeta del dinero, cerrada o abierta (lo decide su dinero, rival a rival) */
 function dineroRivalHTML(S, r, tid) {
   return bloqueada('dineroRivales', tid) ? dnCerrada(S, r.e, tid) : dnAbierta(S, r, tid);
@@ -774,27 +774,24 @@ function movDinero(S, m) {
   const cuandoT = m.t ? `${fechaCorta(m.t)}${m.clase === 'subida' && !m.exacta ? ' · aproximado' : ''}` : 'sin fecha';
   return `<div class="dn-mov"><span class="ic-act dn-ic ${m.clase}">${icono(DN_IC[m.clase] || 'euro')}</span><div class="fila-c"><div class="act-t">${t}</div><div class="fila-s">${cuandoT}</div></div><b class="${cls}">${eur(m.v, { signo: true })}</b></div>`;
 }
-/** el desglose, dentro de la tarjeta (diseño A, el que eligió Carlos el 28 nov): de dónde sale, la línea del tiempo y la
-    gráfica de su saldo. (Las cifras sueltas del final las quitó él: «sin la última sección… eso no tiene sentido») */
+/** el desglose, dentro de la tarjeta: de dónde sale la cifra. La gráfica de su saldo va fuera, siempre a la vista, y sus
+    movimientos en su propio desplegable, todos (Carlos, 28 nov, 11:26). (Las cifras sueltas del final las quitó él el 28 nov) */
 function desgloseCuerpo(S, tid, g) {
   const otras = g.partes.filter((p) => p.clave !== 'base'), max = Math.max(1, ...otras.map((p) => Math.abs(p.v)));
   const est = (p) => ['rec', 'ajuste', 'correccion', 'falta'].includes(p.clave);
   const fila = (p) => `<div class="dn-parte${est(p) ? ' est' : ''}"><span class="dn-p-n">${esc(p.nombre)}${p.n ? `<i>${p.n}</i>` : ''}${p.tramo && p.nota === 'estimadas' ? `<small>de ${eur(p.tramo.min, { dec: 1 })} a ${eur(p.tramo.max, { dec: 1 })}: va el medio</small>` : p.nota && p.nota !== 'estimadas' ? `<small>${esc(p.nota)}</small>` : ''}</span>${p.clave !== 'base' ? `<span class="dn-p-b ${est(p) ? 'est' : clase(p.v)}" style="--w:${Math.max(2, Math.round((Math.abs(p.v) / max) * 100))}%"></span>` : ''}<b class="${p.clave === 'base' ? '' : clase(p.v)}">${eur(p.v, { signo: p.clave !== 'base' })}</b></div>`;
   let h = `<div class="sec dn-sec"><h2>De dónde sale</h2></div>`;
   h += `<div class="dn-partes">${g.partes.map(fila).join('')}<div class="dn-parte dn-total"><span class="dn-p-n">Hoy</span><span></span><b>${eur(g.total)}${g.margen ? ` <small>± ${eur(g.margen)}</small>` : ''}</b></div></div>`;
-  // la línea del tiempo, por meses; lo que no tiene día, al final
-  const todos = S.dnTodos && S.dnTodos[tid], TOPE = 30;
-  const ms = todos ? g.movs : g.movs.slice(0, TOPE);
-  h += `<div class="sec dn-sec"><h2>Sus movimientos</h2><span class="sub">${g.movs.length}</span></div>`;
-  let mes = null;
-  for (const m of ms) {
+  return h;
+}
+/** todos sus movimientos, por meses; lo que no tiene día, al final */
+function movsDinero(S, g) {
+  let h = '', mes = null;
+  for (const m of g.movs) {
     const k = m.t ? diaDe(m.t).slice(0, 7) : 'sin';
     if (k !== mes) { mes = k; h += `<div class="grupo"><span>${k === 'sin' ? 'Subidas sin fecha' : `${MESES_DN[Number(k.slice(5, 7)) - 1]}${k.slice(0, 4) !== diaDe(Date.now()).slice(0, 4) ? ` ${k.slice(0, 4)}` : ''}`}</span><span></span></div>`; }
     h += movDinero(S, m);
   }
-  if (!todos && g.movs.length > TOPE) h += `<button type="button" class="btn chico sec dn-todos" data-accion="dnTodos" data-tid="${esc(tid)}">Ver los ${g.movs.length}</button>`;
-  // su saldo
-  h += `<div class="sec dn-sec"><h2>Cómo ha ido su saldo</h2></div>${banda(g.saldo)}<p class="t2 peq dn-pie">Estimado día a día; la franja es el ±.</p>`;
   return h;
 }
 export function fichaRival(S, tid) {

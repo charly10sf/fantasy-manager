@@ -4880,13 +4880,12 @@ document.addEventListener('click', async (ev) => {
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.D) rehacer(); if (S.hoja) repintarHoja(); else pintar(); break;
     // (0.8.4o) lo que te ha dicho un rival que tiene: la hoja (desde su ficha o su fila de Rivales), sin repintar al tocar
     // (28 nov) el desglose del dinero de un rival, que se despliega dentro de su tarjeta (hojas.js, `dnAbierta`)
-    case 'dnDesglose': if (d.tid) {
-      const abajo = el.classList.contains('dn-ocultar');
-      S.dnAbierto = { ...(S.dnAbierto || {}), [d.tid]: !(S.dnAbierto || {})[d.tid] }; repintarHoja();
-      // ocultado desde abajo: se vuelve a la tarjeta, que si no te quedas mirando lo que había debajo
-      if (abajo) { const c = $('.hoja:not(.sale) .dn-card'); if (c) c.scrollIntoView({ block: 'nearest' }); }
+    case 'dnDesglose': case 'dnMovs': if (d.tid) {
+      const abajo = el.classList.contains('dn-ocultar'), k = d.accion === 'dnMovs' ? 'dnMovs' : 'dnAbierto';
+      S[k] = { ...(S[k] || {}), [d.tid]: !(S[k] || {})[d.tid] }; repintarHoja();
+      // ocultado desde abajo: se vuelve a su botón, que si no te quedas mirando lo que había debajo
+      if (abajo) { const b = $('.hoja:not(.sale) .dn-movs-b'); if (b) b.scrollIntoView({ block: 'nearest' }); }
     } break;
-    case 'dnTodos': if (d.tid) { S.dnTodos = { ...(S.dnTodos || {}), [d.tid]: true }; repintarHoja(); } break;
     case 'abrirDicho': if (S.D && d.tid) { DD.quitarAvisoRivales(); hoja('dicho', d.tid, pilaDesde(el, 'dicho', d.tid)); } break;
     case 'ddModo': formDicho(el, d); break;
     case 'dichoGuardar': {

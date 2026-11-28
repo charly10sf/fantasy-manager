@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9c';
+export const VERSION = '0.9d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,16 @@ export const VERSION = '0.9c';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, 11:26, Carlos: «la gráfica… que salga directamente abajo… y que de normal no salgan movimientos. Solo ponga
+    // movimientos como para desplegar») La tarjeta del dinero de un rival: la gráfica de su saldo siempre a la vista, el
+    // desglose solo con de dónde sale y sus movimientos, todos, en su desplegable (hojas.js `dnAbierta`, `movsDinero`).
+    // Sin tarjeta para nadie (no lleva `todos`).
+    v: '0.9d', f: '2026-11-28', h: '11:29', t: 'El dinero de un rival, más claro',
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, más claro', x: 'Con su dinero abierto, la gráfica de su saldo sale directamente en su ficha, y sus movimientos van en un desplegable que los enseña todos.' },
+    ],
+  },
   {
     // (28 nov, Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia la derecha, hacia la
     // izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas») EL MOVIMIENTO: `entra` de liquid.js (la vista
