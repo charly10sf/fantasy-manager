@@ -3337,7 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
@@ -3522,7 +3521,10 @@
    "SPORT|136791714": 1795855349000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/tarrega-copete-reformulan-mercado-valencia-delantero-136953674.html": 1795859495000,
    "AS|https://as.com/futbol/videos/lamine-se-bate-en-duelo-con-pedri-y-fabrica-una-maravilla-al-alcance-de-muy-pocos-el-traje-que-le-hace-es-tremendo-f202611-v/": 1795860153000,
-   "AS|https://as.com/futbol/primera/kubo-no-sale-del-banquillo-f202611-n/": 1795861787000
+   "AS|https://as.com/futbol/primera/kubo-no-sale-del-banquillo-f202611-n/": 1795861787000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261128/1004256545/laliga-vuelve-cruzar-simeone-revivo-30-anos.html": 1795862979000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256539/entrenamiento-barcelona-deportivo-coruna.html": 1795862874000,
+   "SPORT|136955243": 1795859539000
   },
   "hechos": [
    {
@@ -4113,11 +4115,35 @@
     "motivo": "sanción de dos partidos",
     "plazo": "estará fuera dos partidos",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256539/entrenamiento-barcelona-deportivo-coruna.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795862874000,
+    "id": "2784",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Marc Bernal no entrena con el grupo esta mañana",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136955243",
+    "medio": "SPORT",
+    "t": 1795859539000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a entrenar con el grupo del Barça",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -5034,17 +5060,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 20896,
-  "salida": 5731,
+  "entrada": 23414,
+  "salida": 7238,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.023599,
+  "dolares": 0.024604,
   "reservado": 0
  },
  "recientes": {
@@ -10199,13 +10225,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7287,
+   "ok": 7288,
    "fallos": 0,
-   "ejecuciones": 5963,
+   "ejecuciones": 5964,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T10:56:11.328Z"
+   "ultima": "2026-11-28T11:01:11.503Z"
   }
  },
  "ptsDirecto": {
@@ -10265,15 +10291,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:56:14.611Z"
+   "ultimaBien": "2026-11-28T11:01:23.267Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:56:14.611Z"
+   "ultimaBien": "2026-11-28T11:01:23.267Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:56:14.611Z"
+   "ultimaBien": "2026-11-28T11:01:23.267Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10281,11 +10307,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:56:14.611Z"
+   "ultimaBien": "2026-11-28T11:01:23.267Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:56:14.611Z"
+   "ultimaBien": "2026-11-28T11:01:23.267Z"
   }
  },
  "avisos": [
