@@ -3351,8 +3351,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
-   "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html": 1795609078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/cesar-tarrega-habla-cambio-valencia-136836831.html": 1795611342000,
    "AS|https://as.com/futbol/primera/la-defensa-en-cuadro-f202611-n/": 1795611437000,
@@ -3540,30 +3538,6 @@
    "SPORT|136954502": 1795863636000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/",
-    "medio": "Cadena SER",
-    "t": 1795609225000,
-    "id": "3039",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Murillo vuelve a los entrenamientos con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html",
-    "medio": "Diario Sur",
-    "t": 1795609078000,
-    "id": "3039",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Murillo vuelve a entrenar de forma parcial",
-    "motivo": "golpe en la cabeza con brecha",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136837025",
     "medio": "SPORT",
@@ -5061,16 +5035,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 10,
-   "redactar": 6,
-   "revisar": 5,
+   "redactar": 9,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 42934,
-  "salida": 9104,
-  "cacheLee": 45223,
+  "entrada": 52173,
+  "salida": 10247,
+  "cacheLee": 75115,
   "cacheEscribe": 13916,
-  "dolares": 0.127099,
+  "dolares": 0.159995,
   "reservado": 0
  },
  "recientes": {
@@ -5732,9 +5706,9 @@
  ],
  "fallosRedaccion": {
   "novedades|2784:lesion|2026-11-28": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-28T12:16:37.400Z",
-   "ultima": "2026-11-28T12:16:37.400Z"
+   "ultima": "2026-11-28T12:21:30.744Z"
   }
  },
  "rasgos": {
@@ -10231,13 +10205,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7303,
+   "ok": 7304,
    "fallos": 0,
-   "ejecuciones": 5979,
+   "ejecuciones": 5980,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:16:15.187Z"
+   "ultima": "2026-11-28T12:21:11.942Z"
   }
  },
  "ptsDirecto": {
@@ -10297,15 +10271,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:16:37.540Z"
+   "ultimaBien": "2026-11-28T12:21:30.843Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:16:37.540Z"
+   "ultimaBien": "2026-11-28T12:21:30.843Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:16:37.540Z"
+   "ultimaBien": "2026-11-28T12:21:30.843Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10313,11 +10287,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:16:37.540Z"
+   "ultimaBien": "2026-11-28T12:21:30.843Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:16:37.540Z"
+   "ultimaBien": "2026-11-28T12:21:30.843Z"
   }
  },
  "avisos": [
