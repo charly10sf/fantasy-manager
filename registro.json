@@ -5022,12 +5022,13 @@
    "SPORT|136940333": 1795799657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256389/surrealista-dos-pilares-atleti-perder-camp-nou-vieron-ultimas-tarjetas-barca.html": 1795808696000,
    "SPORT|136944096": 1795806071000,
-   "AS|https://as.com/futbol/primera/mourinho-pasa-del-mercado-puerta-cerrada-para-entrar-y-para-salir-f202611-n/": 1795858529000
+   "AS|https://as.com/futbol/primera/mourinho-pasa-del-mercado-puerta-cerrada-para-entrar-y-para-salir-f202611-n/": 1795858529000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-pasara-papeletas-electorales-nacionalizados-ley-nietos-20261128091153.html": 1795853513000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -5035,17 +5036,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 17177,
-  "salida": 5292,
+  "entrada": 18996,
+  "salida": 5378,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.023007,
+  "dolares": 0.023232,
   "reservado": 0
  },
  "recientes": {
@@ -10200,13 +10201,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7279,
+   "ok": 7280,
    "fallos": 0,
-   "ejecuciones": 5955,
+   "ejecuciones": 5956,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T10:16:13.704Z"
+   "ultima": "2026-11-28T10:21:12.257Z"
   }
  },
  "ptsDirecto": {
@@ -10266,15 +10267,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:16:19.006Z"
+   "ultimaBien": "2026-11-28T10:21:18.731Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:16:19.006Z"
+   "ultimaBien": "2026-11-28T10:21:18.731Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:16:19.006Z"
+   "ultimaBien": "2026-11-28T10:21:18.731Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10282,11 +10283,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:16:19.006Z"
+   "ultimaBien": "2026-11-28T10:21:18.731Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:16:19.006Z"
+   "ultimaBien": "2026-11-28T10:21:18.731Z"
   }
  },
  "avisos": [
