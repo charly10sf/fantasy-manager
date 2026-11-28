@@ -3337,7 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000,
    "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
@@ -10185,13 +10184,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7270,
+   "ok": 7271,
    "fallos": 0,
-   "ejecuciones": 5946,
+   "ejecuciones": 5947,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T09:31:10.810Z"
+   "ultima": "2026-11-28T09:36:14.675Z"
   }
  },
  "ptsDirecto": {
@@ -10251,15 +10250,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:31:15.120Z"
+   "ultimaBien": "2026-11-28T09:36:18.863Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:31:15.120Z"
+   "ultimaBien": "2026-11-28T09:36:18.863Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:31:15.120Z"
+   "ultimaBien": "2026-11-28T09:36:18.863Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10267,11 +10266,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:31:15.120Z"
+   "ultimaBien": "2026-11-28T09:36:18.863Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:31:15.120Z"
+   "ultimaBien": "2026-11-28T09:36:18.863Z"
   }
  },
  "avisos": [
