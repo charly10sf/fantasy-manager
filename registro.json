@@ -3520,7 +3520,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261128/1004256412/pone-marcha-jornada-13-segunda-federacion.html": 1795845600000,
    "SPORT|136948525": 1795813880000,
    "SPORT|136948240": 1795812820000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-levante-racing-20261127_3484136.html": 1795818156000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-levante-racing-20261127_3484136.html": 1795818156000,
+   "SPORT|136791714": 1795855349000
   },
   "hechos": [
    {
@@ -4099,11 +4100,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136791714",
+    "medio": "SPORT",
+    "t": 1795855349000,
+    "id": "1715",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Fermín se pierde dos partidos por sanción",
+    "motivo": "sanción de dos partidos",
+    "plazo": "estará fuera dos partidos",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -5019,17 +5032,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 9424,
-  "salida": 4139,
+  "entrada": 11476,
+  "salida": 4991,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.021655,
+  "dolares": 0.022286,
   "reservado": 0
  },
  "recientes": {
@@ -10184,13 +10197,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7272,
+   "ok": 7273,
    "fallos": 0,
-   "ejecuciones": 5948,
+   "ejecuciones": 5949,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T09:41:11.527Z"
+   "ultima": "2026-11-28T09:46:11.234Z"
   }
  },
  "ptsDirecto": {
@@ -10250,15 +10263,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:41:16.069Z"
+   "ultimaBien": "2026-11-28T09:46:19.585Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:41:16.069Z"
+   "ultimaBien": "2026-11-28T09:46:19.585Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:41:16.069Z"
+   "ultimaBien": "2026-11-28T09:46:19.585Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10266,11 +10279,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:41:16.069Z"
+   "ultimaBien": "2026-11-28T09:46:19.585Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:41:16.069Z"
+   "ultimaBien": "2026-11-28T09:46:19.585Z"
   }
  },
  "avisos": [
