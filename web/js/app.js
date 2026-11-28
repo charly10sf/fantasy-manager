@@ -5252,6 +5252,10 @@ function novAvisoAlArrancar(vista) {
 function novAvisoPedir(v) {
   const g = novAvisos() || { visto: [], pend: null };
   if (g.visto.includes(v)) return;
+  // (0.9b, Carlos, 28 nov: «que solo les salga a los usuarios que no han visto el anterior») una tarjeta que renueva otra
+  // (`noSiVisto`) no sale a quien ya cerró aquella: se da por vista. El dueño la ve igual (la quiere ver para comprobarla)
+  const n = NOVEDADES.find((x) => x.v === v);
+  if (n && n.aviso && n.aviso.noSiVisto && g.visto.includes(n.aviso.noSiVisto) && !avisosGuardados().admin) { g.visto.push(v); if (g.pend === n.aviso.noSiVisto) g.pend = null; LS.set('avisos-nov', g); return; }
   g.pend = v;
   LS.set('avisos-nov', g);
   novAvisoEsperar();

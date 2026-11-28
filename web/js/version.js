@@ -27,9 +27,26 @@ export const NOVEDADES = [
     // (28 nov, 03:17-03:5x, Carlos: «la función del dinero debería estar más vistosa… lo primero que te salga» y «un desglose
     // más avanzado… ventas, subidas de cláusulas… todos los gastos que ha ido haciendo»; de dos diseños en vídeo eligió el A,
     // sin las cifras sueltas del final) EL DINERO DE UN RIVAL, LO PRIMERO DE SU FICHA: la tarjeta (hojas.js, `dineroRivalHTML`),
-    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. SIN TARJETA PARA TODOS
-    // mientras Carlos no lo diga. LA HORA, AL PUBLICAR
-    v: '0.9b', f: '2026-11-28', h: '',
+    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. LA HORA, AL PUBLICAR.
+    // (04:39, Carlos: «renovar y borrar [el pop-up] que ha saltado antes… otro pop-up partiendo del anterior… que solo les
+    // salga a los usuarios que no han visto el anterior»): la tarjeta de la 0.9a, con lo de la ficha arriba; a quien ya cerró
+    // la de la 0.9a no le sale (`noSiVisto`, `novAvisoPedir` en app.js), salvo al dueño, que la quiere ver
+    v: '0.9b', f: '2026-11-28', h: '', todos: true,
+    aviso: {
+      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, más exacto y a la vista',
+      x: 'Ahora sale lo primero en la ficha de cada rival, con el desglose de todo lo que ha movido. Así sale la cifra:',
+      pasos: [
+        { c: 'De salida', x: 'Todos empiezan con lo mismo', v: '100.000.000' },
+        { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9.700.000', cls: 'mas' },
+        { c: 'Cláusulas', tag: 'Nuevo', x: 'Lo que paga por subirlas, al euro y con su día', v: '−17.500.000', cls: 'menos' },
+        { c: 'Recompensas diarias', x: 'Lo único que nadie puede ver: va la mitad', v: '+6.310.000', cls: 'duda' },
+      ],
+      rango: { eti: 'En este ejemplo', desde: 100000000, hasta: 98510000, entero: true, margen: '± 6.810.000', de: 'No recoge ninguna', a: 'Entra a diario' },
+      mas: 'Si entra a diario, quédate con la parte alta',
+      nota: 'En su ficha, toca «Ver el desglose»: movimientos, cláusulas y su saldo día a día.',
+      ir: { v: 'rivales', txt: 'Ver a mis rivales' },
+      noSiVisto: '0.9a',
+    },
     cosas: [
       { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival, lo primero de su ficha', x: 'Al abrir un rival, arriba del todo: cuánto tiene y, al tocar «Ver el desglose», de dónde sale, todo lo que ha comprado, vendido y cobrado, sus subidas de cláusula con su día y cómo ha ido su saldo.' },
       { tipo: 'mejora', d: 'peligro', menor: true, t: 'La ficha de cada rival, más clara', x: 'Quién es, su puesto y su peligro en una pieza, y sus cláusulas en una sola lista: las suyas que te llegan y las tuyas que le llegan a él.' },
