@@ -3545,6 +3545,9 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt-rango .nr-eti { display: block; font: 600 11px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--texto-2); }
 .nvt-rango .nr-cifra { margin: 2px 0 10px; font: 700 26px var(--cond); color: var(--texto); font-variant-numeric: tabular-nums; }
 .nvt-rango .nr-cifra i { font-style: normal; font-size: 18px; color: #ffc547; margin-left: 4px; }
+.nvt-rango .nr-cifra.nr-larga { font-size: 22px; white-space: nowrap; }
+.nvt-rango .nr-cifra.nr-larga i { font-size: 16px; }
+.nvt-cuenta .nvt-pasos .np-v { font-size: 17px; }
 .nvt-rango .nr-barra { position: relative; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); overflow: visible; }
 .nvt-rango .nr-barra::before { content: ''; position: absolute; inset: 0; border-radius: 99px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), #ffc547); transform-origin: left center; transform: scaleX(0); animation: nvt-barra 0.8s ease-out calc(var(--r, 0s) + 0.35s) forwards; }
 .nvt-rango .nr-barra i { position: absolute; left: 50%; top: -4px; width: 2px; height: 16px; background: #fff; border-radius: 2px; transform: translateX(-1px); }

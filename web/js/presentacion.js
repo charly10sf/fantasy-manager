@@ -202,27 +202,27 @@ function listaNov(a) {
    ejemplo, `v`; van entrando una detrás de otra) y `rango` (lo que sale: la cifra cuenta de `desde` a `hasta`, con su ±, y la
    barra de lo que no se sabe, de `de` a `a`, con el punto en la parte alta). Todo por CSS (los retrasos van en `--r`) menos
    la cifra que cuenta; con «reducir movimiento» sale todo puesto */
-const numNov = (x) => x.toFixed(1).replace('.', ',');
+const numNov = (x, entero) => (entero ? String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : x.toFixed(1).replace('.', ','));
 function pasosNov(a) {
   return `<ol class="nvt-pasos">${a.pasos.map((c, i) => `<li style="--r:${(0.5 + i * 0.6).toFixed(2)}s"><b>${esc(c.c)}${tagNov(c)}</b><span>${esc(c.x)}</span>${c.v ? `<em class="np-v${c.cls ? ` ${esc(c.cls)}` : ''}">${esc(c.v)}</em>` : ''}</li>`).join('')}</ol>`;
 }
 function rangoNov(a) {
   const r = a.rango, t0 = a.pasos ? 0.5 + a.pasos.length * 0.6 + 0.2 : 0.4;
   return `<div class="nvt-rango" style="--r:${t0.toFixed(2)}s">${r.eti ? `<span class="nr-eti">${esc(r.eti)}</span>` : ''}
-    <div class="nr-cifra">≈ <span class="nr-n" data-de="${r.desde != null ? r.desde : r.hasta}" data-a="${r.hasta}">${numNov(r.hasta)}</span> M <i>${esc(r.margen || '')}</i></div>
+    <div class="nr-cifra${r.entero ? ' nr-larga' : ''}">≈ <span class="nr-n" data-de="${r.desde != null ? r.desde : r.hasta}" data-a="${r.hasta}"${r.entero ? ' data-e="1"' : ''}>${numNov(r.hasta, r.entero)}</span>${r.entero ? '' : ' M'} <i>${esc(r.margen || '')}</i></div>
     <div class="nr-barra" aria-hidden="true"><i></i><b></b></div><div class="nr-pies"><span>${esc(r.de)}</span><span>${esc(r.a)}</span></div></div>`;
 }
 function contarNov(capa) {
   const n = capa.querySelector('.nr-n');
   if (!n || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-  const de = Number(n.dataset.de), a = Number(n.dataset.a), caja = capa.querySelector('.nvt-rango');
+  const de = Number(n.dataset.de), a = Number(n.dataset.a), caja = capa.querySelector('.nvt-rango'), ent = !!n.dataset.e;
   if (!(de !== a) || !window.requestAnimationFrame) return;
   const espera = (parseFloat(getComputedStyle(caja).getPropertyValue('--r')) || 0) * 1000 + 250, dura = 900, t0 = performance.now();
-  n.textContent = numNov(de);
+  n.textContent = numNov(de, ent);
   const paso = (t) => {
     if (!n.isConnected) return;
     const k = Math.min(1, Math.max(0, (t - t0 - espera) / dura)), s = 1 - (1 - k) ** 3;
-    n.textContent = numNov(de + (a - de) * s);
+    n.textContent = numNov(de + (a - de) * s, ent);
     if (k < 1) window.requestAnimationFrame(paso);
   };
   window.requestAnimationFrame(paso);
