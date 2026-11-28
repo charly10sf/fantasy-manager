@@ -3388,11 +3388,9 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000,
-   "AS|https://as.com/futbol/nico-williams-de-nuevo-ligado-al-psg-f202611-n/": 1795618637000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000,
    "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
-   "SPORT|136829607": 1795618807000,
    "SPORT|136847144": 1795619882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000,
    "SPORT|136846515": 1795622552000,
@@ -5436,6 +5434,11 @@
    "h": "55ec09e8054f",
    "desde": 1795817474593,
    "fin": 1795816572246
+  },
+  "14|140": {
+   "h": "38166e75889d",
+   "desde": 1795878071844,
+   "fin": 1795878071844
   }
  },
  "iaDias": [
@@ -5961,7 +5964,8 @@
    "6106421",
    "6106391",
    "6106269",
-   "5868146"
+   "5868146",
+   "5868141"
   ],
   "equipos": [
    "9866",
@@ -6968,7 +6972,7 @@
     "e": "Rayo Vallecano",
     "g": {
      "liga": [
-      2,
+      3,
       0,
       0,
       0,
@@ -10299,13 +10303,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7358,
+   "ok": 7360,
    "fallos": 0,
-   "ejecuciones": 6011,
+   "ejecuciones": 6012,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T14:56:10.170Z"
+   "ultima": "2026-11-28T15:01:11.110Z"
   }
  },
  "ptsDirecto": {
@@ -10371,27 +10375,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:56:16.537Z"
+   "ultimaBien": "2026-11-28T15:01:14.605Z"
   }
  },
  "avisos": [
