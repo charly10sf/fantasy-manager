@@ -3537,7 +3537,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000,
    "SPORT|136954502": 1795863636000,
    "AS|https://as.com/futbol/flick-tunkara-es-un-talento-y-tiene-un-gran-futuro-en-este-club-f202611-n/": 1795868706000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004255594/rueda-prensa-flick-directo-previa-deportivo-barca-laliga-ea-sports.html": 1795865982000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004255594/rueda-prensa-flick-directo-previa-deportivo-barca-laliga-ea-sports.html": 1795865982000,
+   "AS|https://as.com/futbol/primera/eder-sarabia-el-modelo-de-juego-no-puede-ser-limitante-ha-de-ser-potenciador-f202611-n/": 1795869717000
   },
   "hechos": [
    {
@@ -4142,11 +4143,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/eder-sarabia-el-modelo-de-juego-no-puede-ser-limitante-ha-de-ser-potenciador-f202611-n/",
+    "medio": "AS",
+    "t": 1795869717000,
+    "id": "3077",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Edu Expósito volverá a jugar ante el Getafe",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -5062,17 +5075,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 12,
    "revisar": 12,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 65806,
-  "salida": 13005,
+  "entrada": 67773,
+  "salida": 13548,
   "cacheLee": 107910,
   "cacheEscribe": 13916,
-  "dolares": 0.205243,
+  "dolares": 0.205711,
   "reservado": 0
  },
  "recientes": {
@@ -10227,13 +10240,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7308,
+   "ok": 7309,
    "fallos": 0,
-   "ejecuciones": 5984,
+   "ejecuciones": 5985,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:41:11.849Z"
+   "ultima": "2026-11-28T12:46:12.109Z"
   }
  },
  "ptsDirecto": {
@@ -10293,15 +10306,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:41:16.635Z"
+   "ultimaBien": "2026-11-28T12:46:20.900Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:41:16.635Z"
+   "ultimaBien": "2026-11-28T12:46:20.900Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:41:16.635Z"
+   "ultimaBien": "2026-11-28T12:46:20.900Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10309,11 +10322,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:41:16.635Z"
+   "ultimaBien": "2026-11-28T12:46:20.900Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:41:16.635Z"
+   "ultimaBien": "2026-11-28T12:46:20.900Z"
   }
  },
  "avisos": [
