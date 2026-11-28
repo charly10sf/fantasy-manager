@@ -3523,7 +3523,8 @@
    "AS|https://as.com/futbol/primera/kubo-no-sale-del-banquillo-f202611-n/": 1795861787000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261128/1004256545/laliga-vuelve-cruzar-simeone-revivo-30-anos.html": 1795862979000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256539/entrenamiento-barcelona-deportivo-coruna.html": 1795862874000,
-   "SPORT|136955243": 1795859539000
+   "SPORT|136955243": 1795859539000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000
   },
   "hechos": [
    {
@@ -4142,7 +4143,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -5058,17 +5059,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 23414,
-  "salida": 7238,
+  "entrada": 25431,
+  "salida": 7375,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.024604,
+  "dolares": 0.024874,
   "reservado": 0
  },
  "recientes": {
@@ -10223,13 +10224,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7290,
+   "ok": 7291,
    "fallos": 0,
-   "ejecuciones": 5966,
+   "ejecuciones": 5967,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T11:11:13.112Z"
+   "ultima": "2026-11-28T11:16:11.350Z"
   }
  },
  "ptsDirecto": {
@@ -10289,15 +10290,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:11:18.675Z"
+   "ultimaBien": "2026-11-28T11:16:16.853Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:11:18.675Z"
+   "ultimaBien": "2026-11-28T11:16:16.853Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:11:18.675Z"
+   "ultimaBien": "2026-11-28T11:16:16.853Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10305,11 +10306,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:11:18.675Z"
+   "ultimaBien": "2026-11-28T11:16:16.853Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:11:18.675Z"
+   "ultimaBien": "2026-11-28T11:16:16.853Z"
   }
  },
  "avisos": [
