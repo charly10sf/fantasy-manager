@@ -4969,7 +4969,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000,
    "SPORT|136822776": 1795604778000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
@@ -10186,13 +10185,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7251,
+   "ok": 7252,
    "fallos": 0,
-   "ejecuciones": 5927,
+   "ejecuciones": 5928,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T08:01:12.382Z"
+   "ultima": "2026-11-28T08:06:11.804Z"
   }
  },
  "ptsDirecto": {
@@ -10252,15 +10251,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T08:01:37.319Z"
+   "ultimaBien": "2026-11-28T08:06:18.027Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T08:01:37.319Z"
+   "ultimaBien": "2026-11-28T08:06:18.027Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T08:01:37.319Z"
+   "ultimaBien": "2026-11-28T08:06:18.027Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10268,11 +10267,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T08:01:37.319Z"
+   "ultimaBien": "2026-11-28T08:06:18.027Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T08:01:37.319Z"
+   "ultimaBien": "2026-11-28T08:06:18.027Z"
   }
  },
  "avisos": [
