@@ -1184,7 +1184,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "3040",
+     "nombre": "A. Herrero",
+     "pos": 1
+    },
+    {
+     "id": "3054",
+     "nombre": "Recio",
+     "pos": 2
+    },
+    {
+     "id": "3039",
+     "nombre": "Murillo",
+     "pos": 2
+    },
+    {
+     "id": "2525",
+     "nombre": "Salinas",
+     "pos": 2
+    },
+    {
+     "id": "3037",
+     "nombre": "C. Puga",
+     "pos": 2
+    },
+    {
+     "id": "3036",
+     "nombre": "Dani Lorenzo",
+     "pos": 3
+    },
+    {
+     "id": "3035",
+     "nombre": "Izan M.",
+     "pos": 3
+    },
+    {
+     "id": "3034",
+     "nombre": "Joaquín",
+     "pos": 4
+    },
+    {
+     "id": "3072",
+     "nombre": "Larrubia",
+     "pos": 3
+    },
+    {
+     "id": "3045",
+     "nombre": "Niño",
+     "pos": 4
+    },
+    {
+     "id": "3274",
+     "nombre": "Cajuste",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "3040",
+    "3054",
+    "3042",
+    "3037",
+    "3270",
+    "2525",
+    "3072",
+    "3036",
+    "3044",
+    "3045",
+    "3070"
+   ]
   },
   {
    "id": "3",
@@ -1372,7 +1441,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "68",
+     "nombre": "Unai Simón",
+     "pos": 1
+    },
+    {
+     "id": "3184",
+     "nombre": "H. Rincón",
+     "pos": 2
+    },
+    {
+     "id": "3065",
+     "nombre": "Laporte",
+     "pos": 2
+    },
+    {
+     "id": "74",
+     "nombre": "Yuri",
+     "pos": 2
+    },
+    {
+     "id": "2315",
+     "nombre": "Paredes",
+     "pos": 2
+    },
+    {
+     "id": "927",
+     "nombre": "Berenguer",
+     "pos": 4
+    },
+    {
+     "id": "2318",
+     "nombre": "O. Sancet",
+     "pos": 3
+    },
+    {
+     "id": "3185",
+     "nombre": "Gerenabarrena",
+     "pos": 3
+    },
+    {
+     "id": "3083",
+     "nombre": "Nico Williams",
+     "pos": 4
+    },
+    {
+     "id": "1070",
+     "nombre": "De Galarreta",
+     "pos": 3
+    },
+    {
+     "id": "91",
+     "nombre": "Iñaki Williams",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "68",
+    "74",
+    "3065",
+    "3184",
+    "2315",
+    "2549",
+    "3023",
+    "2318",
+    "3083",
+    "927",
+    "91"
+   ]
   },
   {
    "id": "7",
