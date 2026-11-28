@@ -2462,6 +2462,13 @@
    "jornada": 14,
    "id": "2126667803147038883",
    "t": "2026-11-28T13:21:30.911Z"
+  },
+  {
+   "clave": "novedades|2387:sancion|2026-11-28",
+   "tipo": "novedades",
+   "jornada": 14,
+   "id": "2126674074831065545",
+   "t": "2026-11-28T13:46:26.302Z"
   }
  ],
  "estados": {
@@ -2598,7 +2605,7 @@
   "2384": "ok",
   "2385": "ok",
   "2386": "ok",
-  "2387": "ok",
+  "2387": "suspended",
   "2389": "out_of_league",
   "2390": "ok",
   "2391": "out_of_league",
@@ -3355,11 +3362,16 @@
   "3317": "out_of_league",
   "3318": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2387",
+   "que": "sancion",
+   "antes": "ok",
+   "t": 1795873570861
+  }
+ ],
  "noticias": {
   "vistas": {
-   "SPORT|136837025": 1795614287000,
-   "SPORT|136824498": 1795614271000,
    "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/": 1795618492000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255321/competicion-sanciona-dos-partidos-fermin-no-estara-atletico.html": 1795617730000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000,
@@ -3549,35 +3561,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136837025",
-    "medio": "SPORT",
-    "t": 1795614287000,
-    "id": "2562",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Marc Pubill regresa a la convocatoria del Atlético tras su esguince",
-    "motivo": "esguince leve de tobillo",
-    "plazo": "",
-    "nums": [
-     24
-    ]
-   },
-   {
-    "guid": "SPORT|136824498",
-    "medio": "SPORT",
-    "t": 1795614271000,
-    "id": "1715",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Fermín se pierde el Atlético por sanción de dos partidos",
-    "motivo": "sanción de dos partidos",
-    "plazo": "estará fuera dos partidos",
-    "nums": [
-     3,
-     2
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/",
     "medio": "AS",
@@ -4431,8 +4414,8 @@
     "t": 0
    },
    "2387": {
-    "e": "ok",
-    "t": 0
+    "e": "suspended",
+    "t": 1795873570861
    },
    "2389": {
     "e": "out_of_league",
@@ -5131,16 +5114,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 16,
-   "redactar": 14,
-   "revisar": 14,
+   "redactar": 16,
+   "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 82672,
-  "salida": 17695,
-  "cacheLee": 127838,
+  "entrada": 89695,
+  "salida": 18336,
+  "cacheLee": 147766,
   "cacheEscribe": 13916,
-  "dolares": 0.230227,
+  "dolares": 0.252675,
   "reservado": 0
  },
  "recientes": {
@@ -5300,10 +5283,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-24T07:36:43.654Z",
-    "texto": "Lemar se lesionó ayer en los isquiotibiales y es duda para el partido contra el Atlético, el sábado 28. Es una lesión nueva y no hay plazo, así que no se sabe si llega.\n\nMarc Pubill está disponible para ese Atlético-Elche, y el defensa lleva 4 porterías a cero en 10 partidos.\n\nDjene se pierde el Getafe-Espanyol por la roja que vio en la jornada 13. Vale 12 M y ha perdido 8,6 M en el último mes."
-   },
-   {
     "t": "2026-11-25T16:16:33.872Z",
     "texto": "Edu Expósito vuelve a estar disponible tras las molestias que le tenían fuera desde el 18 de noviembre.\n\nEl centrocampista del Espanyol llega bien de valor: vale 46 M y ha ganado 12,9 M en el último mes. Con un 53 % de titularidad, lo normal es que salga cuando los pericos reciban al Getafe el lunes 30, tras el parón. El Getafe va 18º, un partido asequible."
    },
@@ -5318,6 +5297,10 @@
    {
     "t": "2026-11-28T13:21:30.914Z",
     "texto": "Rodri está lesionado del bíceps femoral y el Barça tiene al Deportivo como próximo partido. Mala noticia también para su cartera: vale 55,6 M y ha perdido 38,9 M en el último mes.\n\nGuido Rodríguez, en cambio, está disponible para el partido del Valencia contra el Osasuna."
+   },
+   {
+    "t": "2026-11-28T13:46:26.304Z",
+    "texto": "🟥 Camello no podrá jugar el Rayo-Levante del sábado 5 de diciembre en Vallecas: llegó a 5 amarillas en la jornada 13 y está sancionado.\n\nEl delantero lleva 7 goles y 2 asistencias en la liga, así que es una baja que se nota para quien lo tenga en su plantilla."
    }
   ],
   "resumen": [
@@ -10295,13 +10278,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7328,
+   "ok": 7330,
    "fallos": 0,
-   "ejecuciones": 5996,
+   "ejecuciones": 5997,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T13:41:13.066Z"
+   "ultima": "2026-11-28T13:46:10.861Z"
   }
  },
  "ptsDirecto": {
@@ -10361,27 +10344,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:41:19.159Z"
+   "ultimaBien": "2026-11-28T13:46:26.392Z"
   }
  },
  "avisos": [
