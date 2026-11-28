@@ -25,12 +25,13 @@ export const VERSION = '0.9d';
 export const NOVEDADES = [
   {
     // (28 nov, 11:26, Carlos: «la gráfica… que salga directamente abajo… y que de normal no salgan movimientos. Solo ponga
-    // movimientos como para desplegar») La tarjeta del dinero de un rival: la gráfica de su saldo siempre a la vista, el
-    // desglose solo con de dónde sale y sus movimientos, todos, en su desplegable (hojas.js `dnAbierta`, `movsDinero`).
+    // movimientos como para desplegar», y 13:26: «que esté dentro del desglose, que salgan 6… y luego desplegar la lista
+    // entera») La tarjeta del dinero de un rival: la gráfica de su saldo siempre a la vista y, en el desglose, de dónde
+    // sale y sus 6 últimos movimientos, con la lista entera al desplegar (hojas.js `desgloseCuerpo`, `movsDinero`).
     // Sin tarjeta para nadie (no lleva `todos`).
-    v: '0.9d', f: '2026-11-28', h: '11:29', t: 'El dinero de un rival, más claro',
+    v: '0.9d', f: '2026-11-28', h: '13:27', t: 'El dinero de un rival, más claro',
     cosas: [
-      { tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, más claro', x: 'Con su dinero abierto, la gráfica de su saldo sale directamente en su ficha, y sus movimientos van en un desplegable que los enseña todos.' },
+      { tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, más claro', x: 'Con su dinero abierto, la gráfica de su saldo sale directamente en su ficha. En el desglose ves sus últimos movimientos y puedes desplegar la lista entera.' },
     ],
   },
   {

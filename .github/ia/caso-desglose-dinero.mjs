@@ -114,27 +114,30 @@ const v = await P.page.evaluate(async () => {
   // el desglose, desplegado dentro de la tarjeta
   // (28 nov, 11:26) la gráfica va fuera del desglose, siempre a la vista, y los movimientos, en su propio desplegable y todos
   const sinNada = pinta(tids[0]).querySelector('.dn-card');
-  const fuera = { graf: !!sinNada.querySelector(':scope > .dn-graf svg.g-banda'), movs: sinNada.querySelectorAll('.dn-mov').length, boton: !!sinNada.querySelector('.dn-movs-b') };
+  const fuera = { graf: !!sinNada.querySelector(':scope > .dn-graf svg.g-banda'), movs: sinNada.querySelectorAll('.dn-mov').length };
   S.dnAbierto = { [tids[0]]: true };
   const dh = pinta(tids[0]).querySelector('.dn-card .dn-desg') || document.createElement('div');
   S.dnAbierto = {};
-  S.dnMovs = { [tids[0]]: true };
-  const dm = pinta(tids[0]).querySelector('.dn-card');
+  // (13:26) sus movimientos van dentro del desglose: 6 al abrirlo, sin número en ningún botón, y la lista entera al desplegarla
+  const botones = [...dh.querySelectorAll('button')].map((b) => b.textContent.trim()).concat([...pinta(tids[0]).querySelectorAll('.dn-card button')].map((b) => b.textContent.trim()));
+  S.dnAbierto = { [tids[0]]: true }; S.dnMovs = { [tids[0]]: true };
+  const dm = pinta(tids[0]).querySelector('.dn-card .dn-desg');
   const movsTodos = dm.querySelectorAll('.dn-movs .dn-mov').length, nMovs = S.M.desgloseDinero(tids[0]).movs.length;
-  S.dnMovs = {};
+  S.dnMovs = {}; S.dnAbierto = {};
   const quitaA = pinta(tids[0], 'clausulas', 'quita');
   const quitaATxt = quitaA.querySelector('.dn-card') ? quitaA.innerHTML.replace(quitaA.querySelector('.dn-card').outerHTML, '') : quitaA.innerHTML;
   S.segRival = null;
   U.LS.del('top-rivales');
-  return { cerr, abr, quitaCerr: /su dinero|dd-ficha|dd-cerr/.test(quitaTxt), quitaAbr: /su dinero|dd-ficha|dd-cerr/.test(quitaATxt), d: { partes: dh.querySelectorAll('.dn-parte').length, movs: dh.querySelectorAll('.dn-mov').length, graf: !!dh.querySelector('svg.g-banda'), total: (dh.querySelector('.dn-total b') || {}).textContent || '' }, fuera, movsTodos, nMovs };
+  return { cerr, abr, quitaCerr: /su dinero|dd-ficha|dd-cerr/.test(quitaTxt), quitaAbr: /su dinero|dd-ficha|dd-cerr/.test(quitaATxt), d: { partes: dh.querySelectorAll('.dn-parte').length, movs: dh.querySelectorAll('.dn-mov').length, graf: !!dh.querySelector('svg.g-banda'), total: (dh.querySelector('.dn-total b') || {}).textContent || '', lista: !!dh.querySelector('.dn-movs-b') }, fuera, movsTodos, nMovs, botones };
 });
 ok(v.cerr.every((x) => x.hay && x.antes && x.cerrada && x.boton && !x.desg && !x.viejaT), `(f) cerrado, la tarjeta sale la primera, antes de las pestañas, con el botón de los anuncios y sin desglose (${JSON.stringify(v.cerr.map((x) => [x.hay, x.antes, x.cerrada, x.boton, x.desg, x.viejaT]))})`);
 ok(v.cerr.every((x) => !/\d+,\d+ ?M|\d{1,3}(\.\d{3}){2}|±/.test(x.txt)), `(f) cerrado, ninguna cifra en la tarjeta (${v.cerr.map((x) => x.txt.replace(/\s+/g, ' ').trim().slice(0, 60)).join(' | ')})`);
 ok(new Set(v.cerr.map((x) => x.html)).size === 1, `(f) cerrado, la tarjeta es igual en todos los rivales salvo su nombre (${new Set(v.cerr.map((x) => x.html)).size} distintas)`);
 ok(v.abr.every((x) => x.hay && !x.cerrada && x.cifra != null && /±|Exacto/.test(x.txt)), `(g) abierto, la tarjeta con la cifra y su ± (o «Exacto» si LaLiga lo da) (${v.abr.map((x) => x.txt.replace(/\s+/g, ' ').trim().slice(0, 40)).join(' | ')})`);
-ok(v.d.partes >= 4 && !v.d.movs && !v.d.graf && /M/.test(v.d.total), `(g) el desglose, desplegado en la tarjeta: solo de dónde sale (${v.d.partes} partes, ${v.d.movs} movimientos, gráfica ${v.d.graf}, hoy ${v.d.total})`);
-ok(v.fuera.graf && !v.fuera.movs && v.fuera.boton, `(g) la gráfica de su saldo, a la vista sin desplegar nada, y sus movimientos solo con su botón (${JSON.stringify(v.fuera)})`);
-ok(v.nMovs >= 3 && v.movsTodos === v.nMovs, `(g) al desplegar sus movimientos salen todos (${v.movsTodos} de ${v.nMovs})`);
+ok(v.d.partes >= 4 && v.d.movs === Math.min(6, v.nMovs) && !v.d.graf && /M/.test(v.d.total) && v.d.lista === v.nMovs > 6, `(g) el desglose, desplegado en la tarjeta: de dónde sale y sus 6 últimos movimientos, sin la gráfica (${v.d.partes} partes, ${v.d.movs} de ${v.nMovs} movimientos, gráfica ${v.d.graf}, lista ${v.d.lista}, hoy ${v.d.total})`);
+ok(v.fuera.graf && !v.fuera.movs, `(g) la gráfica de su saldo, a la vista sin desplegar nada, y ningún movimiento fuera del desglose (${JSON.stringify(v.fuera)})`);
+ok(v.nMovs > 6 && v.movsTodos === v.nMovs, `(g) al desplegar la lista salen todos (${v.movsTodos} de ${v.nMovs})`);
+ok(v.botones.every((t) => !/\d/.test(t)), `(g) ningún número en los botones (${v.botones.join(' | ')})`);
 ok(!v.quitaCerr && !v.quitaAbr, `(h) Cláusulas, sin el dinero dentro (cerrado ${v.quitaCerr}, abierto ${v.quitaAbr})`);
 ok(!P.errores || !P.errores.length, `sin errores en la página${P.errores && P.errores.length ? `: ${P.errores.join(' | ')}` : ''}`);
 await cerrar();

@@ -4884,7 +4884,8 @@ document.addEventListener('click', async (ev) => {
       const abajo = el.classList.contains('dn-ocultar'), k = d.accion === 'dnMovs' ? 'dnMovs' : 'dnAbierto';
       S[k] = { ...(S[k] || {}), [d.tid]: !(S[k] || {})[d.tid] }; repintarHoja();
       // ocultado desde abajo: se vuelve a su botón, que si no te quedas mirando lo que había debajo
-      if (abajo) { const b = $('.hoja:not(.sale) .dn-movs-b'); if (b) b.scrollIntoView({ block: 'nearest' }); }
+      // al ocultar algo largo desde abajo, se vuelve a donde empieza: la lista, a su título; el desglose, a la tarjeta
+      if (abajo || (k === 'dnMovs' && !S[k][d.tid])) { const b = $(k === 'dnMovs' ? '.hoja:not(.sale) .dn-movs-t' : '.hoja:not(.sale) .dn-card'); if (b) b.scrollIntoView({ block: 'nearest' }); }
     } break;
     case 'abrirDicho': if (S.D && d.tid) { DD.quitarAvisoRivales(); hoja('dicho', d.tid, pilaDesde(el, 'dicho', d.tid)); } break;
     case 'ddModo': formDicho(el, d); break;
