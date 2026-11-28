@@ -2505,6 +2505,21 @@
    "jornada": 14,
    "id": "2126703025632788780",
    "t": "2026-11-28T15:41:28.617Z"
+  },
+  {
+   "clave": "directo|134|Oihan Sancet|gol1",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126704247353811128",
+   "t": "2026-11-28T15:46:19.942Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "134",
+    "equipo": "93",
+    "min": 27,
+    "extra": 0,
+    "jugador": "Oihan Sancet"
+   }
   }
  ],
  "estados": {
@@ -5104,16 +5119,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 21,
-   "redactar": 37,
+   "redactar": 39,
    "revisar": 25,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 167386,
-  "salida": 25271,
-  "cacheLee": 329095,
-  "cacheEscribe": 24505,
-  "dolares": 0.501985,
+  "entrada": 170908,
+  "salida": 25526,
+  "cacheLee": 342112,
+  "cacheEscribe": 26414,
+  "dolares": 0.520516,
   "reservado": 0
  },
  "recientes": {
@@ -5251,10 +5266,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-27T20:46:18.959Z",
-    "texto": "⚽ Se rompe el partido en el Ciutat de València: el Levante se adelanta en el 42' y es 1-0 al Racing.\n\nIván Romero marca y lleva 4 puntos. Es su cuarto gol entre Liga, Champions y Copa. Rey, que lo asiste, también va por 4."
-   },
-   {
     "t": "2026-11-27T21:26:32.053Z",
     "texto": "⚽ Pablo García empata para el Racing en el 66': Levante 1-1 Racing. Pablo García va por 5 puntos de momento y Almeida, que da el pase, por 4."
    },
@@ -5269,6 +5280,10 @@
    {
     "t": "2026-11-28T14:36:20.319Z",
     "texto": "⚽ Marca De Frutos en el 72' y el Rayo se pone 0-1 en el campo del Betis.\n\nEl delantero lleva 5 puntos de momento y encadena tres jornadas seguidas puntuando fuerte."
+   },
+   {
+    "t": "2026-11-28T15:46:19.944Z",
+    "texto": "⚽ Oihan Sancet abre el marcador en el 27': Málaga 0-1 Athletic. Oihan Sancet lleva 6 puntos; el pase es de Nico Williams, que suma 3."
    }
   ],
   "novedades": [
@@ -10286,17 +10301,33 @@
    "w": "2026-11-28T14:34:30Z",
    "f": "2026-11-28T14:36:13.355Z",
    "rf": "72:40"
+  },
+  "fm|134|950545|27": {
+   "j": "Oihan Sancet",
+   "m": "27'",
+   "f": "2026-11-28T15:46:10.613Z",
+   "rf": "29:57",
+   "casado": true
+  },
+  "directo|134|Oihan Sancet|gol1": {
+   "j": "Oihan Sancet",
+   "m": "27'",
+   "e": "2026-11-28T15:46:10.613Z",
+   "re": "30'",
+   "w": "2026-11-28T15:42:43Z",
+   "f": "2026-11-28T15:46:10.613Z",
+   "rf": "29:57"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7373,
+   "ok": 7375,
    "fallos": 0,
-   "ejecuciones": 6020,
+   "ejecuciones": 6021,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:41:11.056Z"
+   "ultima": "2026-11-28T15:46:10.613Z"
   }
  },
  "ptsDirecto": {
@@ -10347,6 +10378,18 @@
    "g": 1,
    "a": 0,
    "t": 1795876573355
+  },
+  "14|134|2318": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795880770613
+  },
+  "14|134|3083": {
+   "p": 3,
+   "g": 0,
+   "a": 1,
+   "t": 1795880770613
   }
  },
  "golesAnulados": {
@@ -10362,27 +10405,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:41:35.833Z"
+   "ultimaBien": "2026-11-28T15:46:23.991Z"
   }
  },
  "avisos": [
