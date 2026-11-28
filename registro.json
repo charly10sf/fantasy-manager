@@ -3337,7 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000,
    "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
@@ -4983,7 +4982,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000,
    "SPORT|136822776": 1795604778000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
@@ -10201,13 +10199,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7280,
+   "ok": 7281,
    "fallos": 0,
-   "ejecuciones": 5956,
+   "ejecuciones": 5957,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T10:21:12.257Z"
+   "ultima": "2026-11-28T10:26:10.499Z"
   }
  },
  "ptsDirecto": {
@@ -10267,15 +10265,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:21:18.731Z"
+   "ultimaBien": "2026-11-28T10:26:13.404Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:21:18.731Z"
+   "ultimaBien": "2026-11-28T10:26:13.404Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:21:18.731Z"
+   "ultimaBien": "2026-11-28T10:26:13.404Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10283,11 +10281,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:21:18.731Z"
+   "ultimaBien": "2026-11-28T10:26:13.404Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:21:18.731Z"
+   "ultimaBien": "2026-11-28T10:26:13.404Z"
   }
  },
  "avisos": [
