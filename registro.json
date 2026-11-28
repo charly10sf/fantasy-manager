@@ -2600,7 +2600,7 @@
   "2386": "ok",
   "2387": "ok",
   "2389": "out_of_league",
-  "2390": "doubtful",
+  "2390": "ok",
   "2391": "out_of_league",
   "2392": "out_of_league",
   "2394": "ok",
@@ -3544,7 +3544,9 @@
    "AS|https://as.com/futbol/primera/eder-sarabia-el-modelo-de-juego-no-puede-ser-limitante-ha-de-ser-potenciador-f202611-n/": 1795869717000,
    "SPORT|136957705": 1795866210000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256596/flick-descarta-bernal-dos-partidos.html": 1795869873000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/28/hansi-flick-rodri-christensen-y-lamine-viajaran-y-podran-jugar-cadena-ser/": 1795871439000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/28/hansi-flick-rodri-christensen-y-lamine-viajaran-y-podran-jugar-cadena-ser/": 1795871439000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256612/flick-no-ve-calnedario-excusa-habla-rotaciones.html": 1795872041000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000
   },
   "hechos": [
    {
@@ -4173,11 +4175,47 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256612/flick-no-ve-calnedario-excusa-habla-rotaciones.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795872041000,
+    "id": "2784",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Marc Bernal se pierde los dos próximos partidos",
+    "motivo": "",
+    "plazo": "estará fuera dos partidos",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256612/flick-no-ve-calnedario-excusa-habla-rotaciones.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795872041000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a la convocatoria del Barcelona",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm",
+    "medio": "La Voz de Galicia",
+    "t": 1795871820000,
+    "id": "3069",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Blanco se pierde la visita al Mérida",
+    "motivo": "molestias en el pie",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -5042,7 +5080,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
    "SPORT|136851440": 1795626010000,
@@ -5093,17 +5130,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 14,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 80456,
-  "salida": 16102,
+  "entrada": 82672,
+  "salida": 17695,
   "cacheLee": 127838,
   "cacheEscribe": 13916,
-  "dolares": 0.229209,
+  "dolares": 0.230227,
   "reservado": 0
  },
  "recientes": {
@@ -10258,13 +10295,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7322,
+   "ok": 7324,
    "fallos": 0,
-   "ejecuciones": 5993,
+   "ejecuciones": 5994,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T13:26:11.082Z"
+   "ultima": "2026-11-28T13:31:12.038Z"
   }
  },
  "ptsDirecto": {
@@ -10324,27 +10361,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T13:26:14.995Z"
+   "ultimaBien": "2026-11-28T13:31:24.957Z"
   }
  },
  "avisos": [
