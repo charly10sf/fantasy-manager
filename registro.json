@@ -3337,7 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
    "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html": 1795609078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
@@ -3527,18 +3526,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795605992000,
-    "id": "927",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Berenguer no empieza la sesión con el grupo en Lezama",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/",
     "medio": "Cadena SER",
@@ -10224,13 +10211,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7293,
+   "ok": 7294,
    "fallos": 0,
-   "ejecuciones": 5969,
+   "ejecuciones": 5970,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T11:26:09.853Z"
+   "ultima": "2026-11-28T11:31:11.557Z"
   }
  },
  "ptsDirecto": {
@@ -10290,15 +10277,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:26:13.323Z"
+   "ultimaBien": "2026-11-28T11:31:16.432Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:26:13.323Z"
+   "ultimaBien": "2026-11-28T11:31:16.432Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:26:13.323Z"
+   "ultimaBien": "2026-11-28T11:31:16.432Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10306,11 +10293,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:26:13.323Z"
+   "ultimaBien": "2026-11-28T11:31:16.432Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:26:13.323Z"
+   "ultimaBien": "2026-11-28T11:31:16.432Z"
   }
  },
  "avisos": [
