@@ -1887,7 +1887,7 @@ function iaSinClaveIos(S) {
     : '<p class="entradilla">Ahora mismo no se le puede preguntar a la IA. Vuelve a probar en un rato: mientras, en Hoy tienes el plan de la app.</p>'}`;
 }
 export function ia(S) {
-  // (0.9b; Carlos, 28 nov: «en la liga de ejemplo, en preguntas sigue lo de la clave de Google… eso hay que quitarlo sí o
+  // (0.9c; Carlos, 28 nov: «en la liga de ejemplo, en preguntas sigue lo de la clave de Google… eso hay que quitarlo sí o
   // sí») en la liga de ejemplo, en todas partes, lo mismo que en la app del iPhone: entra con tu cuenta. Quitar la clave del
   // todo (Ajustes, la guía) es otro encargo: ESTADO.md
   if (!puedeChat(!!(S.D && S.D.demo))) return enAppIos() || (S.D && S.D.demo) ? iaSinClaveIos(S) : guiaClave(planesApp(!!(S.D && S.D.demo)));

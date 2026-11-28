@@ -1231,7 +1231,7 @@ const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaI
 function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
 function pintar({ arriba = false, mueve = null } = {}) {
   if (!S.D) return;
-  // (0.9b) un toque a mitad de un movimiento: lo de antes acaba ya, en su sitio
+  // (0.9c) un toque a mitad de un movimiento: lo de antes acaba ya, en su sitio
   pararMovimiento();
   alDiaDichos();
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
@@ -1287,12 +1287,12 @@ function pintar({ arriba = false, mueve = null } = {}) {
   // los anuncios: en la web, el de AdSense en las pestañas (nunca en Pregunta); en la app de Google Play, que ya se pueden
   // cargar (desde la 0.8 sin banner: los intersticiales, en una pausa)
   ponerBanner(S.vista !== 'ia', true);
-  // (0.9b) y lo recién pintado entra desde el lado al que vas (después de lo que mide arriba, que no lo vea movido)
+  // (0.9c) y lo recién pintado entra desde el lado al que vas (después de lo que mide arriba, que no lo vea movido)
   // (si algo de aquí arriba ha vuelto a pintar la vista —Equipo → Jornadas con lo guardado—, lo que se mueve es lo de ahora)
   if (queMueve && !queMueve.isConnected) queMueve = cajaQueMueve(v, mueve);
   if (queMueve) moverEntra(queMueve, mueve.desde);
 }
-/* (0.9b, 28 nov) qué se mueve al cambiar de pantalla. Al cambiar de pestaña de abajo, la vista entera (un elemento); al
+/* (0.9c, 28 nov) qué se mueve al cambiar de pantalla. Al cambiar de pestaña de abajo, la vista entera (un elemento); al
    cambiar de sección dentro de una pestaña, solo lo de debajo del selector (el selector se queda, con su píldora). La caja
    del chat (fixed) nunca: con un antepasado movido dejaría de estar fija mientras dura */
 function cajaQueMueve(v, mueve) {
@@ -1514,7 +1514,7 @@ function bajarA(sel, raiz = null) {
 function ir(vista, { arriba = true, mover = false } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
-  // (0.9b) solo lo que pide el que toca (la barra, los botones con data-ir): al volver de recargar, el tutorial o lo que
+  // (0.9c) solo lo que pide el que toca (la barra, los botones con data-ir): al volver de recargar, el tutorial o lo que
   // cambia de pestaña por su cuenta, sin movimiento
   const desde = mover ? desdeDonde(S.vista, vista) : null;
   if (S.vista !== vista) nativo.toque();
@@ -3469,7 +3469,7 @@ function rotularHoja(hoja) {
   const t = hoja.querySelector('h2');
   if (t) { t.id ||= 'hojaTit'; hoja.setAttribute('aria-labelledby', t.id); hoja.removeAttribute('aria-label'); } else { hoja.removeAttribute('aria-labelledby'); hoja.setAttribute('aria-label', 'Ficha'); }
 }
-/* (0.9b) cómo entra: 'sube' (desde abajo, como siempre), 'arriba' (Ajustes con su botón en la cápsula de arriba: baja un
+/* (0.9c) cómo entra: 'sube' (desde abajo, como siempre), 'arriba' (Ajustes con su botón en la cápsula de arriba: baja un
    poco desde arriba con fundido), 'pila' (una ficha encima de otra, «‹ Volver»: la hoja se queda y lo nuevo entra desde la
    derecha), 'vuelve' (lo de antes entra desde la izquierda) y 'quieta' (ya en su sitio: tras recargar con la versión nueva) */
 function abrirHoja(html, modo = 'sube') {
@@ -3486,7 +3486,7 @@ function abrirHoja(html, modo = 'sube') {
   const hoja = document.createElement('div'); hoja.className = 'hoja';
   if (tam) hoja.classList.add(tam);
   if (modo === 'arriba') hoja.classList.add('hoja-arriba');
-  // (0.9b) Ajustes, de alto fijo en el móvil: al plegar una sección, la hoja no cambia de alto ni da un salto al acabar
+  // (0.9c) Ajustes, de alto fijo en el móvil: al plegar una sección, la hoja no cambia de alto ni da un salto al acabar
   if (/class="aj-busca"/.test(html)) hoja.classList.add('hoja-alta');
   // (sin transición: se pone la clase antes de que el navegador la vea sin ella)
   if (enSitio) { velo.classList.add('on'); hoja.classList.add('on'); }
@@ -3532,7 +3532,7 @@ function gestoHoja(hoja, velo) {
     hoja.classList.remove('arrastrando');
     hoja.style.transition = ''; hoja.style.transform = '';
     if (velo) { velo.style.transition = ''; velo.style.opacity = ''; }
-    // (0.9b) arrastrada hacia abajo, se va hacia abajo aunque haya entrado desde arriba (Ajustes)
+    // (0.9c) arrastrada hacia abajo, se va hacia abajo aunque haya entrado desde arriba (Ajustes)
     if (cierra) { nativo.toque(); hoja.classList.remove('hoja-arriba'); const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); }
   };
   hoja.addEventListener('touchstart', (e) => {
@@ -3587,7 +3587,7 @@ function gestoHoja(hoja, velo) {
 }
 function cerrarHoja(ya = false, sigue = false) {
   S.apodoEdita = null;
-  // (0.9b) la que ya se está yendo no cuenta: un segundo toque en el velo no la cierra otra vez
+  // (0.9c) la que ya se está yendo no cuenta: un segundo toque en el velo no la cierra otra vez
   const h = $('.hoja:not(.sale)'), v = $('.velo:not(.sale)');
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
@@ -3601,7 +3601,7 @@ function cerrarHoja(ya = false, sigue = false) {
   }
   if (ya) { h.remove(); v && v.remove(); return true; }
   quitarAtras();
-  // (0.9b) se va hasta abajo del todo (o hacia arriba, Ajustes) y solo entonces se quita: antes se quitaba a los 250 ms,
+  // (0.9c) se va hasta abajo del todo (o hacia arriba, Ajustes) y solo entonces se quita: antes se quitaba a los 250 ms,
   // con 15 px de la hoja aún a la vista. La salida va algo más rápida que la entrada (`.sale`, en app.css)
   h.classList.add('sale'); v && v.classList.add('sale');
   h.classList.remove('on'); v && v.classList.remove('on');
@@ -3662,7 +3662,7 @@ function cuerpoHoja(tipo, arg, pila = S.pila) {
 }
 function hoja(tipo, arg, pila = [], { modo = null } = {}) {
   alDiaDichos();
-  // (0.9b) cómo entra (abrirHoja): encima de la que había, desde la derecha; la misma otra vez, en su sitio; Ajustes, en el
+  // (0.9c) cómo entra (abrirHoja): encima de la que había, desde la derecha; la misma otra vez, en su sitio; Ajustes, en el
   // móvil, desde arriba o desde abajo según `fm-ajustes` (las dos para que elija Carlos)
   const ant = S.hoja && S.tipoHoja ? S.tipoHoja : null;
   if (!modo) {
@@ -3776,7 +3776,7 @@ async function pintarTarjeta() {
   if (S.tipoHoja && S.tipoHoja[0] === 'tarjeta') repintarHoja();
 }
 /** boton: la pestaña tocada de un selector de la ficha (club, rival, bajas): lo de debajo de ese selector entra desde su lado */
-/* (0.9b; Carlos: Ajustes «más liquid entre las subpestañas») una sección de Ajustes se abre hacia abajo y se cierra hacia
+/* (0.9c; Carlos: Ajustes «más liquid entre las subpestañas») una sección de Ajustes se abre hacia abajo y se cierra hacia
    arriba. Sin animar alturas: al abrir, la sección se abre de golpe, lo de dentro baja con un fundido y las secciones de
    debajo, que han saltado hacia abajo, vuelven a su sitio nuevo desde el de antes (transform); al cerrar, lo de dentro se
    apaga, las de debajo suben tapándolo y, al acabar, se cierra. Se mide una vez por toque (nada en cada fotograma).
@@ -3785,30 +3785,40 @@ const plegando = new Map();
 function plegarConMovimiento(det) {
   const abrir = !(det.open && !det.classList.contains('cerrando'));
   const cuerpo = det.querySelector('.aj-cuerpo');
-  if (quietoMov() || !det.animate || !cuerpo) {
+  if (quietoMov() || !det.animate || !cuerpo || !det.parentNode) {
     const antes = plegando.get(det); if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); }
     det.open = abrir; return abrir;
   }
-  const sigs = [];
-  for (let n = det.nextElementSibling; n; n = n.nextElementSibling) if (!n.hidden) sigs.push(n);
-  // dónde se ven ahora (con lo que se esté moviendo): si se da la vuelta a mitad, se sigue desde ahí, sin saltos
-  const y0 = sigs.map((n) => n.getBoundingClientRect().top);
+  // todo lo de la lista de Ajustes menos lo que va pegado arriba (el asa): lo de antes de la sección, ella y lo de después
+  const fijo = (n) => n.hidden || n.matches('.asa, .cerrar-flota') || getComputedStyle(n).position === 'sticky';
+  const todos = [...det.parentNode.children].filter((n) => !fijo(n));
+  const iDet = todos.indexOf(det);
+  // dónde se ve cada uno ahora (con lo que se esté moviendo): si se da la vuelta a mitad, se sigue desde ahí, sin saltos
+  const y0 = todos.map((n) => n.getBoundingClientRect().top);
   const op0 = det.open ? Number(getComputedStyle(cuerpo).opacity) : 0;
   const antes = plegando.get(det);
   if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); if (!antes.abrir) det.open = false; }
   const curva = 'cubic-bezier(0.22, 1, 0.36, 1)', sale = 'cubic-bezier(0.4, 0, 0.2, 1)';
   const anims = [];
+  // (se mide todo antes de mover nada: una sola vez por toque)
+  const mover = (fin, ms, ease, fill) => todos.map((n) => n.getBoundingClientRect().top).forEach((y1, i) => {
+    const n = todos[i], desde = y0[i] - y1, hasta = fin(i);
+    if (Math.abs(desde - hasta) > 0.5 || Math.abs(hasta) > 0.5) anims.push(n.animate([{ transform: `translateY(${desde}px)` }, { transform: hasta ? `translateY(${hasta}px)` : 'none' }], { duration: ms, easing: ease, fill }));
+  });
   if (abrir) {
     det.open = true;
-    const y1 = sigs.map((n) => n.getBoundingClientRect().top);
     anims.push(cuerpo.animate([{ opacity: op0, transform: `translateY(${-12 * (1 - op0)}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: curva }));
-    sigs.forEach((n, i) => { const d = y0[i] - y1[i]; if (Math.abs(d) > 0.5) anims.push(n.animate([{ transform: `translateY(${d}px)` }, { transform: 'none' }], { duration: 340, easing: curva })); });
+    mover(() => 0, 340, curva);
   } else {
-    // (abierta, en su sitio final: de ahí suben las de debajo lo que mide lo de dentro)
-    const y1 = sigs.map((n) => n.getBoundingClientRect().top), dy = cuerpo.offsetHeight;
+    // abierta y en su sitio final. Al cerrarse, lo de debajo sube lo que mide lo de dentro; pero si la hoja está bajada
+    // hasta el final, al acortarse el navegador recorta el scroll y todo baja de golpe: eso (c) se hace aquí también, con
+    // movimiento (lo de arriba baja c y lo de debajo sube dy − c), y al quitar el open todo queda donde ya estaba
+    const sc = det.closest('.hoja') || document.scrollingElement, dy = cuerpo.offsetHeight;
+    // (no más de lo bajada que esté: el scroll no baja de 0)
+    const c = Math.min(sc.scrollTop, Math.max(0, Math.round(sc.scrollTop - (sc.scrollHeight - dy - sc.clientHeight))));
     det.classList.add('cerrando');
     anims.push(cuerpo.animate([{ opacity: op0, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }], { duration: 200, easing: sale, fill: 'forwards' }));
-    sigs.forEach((n, i) => anims.push(n.animate([{ transform: `translateY(${y0[i] - y1[i]}px)` }, { transform: `translateY(${-dy}px)` }], { duration: 260, easing: sale, fill: 'forwards' })));
+    mover((i) => (i <= iDet ? c : c - dy), 260, sale, 'forwards');
   }
   const ya = { abrir, anims };
   plegando.set(det, ya);
@@ -3826,7 +3836,7 @@ function repintarHoja({ boton = null } = {}) {
   pararMovimiento();
   const sc = S.hoja.scrollTop;
   const dentro = S.hoja.contains(document.activeElement);
-  // (0.9b) de qué selector es (el n.º dentro de la ficha: el rival lleva dos) y hacia qué lado queda
+  // (0.9c) de qué selector es (el n.º dentro de la ficha: el rival lleva dos) y hacia qué lado queda
   const desde = boton && S.hoja.contains(boton) ? ladoTabs(boton) : null;
   const n = desde ? Math.max(0, [...S.hoja.querySelectorAll('.tabs')].indexOf(boton.closest('.tabs'))) : 0;
   S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
@@ -4469,7 +4479,7 @@ document.addEventListener('touchend', (e) => {
   const j = nav.findIndex((b) => b.dataset.ir === S.vista);
   if (j < 0 || !nav[j + paso]) return;
   nativo.toque();
-  // (0.9b) el toque ya mueve la pantalla nueva desde ese lado (antes, aquí, entra-d / entra-i)
+  // (0.9c) el toque ya mueve la pantalla nueva desde ese lado (antes, aquí, entra-d / entra-i)
   nav[j + paso].click();
 }, { passive: true });
 // tirar hacia abajo desde arriba del todo actualiza, como en cualquier app
@@ -4534,7 +4544,7 @@ document.addEventListener('click', async (ev) => {
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
   if (d.seg) {
     const [v, s] = d.seg.split(':');
-    // (0.9b) la sección nueva entra desde su lado del selector (también desde un enlace que cambia de sección: se mira
+    // (0.9c) la sección nueva entra desde su lado del selector (también desde un enlace que cambia de sección: se mira
     // dónde está su pestaña en el selector que se ve)
     const pest = el.closest('.tabs-in') ? el : (S.seg[v] !== s ? [...document.querySelectorAll('#vista .tabs-in button[data-seg]')].find((b) => b.dataset.seg === d.seg) : null);
     const desde = !d.ir && S.vista === v && !el.closest('.hoja') ? ladoTabs(pest) : null;
@@ -4866,6 +4876,9 @@ document.addEventListener('click', async (ev) => {
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.D) rehacer(); if (S.hoja) repintarHoja(); else pintar(); break;
     // (0.8.4o) lo que te ha dicho un rival que tiene: la hoja (desde su ficha o su fila de Rivales), sin repintar al tocar
+    // (28 nov) el desglose del dinero de un rival, que se despliega dentro de su tarjeta (hojas.js, `dnAbierta`)
+    case 'dnDesglose': if (d.tid) { S.dnAbierto = { ...(S.dnAbierto || {}), [d.tid]: !(S.dnAbierto || {})[d.tid] }; repintarHoja(); } break;
+    case 'dnTodos': if (d.tid) { S.dnTodos = { ...(S.dnTodos || {}), [d.tid]: true }; repintarHoja(); } break;
     case 'abrirDicho': if (S.D && d.tid) { DD.quitarAvisoRivales(); hoja('dicho', d.tid, pilaDesde(el, 'dicho', d.tid)); } break;
     case 'ddPaso': case 'ddAtajo': case 'ddModo': formDicho(el, d); break;
     case 'dichoGuardar': {
@@ -4985,7 +4998,7 @@ document.addEventListener('click', async (ev) => {
     // el tema de evento (bloque TEMA_EVENTO de index.html): se enciende o se apaga sin recargar
     case 'temaEvento': if (window.temaEvento) { window.temaEvento.cambiar(!window.temaEvento.activo()); repintarHoja(); } break;
     // (40) las secciones de Ajustes: se recuerda cuáles has abierto para no cerrarlas al repintar
-    // (0.9b) con movimiento: se abre hacia abajo y se cierra hacia arriba (lo hace plegarConMovimiento, no el navegador)
+    // (0.9c) con movimiento: se abre hacia abajo y se cierra hacia arriba (lo hace plegarConMovimiento, no el navegador)
     case 'plegarAjuste': { const det = el.closest('details'); if (det) { ev.preventDefault(); Hj.plegarAjuste(S, d.k, plegarConMovimiento(det)); } break; }
     case 'quitarAvisoJ': { const j = S.M && S.M.J(d.pid); avisarJugador(d.pid, null); if (S.D) programar(S.D, S.M, planAvisos()); tostada(`Quitado el aviso${j ? ` de ${j.nombre}` : ''}`, 2400); repintarHoja(); break; }
     case 'exactas': nativo.pedirAlarmasExactas(); break;
@@ -5570,7 +5583,7 @@ function pasosTour() {
     conIA
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: planesApp(demo) ? `La IA hace el plan sola al empezar el día y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien: tienes ${planesCfg().gratis} al día con la IA${topConAnuncio() ? ' y, viendo un anuncio corto, alguno más' : ''}. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.` : 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
       // (iOS 3) en la app de iOS no hay clave de Google: la IA es la de la app, con tu cuenta
-      // (0.9b) y en la liga de ejemplo, en todas partes (Carlos, 28 nov: nada de la clave de Google a la vista)
+      // (0.9c) y en la liga de ejemplo, en todas partes (Carlos, 28 nov: nada de la clave de Google a la vista)
       : enAppIos() || demo ? { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Aquí el plan sale de los números. Con tu cuenta de LaLiga, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar lo que quieras de tu liga.' }
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar:not([hidden]), #supEstado.sup-toca', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },

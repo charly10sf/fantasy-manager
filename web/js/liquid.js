@@ -260,7 +260,7 @@ export function iniciarLiquid() {
   pedir();
 }
 
-/* ---- 8. (0.9b, 28 nov) el movimiento al cambiar de pantalla: cada cosa entra desde el lado al que vas (Carlos: «como de
+/* ---- 8. (0.9c, 28 nov) el movimiento al cambiar de pantalla: cada cosa entra desde el lado al que vas (Carlos: «como de
  *         hacia la derecha, hacia la izquierda… o arriba, abajo»). La app repinta la vista entera con innerHTML, así que no
  *         hay «pantalla de antes» que sacar: se anima la ENTRADA de lo recién pintado, un desplazamiento corto con fundido,
  *         en UN elemento (la vista entera, o lo de debajo del selector) y solo transform y opacity. Lo nuevo se puede tocar

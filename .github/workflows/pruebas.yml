@@ -151,6 +151,9 @@ jobs:
       # (27 nov, Gulácsi) ni «véndelo» y «blíndalo» a la vez, ni blindar con el riesgo bajo, ni vender al portero titular que baja poco
       - name: Ni vender y blindar a la vez
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-vender-y-blindar.mjs
+      # (28 nov) el dinero de un rival, lo primero de su ficha: cerrado sin nada suyo; abierto, el desglose que suma la cifra al euro
+      - name: El dinero de un rival, arriba de su ficha y con su desglose
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-desglose-dinero.mjs
       # (27 nov) el ± del dinero de un rival dice de qué sale (no siempre es la recompensa diaria)
       - name: De qué sale el ± del dinero de un rival
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-margen-dinero.mjs

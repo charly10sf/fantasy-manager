@@ -1,4 +1,4 @@
-// (0.9b, 28 nov) El movimiento al cambiar de pantalla: comprueba con la app de verdad (la liga de ejemplo) que cada cosa
+// (0.9c, 28 nov) El movimiento al cambiar de pantalla: comprueba con la app de verdad (la liga de ejemplo) que cada cosa
 // entra desde su lado, que un toque a mitad no deja nada a medias, que las hojas se quitan cuando han acabado de irse y que
 // las secciones de Ajustes se abren y se cierran sin quedarse movidas.
 //   node .github/liquid/movimiento.mjs [opciones: pc, webkit, w320, tx160, rm (reducir movimiento)] [BASE]

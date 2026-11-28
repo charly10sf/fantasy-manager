@@ -963,7 +963,9 @@ export function analizar(D, H, c, extra = {}) {
     const fl = (tid) => (flujos[tid] ||= { v: 0, n: 0, gastado: 0, ingresado: 0, premios: 0, raros: 0, ev: [] });
     // (27 nov) cada movimiento lleva su clase: 's' = pagado solo con saldo (una cláusula o una compra a otro mánager: después
     // de pagarlo no puede quedar en negativo), 'p' = el premio de una jornada (si lo cobra, la empezó en positivo)
-    const mover = (tid, x, t, k, c) => { const f = fl(tid); f.v += x; f.n++; f.ev.push([t || 0, x, c || '']); if (k) f[k] += Math.abs(x); };
+    // (28 nov, el desglose del dinero) y de dónde sale: { k, pid, con } (k: mercado, manager, clausula, ventaLiga,
+    // ventaManager, clausCobrada o premio; con: el equipo del otro mánager)
+    const mover = (tid, x, t, k, c, o) => { const f = fl(tid); f.v += x; f.n++; f.ev.push([t || 0, x, c || '', o || null]); if (k) f[k] += Math.abs(x); };
     // una venta a otro manager que saliera también como compra suya: no se cuenta dos veces
     const compraDe = new Set();
     for (const a of AH.lista) if ((a.clase === 'compra' || a.clase === 'clausula') && (a.otroId || a.otro)) compraDe.add(`${a.pid}|${Math.abs(num(a.importe))}|${tidDe(a.otroId, a.otro)}`);
@@ -972,12 +974,13 @@ export function analizar(D, H, c, extra = {}) {
       if (!imp) continue;
       const q = tidDe(a.quienId, a.quien), o = tidDe(a.otroId, a.otro);
       if (a.clase === 'compra' || a.clase === 'clausula') {
-        if (q) mover(q, -imp, a.t, 'gastado', a.clase === 'clausula' || o ? 's' : '');
-        if (o && o !== q) mover(o, imp, a.t, 'ingresado');
+        const cz = a.clase === 'clausula';
+        if (q) mover(q, -imp, a.t, 'gastado', cz || o ? 's' : '', { k: cz ? 'clausula' : o ? 'manager' : 'mercado', pid: a.pid || null, con: o && o !== q ? o : null });
+        if (o && o !== q) mover(o, imp, a.t, 'ingresado', '', { k: cz ? 'clausCobrada' : 'ventaManager', pid: a.pid || null, con: q || null });
       } else if (a.clase === 'venta') {
-        if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) mover(q, imp, a.t, 'ingresado');
+        if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) mover(q, imp, a.t, 'ingresado', '', { k: 'ventaLiga', pid: a.pid || null, con: null });
       } else if (a.clase === 'premio') {
-        if (q) mover(q, imp, a.t, 'premios', 'p');
+        if (q) mover(q, imp, a.t, 'premios', 'p', { k: 'premio', pid: null, con: null });
       } else if (a.clase === 'otro' && q) fl(q).raros++; // un movimiento con dinero de un tipo que no se conoce: al margen
     }
   }
@@ -1318,6 +1321,96 @@ export function analizar(D, H, c, extra = {}) {
       return { v: dc.v + mov - sub + rec * pr, exacto: false, margen, partes: { fija: 0.3e6, rec: mr, dicho: num(dc.r) }, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec * pr, n: f.n };
     }
     return M.dineroCuenta(tid);
+  };
+  /* (28 nov, Carlos: «si un usuario desbloquea lo del dinero con 2 anuncios, que le salga una pestaña mejor, más avanzada,
+     que ponga ventas, subidas de cláusulas… un desglose de todos los gastos que ha ido haciendo a lo largo del tiempo»)
+     EL DESGLOSE DEL DINERO DE UN RIVAL, para su ficha. Solo se pinta con SU dinero abierto (lo mira la vista: aquí no se
+     sabe), y la vista no hace ninguna cuenta: todo sale de aquí, de `M.dineroDe`, `flujos` y `subidas`.
+     { total, margen, exacto, d, partes: [{ clave, nombre, v, n, tramo, nota }], movs: [{ t, clase, pid, con, v, exacta,
+     de, a, ida }], saldo: [{ t, v, min, max }], resumen (lo de la tarjeta), desde }.
+     LA SUMA DE `partes` ES `total`, AL EURO: cada parte va redondeada al euro y lo único que no se ve, las recompensas
+     diarias, es lo que falta hasta la cifra (con lo que te dijo o con lo que da LaLiga, hasta lo más que ha podido coger:
+     lo que sobre va en su propia parte, «ajuste»). Lo que corrige la cuenta (lo que te han dicho otros, otras ligas) y lo
+     que le falta a la cuenta (`falta`), en la suya. Cada movimiento de la actividad sale una vez en `movs` */
+  const PARTES_DINERO = [
+    ['base', 'De salida'], ['mercado', 'Fichajes del mercado'], ['compras', 'Compras a mánagers y cláusulas pagadas'],
+    ['ventasLiga', 'Ventas a LaLiga'], ['ventasMan', 'Ventas a mánagers y cláusulas cobradas'], ['premios', 'Premios de jornada'],
+    ['subidas', 'Subidas de cláusula'], ['rec', 'Recompensas diarias'], ['falta', 'Lo que no sale en sus movimientos'],
+    ['correccion', 'Corrección de la cuenta'], ['ajuste', 'Ajuste'],
+  ];
+  const PARTE_DE = { mercado: 'mercado', manager: 'compras', clausula: 'compras', ventaLiga: 'ventasLiga', ventaManager: 'ventasMan', clausCobrada: 'ventasMan', premio: 'premios' };
+  M.PARTES_DINERO = PARTES_DINERO;
+  M.desgloseDinero = (tid) => {
+    if (!tid || tid === yoTid || !AH.completa || !AH.desde) return null;
+    const d = M.dineroDe(tid);
+    if (!d || d.v == null) return null;
+    const total = Math.round(d.v);
+    const f = flujos[tid] || { ev: [], n: 0 }, s = subidas[tid] || { v: 0, n: 0, lista: [], idas: [] };
+    const v = {}, n = {};
+    for (const [k] of PARTES_DINERO) { v[k] = 0; n[k] = 0; }
+    v.base = 100e6;
+    const movs = [];
+    for (const [t, x, , o] of f.ev) {
+      const k = (o && PARTE_DE[o.k]) || (x < 0 ? 'mercado' : 'ventasLiga');
+      const r = Math.round(x);
+      v[k] += r; n[k]++;
+      movs.push({ t: t || null, clase: (o && o.k) || (x < 0 ? 'mercado' : 'ventaLiga'), pid: o ? o.pid : null, con: o ? o.con : null, v: r, exacta: true });
+    }
+    for (const x of s.lista || []) {
+      const r = -Math.round(x.pago);
+      v.subidas += r; n.subidas++;
+      movs.push({ t: x.t || null, clase: 'subida', pid: x.pid, con: null, v: r, exacta: !!(x.exacta && x.t), de: x.de, a: x.a, ida: false });
+    }
+    for (const x of s.idas || []) {
+      const r = -Math.round(x.pago);
+      v.subidas += r; n.subidas++;
+      movs.push({ t: x.t || null, clase: 'subida', pid: x.pid, con: null, v: r, exacta: !!x.t, de: x.de, a: x.a, ida: true });
+    }
+    const rc = recDe(tid);
+    const tramo = { min: Math.round(rc.min), max: Math.round(recTotal), medio: Math.round(rc.v) };
+    let nota = 'estimadas';
+    const sabido = () => PARTES_DINERO.reduce((t, [k]) => (k === 'rec' ? t : t + v[k]), 0);
+    if (d.dicho || d.exacto) {
+      // la cifra parte de lo que te dijo (o de lo que da LaLiga): las recompensas son lo que falta hasta ella, como mucho todas
+      const resto = total - sabido();
+      v.rec = Math.max(0, Math.min(resto, tramo.max));
+      v.ajuste = resto - v.rec;
+      nota = d.dicho ? 'de lo que te dijo' : 'de su saldo';
+    } else {
+      v.falta = Math.round(num(rc.falta));
+      v.correccion = Math.round(num(d.correccion && d.correccion.v));
+      v.rec = total - sabido();
+    }
+    const partes = PARTES_DINERO.filter(([k]) => k === 'base' || k === 'rec' || v[k] || n[k]).map(([clave, nombre]) => ({
+      clave, nombre: clave === 'ajuste' ? (d.dicho ? 'Ajuste con lo que te dijo' : 'Ajuste con su saldo') : nombre,
+      v: v[clave], n: clave === 'base' || clave === 'rec' || clave === 'falta' || clave === 'correccion' || clave === 'ajuste' ? null : n[clave],
+      ...(clave === 'rec' ? { tramo, nota } : {}),
+    }));
+    movs.sort((a, b) => (a.t == null) - (b.t == null) || (b.t || 0) - (a.t || 0));
+    /* el saldo de cada día: desde 100 M, los movimientos y las subidas en su día; las subidas sin fecha y lo estimado
+       (recompensas, corrección, ajuste, lo que falta), repartidos como las recompensas de cada día. La banda, el ± en esa
+       misma proporción: al final, la cifra de arriba y su ± */
+    const margen = d.exacto ? 0 : Math.round(num(d.margen));
+    const repartir = v.rec + v.falta + v.correccion + v.ajuste + movs.filter((m) => m.clase === 'subida' && m.t == null).reduce((t, m) => t + m.v, 0);
+    const conFecha = movs.filter((m) => m.t != null).sort((a, b) => a.t - b.t);
+    const saldo = [];
+    let acum = 100e6, i = 0, recAc = 0, tPrev = AH.desde;
+    const recFin = recTotal || 1;
+    for (let t = AH.desde; ; t = Math.min(t + DIA, ahora)) {
+      while (i < conFecha.length && conFecha[i].t <= t) acum += conFecha[i++].v;
+      recAc += recTotal ? M.recompensas(tPrev, t) : 0;
+      tPrev = t;
+      const fr = t >= ahora ? 1 : recTotal ? Math.min(1, recAc / recFin) : (t - AH.desde) / Math.max(1, ahora - AH.desde);
+      const x = Math.round(acum + repartir * fr), m = Math.round(margen * fr);
+      saldo.push({ t, v: x, min: x - m, max: x + m });
+      if (t >= ahora) break;
+    }
+    // la cifra de hoy es la de arriba, al euro (lo de antes de `ahora` que no se ha recorrido entra aquí)
+    const ult = saldo[saldo.length - 1];
+    if (ult && ult.v !== total) { ult.v = total; ult.min = total - margen; ult.max = total + margen; }
+    // lo de la tarjeta de arriba: lo movido (comprar, vender, cobrar y los premios), las subidas y las recompensas
+    const resumen = { movido: v.mercado + v.compras + v.ventasLiga + v.ventasMan + v.premios, nMov: f.n, subidas: v.subidas, nSubidas: n.subidas, rec: v.rec, tramo };
+    return { total, margen, exacto: !!d.exacto, d, partes, movs, saldo, resumen, diasLiga, desde: AH.desde };
   };
   /** lo que puede gastar de golpe en una cláusula: su saldo (con el margen si es estimado); null si no se sabe */
   M.capacidad = (tid) => {
@@ -4089,7 +4182,8 @@ export function mejorOnce(lista, formaciones, pp, op = {}) {
  * el porqué del peligro de un rival, en una línea corta (ficha del rival y la IA). Sin cifras de su dinero: vale aunque
  * tengas cerrado el dinero de ese rival. Con «quién paga» cerrado (`quien: false`) no dice qué cláusulas tuyas le llegan
  */
-export function motivoPeligro(r, { quien = true } = {}) {
+/** (28 nov) `dinero`: false con el dinero de ese rival cerrado: entonces no se dice si tiene mucho o poco (sale de su dinero) */
+export function motivoPeligro(r, { quien = true, dinero = true } = {}) {
   const p = r && r.peligro;
   if (!p) return '';
   const partes = [];
@@ -4102,7 +4196,7 @@ export function motivoPeligro(r, { quien = true } = {}) {
   if (ll) partes.push(ll);
   // el dinero, sin cifras (20 nov, 20:19: el nivel sale sobre todo de lo rico que es y de lo que suele clausular)
   const pobreSin = p.riq < 0.3 && p.sinDinero && quien && !ll && !p.lleno && !p.caras;
-  const riqueza = p.riq == null || pobreSin ? null : p.riq >= 0.75 ? 'es de los que más dinero tienen de la liga' : p.riq < 0.3 ? 'tiene poco dinero frente al resto de la liga' : p.sinDinero && quien && !ll ? 'tiene poco saldo, pero un equipo que puede vender' : null;
+  const riqueza = p.riq == null || pobreSin || !dinero ? null : p.riq >= 0.75 ? 'es de los que más dinero tienen de la liga' : p.riq < 0.3 ? 'tiene poco dinero frente al resto de la liga' : p.sinDinero && quien && !ll ? 'tiene poco saldo, pero un equipo que puede vender' : null;
   const ricoPobre = riqueza && (p.riq >= 0.75 || p.riq < 0.3);
   if (ricoPobre && !ll) partes.push(riqueza);
   if (p.czAMi >= 2) partes.push(`te ha clausulado a ${p.czAMi}`);

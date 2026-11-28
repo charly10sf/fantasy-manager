@@ -1,4 +1,4 @@
-// (0.9b, 28 nov) El cambio de pantalla con movimiento, contra main, con la CPU ×6, alternando vueltas (el ruido entre
+// (0.9c, 28 nov) El cambio de pantalla con movimiento, contra main, con la CPU ×6, alternando vueltas (el ruido entre
 // vueltas es grande). Por vuelta y por cada lado: lo que tarda en dejar tocar (de tocar a dos fotogramas pintados, mediana
 // de 24 cambios seguidos), el hilo principal por cambio y, cambiando de uno en uno con pausa, los fotogramas de los 500 ms
 // de después (cuántos pasan de 50 ms y el más largo). Lo mismo con las sub-pestañas y abriendo y cerrando una ficha.

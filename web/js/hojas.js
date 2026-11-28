@@ -6,7 +6,7 @@ import { cristalTxt } from './liquid.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe, margenPor } from './util.js';
 import { lineaPaso, pujaLinea, noCompensaTxt, vecesCorto, pujaDe } from './puja-txt.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
-import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
+import { linea, barra, mini, columnasSem, areaSem, banda, silueta } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos, enAppIos, permisoIA } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
@@ -18,7 +18,7 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo, K } from './datos.js';
-import { dichoDe, fichaDichoHTML, tileDicho } from './dinero-dicho.js';
+import { dichoDe, fichaDichoHTML } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
@@ -631,14 +631,16 @@ function perfilHTML(S, tid) {
 
 /* ================= FICHA DE RIVAL ================= */
 /* en pestañas, como la del club (Carlos, 13 nov, punto 50: «más sencillas, más intuitivas, y con subpestañas dentro»;
-   eligió la opción A con retoques). Arriba solo quién es y su valor; lo clausulable baja a Cláusulas, partido en lo que
-   tú le puedes quitar y lo que él te puede quitar a ti. Siempre se abre en Plantilla: S.segRival = { tid, seg, sub }
-   solo vale para el rival que la eligió (app.js lo borra al abrir un rival desde fuera). */
+   eligió la opción A con retoques). Arriba quién es (28 nov: en una pieza, con el peligro y el apodo), SU DINERO (la tarjeta
+   de `dineroRivalHTML`, encima de las pestañas: no es una pestaña) y tres casillas; lo clausulable va en Cláusulas, en una
+   sola lista (28 nov, Carlos: «juntar en una»): las suyas que te llegan, las tuyas a su alcance y las suyas que no te llegan.
+   Siempre se abre en Plantilla: S.segRival = { tid, seg, sub } solo vale para el rival que la eligió (app.js lo borra al
+   abrir un rival desde fuera). */
 const PEST_RIVAL = [['plantilla', 'Plantilla'], ['suben', 'Suben y bajan'], ['clausulas', 'Cláusulas'], ['juego', 'Su juego']];
 const SUB_RIVAL = {
   plantilla: [['todos', 'Todos'], ['puesto', 'Por puesto']],
   suben: [['hoy', 'Hoy'], ['7d', '7 días']],
-  clausulas: [['quitas', 'Le quitas tú'], ['quita', 'Te quita él']],
+  clausulas: [['todas', 'Todas']],
   juego: [['perfil', 'Perfil'], ['venta', 'En venta'], ['movs', 'Movimientos']],
 };
 function segDeRival(S, tid) {
@@ -694,6 +696,104 @@ function premiumRivalTxt(S, tid, e) {
   const ced = M.premium.cesiones && e && e.cedidos > 0 ? e.cedidos : 0;
   return `${ents.length ? ` · entrenador${ents.length > 1 ? 'es' : ''}: ${esc(ents.map((j) => j.nombre).join(' y '))}` : ''}${ced ? ` · ${ced} cedido${ced > 1 ? 's' : ''}` : ''}`;
 }
+/* ================= EL DINERO DE UN RIVAL, ARRIBA DE SU FICHA (28 nov) ================= */
+/* (Carlos, 28 nov, 03:18: «la función del dinero debería estar más vistosa, no metida en Cláusulas → Te quita él… debería
+   estar más a la vista en el perfil, lo primero que te salga. Así, si lo tienes sin desbloquear, te sale lo primero, para
+   que haga más fuerza de que lo desbloquees»; 03:17: «si un usuario desbloquea lo del dinero con 2 anuncios, que le salga
+   una pestaña mejor, más avanzada… un desglose de todos los gastos que ha ido haciendo a lo largo del tiempo»)
+   UNA TARJETA ENCIMA DE LAS PESTAÑAS. CERRADA: dorada, con la corona y lo que hay dentro, la silueta de mentira (`silueta`,
+   igual para todos) y el botón de los anuncios; NI UNA CIFRA NI NADA QUE SALGA DE SUS DATOS (solo lo que te dijo, que es
+   tuyo). ABIERTA: la cifra con su ±, de qué sale el ±, tres cifras (lo movido, las subidas, las recompensas), lo que te
+   dijo y la entrada al desglose. Todas las cifras, de `M.desgloseDinero`: aquí no se suma nada */
+const MESES_DN = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function nombreDe(S, tid) {
+  if (S.D && S.D.yo && String(S.D.yo.teamId) === String(tid)) return 'ti';
+  const e = ((S.D && S.D.clasif) || []).find((x) => String(x.teamId) === String(tid));
+  return e ? e.manager || e.nombre : 'otro mánager';
+}
+function dnCerrada(S, e, tid) {
+  // (Carlos, 28 nov, 03:4x: «que la función top no ocupe tanto espacio en el perfil, quizás la mitad») una fila con la corona,
+  // qué hay dentro y la silueta, y debajo el botón con «Apuntar» al lado; si te dijo lo que tiene (es tuyo), eso debajo
+  const a = anunciosPorVez('dineroRivales'), q = POR_JORNADA.includes('dineroRivales') ? usosQuedan('dineroRivales') : Infinity;
+  const btn = topConAnuncio() ? (q === 0 ? 'Ya abriste los de esta jornada' : `Desbloquear · ${a === 1 ? 'un anuncio' : `${a} anuncios`}`) : 'Desbloquear';
+  const dd = dichoDe(tid);
+  return `<section class="dn-card cerrada dorado" aria-label="Su dinero">
+    <div class="dn-fila"><span class="bloq-ic">${icono('corona')}</span><div class="dn-cab-t"><b>Su dinero</b><span>Al euro, con todo lo que ha movido, sus cláusulas y su saldo</span></div><span class="dn-sil-c">${silueta()}</span></div>
+    <div class="dn-acc"><button type="button" class="dn-abrir" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}">${esc(btn)}</button>${dd ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
+    ${dd ? fichaDichoHTML(tid, { cerrado: true }) : ''}
+  </section>`;
+}
+function dnAbierta(S, r, tid) {
+  const g = S.M.desgloseDinero ? S.M.desgloseDinero(tid) : null, d = r.dinero, hasta = rivalAbiertoHasta(tid);
+  const cab = `<div class="dn-top"><span class="dn-eti">${icono('corona')}Su dinero</span>${hasta ? `<span class="dn-hasta">abierto hasta las ${horaDe(hasta)}</span>` : ''}</div>`;
+  if (!g) {
+    return `<section class="dn-card">${cab}<div class="dn-cifra"><b>${d && d.v != null ? esc(dineroCorto(d)) : '?'}</b>${d && d.margen ? `<span>± ${eur(d.margen)}</span>` : ''}</div>
+      <p class="dn-por">${esc(d && d.v == null ? `No se sabe todavía: ${d.motivo || 'faltan datos'}.` : d && d.exacto ? 'Exacto.' : 'Sin sus movimientos desde el principio no hay desglose.')}</p>${d && d.exacto ? '' : fichaDichoHTML(tid, { cerrado: false })}</section>`;
+  }
+  const R = g.resumen, abierto = !!(S.dnAbierto && S.dnAbierto[tid]);
+  // el ± y de qué sale, de la ficha del rival (r.dinero, la misma cuenta del motor que `g.d`)
+  const dm = d && d.v != null ? d : g.d, por = g.exacto ? 'exacto' : margenPor(dm), mg = g.exacto ? 0 : num(dm.margen);
+  const tres = [
+    [eur(R.movido, { signo: true }), `${R.nMov} movimiento${R.nMov === 1 ? '' : 's'}`],
+    [eur(R.subidas, { signo: true }), `${R.nSubidas} subida${R.nSubidas === 1 ? '' : 's'} de cláusula`],
+    [eur(R.rec, { signo: true }), R.tramo && !g.d.dicho && !g.exacto ? 'recompensas, estimadas' : 'recompensas'],
+  ];
+  const dc = d && d.dicho, cu = dc && S.M.dineroCuentaBruta ? S.M.dineroCuentaBruta(tid) : null;
+  const antes = dc && dc.est != null ? `<p class="t2 peq dn-antes">Cuando te lo dijo, la cuenta daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })}).${cu && cu.v != null && Math.abs(cu.v - dc.est) >= 1e5 ? ` Ahora daría ${eur(cu.v)}.` : ''}</p>` : '';
+  return `<section class="dn-card${abierto ? ' desplegada' : ''}" aria-label="Su dinero">${cab}
+    <div class="dn-cifra-f"><div class="dn-cifra"><b>${g.exacto ? '' : '≈ '}${eur(g.total)}</b>${mg ? `<span>± ${eur(mg)}</span>` : ''}</div></div>
+    ${por ? `<p class="dn-por">${g.exacto ? 'Exacto' : `El ± es ${esc(por)}`}</p>` : ''}
+    <div class="dn-tres">${tres.map(([v, t]) => `<div><b class="${v.startsWith('−') ? 'baja' : v.startsWith('+') ? 'sube' : ''}">${v}</b><span>${t}</span></div>`).join('')}</div>
+    <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
+    ${abierto ? `<div class="dn-desg">${desgloseCuerpo(S, tid, g)}</div>` : ''}
+    ${dc ? fichaDichoHTML(tid, { cerrado: false }) : ''}${antes}
+  </section>`;
+}
+/** la tarjeta del dinero, cerrada o abierta (lo decide su dinero, rival a rival) */
+function dineroRivalHTML(S, r, tid) {
+  return bloqueada('dineroRivales', tid) ? dnCerrada(S, r.e, tid) : dnAbierta(S, r, tid);
+}
+const DN_TXT = {
+  mercado: (j) => `Fichó a <b>${j}</b> del mercado`,
+  manager: (j, c) => (c === 'ti' ? `Te compró a <b>${j}</b>` : `Le compró <b>${j}</b> a ${c}`),
+  clausula: (j, c) => (c === 'ti' ? `Te clausuló a <b>${j}</b>` : `Le clausuló <b>${j}</b> a ${c}`),
+  ventaLiga: (j) => `Vendió a <b>${j}</b> a LaLiga`,
+  ventaManager: (j, c) => (c === 'ti' ? `Te vendió a <b>${j}</b>` : `Le vendió <b>${j}</b> a ${c}`),
+  clausCobrada: (j, c) => (c === 'ti' ? `Le clausulaste a <b>${j}</b>` : `${c} le clausuló a <b>${j}</b>`),
+  premio: () => 'Premio de la jornada',
+};
+const DN_IC = { mercado: 'mercado', manager: 'cambio', clausula: 'diana', ventaLiga: 'euro', ventaManager: 'cambio', clausCobrada: 'diana', premio: 'estrella', subida: 'escudo' };
+function movDinero(S, m) {
+  const j = m.pid ? esc((S.M.J(m.pid) || {}).nombre || 'un jugador') : '';
+  const c = m.con ? esc(nombreDe(S, m.con)) : '';
+  const t = m.clase === 'subida' ? `Subió ${eur(m.a - m.de)} la cláusula de <b>${j}</b>${m.ida ? ' · ya no lo tiene' : ''}` : (DN_TXT[m.clase] || (() => 'Movimiento'))(j, c);
+  const cls = m.v > 0 ? 'sube' : m.v < 0 ? 'baja' : '';
+  const cuandoT = m.t ? `${fechaCorta(m.t)}${m.clase === 'subida' && !m.exacta ? ' · aproximado' : ''}` : 'sin fecha';
+  return `<div class="dn-mov"><span class="ic-act dn-ic ${m.clase}">${icono(DN_IC[m.clase] || 'euro')}</span><div class="fila-c"><div class="act-t">${t}</div><div class="fila-s">${cuandoT}</div></div><b class="${cls}">${eur(m.v, { signo: true })}</b></div>`;
+}
+/** el desglose, dentro de la tarjeta (diseño A, el que eligió Carlos el 28 nov): de dónde sale, la línea del tiempo y la
+    gráfica de su saldo. (Las cifras sueltas del final las quitó él: «sin la última sección… eso no tiene sentido») */
+function desgloseCuerpo(S, tid, g) {
+  const otras = g.partes.filter((p) => p.clave !== 'base'), max = Math.max(1, ...otras.map((p) => Math.abs(p.v)));
+  const est = (p) => ['rec', 'ajuste', 'correccion', 'falta'].includes(p.clave);
+  const fila = (p) => `<div class="dn-parte${est(p) ? ' est' : ''}"><span class="dn-p-n">${esc(p.nombre)}${p.n ? `<i>${p.n}</i>` : ''}${p.tramo && p.nota === 'estimadas' ? `<small>de ${eur(p.tramo.min, { dec: 1 })} a ${eur(p.tramo.max, { dec: 1 })}: va el medio</small>` : p.nota && p.nota !== 'estimadas' ? `<small>${esc(p.nota)}</small>` : ''}</span>${p.clave !== 'base' ? `<span class="dn-p-b ${est(p) ? 'est' : clase(p.v)}" style="--w:${Math.max(2, Math.round((Math.abs(p.v) / max) * 100))}%"></span>` : ''}<b class="${p.clave === 'base' ? '' : clase(p.v)}">${eur(p.v, { signo: p.clave !== 'base' })}</b></div>`;
+  let h = `<div class="sec dn-sec"><h2>De dónde sale</h2></div>`;
+  h += `<div class="dn-partes">${g.partes.map(fila).join('')}<div class="dn-parte dn-total"><span class="dn-p-n">Hoy</span><span></span><b>${eur(g.total)}${g.margen ? ` <small>± ${eur(g.margen)}</small>` : ''}</b></div></div>`;
+  // la línea del tiempo, por meses; lo que no tiene día, al final
+  const todos = S.dnTodos && S.dnTodos[tid], TOPE = 30;
+  const ms = todos ? g.movs : g.movs.slice(0, TOPE);
+  h += `<div class="sec dn-sec"><h2>Sus movimientos</h2><span class="sub">${g.movs.length}</span></div>`;
+  let mes = null;
+  for (const m of ms) {
+    const k = m.t ? diaDe(m.t).slice(0, 7) : 'sin';
+    if (k !== mes) { mes = k; h += `<div class="grupo"><span>${k === 'sin' ? 'Subidas sin fecha' : `${MESES_DN[Number(k.slice(5, 7)) - 1]}${k.slice(0, 4) !== diaDe(Date.now()).slice(0, 4) ? ` ${k.slice(0, 4)}` : ''}`}</span><span></span></div>`; }
+    h += movDinero(S, m);
+  }
+  if (!todos && g.movs.length > TOPE) h += `<button type="button" class="btn chico sec dn-todos" data-accion="dnTodos" data-tid="${esc(tid)}">Ver los ${g.movs.length}</button>`;
+  // su saldo
+  h += `<div class="sec dn-sec"><h2>Cómo ha ido su saldo</h2></div>${banda(g.saldo)}<p class="t2 peq dn-pie">Estimado día a día; la franja es el ±.</p>`;
+  return h;
+}
 export function fichaRival(S, tid) {
   const { M } = S;
   const r = M.rivales.find((x) => x.e.teamId === tid);
@@ -702,26 +802,26 @@ export function fichaRival(S, tid) {
   const { seg, sub } = segDeRival(S, tid);
   // las funciones top cerradas, juntas en una tarjeta al final (antes, un candado en cada sección)
   const cerradas = [];
-  // arriba, lo primero que se mira de un rival (Carlos, 13 nov, 19:08): su dinero (con el candado si es función top),
-  // el valor de su plantilla, sus cláusulas abiertas y lo que ha gastado; cada casilla lleva a su pestaña
+  // arriba, lo primero que se mira de un rival (Carlos, 13 nov, 19:08): el valor de su plantilla, sus cláusulas abiertas y lo
+  // que ha gastado; cada casilla lleva a su pestaña. Su dinero va en su tarjeta, encima (28 nov: `dineroRivalHTML`)
   const ir = (s, p) => `data-accion="segRival" data-tid="${esc(tid)}" data-s="${s}" data-p="${p}"`;
-  const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
-  const conDinero = r.dinero && r.dinero.v != null;
-  const tDinero = bloqueada('dineroRivales', tid)
-    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('corona')}</b><span>su dinero ›</span></button>`
-    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}${margenPor(r.dinero, { uno: true }) ? ` ${margenPor(r.dinero, { uno: true })}` : ''}`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
+  const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })}</small>` : '';
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
-    tDinero,
-    `<button class="eq2-t" ${ir('juego', 'movs')}><b>${eur(e.valor, { dec: 1 })}</b><span>su plantilla ›</span>${dV}</button>`,
-    `<button class="eq2-t" ${ir('clausulas', 'quitas')}><b>${r.abiertas}</b><span>cláusulas abiertas${r.abiertas ? `, ${teLlegan} te llega${teLlegan === 1 ? '' : 'n'}` : ''} ›</span></button>`,
-    `<button class="eq2-t" ${ir('juego', 'movs')}><b>${eur(r.gastado, { dec: 1 })}</b><span>gastado en 7 días · ${r.movs} movimiento${r.movs === 1 ? '' : 's'} ›</span></button>`,
+    `<button class="rv-t" ${ir('juego', 'movs')}><b>${eur(e.valor, { dec: 1 })}</b><span>plantilla</span>${dV}</button>`,
+    `<button class="rv-t" ${ir('clausulas', 'todas')}><b>${r.abiertas}</b><span>abiertas${r.abiertas ? ` · ${teLlegan} te llega${teLlegan === 1 ? '' : 'n'}` : ''}</span></button>`,
+    `<button class="rv-t" ${ir('juego', 'movs')}><b>${eur(r.gastado, { dec: 1 })}</b><span>gastado · 7 días</span></button>`,
   ];
-  let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2></div>
-  <p class="t2 rival-sub"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos${premiumRivalTxt(S, tid, e)}</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></p>
-  <p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid) }))}</p>
-  ${apodoRival(S, e)}
-  <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
+  // (28 nov, Carlos: «reworkea un poco esa parte primera del perfil para que quede mejor») quién es en una pieza (la cara, el
+  // nombre y debajo mánager, puesto, puntos, el peligro y el apodo), su dinero, y tres casillas en una fila
+  const aps = apodosDe(String(tid));
+  const apodoBtn = `<button type="button" class="rv-apodo" data-accion="apodoEditar" data-tid="${esc(tid)}" aria-label="${aps.length ? 'Cambiar el apodo' : 'Ponle un apodo para la IA y la voz'}">${icono('lapiz')}${aps.length ? `«${esc(aps[0])}»` : 'Apodo'}</button>`;
+  let h = `<div class="hoja-cab rival-cab rv-hero">${caraManager(e, 'g')}<div class="rv-hero-t"><h2>${esc(e.nombre)}</h2>
+    <p class="rv-meta"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º · ${e.puntos} pts${premiumRivalTxt(S, tid, e)}</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${apodoBtn}</p></div></div>
+  <p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid), dinero: !bloqueada('dineroRivales', tid) }))}</p>
+  ${S.apodoEdita === String(tid) ? apodoRival(S, e) : ''}
+  ${dineroRivalHTML(S, r, tid)}
+  <div class="rv-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;
   // la jornada en directo: lo que lleva y su once, jugador a jugador (encima de las pestañas, solo con partidos)
   if (M.vivo && M.enJuego) {
@@ -734,7 +834,7 @@ export function fichaRival(S, tid) {
   h += `<div class="tabs club-tabs rival-tabs"><div class="tabs-in" role="tablist" aria-label="Partes de la ficha del rival">${PEST_RIVAL.map(([k, txt]) => `<button data-accion="segRival" data-tid="${esc(tid)}" data-s="${k}" role="tab" aria-selected="${k === seg}" class="${k === seg ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   // la subpestaña, con el selector de Clubes; en Suben y bajan, el total de toda su plantilla a la derecha
   const sb = seg === 'suben' ? subenBajanRival(r, sub) : null;
-  h += `<div class="sb-cab"><div class="sb-sel" role="tablist" aria-label="${esc(PEST_RIVAL.find(([k]) => k === seg)[1])}">${SUB_RIVAL[seg].map(([k, t]) => `<button data-accion="subRival" data-tid="${esc(tid)}" data-p="${k}" role="tab" aria-selected="${k === sub}" class="${k === sub ? 'activo' : ''}">${t}</button>`).join('')}</div>
+  if (SUB_RIVAL[seg].length > 1) h += `<div class="sb-cab"><div class="sb-sel" role="tablist" aria-label="${esc(PEST_RIVAL.find(([k]) => k === seg)[1])}">${SUB_RIVAL[seg].map(([k, t]) => `<button data-accion="subRival" data-tid="${esc(tid)}" data-p="${k}" role="tab" aria-selected="${k === sub}" class="${k === sub ? 'activo' : ''}">${t}</button>`).join('')}</div>
     ${sb && sb.tot != null ? `<div class="sb-tot"><b class="${clase(sb.tot)}">${sb.tot ? `${sb.tot > 0 ? '▲' : '▼'} ${eur(sb.tot, { dec: 1, signo: true })}` : '='}</b><span>entre todos ${sub === '7d' ? 'en 7 días' : 'hoy'}</span></div>` : ''}</div>`;
   const filaP = (x) => filaJugador(x, {
     sub: `${esc(x.j.equipo)} · vale ${eur(x.j.valor)}`,
@@ -750,38 +850,26 @@ export function fichaRival(S, tid) {
       }
     } else h += `<div class="grupo"><span>${r.fichas.length} jugadores · de más a menos valor</span><span>${r.abiertas} abiertas</span></div>${[...r.fichas].sort((a, b) => b.j.valor - a.j.valor).map(filaP).join('')}`;
   } else if (seg === 'suben') h += sb.h;
-  else if (seg === 'clausulas' && sub === 'quitas') {
-    // lo que tú le puedes quitar: las abiertas que te llegan, las que te llegarán cuando se abran y el resto
+  else if (seg === 'clausulas') {
+    // (28 nov, Carlos: «juntar en una») las suyas que te llegan y, debajo, las tuyas que le llegan a él (quién paga, función
+    // top: su candado aquí mismo); al final, las suyas que no te llegan. Su dinero ya no va aquí: es la tarjeta de arriba
     const porAbrir = (a, b) => (a.abierta === b.abierta ? (a.abierta ? (b.interes || 0) - (a.interes || 0) : a.abreEn - b.abreEn) : a.abierta ? -1 : 1);
     const ya = r.fichas.filter((x) => x.abierta && x.meLlega).sort(porAbrir);
     const luego = r.fichas.filter((x) => !x.abierta && x.meLlega).sort(porAbrir);
     const resto = r.fichas.filter((x) => !x.meLlega).sort(porAbrir);
-    const grupo = (t, xs) => (xs.length ? `<div class="grupo"><span>${t} · ${xs.length}</span><span></span></div>${xs.map(filaP).join('')}` : '');
-    h += r.fichas.length ? (ya.length || luego.length ? '' : `<p class="t2 peq">Con tu dinero de ahora no te llega ninguna de sus cláusulas.</p>`) + grupo('Abiertas y te llegan', ya) + grupo('Te llegan cuando se abran', luego) + grupo('No te llegan', resto) : nada('No se ha podido leer su plantilla.');
-  } else if (seg === 'clausulas') {
-    // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
-    // (0.8.4o) con su dinero cerrado, solo la cifra que pusiste tú (dinero-dicho.js): la cuenta de la app, «ahora daría» y
-    // la diferencia, solo con su dinero abierto
-    const cerradoD = bloqueada('dineroRivales', tid), exactoD = !!(r.dinero && r.dinero.exacto), ddR = exactoD ? null : dichoDe(tid);
-    if (cerradoD) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${cerradoD ? (ddR ? `${tileDicho(ddR)}<button type="button" class="eq2-t dd-cerr" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('corona')}Cerrado</b><span>su dinero en la app</span></button>` : '') : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}${margenPor(r.dinero, { uno: true }) ? ` ${margenPor(r.dinero, { uno: true })}` : ''}`) : 'su dinero: no se sabe'}</span></div>`}
-      <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado` : 'sin compras al mercado'}</span></div></div>`;
-    // si te ha dicho cuánto tiene, se apunta (la hoja «dicho»): con su dinero abierto, desde entonces sale de eso más lo que mueva
-    if (!exactoD) {
-      h += fichaDichoHTML(tid, { cerrado: cerradoD });
-      const dc = !cerradoD && r.dinero && r.dinero.dicho, cu = dc && (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
-      if (dc && (dc.est != null || (cu && cu.v != null))) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''}</p>`;
-    }
-    // (0.8.4o) con quién paga cerrado, su candado aunque ahora no le llegue a ninguna: «no le llega» también sale de su dinero
-    if (bloqueada('quienPaga', tid)) cerradas.push('quienPaga');
+    const grupo = (t, xs, d = '') => (xs.length ? `<div class="grupo"><span>${t} · ${xs.length}</span><span>${d}</span></div>${xs.map(filaP).join('')}` : '');
+    if (!r.fichas.length) h += nada('No se ha podido leer su plantilla.');
+    else h += (ya.length || luego.length ? '' : '<p class="t2 peq">Con tu dinero de ahora no te llega ninguna de sus cláusulas.</p>') + grupo('Suyas: abiertas y te llegan', ya) + grupo('Suyas: te llegan cuando se abran', luego);
+    if (bloqueada('quienPaga', tid)) h += `<div class="grupo"><span>Tuyas a su alcance</span><span></span></div>${candado('quienPaga')}`;
     else if (r.leLlegan && r.leLlegan.length) {
-      h += `<div class="grupo"><span>Tus cláusulas a su alcance · ${r.leLlegan.length}</span><span>${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
+      h += `<div class="grupo"><span>Tuyas a su alcance · ${r.leLlegan.length}</span><span>${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
       h += r.leLlegan.map((x) => filaJugador(x, {
         sub: `Tuyo · vale ${eur(x.j.valor)}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? ` · subirla a ${eur(x.blindaje.objetivo)} (${eur(x.blindaje.coste)})` : x.blindaje && x.blindaje.parcial ? ` · subirla a ${eur(x.blindaje.parcial.objetivo)} (${eur(x.blindaje.parcial.coste)})` : ''}`,
         extra: `${clausulaPill(x)}${x.abierta ? '<span class="pill mal">Te lo puede quitar ya</span>' : ''}`,
         derecha: `<div class="v">${eur(x.clausula)}</div>`, op: S.opPorPid[x.pid],
       })).join('');
-    } else h += `<p class="t2 peq">Ahora no le llega para ninguna de tus cláusulas.</p>`;
+    } else h += `<div class="grupo"><span>Tuyas a su alcance · 0</span><span></span></div><p class="t2 peq">Ahora no le llega para ninguna de tus cláusulas.</p>`;
+    h += grupo('Suyas: no te llegan', resto);
   } else if (sub === 'perfil') {
     // cómo juega (función top, desde la 0.6.5)
     if (bloqueada('perfilRival')) cerradas.push('perfilRival');
@@ -1189,7 +1277,7 @@ export function ajustes(S) {
   // (iOS 3) en la app de iOS no hay clave de Google; en su lugar, el permiso para mandar tu liga a la IA
   const permIA = enAppIos() ? permisoIA() : null;
   if (permIA !== null) c3 += fila('Mandar tu liga a la IA', permIA === 'si' ? 'Sí: para el plan con la IA y tus preguntas (los rivales, con otro nombre)' : permIA === 'no' ? 'No: no se manda nada y el plan sale sin la IA' : 'Se te pregunta antes del primer plan o pregunta', permIA === 'si' ? btnA('quitarPermisoIA', 'Apagar') : btnA('permisoIA', 'Activar', { sec: false }), 'permiso privacidad datos ia');
-  // (0.9b) en la liga de ejemplo, ni rastro de la clave (salvo para quitar una que ya estuviera puesta)
+  // (0.9c) en la liga de ejemplo, ni rastro de la clave (salvo para quitar una que ya estuviera puesta)
   else if (!enDemo() || k) c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();

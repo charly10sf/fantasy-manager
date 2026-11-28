@@ -1,4 +1,4 @@
-// (0.9b, 28 nov) Los vídeos del movimiento para enseñárselos a Carlos antes de publicar: cada escena dos veces, a velocidad
+// (0.9c, 28 nov) Los vídeos del movimiento para enseñárselos a Carlos antes de publicar: cada escena dos veces, a velocidad
 // real y a cámara lenta (×4, con la velocidad de las animaciones del navegador), en un mp4 con el rótulo debajo.
 //   node .github/liquid/video-movimiento.mjs <carpeta> [escenas: pestanas,largo,secciones,fichas,pregunta,abajo,pc] [BASE]
 // Con la web servida en local (python3 -m http.server 8765 dentro de web/). SE GRABA CON WEBKIT: el Chromium de aquí (sin

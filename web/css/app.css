@@ -3062,7 +3062,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .filtros.rk-jsel > button { flex: none; }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
 
-/* (al deslizar de lado a la pestaña de al lado, la nueva entra desde ese lado: desde la 0.9b lo hace `entra` de liquid.js
+/* (al deslizar de lado a la pestaña de al lado, la nueva entra desde ese lado: desde la 0.9c lo hace `entra` de liquid.js
    con cualquier cambio de pestaña, no solo al deslizar) */
 /* (sesión 8, M9) el error del código de entrada, debajo del campo */
 .codigo-err { margin: 8px 0 0; color: var(--rojo-l); font-size: var(--t-sec2); font-weight: 600; }
@@ -4488,7 +4488,101 @@ html.lq .pp-l2s .pp-cu, html.lq .pp-l2s .pp-est { max-width: 100%; overflow: hid
    se quedaban en 4,1:1 con el gris de antes; con este blanco, 4,9:1 o más */
 html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 243, 0.84); }
 
-/* ==== 0.9b · EL MOVIMIENTO (28 nov; Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia
+/* ===== 0.9b · EL DINERO DE UN RIVAL, ARRIBA DE SU FICHA (28 nov; hojas.js, `dineroRivalHTML`) =====
+   Una tarjeta translúcida (no es cristal: no flota), encima de las pestañas. Cerrada, en dorado con la corona y la silueta
+   de mentira difuminada; abierta, la cifra grande y la entrada al desglose. Solo se anima `transform` */
+.dn-card { position: relative; margin: 10px 0 12px; padding: 14px 14px 12px; border-radius: var(--r-tarj); background: var(--plano); border: 1px solid var(--linea); overflow: hidden; }
+.dn-card.cerrada { padding-bottom: 10px; }
+.dn-cab { display: flex; align-items: center; gap: 12px; }
+.dn-cab .bloq-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.dn-cab .bloq-ic .ic { width: 22px; height: 22px; }
+.dn-cab-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dn-cab-t b { font: 600 22px/1.05 var(--cond); text-transform: uppercase; letter-spacing: .3px; color: #ffe7a6; }
+.dn-cab-t span { font: 500 var(--t-mini)/1.3 'Barlow'; color: #f4e2b4; opacity: .85; }
+.dn-sil-c { margin: 12px 0 2px; color: rgba(255, 210, 110, .55); filter: blur(2.5px); opacity: .9; }
+.dn-sil { display: block; width: 100%; height: 62px; }
+.dn-sil rect { fill: currentColor; }
+.dn-abrir { display: block; width: 100%; margin: 12px 0 4px; padding: 13px 14px; border-radius: var(--r-ctl); font: 700 15px/1 'Barlow'; color: #2a1a00; background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); box-shadow: 0 6px 18px rgba(255, 180, 40, .28); }
+.dn-abrir:active { transform: scale(.98); }
+.dn-apunta { display: block; margin: 8px auto 0; font-size: var(--t-mini); color: #f4e2b4; }
+.dn-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dn-eti { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--cond); text-transform: uppercase; letter-spacing: .6px; color: var(--oro); }
+.dn-eti .ic { width: 15px; height: 15px; }
+.dn-hasta { font: 500 var(--t-mini) 'Barlow'; color: var(--texto2); }
+.dn-cifra-f { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.dn-cifra { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
+.dn-cifra b { font: 600 40px/1 var(--cond); letter-spacing: .2px; color: #fff; }
+.dn-cifra span { font: 600 16px/1 var(--cond); color: var(--texto2); }
+.dn-por { margin: 6px 0 0; font: 500 var(--t-mini)/1.35 'Barlow'; color: var(--texto2); }
+.dn-tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 0; }
+.dn-tres > div { display: flex; flex-direction: column; gap: 3px; padding: 9px 10px; border-radius: 12px; background: var(--plano2); min-width: 0; }
+.dn-tres b { font: 600 17px/1 var(--cond); white-space: nowrap; }
+.dn-tres span { font: 500 11.5px/1.25 'Barlow'; color: var(--texto2); }
+.dn-ver { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin: 10px 0 0; padding: 11px; border-radius: var(--r-ctl); font: 600 14px/1 'Barlow'; color: var(--oro); background: rgba(255, 197, 71, .08); border: 1px solid rgba(255, 197, 71, .28); }
+.dn-ver .ic { width: 16px; height: 16px; }
+.dn-ver:active { transform: scale(.98); }
+.dn-desg { margin-top: 6px; }
+.dn-sec { margin-top: 16px; }
+.dn-partes { display: grid; gap: 2px; }
+.dn-parte { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 2px; border-bottom: 1px solid var(--linea); }
+.dn-p-n { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; font: 500 14px/1.25 'Barlow'; min-width: 0; }
+.dn-p-n i { font: 600 11px/1 'Barlow'; font-style: normal; padding: 2px 6px; border-radius: var(--r-red); background: var(--plano2); color: var(--texto2); }
+.dn-p-n small { flex-basis: 100%; font: 500 11.5px/1.25 'Barlow'; color: var(--apagado); }
+.dn-p-b { height: 8px; border-radius: 4px; width: var(--w); background: var(--texto2); justify-self: start; }
+.dn-p-b.sube { background: var(--sube); } .dn-p-b.baja { background: var(--baja); }
+.dn-p-b.est { background: repeating-linear-gradient(135deg, var(--oro) 0 4px, rgba(255, 197, 71, .45) 4px 8px); }
+.dn-parte > b { font: 600 16px/1 var(--cond); white-space: nowrap; text-align: right; }
+.dn-parte.est > b { color: var(--oro); }
+.dn-total { border-bottom: 0; padding-top: 10px; }
+.dn-total .dn-p-n { font: 600 15px/1 var(--cond); text-transform: uppercase; letter-spacing: .4px; }
+.dn-total > b { font-size: 20px; } .dn-total > b small { font: 600 12px var(--cond); color: var(--texto2); }
+.dn-mov { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--linea); }
+.dn-mov .ic-act { width: 32px; height: 32px; border-radius: 10px; }
+.dn-mov .ic-act .ic { width: 16px; height: 16px; }
+.dn-mov .fila-c { flex: 1; min-width: 0; }
+.dn-mov > b { font: 600 15px/1 var(--cond); white-space: nowrap; }
+.dn-ic.subida { color: var(--oro); background: var(--oro-s); }
+.dn-ic.premio { color: var(--oro); }
+.dn-todos { display: block; margin: 10px auto 0; }
+.dn-pie { margin: 4px 0 0; }
+.g-banda .g-bd { fill: rgba(255, 197, 71, .16); }
+.g-cero { stroke: var(--linea); stroke-dasharray: 3 4; }
+@media (prefers-reduced-motion: reduce) { .dn-abrir:active, .dn-ver:active { transform: none; } }
+.dn-card.dorado { border: 1px solid rgba(255, 205, 90, .8); background: linear-gradient(135deg, rgba(255, 205, 90, .28), rgba(255, 205, 90, .08) 55%, rgba(255, 205, 90, .18)), var(--plano2); box-shadow: 0 0 0 1px rgba(255, 205, 90, .12), 0 6px 22px rgba(255, 180, 40, .14); }
+.dn-card.dorado::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 236, 175, .2), transparent); transform: skewX(-18deg); animation: brilloOro 5.5s ease-in-out infinite; pointer-events: none; }
+.dn-card:not(.cerrada) { border-color: rgba(255, 197, 71, .3); }
+/* la cabecera de la ficha del rival, rehecha (28 nov: «reworkea un poco esa parte primera del perfil»): la cara, el nombre
+   y una línea con mánager, puesto, puntos, el peligro y el apodo; debajo, su dinero y tres casillas en una fila */
+.rv-hero { align-items: center; gap: 12px; margin-bottom: 4px; }
+.rv-hero-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.rv-hero-t h2 { padding: 0; }
+.rv-meta { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font: 500 14px/1.2 'Barlow'; color: var(--texto2); }
+.rv-meta .amenaza { flex: none; }
+.rv-apodo { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: var(--r-red); border: 1px dashed rgba(255, 255, 255, .16); font: 500 12.5px/1.2 'Barlow'; color: var(--texto2); background: transparent; }
+.rv-apodo .ic { width: 12px; height: 12px; }
+.rv-hero + .peligro-por { margin: 2px 0 6px; }
+.rv-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+.rv-t { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 13px 12px 12px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); text-align: left; color: inherit; }
+.rv-t:active { transform: scale(.98); }
+.rv-t b { font: 600 23px/1 var(--cond); white-space: nowrap; }
+.rv-t span { font: 500 13px/1.25 'Barlow'; color: var(--texto2); }
+.rv-t small { font: 600 12px/1.1 'Barlow'; }
+/* la tarjeta cerrada, en la mitad de alto (Carlos: «que la función top no ocupe tanto espacio en el perfil, quizás la mitad») */
+.dn-fila { display: flex; align-items: center; gap: 12px; }
+.dn-fila .dn-cab-t { flex: 1; }
+.dn-fila .dn-cab-t b { font-size: 20px; }
+.dn-fila .dn-sil-c { flex: none; width: 96px; margin: 0; filter: blur(1px); color: rgba(255, 214, 120, .75); }
+.dn-fila .dn-sil { height: 34px; }
+.dn-acc { display: flex; gap: 8px; margin-top: 10px; }
+.dn-acc .dn-abrir { flex: 1; margin: 0; padding: 11px 12px; font-size: 14.5px; }
+.dn-apunta { flex: none; display: inline-flex; align-items: center; gap: 5px; margin: 0; padding: 0 12px; border-radius: var(--r-ctl); font: 600 13px/1 'Barlow'; color: #ffe7a6; background: rgba(255, 205, 90, .1); border: 1px solid rgba(255, 205, 90, .35); }
+.dn-apunta .ic { width: 13px; height: 13px; }
+.dn-card.cerrada { padding: 12px 12px 12px; margin: 8px 0 10px; }
+.dn-card { margin: 8px 0 10px; }
+.dn-acc .dn-ver { flex: 1; margin: 0; }
+.dn-card > .dd-ficha { margin: 10px 0 0; }
+
+/* ==== 0.9c · EL MOVIMIENTO (28 nov; Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia
    la derecha, hacia la izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas»). Lo de cambiar de
    pantalla lo hace liquid.js (`entra`): la vista nueva entra desde el lado al que vas, con la API de animaciones, en un
    solo elemento y solo transform y opacity. Aquí, las hojas y las secciones de Ajustes ==== */

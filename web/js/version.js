@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9b';
+export const VERSION = '0.9c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -28,12 +28,24 @@ export const NOVEDADES = [
     // izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas») EL MOVIMIENTO: `entra` de liquid.js (la vista
     // nueva entra desde el lado al que vas, en un elemento, solo transform y opacity), las hojas en abrirHoja/cerrarHoja de
     // app.js (se quitan al acabar de irse; una encima de otra, desde la derecha; Ajustes, desde arriba) y las secciones de
-    // Ajustes (`plegarConMovimiento`). La sección «0.9b» del final de app.css. Sin tarjeta para nadie (no lleva `todos`).
+    // Ajustes (`plegarConMovimiento`). La sección «0.9c» del final de app.css. Sin tarjeta para nadie (no lleva `todos`).
     // LA HORA, AL PUBLICAR
-    v: '0.9b', f: '2026-11-28', h: '00:00', t: 'La app se mueve mejor',
+    v: '0.9c', f: '2026-11-28', h: '', t: 'La app se mueve mejor',
     cosas: [
       { tipo: 'mejora', d: 'deslizar', t: 'La app se mueve mejor', x: 'Cada pantalla entra desde el lado al que vas, al cambiar de pestaña y de sección; Pregunta, desde arriba. Si abres una ficha desde otra, la nueva entra de lado y «Volver» te lleva hacia atrás, y al cerrarlas se van del todo.' },
       { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, más limpio', x: 'Las secciones de Ajustes se abren hacia abajo y se cierran hacia arriba, y la que tienes abierta se distingue de un vistazo.' },
+    ],
+  },
+  {
+    // (28 nov, 03:17-03:5x, Carlos: «la función del dinero debería estar más vistosa… lo primero que te salga» y «un desglose
+    // más avanzado… ventas, subidas de cláusulas… todos los gastos que ha ido haciendo»; de dos diseños en vídeo eligió el A,
+    // sin las cifras sueltas del final) EL DINERO DE UN RIVAL, LO PRIMERO DE SU FICHA: la tarjeta (hojas.js, `dineroRivalHTML`),
+    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. SIN TARJETA PARA TODOS
+    // mientras Carlos no lo diga. LA HORA, AL PUBLICAR
+    v: '0.9b', f: '2026-11-28', h: '',
+    cosas: [
+      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival, lo primero de su ficha', x: 'Al abrir un rival, arriba del todo: cuánto tiene y, al tocar «Ver el desglose», de dónde sale, todo lo que ha comprado, vendido y cobrado, sus subidas de cláusula con su día y cómo ha ido su saldo.' },
+      { tipo: 'mejora', d: 'peligro', menor: true, t: 'La ficha de cada rival, más clara', x: 'Quién es, su puesto y su peligro en una pieza, y sus cláusulas en una sola lista: las suyas que te llegan y las tuyas que le llegan a él.' },
     ],
   },
   {

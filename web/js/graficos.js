@@ -159,3 +159,34 @@ export function areaSem(datos, { alto = 180, formato = (v) => String(v), color =
   });
   return `${s}</svg>`;
 }
+
+/** (28 nov, el desglose del dinero de un rival) su saldo en el tiempo con la banda del ±: puntos = [{ t, v, min, max }].
+    La línea, la banda y, abajo, de qué día a qué día; arriba, lo más alto y lo más bajo */
+export function banda(puntos, { alto = 150, formato = (v) => eur(v, { dec: 1 }) } = {}) {
+  const p = (puntos || []).filter((x) => Number.isFinite(x.t) && Number.isFinite(x.v));
+  if (p.length < 2) return '';
+  const W = 340, H = alto, mx = 4, arr = 16, aba = 22;
+  const t0 = p[0].t, t1 = p[p.length - 1].t;
+  const lo = Math.min(...p.map((x) => x.min)), hi = Math.max(...p.map((x) => x.max)), r = hi - lo || 1;
+  const X = (t) => mx + ((t - t0) / (t1 - t0 || 1)) * (W - 2 * mx);
+  const Y = (v) => arr + (1 - (v - lo) / r) * (H - arr - aba);
+  const ln = p.map((x, i) => `${i ? 'L' : 'M'}${X(x.t).toFixed(1)},${Y(x.v).toFixed(1)}`).join(' ');
+  const bd = `${p.map((x, i) => `${i ? 'L' : 'M'}${X(x.t).toFixed(1)},${Y(x.max).toFixed(1)}`).join(' ')} ${p.slice().reverse().map((x) => `L${X(x.t).toFixed(1)},${Y(x.min).toFixed(1)}`).join(' ')} Z`;
+  const vs = p.map((x) => x.v), imax = vs.indexOf(Math.max(...vs)), imin = vs.indexOf(Math.min(...vs)), u = p[p.length - 1];
+  const et = (i, arriba) => { const x = X(p[i].t), y = Y(p[i].v); return `<text x="${x.toFixed(1)}" y="${(arriba ? y - 6 : y + 14).toFixed(1)}" text-anchor="${x < 40 ? 'start' : x > W - 40 ? 'end' : 'middle'}" class="g-et">${esc(formato(p[i].v))}</text>`; };
+  const cero = lo < 0 && hi > 0 ? `<line class="g-cero" x1="${mx}" x2="${W - mx}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}"/>` : '';
+  return `<svg class="graf g-banda" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(`Su saldo: de ${formato(p[0].v)} a ${formato(u.v)}; lo más alto ${formato(vs[imax])} y lo más bajo ${formato(vs[imin])}`)}">
+    ${cero}<path class="g-bd" d="${bd}"/><path d="${ln}" fill="none" stroke="var(--oro)" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <circle cx="${X(u.t).toFixed(1)}" cy="${Y(u.v).toFixed(1)}" r="4" fill="var(--oro)"/>
+    ${imax !== p.length - 1 && imax ? et(imax, true) : ''}${imin !== imax && imin !== p.length - 1 && imin ? et(imin, false) : ''}
+    <text x="${mx}" y="${H - 5}" class="g-eje">${fechaCorta(t0)}</text><text x="${W - mx}" y="${H - 5}" text-anchor="end" class="g-eje">${fechaCorta(t1)}</text>
+  </svg>`;
+}
+
+/** lo que se ve con su dinero cerrado: una gráfica y unas barras de mentira, iguales para todos (nada sale de sus datos) */
+export function silueta() {
+  const ps = [30, 34, 31, 40, 37, 45, 42, 50, 47, 55, 52, 58];
+  const ln = ps.map((v, i) => `${i ? 'L' : 'M'}${(8 + i * 18).toFixed(0)},${(70 - v).toFixed(0)}`).join(' ');
+  const bs = [62, 38, 50, 24, 44].map((w, i) => `<rect x="226" y="${10 + i * 12}" width="${w}" height="7" rx="3.5"/>`).join('');
+  return `<svg class="dn-sil" viewBox="0 0 300 74" aria-hidden="true"><path d="${ln}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${bs}</svg>`;
+}
