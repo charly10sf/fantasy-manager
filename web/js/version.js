@@ -30,7 +30,7 @@ export const NOVEDADES = [
     // (todos: true) con la tarjeta pequeña (aviso). La cuenta: motor.js, «CÓMO PONE LALIGA LAS CLÁUSULAS»; lo medido, en
     // claude/nota-cuenta-dinero.md del proyecto. LA HORA Y EL DÍA, AL PUBLICAR. Lo de proteger, el cierre y el blindaje
     // (27 nov) va en `cosas`
-    v: '0.9a', f: '2026-11-28', h: '02:10', t: 'El dinero de tus rivales, más exacto', todos: true,
+    v: '0.9a', f: '2026-11-28', h: '02:28', t: 'El dinero de tus rivales, más exacto', todos: true,
     // (01:15) de los cuatro diseños eligió el animado: la cuenta pieza a pieza con un ejemplo y al final la barra del ±;
     // (02:00) sin la línea de «¿Te dice lo que tiene?»: «eso quítalo y publicamos»
     aviso: {
