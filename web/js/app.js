@@ -55,7 +55,7 @@ import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenAc
 import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
-import { iniciarLiquid } from './liquid.js';
+import { iniciarLiquid, entra as moverEntra, parar as pararMovimiento, envolver, ladoTabs } from './liquid.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
@@ -1229,8 +1229,10 @@ function marcarApodos() { const b = $('#bAjustes'); if (b) b.classList.toggle('b
 /** las bandas de arriba (también sola, sin repintar la pestaña: (25 nov) al poner el código de una invitación) */
 const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
 function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
-function pintar({ arriba = false } = {}) {
+function pintar({ arriba = false, mueve = null } = {}) {
   if (!S.D) return;
+  // (0.9b) un toque a mitad de un movimiento: lo de antes acaba ya, en su sitio
+  pararMovimiento();
   alDiaDichos();
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
   const escrito = ['pregunta', 'claveIA'].map((id) => { const el = $(`#${id}`); return el && el.value ? [id, el.value, document.activeElement === el ? el.selectionStart : null] : null; }).filter(Boolean);
@@ -1250,6 +1252,7 @@ function pintar({ arriba = false } = {}) {
   // (sesión 8, M9) cada pestaña con su h1 (si no lo trae a la vista, uno solo para lectores) y su título en el navegador
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
+  let queMueve = mueve ? cajaQueMueve(v, mueve) : null;
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
   pintarBanda();
   if (arriba) window.scrollTo(0, 0);
@@ -1284,6 +1287,31 @@ function pintar({ arriba = false } = {}) {
   // los anuncios: en la web, el de AdSense en las pestañas (nunca en Pregunta); en la app de Google Play, que ya se pueden
   // cargar (desde la 0.8 sin banner: los intersticiales, en una pausa)
   ponerBanner(S.vista !== 'ia', true);
+  // (0.9b) y lo recién pintado entra desde el lado al que vas (después de lo que mide arriba, que no lo vea movido)
+  // (si algo de aquí arriba ha vuelto a pintar la vista —Equipo → Jornadas con lo guardado—, lo que se mueve es lo de ahora)
+  if (queMueve && !queMueve.isConnected) queMueve = cajaQueMueve(v, mueve);
+  if (queMueve) moverEntra(queMueve, mueve.desde);
+}
+/* (0.9b, 28 nov) qué se mueve al cambiar de pantalla. Al cambiar de pestaña de abajo, la vista entera (un elemento); al
+   cambiar de sección dentro de una pestaña, solo lo de debajo del selector (el selector se queda, con su píldora). La caja
+   del chat (fixed) nunca: con un antepasado movido dejaría de estar fija mientras dura */
+function cajaQueMueve(v, mueve) {
+  if (mueve.que === 'seccion') {
+    const t = v.querySelectorAll('.tabs')[mueve.n || 0] || v.querySelector('.tabs');
+    return t && t.parentNode ? envolver(t.parentNode, t) : null;
+  }
+  return v.querySelector('.escribe') ? envolver(v, null, '.escribe') : v;
+}
+/** hacia dónde entra la pestaña `a` viniendo de `de`. En el móvil la barra es horizontal (der/izq); en el ordenador las
+ *  pestañas van en vertical en la columna de la izquierda (abajo/arriba). Pregunta, con su botón arriba, entra desde
+ *  arriba; al dejarla, lo nuevo sube desde abajo (ella «se va» hacia arriba) */
+function desdeDonde(de, a) {
+  if (!de || !a || de === a) return null;
+  if (a === 'ia') return 'arriba';
+  if (de === 'ia') return 'abajo';
+  const i = NAV.findIndex(([k]) => k === de), j = NAV.findIndex(([k]) => k === a);
+  if (i < 0 || j < 0) return null;
+  return V.ancho() ? (j > i ? 'abajo' : 'arriba') : (j > i ? 'der' : 'izq');
 }
 /* ---------------- anuncios: AdMob en la versión de Google Play y AdSense en la web ---------------- */
 let bannerYa = null;
@@ -1483,15 +1511,18 @@ function bajarA(sel, raiz = null) {
   if (!sel) return;
   requestAnimationFrame(() => { const r = (raiz && raiz.isConnected ? raiz : null) || S.hoja || $('#vista'); const o = (r && r.querySelector(sel)) || $(`#vista ${sel}`); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 }
-function ir(vista, { arriba = true } = {}) {
+function ir(vista, { arriba = true, mover = false } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
+  // (0.9b) solo lo que pide el que toca (la barra, los botones con data-ir): al volver de recargar, el tutorial o lo que
+  // cambia de pestaña por su cuenta, sin movimiento
+  const desde = mover ? desdeDonde(S.vista, vista) : null;
   if (S.vista !== vista) nativo.toque();
   // (27 nov) al dejar Rivales, lo visto del parte se guarda para marcar lo nuevo la próxima vez
   if (S.vista === 'rivales' && vista !== 'rivales') V.guardarParteVisto();
   S.vista = vista;
   if (location.hash !== '#' + vista) history.replaceState(null, '', '#' + vista);
-  pintar({ arriba });
+  pintar({ arriba, mueve: desde ? { que: 'vista', desde } : null });
   // (repaso de la 0.8s) al ir a Hoy o a Pregunta, lo último de los otros dispositivos (como mucho cada 20 s): con la app
   // abierta en el móvil mientras se usa la web, antes no llegaba nada hasta salir de la app y volver
   if ((vista === 'hoy' || vista === 'ia') && S.D && !enDemo()) sincronizar({ por: 'vista' });
@@ -2813,7 +2844,7 @@ function volverTrasRecarga() {
   S.vuelta = null;
   if (!g || !S.D || !S.M || tourAbierto()) return;
   if (g.y) requestAnimationFrame(() => window.scrollTo(0, g.y));
-  if (g.hoja && !S.hoja) { try { hoja(g.hoja[0], g.hoja[1]); } catch (e) { /* la ficha ya no está (otro día, otra liga) */ } }
+  if (g.hoja && !S.hoja) { try { hoja(g.hoja[0], g.hoja[1], [], { modo: 'quieta' }); } catch (e) { /* la ficha ya no está (otro día, otra liga) */ } }
 }
 /* Con versión nueva en la web, una ventana en mitad de la pantalla que no se puede cerrar: «Actualizar ahora» y
    nada más (lo pidió Carlos el 25 oct: con solo la banda, Domy se quedaba en una vieja). Si tras dos intentos sigue en
@@ -3438,15 +3469,28 @@ function rotularHoja(hoja) {
   const t = hoja.querySelector('h2');
   if (t) { t.id ||= 'hojaTit'; hoja.setAttribute('aria-labelledby', t.id); hoja.removeAttribute('aria-label'); } else { hoja.removeAttribute('aria-labelledby'); hoja.setAttribute('aria-label', 'Ficha'); }
 }
-function abrirHoja(html) {
+/* (0.9b) cómo entra: 'sube' (desde abajo, como siempre), 'arriba' (Ajustes con su botón en la cápsula de arriba: baja un
+   poco desde arriba con fundido), 'pila' (una ficha encima de otra, «‹ Volver»: la hoja se queda y lo nuevo entra desde la
+   derecha), 'vuelve' (lo de antes entra desde la izquierda) y 'quieta' (ya en su sitio: tras recargar con la versión nueva) */
+function abrirHoja(html, modo = 'sube') {
   // el foco vuelve al cerrar a lo que abrió la primera ficha (si se encadenan, a ese mismo)
   const antes = S.hoja ? S.focoAntes : document.activeElement;
+  // (lo que ya se movía, en su sitio)
+  pararMovimiento();
+  const enSitio = modo === 'pila' || modo === 'vuelve' || modo === 'quieta' || quietoMov();
+  // (una ficha encima de otra: la hoja nueva sale ya con la clase de la de antes, media o entera, para que no salte)
+  const tam = enSitio && S.hoja ? ['hoja-media', 'hoja-entera'].find((c) => S.hoja.classList.contains(c)) : null;
   cerrarHoja(true, true);
   S.focoAntes = antes;
   const velo = document.createElement('div'); velo.className = 'velo'; velo.dataset.accion = 'cerrarHoja';
   const hoja = document.createElement('div'); hoja.className = 'hoja';
+  if (tam) hoja.classList.add(tam);
+  if (modo === 'arriba') hoja.classList.add('hoja-arriba');
+  // (sin transición: se pone la clase antes de que el navegador la vea sin ella)
+  if (enSitio) { velo.classList.add('on'); hoja.classList.add('on'); }
   hoja.setAttribute('role', 'dialog'); hoja.setAttribute('aria-modal', 'true'); hoja.tabIndex = -1;
   hoja.innerHTML = `${ASA}${conCerrar(html)}`;
+  const caja = modo === 'pila' || modo === 'vuelve' ? envolver(hoja, hoja.querySelector('.asa')) : null;
   rotularHoja(hoja);
   document.body.append(velo, hoja);
   document.body.style.overflow = 'hidden';
@@ -3457,8 +3501,10 @@ function abrirHoja(html) {
   encuadrar(hoja);
   ajustarTabs(hoja);
   gestoHoja(hoja, velo);
+  if (caja) moverEntra(caja, modo === 'pila' ? 'der' : 'izq');
   return hoja;
 }
+const quietoMov = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* (32) En el móvil, la ficha se cierra arrastrándola hacia abajo, como las de Android e iOS (Carlos, 10 nov: sin ×).
    Va pegada al dedo (sin transición mientras se arrastra, un cambio por fotograma), se cierra si baja más de un 25 % de
    su altura o si se suelta con fuerza hacia abajo, y si no vuelve a su sitio. El velo se aclara según baja. Se puede
@@ -3484,7 +3530,8 @@ function gestoHoja(hoja, velo) {
     hoja.classList.remove('arrastrando');
     hoja.style.transition = ''; hoja.style.transform = '';
     if (velo) { velo.style.transition = ''; velo.style.opacity = ''; }
-    if (cierra) { nativo.toque(); const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); }
+    // (0.9b) arrastrada hacia abajo, se va hacia abajo aunque haya entrado desde arriba (Ajustes)
+    if (cierra) { nativo.toque(); hoja.classList.remove('hoja-arriba'); const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); }
   };
   hoja.addEventListener('touchstart', (e) => {
     g = null;
@@ -3538,7 +3585,8 @@ function gestoHoja(hoja, velo) {
 }
 function cerrarHoja(ya = false, sigue = false) {
   S.apodoEdita = null;
-  const h = $('.hoja'), v = $('.velo');
+  // (0.9b) la que ya se está yendo no cuenta: un segundo toque en el velo no la cierra otra vez
+  const h = $('.hoja:not(.sale)'), v = $('.velo:not(.sale)');
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
   if (S.tipoHoja && S.tipoHoja[0] === 'anuncio' && S.anuncio && S.anuncio.cargando) { nativo.cancelarAnuncio(); S.anuncio = null; }
@@ -3551,8 +3599,14 @@ function cerrarHoja(ya = false, sigue = false) {
   }
   if (ya) { h.remove(); v && v.remove(); return true; }
   quitarAtras();
+  // (0.9b) se va hasta abajo del todo (o hacia arriba, Ajustes) y solo entonces se quita: antes se quitaba a los 250 ms,
+  // con 15 px de la hoja aún a la vista. La salida va algo más rápida que la entrada (`.sale`, en app.css)
+  h.classList.add('sale'); v && v.classList.add('sale');
   h.classList.remove('on'); v && v.classList.remove('on');
-  setTimeout(() => { h.remove(); v && v.remove(); }, 250);
+  let fuera = false;
+  const quitar = () => { if (fuera) return; fuera = true; h.remove(); v && v.remove(); };
+  h.addEventListener('transitionend', (e) => { if (e.target === h && e.propertyName === 'transform') quitar(); });
+  setTimeout(quitar, quietoMov() ? 0 : 420);
   return true;
 }
 const htmlHoja = (tipo, arg) => {
@@ -3604,7 +3658,20 @@ function cuerpoHoja(tipo, arg, pila = S.pila) {
   const atras = pila && pila.length ? `<button class="volver-h" data-accion="volverHoja">${icono('atras')}<span>${esc(nombreHoja(pila[pila.length - 1]))}</span></button>` : '';
   return atras + htmlHoja(tipo, arg);
 }
-function hoja(tipo, arg, pila = []) { alDiaDichos(); abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
+function hoja(tipo, arg, pila = [], { modo = null } = {}) {
+  alDiaDichos();
+  // (0.9b) cómo entra (abrirHoja): encima de la que había, desde la derecha; la misma otra vez, en su sitio; Ajustes, en el
+  // móvil, desde arriba o desde abajo según `fm-ajustes` (las dos para que elija Carlos)
+  const ant = S.hoja && S.tipoHoja ? S.tipoHoja : null;
+  if (!modo) {
+    if (ant && pila.length && pila.length > (S.pila || []).length) modo = 'pila';
+    else if (ant && ant[0] === tipo && String(ant[1]) === String(arg)) modo = 'quieta';
+    else if (tipo === 'ajustes' && !ant && !V.ancho() && ajustesDesdeArriba()) modo = 'arriba';
+    else modo = 'sube';
+  }
+  abrirHoja(cuerpoHoja(tipo, arg, pila), modo); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras();
+}
+const ajustesDesdeArriba = () => LS.get('ajustes-entra', 'arriba') !== 'abajo';
 /* en la web, el «atrás» del navegador (o el gesto del móvil) cierra la ficha en vez de salir de la app: al abrir una
    ficha se apunta un paso en el historial y, al cerrarla con la X, se quita (revisión del 29 oct). En la app de
    Android lo hace window.atras */
@@ -3636,7 +3703,7 @@ function volverHoja() {
   const pila = [...(S.pila || [])];
   const ant = pila.pop();
   if (!ant) return false;
-  hoja(ant[0], ant[1], pila);
+  hoja(ant[0], ant[1], pila, { modo: 'vuelve' });
   alAbrir(ant[0], ant[1]);
   return true;
 }
@@ -3706,18 +3773,65 @@ async function pintarTarjeta() {
   if (r) Object.assign(T, r, { error: '' }); else T.error = 'No se ha podido preparar la imagen.';
   if (S.tipoHoja && S.tipoHoja[0] === 'tarjeta') repintarHoja();
 }
-function repintarHoja() {
+/** boton: la pestaña tocada de un selector de la ficha (club, rival, bajas): lo de debajo de ese selector entra desde su lado */
+/* (0.9b; Carlos: Ajustes «más liquid entre las subpestañas») una sección de Ajustes se abre hacia abajo y se cierra hacia
+   arriba. Sin animar alturas: al abrir, la sección se abre de golpe, lo de dentro baja con un fundido y las secciones de
+   debajo, que han saltado hacia abajo, vuelven a su sitio nuevo desde el de antes (transform); al cerrar, lo de dentro se
+   apaga, las de debajo suben tapándolo y, al acabar, se cierra. Se mide una vez por toque (nada en cada fotograma).
+   Devuelve si queda abierta */
+const plegando = new Map();
+function plegarConMovimiento(det) {
+  const abrir = !(det.open && !det.classList.contains('cerrando'));
+  const antes = plegando.get(det);
+  if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); if (!antes.abrir) det.open = false; }
+  const cuerpo = det.querySelector('.aj-cuerpo');
+  if (quietoMov() || !det.animate || !cuerpo) { det.open = abrir; return abrir; }
+  const sigs = [];
+  for (let n = det.nextElementSibling; n; n = n.nextElementSibling) if (!n.hidden) sigs.push(n);
+  const curva = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const anims = [];
+  if (abrir) {
+    const y0 = det.offsetHeight;
+    det.open = true;
+    const dy = det.offsetHeight - y0;
+    anims.push(cuerpo.animate([{ opacity: 0, transform: 'translateY(-12px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: curva }));
+    if (dy > 0) for (const n of sigs) anims.push(n.animate([{ transform: `translateY(${-dy}px)` }, { transform: 'none' }], { duration: 340, easing: curva }));
+  } else {
+    const dy = cuerpo.offsetHeight;
+    det.classList.add('cerrando');
+    const sale = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    anims.push(cuerpo.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }], { duration: 200, easing: sale, fill: 'forwards' }));
+    for (const n of sigs) anims.push(n.animate([{ transform: 'none' }, { transform: `translateY(${-dy}px)` }], { duration: 260, easing: sale, fill: 'forwards' }));
+  }
+  const ya = { abrir, anims };
+  plegando.set(det, ya);
+  Promise.all(anims.map((a) => a.finished)).then(() => {
+    if (plegando.get(det) !== ya) return;
+    plegando.delete(det);
+    if (!abrir) { det.open = false; det.classList.remove('cerrando'); }
+    for (const a of anims) a.cancel();
+  }).catch(() => { /* cancelada: ya lo ha dejado en su sitio quien la canceló */ });
+  return abrir;
+}
+function repintarHoja({ boton = null } = {}) {
   if (!S.hoja || !S.tipoHoja) return;
   alDiaDichos();
+  pararMovimiento();
   const sc = S.hoja.scrollTop;
   const dentro = S.hoja.contains(document.activeElement);
+  // (0.9b) de qué selector es (el n.º dentro de la ficha: el rival lleva dos) y hacia qué lado queda
+  const desde = boton && S.hoja.contains(boton) ? ladoTabs(boton) : null;
+  const n = desde ? Math.max(0, [...S.hoja.querySelectorAll('.tabs')].indexOf(boton.closest('.tabs'))) : 0;
   S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
+  const t = desde && (S.hoja.querySelectorAll('.tabs')[n] || S.hoja.querySelector('.tabs'));
+  const caja = t && t.parentNode ? envolver(t.parentNode, t) : null;
   rotularHoja(S.hoja);
   if (S.tipoHoja[0] === 'ajustes' && S.ajBusca) Hj.filtrarAjustes(S.hoja, S.ajBusca);
   S.hoja.scrollTop = sc;
   if (dentro) S.hoja.focus({ preventScroll: true });
   encuadrar(S.hoja);
   ajustarTabs(S.hoja);
+  if (caja) moverEntra(caja, desde);
 }
 
 window.atras = () => {
@@ -4348,9 +4462,8 @@ document.addEventListener('touchend', (e) => {
   const j = nav.findIndex((b) => b.dataset.ir === S.vista);
   if (j < 0 || !nav[j + paso]) return;
   nativo.toque();
+  // (0.9b) el toque ya mueve la pantalla nueva desde ese lado (antes, aquí, entra-d / entra-i)
   nav[j + paso].click();
-  const v = $('#vista');
-  if (v) { v.classList.remove('entra-d', 'entra-i'); void v.offsetWidth; v.classList.add(paso > 0 ? 'entra-d' : 'entra-i'); }
 }, { passive: true });
 // tirar hacia abajo desde arriba del todo actualiza, como en cualquier app
 let tiron = null;
@@ -4412,7 +4525,16 @@ document.addEventListener('click', async (ev) => {
   const d = el.dataset;
   if (d.abrir) { ev.preventDefault(); nativo.abrir(d.abrir); return; }
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
-  if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); volverAPestanas(); return; } }
+  if (d.seg) {
+    const [v, s] = d.seg.split(':');
+    // (0.9b) la sección nueva entra desde su lado del selector (también desde un enlace que cambia de sección: se mira
+    // dónde está su pestaña en el selector que se ve)
+    const pest = el.closest('.tabs-in') ? el : (S.seg[v] !== s ? [...document.querySelectorAll('#vista .tabs-in button[data-seg]')].find((b) => b.dataset.seg === d.seg) : null);
+    const desde = !d.ir && S.vista === v && !el.closest('.hoja') ? ladoTabs(pest) : null;
+    const n = desde ? Math.max(0, $$('#vista .tabs').indexOf(pest.closest('.tabs'))) : 0;
+    S.seg[v] = s;
+    if (!d.ir) { pintar({ mueve: desde ? { que: 'seccion', desde, n } : null }); volverAPestanas(); return; }
+  }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
   // dentro del resumen de una tarjeta que se despliega (los pasos del plan), abrir la ficha sin desplegarla
   if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
@@ -4421,7 +4543,7 @@ document.addEventListener('click', async (ev) => {
   if (d.ir && !d.accion) {
     // (0.8) cambiar de pestaña con la barra de abajo es una pausa natural (a Pregunta, no: va a escribir)
     const pausa = !!el.closest('.nav') && d.ir !== 'ia' && (ALIAS[d.ir] || d.ir) !== S.vista && !S.hoja;
-    cerrarHoja(); ir(d.ir);
+    cerrarHoja(); ir(d.ir, { mover: true });
     if (pausa) pausaNatural();
     return;
   }
@@ -4446,7 +4568,7 @@ document.addEventListener('click', async (ev) => {
     case 'bajas': {
       if (!S.M) break;
       const yaAbierta = S.tipoHoja && S.tipoHoja[0] === 'bajas' && el.closest('.hoja');
-      if (yaAbierta) { S.tipoHoja = ['bajas', d.v]; repintarHoja(); S.hoja.scrollTop = 0; } else hoja('bajas', d.v || 'todas', pilaDesde(el, 'bajas', d.v));
+      if (yaAbierta) { S.tipoHoja = ['bajas', d.v]; repintarHoja({ boton: el }); S.hoja.scrollTop = 0; } else hoja('bajas', d.v || 'todas', pilaDesde(el, 'bajas', d.v));
       Bj.cargarPartes().then((nuevo) => { if (nuevo && S.tipoHoja && S.tipoHoja[0] === 'bajas') repintarHoja(); }).catch(() => {});
       break;
     }
@@ -4455,7 +4577,7 @@ document.addEventListener('click', async (ev) => {
     case 'jorClub': (S.jorClub ||= {})[d.id] = Number(d.n); repintarHoja(); break;
     // las pestañas de la ficha de un club (Carlos, 9 nov): al cambiar, si estabas más abajo, vuelve a ellas
     case 'segClub': {
-      S.segClub = { id: d.id, seg: d.s }; repintarHoja();
+      S.segClub = { id: d.id, seg: d.s }; repintarHoja({ boton: el });
       const hero = S.hoja && S.hoja.querySelector('.club-hero');
       if (hero) { const y = hero.offsetTop + hero.offsetHeight; if (S.hoja.scrollTop > y) S.hoja.scrollTop = y; }
       break;
@@ -4465,7 +4587,7 @@ document.addEventListener('click', async (ev) => {
     case 'segRival': case 'subRival': {
       const prev = S.segRival && String(S.segRival.tid) === String(d.tid) ? S.segRival : {};
       S.segRival = d.accion === 'segRival' ? { tid: d.tid, seg: d.s, sub: d.p } : { ...prev, tid: d.tid, sub: d.p };
-      repintarHoja();
+      repintarHoja({ boton: el });
       const t = S.hoja && S.hoja.querySelector('.rival-tabs');
       if (t && S.hoja.scrollTop > t.offsetTop) S.hoja.scrollTop = t.offsetTop;
       break;
@@ -4705,7 +4827,7 @@ document.addEventListener('click', async (ev) => {
     case 'cerrarHoja': if (S.tipoHoja && S.tipoHoja[0] === 'bloq' && S.pila && S.pila.length && !(el && el.classList.contains('asa'))) { volverHoja(); break; }
       if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) { const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); } break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
-    case 'irIA': cerrarHoja(); ir('ia'); break;
+    case 'irIA': cerrarHoja(); ir('ia', { mover: true }); break;
     // (iOS 3) el permiso para mandar tu liga a la IA (Pregunta y Ajustes → La IA)
     case 'permisoIA': pedirPermisoIA(null, () => { if (S.hoja) repintarHoja(); pintar(); }); break;
     case 'quitarPermisoIA': ponerPermisoIA(false); if (S.hoja) repintarHoja(); pintar(); tostada('La IA, apagada: no se le manda nada'); break;
@@ -4856,7 +4978,8 @@ document.addEventListener('click', async (ev) => {
     // el tema de evento (bloque TEMA_EVENTO de index.html): se enciende o se apaga sin recargar
     case 'temaEvento': if (window.temaEvento) { window.temaEvento.cambiar(!window.temaEvento.activo()); repintarHoja(); } break;
     // (40) las secciones de Ajustes: se recuerda cuáles has abierto para no cerrarlas al repintar
-    case 'plegarAjuste': { const det = el.closest('details'); if (det) Hj.plegarAjuste(S, d.k, !det.open); break; }
+    // (0.9b) con movimiento: se abre hacia abajo y se cierra hacia arriba (lo hace plegarConMovimiento, no el navegador)
+    case 'plegarAjuste': { const det = el.closest('details'); if (det) { ev.preventDefault(); Hj.plegarAjuste(S, d.k, plegarConMovimiento(det)); } break; }
     case 'quitarAvisoJ': { const j = S.M && S.M.J(d.pid); avisarJugador(d.pid, null); if (S.D) programar(S.D, S.M, planAvisos()); tostada(`Quitado el aviso${j ? ` de ${j.nombre}` : ''}`, 2400); repintarHoja(); break; }
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;

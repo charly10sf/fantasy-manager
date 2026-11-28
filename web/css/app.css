@@ -3062,11 +3062,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .filtros.rk-jsel > button { flex: none; }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
 
-/* al deslizar de lado a la pestaña de abajo de al lado, la nueva entra desde ese lado (Carlos, 9 nov 15:24) */
-@keyframes entra-d { from { transform: translateX(28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
-@keyframes entra-i { from { transform: translateX(-28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
-#vista.entra-d { animation: entra-d 0.18s ease-out; } #vista.entra-i { animation: entra-i 0.18s ease-out; }
-@media (prefers-reduced-motion: reduce) { #vista.entra-d, #vista.entra-i { animation: none; } }
+/* (al deslizar de lado a la pestaña de al lado, la nueva entra desde ese lado: desde la 0.9b lo hace `entra` de liquid.js
+   con cualquier cambio de pestaña, no solo al deslizar) */
 /* (sesión 8, M9) el error del código de entrada, debajo del campo */
 .codigo-err { margin: 8px 0 0; color: var(--rojo-l); font-size: var(--t-sec2); font-weight: 600; }
 
@@ -4490,3 +4487,41 @@ html.lq .pp-l2s .pp-cu, html.lq .pp-l2s .pp-est { max-width: 100%; overflow: hid
 /* el contraste, medido con lo peor por detrás (el césped del once pasando bajo el selector): las pestañas sin elegir
    se quedaban en 4,1:1 con el gris de antes; con este blanco, 4,9:1 o más */
 html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 243, 0.84); }
+
+/* ==== 0.9b · EL MOVIMIENTO (28 nov; Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia
+   la derecha, hacia la izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas»). Lo de cambiar de
+   pantalla lo hace liquid.js (`entra`): la vista nueva entra desde el lado al que vas, con la API de animaciones, en un
+   solo elemento y solo transform y opacity. Aquí, las hojas y las secciones de Ajustes ==== */
+
+/* ---- las hojas: suben frenando (como en la 0.9) y se van acelerando, más rápido que al entrar; se quitan cuando han
+   acabado de irse (antes, a los 250 ms, con la hoja aún a la vista). El velo va con la hoja ---- */
+html.lq .velo { transition: opacity var(--hoja-ms) var(--hoja-curva); }
+html.lq .velo.sale { transition: opacity 260ms cubic-bezier(0.32, 0, 0.67, 0); }
+html.lq .hoja.sale, html.lq:not(.escritorio) .hoja.sale { transition: transform 280ms cubic-bezier(0.32, 0, 0.67, 0); }
+/* Ajustes, con su botón en la cápsula de arriba, entra bajando un poco desde arriba con un fundido y se va por donde vino
+   (`ajustes-entra` = abajo en LS: como las demás hojas). Si se cierra arrastrando, se va hacia abajo (gestoHoja le quita
+   la clase) */
+html.lq:not(.escritorio) .hoja.hoja-arriba { transition: transform 360ms var(--hoja-curva), opacity 220ms ease-out; }
+html.lq:not(.escritorio) .hoja.hoja-arriba:not(.on), html.lq:not(.escritorio) .hoja.hoja-arriba.hoja-media:not(.on) { transform: translateY(-40px); opacity: 0; }
+html.lq:not(.escritorio) .hoja.hoja-arriba.sale { transition: transform 240ms cubic-bezier(0.32, 0, 0.67, 0), opacity 200ms ease-in; }
+
+/* ---- Ajustes: las secciones, tarjetas de cristal sin desenfoque (están dentro de una hoja opaca); la abierta, con la lente
+   de las pestañas elegidas y el icono en su gota; la flecha gira. El abrir y cerrar lo mueve app.js (`plegarConMovimiento`):
+   lo de dentro baja con un fundido y las secciones de debajo se desplazan con transform, sin animar alturas ---- */
+html.lq .aj-sec { margin: 0 0 10px; border: 0; border-radius: var(--r-tarj); background: rgba(255, 255, 255, 0.055); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+html.lq .aj-sec > summary { padding: 14px 14px 14px 12px; border-radius: var(--r-tarj); }
+html.lq .aj-sec > summary > .ic:first-child { box-sizing: content-box; width: 20px; height: 20px; padding: 9px; border-radius: 50%; background: rgba(238, 28, 60, 0.12); color: var(--rojo-texto, #ff5269); }
+html.lq .aj-sec .av-fl { transition: transform 300ms var(--hoja-curva); }
+html.lq .aj-sec[open] { background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05) 76px, rgba(255, 255, 255, 0.04)); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 0 rgba(255, 255, 255, 0.06); }
+html.lq .aj-sec[open] > summary > .ic:first-child { background: linear-gradient(180deg, rgba(238, 28, 60, 0.42), rgba(238, 28, 60, 0.2)); box-shadow: inset 1px 1px 0 rgba(255, 160, 175, 0.45), inset 0 0 0 1px rgba(255, 82, 105, 0.35); color: #fff; }
+html.lq .aj-sec[open] > summary .aj-tx b { color: #fff; }
+html.lq .aj-sec[open] > summary .av-fl { color: var(--texto); }
+html.lq .aj-sec > summary:active { background: rgba(255, 255, 255, 0.04); }
+html.lq .aj-sec .aj-cuerpo { padding: 0 14px 6px; }
+html.lq .aj-sec .aj-cuerpo .ajuste { border-bottom-color: rgba(255, 255, 255, 0.07); }
+html.lq .aj-sec.resalta { animation: none; box-shadow: inset 0 0 0 1.5px var(--rojo-l), inset 1px 1px 0 rgba(255, 255, 255, 0.22); }
+html.lq .aj-busca input { border-radius: 18px; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.08); }
+html.lq .aj-atajo { border-radius: var(--r-tarj); }
+@media (prefers-reduced-motion: reduce) { html.lq .aj-sec .av-fl, html.lq .velo, html.lq .hoja.hoja-arriba { transition-duration: 1ms !important; } }
+html.lq .aj-sec.cerrando > summary .av-fl { transform: none; }
+html.lq .aj-sec .aj-cuerpo { border-top-color: rgba(255, 255, 255, 0.07); }
