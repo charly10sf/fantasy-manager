@@ -2491,6 +2491,13 @@
     "extra": 0,
     "jugador": "Jorge de Frutos"
    }
+  },
+  {
+   "clave": "mvp|140",
+   "tipo": "mvp",
+   "jornada": 14,
+   "id": "2126701812455444794",
+   "t": "2026-11-28T15:36:39.379Z"
   }
  ],
  "estados": {
@@ -5038,7 +5045,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
    "SPORT|136851440": 1795626010000,
    "SPORT|136852775": 1795628687000,
@@ -5089,16 +5095,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 20,
-   "redactar": 30,
-   "revisar": 23,
+   "redactar": 35,
+   "revisar": 24,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 141828,
-  "salida": 23706,
-  "cacheLee": 278849,
-  "cacheEscribe": 18652,
-  "dolares": 0.41335,
+  "entrada": 157910,
+  "salida": 24717,
+  "cacheLee": 311698,
+  "cacheEscribe": 24505,
+  "dolares": 0.482321,
   "reservado": 0
  },
  "recientes": {
@@ -5148,10 +5154,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-22T17:46:40.697Z",
-    "texto": "⭐ Yassir Zabiri es el MVP del Racing ⚓ 3-2 Real Sociedad: marcó el 1-0 en el 6' y el 2-0 en el 8', y se va a 16 puntos.\n\nPuntúa más del doble de lo que suele y vale 61,7 M. El viernes a las 21:00 visita al Levante 🐸, y con este partido, si lo tienes, no se toca."
-   },
-   {
     "t": "2026-11-22T19:46:39.964Z",
     "texto": "⭐ Rosier sale como el mejor del Osasuna 🐂-Málaga 🐟: 15 puntos, más del triple de lo que suele sacar. El Osasuna ganó 1-0 en El Sadar con gol de Budimir en el 20'.\n\nEl defensa vale 1,2 M y en la jornada 14 visita al Valencia 🦇. Una sola buena tarde no cambia su temporada, pero a ese precio da para pensar si necesitas defensa barato."
    },
@@ -5166,6 +5168,10 @@
    {
     "t": "2026-11-27T22:26:52.962Z",
     "texto": "⭐ Pablo García es el mejor del Levante-Racing con 14 puntos: empató en el 66' y puso el 1-3 en el 90+5'.\n\nEl delantero del Racing llega a 52 en la temporada y vale 3,2 M. En la jornada 15 recibe al Deportivo, un partido que en casa invita a pensar en él como fichaje barato."
+   },
+   {
+    "t": "2026-11-28T15:36:39.381Z",
+    "texto": "⭐ Isi se lleva el Betis-Rayo con 15 puntos, más del triple de su media. Fue el que más puntuó de los dos equipos en un partido que el Rayo ganó 0-1 con gol de De Frutos en el 72'.\n\nEl centrocampista vale 4,1 M y en la jornada 15 recibe al Levante: a ese precio y con un partido en casa, es un fichaje barato que merece una mirada."
    }
   ],
   "mercado": [
@@ -5763,7 +5769,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "final|140": {
+   "n": 1,
+   "t": "2026-11-28T15:36:32.578Z",
+   "ultima": "2026-11-28T15:36:32.578Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -10275,13 +10287,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7369,
+   "ok": 7371,
    "fallos": 0,
-   "ejecuciones": 6018,
+   "ejecuciones": 6019,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:31:14.324Z"
+   "ultima": "2026-11-28T15:36:19.166Z"
   }
  },
  "ptsDirecto": {
@@ -10347,27 +10359,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:31:18.525Z"
+   "ultimaBien": "2026-11-28T15:36:40.146Z"
   }
  },
  "avisos": [
