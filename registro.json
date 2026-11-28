@@ -3338,7 +3338,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
    "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html": 1795609078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
@@ -5008,7 +5007,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136822776": 1795604778000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
@@ -10225,13 +10223,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7289,
+   "ok": 7290,
    "fallos": 0,
-   "ejecuciones": 5965,
+   "ejecuciones": 5966,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T11:06:12.710Z"
+   "ultima": "2026-11-28T11:11:13.112Z"
   }
  },
  "ptsDirecto": {
@@ -10291,15 +10289,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:06:17.751Z"
+   "ultimaBien": "2026-11-28T11:11:18.675Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:06:17.751Z"
+   "ultimaBien": "2026-11-28T11:11:18.675Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:06:17.751Z"
+   "ultimaBien": "2026-11-28T11:11:18.675Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10307,11 +10305,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:06:17.751Z"
+   "ultimaBien": "2026-11-28T11:11:18.675Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:06:17.751Z"
+   "ultimaBien": "2026-11-28T11:11:18.675Z"
   }
  },
  "avisos": [
