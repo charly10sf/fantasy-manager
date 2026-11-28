@@ -3521,7 +3521,8 @@
    "SPORT|136948525": 1795813880000,
    "SPORT|136948240": 1795812820000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-levante-racing-20261127_3484136.html": 1795818156000,
-   "SPORT|136791714": 1795855349000
+   "SPORT|136791714": 1795855349000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/tarrega-copete-reformulan-mercado-valencia-delantero-136953674.html": 1795859495000
   },
   "hechos": [
    {
@@ -4116,7 +4117,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -5019,12 +5020,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/europa-league/20261127/1004256208/severo-castigo-expone-marsella-jugar-puerta-cerrada-europa.html": 1795779064000,
    "SPORT|136940333": 1795799657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261127/1004256389/surrealista-dos-pilares-atleti-perder-camp-nou-vieron-ultimas-tarjetas-barca.html": 1795808696000,
-   "SPORT|136944096": 1795806071000
+   "SPORT|136944096": 1795806071000,
+   "AS|https://as.com/futbol/primera/mourinho-pasa-del-mercado-puerta-cerrada-para-entrar-y-para-salir-f202611-n/": 1795858529000
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-27",
-   "n": 6,
+   "dia": "2026-11-28",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
@@ -5032,17 +5034,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 4,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 11476,
-  "salida": 4991,
+  "entrada": 15247,
+  "salida": 5169,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.022286,
+  "dolares": 0.022752,
   "reservado": 0
  },
  "recientes": {
@@ -10197,13 +10199,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7275,
+   "ok": 7276,
    "fallos": 0,
-   "ejecuciones": 5951,
+   "ejecuciones": 5952,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T09:56:11.585Z"
+   "ultima": "2026-11-28T10:01:13.480Z"
   }
  },
  "ptsDirecto": {
@@ -10263,15 +10265,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:56:15.608Z"
+   "ultimaBien": "2026-11-28T10:01:22.674Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:56:15.608Z"
+   "ultimaBien": "2026-11-28T10:01:22.674Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:56:15.608Z"
+   "ultimaBien": "2026-11-28T10:01:22.674Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10279,11 +10281,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:56:15.608Z"
+   "ultimaBien": "2026-11-28T10:01:22.674Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T09:56:15.608Z"
+   "ultimaBien": "2026-11-28T10:01:22.674Z"
   }
  },
  "avisos": [
