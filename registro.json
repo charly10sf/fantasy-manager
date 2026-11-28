@@ -2498,6 +2498,13 @@
    "jornada": 14,
    "id": "2126701812455444794",
    "t": "2026-11-28T15:36:39.379Z"
+  },
+  {
+   "clave": "final|140",
+   "tipo": "final",
+   "jornada": 14,
+   "id": "2126703025632788780",
+   "t": "2026-11-28T15:41:28.617Z"
   }
  ],
  "estados": {
@@ -3578,7 +3585,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256629/analizamos-rueda-prensa-flick-claves-partido-depor.html": 1795875411000,
    "SPORT|136959725": 1795872532000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/28/real-betis-0-1-rayo-vallecano-resumen-resultado-y-goles-del-partido-de-la-jornada-14-de-laliga-ea-sports-cadena-ser/": 1795877915000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/28/real-betis-0-1-rayo-vallecano-resumen-resultado-y-goles-del-partido-de-la-jornada-14-de-laliga-ea-sports-cadena-ser/": 1795877915000,
+   "SPORT|136960448": 1795876610000,
+   "SPORT|136960967": 1795876456000
   },
   "hechos": [
    {
@@ -4180,7 +4189,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -5094,17 +5103,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 20,
-   "redactar": 35,
-   "revisar": 24,
+   "clasificar": 21,
+   "redactar": 37,
+   "revisar": 25,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 157910,
-  "salida": 24717,
-  "cacheLee": 311698,
+  "entrada": 167386,
+  "salida": 25271,
+  "cacheLee": 329095,
   "cacheEscribe": 24505,
-  "dolares": 0.482321,
+  "dolares": 0.501985,
   "reservado": 0
  },
  "recientes": {
@@ -5132,10 +5141,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-22T17:41:31.567Z",
-    "texto": "🏁 El Racing ⚓ le gana 3-2 a la Real Sociedad en El Sardinero, con dos goles de Zabiri en los primeros ocho minutos.\n\nYassir Zabiri se va a 16 puntos, más del doble de su media de 7,2, y es el mejor de los dos equipos. La Real se levantó del 2-0: Oyarzabal recortó en el 45+1' y Guedes empató en el 60'. Guedes suma 11 y Oyarzabal 10.\n\nEl Racing lo ganó de penalti: Canales, en el 68'."
-   },
-   {
     "t": "2026-11-22T19:46:27.881Z",
     "texto": "🏁 Budimir la mete en el 20' y el Osasuna 🐂 gana 1-0 al Málaga 🐟 en El Sadar. Para los rojillos, que eran 16º, es una victoria que no llegaba desde hacía semanas.\n\nRosier es el mejor de los dos equipos, con 15 puntos: más del triple de lo que suele dar. Budimir se queda en 12 y Boyomo en 11, que también triplica su media. Del Málaga, 20º antes de jugar, solo puntúa Puga, con 7 aunque pierde.\n\nCatena vio la roja en el 90+2'."
    },
@@ -5150,6 +5155,10 @@
    {
     "t": "2026-11-27T22:26:47.053Z",
     "texto": "El Racing remonta en el Ciutat de València y gana 1-3 al Levante, que se había puesto por delante con un gol de Romero en el 42'.\n\nPablo García empató en el 66' y cerró el marcador en el 90+5': 14 puntos y el que más saca entre los dos equipos. Zabiri puso el 1-2 en el 81' y suma 11, los mismos que Iñigo Vicente.\n\nDel Levante, 15º antes de jugar, puntúa Olasagasti: 8 aunque pierde."
+   },
+   {
+    "t": "2026-11-28T15:41:28.619Z",
+    "texto": "🏁 El Rayo gana 0-1 al Betis con un gol de De Frutos en el 72'. Los vallecanos eran 16º y se llevan los tres puntos ante el 4º.\n\nIsi, con 15 puntos, es el que más saca de los dos equipos. Detrás, Audero con 13 y Pathé Ciss con 11. Del Betis, el único que destaca es Bellerín, con 7."
    }
   ],
   "mvp": [
@@ -5769,13 +5778,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "final|140": {
-   "n": 1,
-   "t": "2026-11-28T15:36:32.578Z",
-   "ultima": "2026-11-28T15:36:32.578Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -10287,13 +10290,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7371,
+   "ok": 7373,
    "fallos": 0,
-   "ejecuciones": 6019,
+   "ejecuciones": 6020,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:36:19.166Z"
+   "ultima": "2026-11-28T15:41:11.056Z"
   }
  },
  "ptsDirecto": {
@@ -10359,27 +10362,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:36:40.146Z"
+   "ultimaBien": "2026-11-28T15:41:35.833Z"
   }
  },
  "avisos": [
