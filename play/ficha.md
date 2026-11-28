@@ -68,7 +68,7 @@ Gratis, con anuncios y sin compras. Funciona en Android y también en el iPhone 
 
 Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relación con LaLiga ni con LaLiga Fantasy. Para usarla necesitas tu propia cuenta de LaLiga Fantasy: entras en la página oficial de LaLiga y la app nunca ve tu contraseña.
 
-(Textos de la 0.9, 28 nov 2026. VISTO BUENO DE CARLOS: 28 nov, 02:38, a los textos y a las tarjetas de las dos tiendas. SIN SUBIR todavía a Play Console: se suben a la vez que la 0.9 a la App Store, cuando Apple apruebe la 0.8.5. Los de antes, en el historial de este archivo.)
+(Textos de la 0.9, 28 nov 2026. VISTO BUENO DE CARLOS: 28 nov, 02:38, a los textos y a las tarjetas de las dos tiendas. Subidos a Play Console el 28 nov a las 15:1x (ficha predeterminada y las 8 tarjetas nuevas, en revisión de Google); en la App Store van con la 0.9, cuando Apple apruebe la 0.8.5. Los de antes, en el historial de este archivo.)
 
 ## Imágenes
 
@@ -77,7 +77,7 @@ Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relaci
 | Icono | icono-512.png | 512 × 512 |
 | Gráfico destacado | grafico-destacado-1024x500.png | 1024 × 500 |
 | Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-clubes, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-dinero y 9-paron (.png), en ese orden | 1080 × 1920 |
-| Capturas de teléfono NUEVAS (0.9, con el rediseño; sin subir) | rama `tarjetas-tienda`, carpeta tienda/google-play: 01-rival (el dinero de cada rival, lo primero: Carlos, 28 nov) … 08-clubes, en ese orden | 1080 × 1920 |
+| Capturas de teléfono NUEVAS (0.9, con el rediseño; subidas el 28 nov a las 15:1x) | rama `tarjetas-tienda`, carpeta tienda/google-play: 01-rival (el dinero de cada rival, lo primero: Carlos, 28 nov) … 08-clubes, en ese orden | 1080 × 1920 |
 
 Las capturas usan la liga de ejemplo (datos inventados) y llevan las caras de los jugadores y los escudos de LaLiga, como se ve la app (Carlos, 10 nov: sin ellos no valen). Rehechas el 10 nov con la app de la 0.7.1e. Nuevas frente a las del 4 nov: la 2, la ficha de un club en «Suben y bajan» (antes, el plan, que desde la 0.7.1 ya sale en la primera pantalla de Hoy); la 8, la ficha de un rival de verdad, C.A.D Domyngas (Domy), hecha con dos capturas de Carlos en una sola pantalla (dinero arriba, «Cómo juega» debajo): solo cambia su dinero (≈ 96,60 M en vez del real) y fuera el aviso de «te dijo que tenía…»; Carlos dijo el 10 nov que Domy y los de la liga lo saben y les parece bien, y que la foto de Mbappé de dictador se queda (antes, Movimientos; las capturas de Carlos no van al repo: .github/captura-domy.py); y la 9, la pestaña Parón con la demo en el parón (antes, Directo, que sin jornada en juego solo enseñaba el calendario; pedida por Carlos). La 7 (ficha de Raphinha: arriba, y su gráfica con «Cada día» y quién lo puede pagar) y la 9 (la pestaña Parón y una fila abierta con su gráfica) van con dos móviles; la 7 y la 9 salen con las funciones de anuncio abiertas (sin candado). La 6, el chat, lleva una respuesta escrita a mano con las cifras de la demo y la cabecera dice «IA»: ninguna captura nombra modelos. La 5 (Equipo, tu once) queda de repuesto. Se rehacen con `.github/capturas-play.py` (instrucciones arriba del archivo; si cambia la demo, revisar las cifras de la respuesta del chat).
 
