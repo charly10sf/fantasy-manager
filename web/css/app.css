@@ -4587,6 +4587,13 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
    pantalla lo hace liquid.js (`entra`): la vista nueva entra desde el lado al que vas, con la API de animaciones, en un
    solo elemento y solo transform y opacity. Aquí, las hojas y las secciones de Ajustes ==== */
 
+/* ---- lo que entra de lado se sale 36 px por el borde mientras se mueve: sin recortarlo, el móvil cree que la página es
+   más ancha, reajusta la vista y la barra de abajo (fija) se va hacia abajo y se corta (Carlos, 28 nov, 05:10: «cuando
+   cambio entre pestañas se quita la barra de abajo»). `clip`, no `hidden`: no crea un contenedor de scroll, así que el
+   selector pegado (sticky) y la caja del chat (fixed) siguen igual ---- */
+html.lq main { overflow-x: clip; }
+html.lq .hoja { overflow-x: hidden; }
+
 /* ---- las hojas: suben frenando (como en la 0.9) y se van acelerando, más rápido que al entrar; se quitan cuando han
    acabado de irse (antes, a los 250 ms, con la hoja aún a la vista). El velo va con la hoja ---- */
 html.lq .velo { transition: opacity var(--hoja-ms) var(--hoja-curva); }

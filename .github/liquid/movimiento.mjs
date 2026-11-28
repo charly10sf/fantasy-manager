@@ -49,6 +49,19 @@ const r = await p.evaluate(async ({ PC, RM }) => {
     ok(a[0] && /translate3d\(0px, 28px|translate3d\(36px|translate3d\(\d+px, 0/.test(inicio(a[0])) && (PC ? /, 28px/.test(inicio(a[0])) : /^translate3d\(\d+px/.test(inicio(a[0]))), `Hoy → Mercado entra desde ${PC ? 'abajo' : 'la derecha'} (${a[0] && inicio(a[0])})`);
   }
   await espera(400);
+  // (28 nov, 05:10, Carlos: «se quita la barra de abajo») lo que entra de lado no puede ensanchar la página: el móvil
+  // reajustaría la vista y la barra fija se iría hacia abajo
+  {
+    // (en el móvil, si la página se ensancha, el navegador ensancha también la ventana: se compara con el ancho de antes)
+    const fuera = [], ancho0 = window.innerWidth;
+    for (const v of ['clubes', 'hoy']) {
+      clic(`.nav [data-ir="${v}"]`);
+      for (const t of [16, 60, 120]) { await espera(t === 16 ? 16 : 50); fuera.push([Math.round(document.documentElement.scrollWidth - ancho0), Math.round(window.innerWidth - ancho0)]); }
+      await espera(300);
+    }
+    ok(fuera.every(([w, b]) => w <= 0 && b <= 0), `mientras entra, ni la página ni la ventana se ensanchan (la barra fija no se mueve) (${JSON.stringify(fuera)})`);
+    clic('.nav [data-ir="mercado"]'); await espera(400);
+  }
   ok(quieta(vista()) && !deVista().length, `Mercado: acaba en su sitio (${getComputedStyle(vista()).transform} ${getComputedStyle(vista()).opacity} ${document.getAnimations().filter((x) => x.effect && x.effect.target === vista()).map((x) => x.constructor.name + ':' + Math.round(x.currentTime) + '/' + x.playState).join(',')} t=${Math.round(performance.now())})`);
   clic('.nav [data-ir="equipo"]'); await espera(16);
   a = deVista();
