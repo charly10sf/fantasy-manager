@@ -17,3 +17,6 @@ El diseño de las tarjetas (titulares, líneas, marco, pie) no ha cambiado: `com
     WEB=<repo>/web node componer.mjs p-sin app-store-6.9 1320 2868   (y 6.3, con-caras y google-play, como arriba)
 
 Siguen SIN SUBIR a ninguna tienda: falta el visto bueno de Carlos y que Apple apruebe la 0.8.5.
+
+Carlos (28 nov, 01:05): lo primero es el dinero de los rivales («es el gamechanger de la app»), por delante del plan. La primera
+tarjeta es la lista de Rivales con el dinero de cada uno abierto; orden: dinero, plan, parte, suben, ficha, once, IA, clubes.

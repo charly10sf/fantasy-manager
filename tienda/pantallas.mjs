@@ -29,7 +29,8 @@ const PANTALLAS = [
   ['ficha', 'equipo', true, 0, 'ficha'],
   ['parte', 'rivales', true, 0],
   ['equipo', 'equipo', false, 0, 'once'],
-  ['rival', 'rival', true, 0],
+  // (Carlos, 28 nov: el dinero de los rivales es lo primero) la lista de Rivales con el dinero de cada uno abierto, no la ficha de uno
+  ['rival', 'dinero', true, 0],
   ['chat', 'pregunta', false, 0, 'chat'],
   ['clubes', 'clubes', false, 0],
 ];
@@ -76,9 +77,10 @@ for (const [nombre, p, top, , extra] of PANTALLAS) {
   await pg.evaluate(async (pa) => {
     const clic = (sel) => { const b = document.querySelector(sel); if (b) b.click(); return !!b; };
     const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
-    const base = { rival: 'rivales' }[pa] || pa;
+    const base = { rival: 'rivales', dinero: 'rivales' }[pa] || pa;
     clic(`.nav [data-ir="${base}"]`); await espera(250);
     if (pa === 'rivales') { clic('[data-seg="rivales:parte"]'); await espera(200); }
+    if (pa === 'dinero') { clic('[data-seg="rivales:clasif"]'); await espera(300); const av = [...document.querySelectorAll('#vista *')].find((e) => /te ha dicho cu[aá]nto/i.test(e.textContent) && e.querySelector('button') && e.textContent.length < 400); const x = av && [...av.querySelectorAll('button')].pop(); if (x) x.click(); await espera(300); }
     if (pa === 'rival') { clic('.tabs [data-seg^="rivales:"]'); await espera(200); clic('#vista [data-r]'); for (let i = 0; i < 30 && !document.querySelector('.hoja.on'); i++) await espera(80); }
     await espera(500); window.scrollTo(0, 0);
   }, extra === 'chat' ? 'hoy' : p);

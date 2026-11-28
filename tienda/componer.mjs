@@ -12,13 +12,14 @@ const F = { c7: b64(`${WEB}/fonts/barlow-condensed-700.woff2`), r4: b64(`${WEB}/
 const ICONO = b64(`${WEB}/img/icono-180.png`);
 
 // [archivo, titular (lo de <em>, en rojo), línea]
+// el orden lo puso Carlos (28 nov, 01:05): primero el dinero de los rivales, «el gamechanger de la app», por delante del plan
 export const TARJETAS = [
+  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Cuánto tiene y quién puede clausularte', 'El dinero de cada <em>rival</em>'],
   ['hoy', 'Tu plan<br>de <em>hoy</em>', 'Qué fichar, vender y alinear, paso a paso'],
+  ['parte', 'El parte de<br>tus <em>rivales</em>', 'Quién va corto, sin blindajes o en negativo'],
   ['mercado', 'Los que<br>más <em>suben</em>', 'Ficha antes de que se revaloricen', 'Los que más <em>suben</em>'],
   ['ficha', 'Cada jugador,<br><em>a fondo</em>', 'Valor, cláusula, rival y qué hacer con él'],
-  ['parte', 'El parte de<br>tus <em>rivales</em>', 'Quién va corto, sin blindajes o en negativo'],
   ['equipo', 'Tu mejor<br><em>once</em>', 'El que más puntúa, con el % de ser titular'],
-  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Quién puede pagar tus cláusulas'],
   ['chat', 'Pregúntale a<br>tu <em>míster IA</em>', 'Cualquier duda de tu liga, con cifras', 'Tu <em>míster IA</em>', 'Pregúntale cualquier duda de tu liga, con cifras'],
   ['clubes', 'Club<br>a <em>club</em>', 'Clasificación, calendario y bajas'],
 ];
