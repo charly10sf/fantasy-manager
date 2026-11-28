@@ -3387,7 +3387,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/": 1795618492000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000,
    "AS|https://as.com/futbol/nico-williams-de-nuevo-ligado-al-psg-f202611-n/": 1795618637000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000,
@@ -3579,18 +3578,6 @@
    "SPORT|136959725": 1795872532000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/",
-    "medio": "AS",
-    "t": 1795618492000,
-    "id": "1715",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Fermín López cumplirá dos partidos de sanción sin jugar",
-    "motivo": "expulsión por protestas al cuarto árbitro",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/",
     "medio": "Cadena SER",
@@ -10312,13 +10299,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7356,
+   "ok": 7358,
    "fallos": 0,
-   "ejecuciones": 6010,
+   "ejecuciones": 6011,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T14:51:11.759Z"
+   "ultima": "2026-11-28T14:56:10.170Z"
   }
  },
  "ptsDirecto": {
@@ -10384,27 +10371,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:51:18.176Z"
+   "ultimaBien": "2026-11-28T14:56:16.537Z"
   }
  },
  "avisos": [
