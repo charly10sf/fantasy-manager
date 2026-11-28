@@ -3551,7 +3551,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256596/flick-descarta-bernal-dos-partidos.html": 1795869873000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/28/hansi-flick-rodri-christensen-y-lamine-viajaran-y-podran-jugar-cadena-ser/": 1795871439000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256612/flick-no-ve-calnedario-excusa-habla-rotaciones.html": 1795872041000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000,
+   "MARCA|https://www.marca.com/futbol/rayo/2026/11/28/camello-perdera-encuentro-levante.html": 1795874397000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000
   },
   "hechos": [
    {
@@ -4187,11 +4189,23 @@
     "motivo": "molestias en el pie",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/rayo/2026/11/28/camello-perdera-encuentro-levante.html",
+    "medio": "MARCA",
+    "t": 1795874397000,
+    "id": "2387",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Camello se perderá el Levante por acumulación de amarillas",
+    "motivo": "acumulación de amonestaciones",
+    "plazo": "se perderá el próximo partido de Liga",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -5106,17 +5120,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 16,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 89695,
-  "salida": 18336,
+  "entrada": 91942,
+  "salida": 19463,
   "cacheLee": 147766,
   "cacheEscribe": 13916,
-  "dolares": 0.252675,
+  "dolares": 0.253463,
   "reservado": 0
  },
  "recientes": {
@@ -10271,13 +10285,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7336,
+   "ok": 7338,
    "fallos": 0,
-   "ejecuciones": 6000,
+   "ejecuciones": 6001,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T14:01:10.772Z"
+   "ultima": "2026-11-28T14:06:11.557Z"
   }
  },
  "ptsDirecto": {
@@ -10337,27 +10351,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:01:15.570Z"
+   "ultimaBien": "2026-11-28T14:06:21.995Z"
   }
  },
  "avisos": [
