@@ -2448,6 +2448,13 @@
    "jornada": 14,
    "id": "2126647723516449056",
    "t": "2026-11-28T12:01:43.634Z"
+  },
+  {
+   "clave": "novedades|2784:lesion|2026-11-28",
+   "tipo": "novedades",
+   "jornada": 14,
+   "id": "2126654004272775489",
+   "t": "2026-11-28T12:26:41.004Z"
   }
  ],
  "estados": {
@@ -4976,10 +4983,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-24",
-  "n": 3,
+  "dia": "2026-11-28",
+  "n": 1,
   "ok": 0,
-  "mal": 3
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -5035,16 +5042,16 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 10,
-   "redactar": 9,
-   "revisar": 8,
-   "pulir": 0
+   "redactar": 12,
+   "revisar": 12,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 52173,
-  "salida": 10247,
-  "cacheLee": 75115,
+  "entrada": 63749,
+  "salida": 12061,
+  "cacheLee": 107910,
   "cacheEscribe": 13916,
-  "dolares": 0.159995,
+  "dolares": 0.204565,
   "reservado": 0
  },
  "recientes": {
@@ -5204,10 +5211,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-22T15:01:31.747Z",
-    "texto": "❌ Fermín se queda sin jugar en Riazor: está sancionado y se pierde el Deportivo-Barça del domingo 29 de noviembre.\n\nEl centrocampista lleva 7 goles y 5 asistencias en la liga, así que quien lo tenga pierde a un jugador que daba puntos de verdad. Hay una semana por delante para buscarle sustituto."
-   },
-   {
     "t": "2026-11-22T21:56:58.464Z",
     "texto": "🟥 Catena no podrá jugar por sanción. Vio la roja en la jornada 13. Se pierde el partido contra el Valencia 🦇. El defensa del Osasuna 🐂 lleva 3 porterías a cero en 11 partidos.\n\nEl partido es el domingo 29 de noviembre."
    },
@@ -5222,6 +5225,10 @@
    {
     "t": "2026-11-25T17:06:29.635Z",
     "texto": "Gerard vuelve a estar disponible después de las molestias que lo apartaban desde el 30 de octubre.\n\nEl delantero del Villarreal llega con el valor por los suelos: vale 11,4 M y ha perdido 10,7 M en el último mes. El domingo 29 visita a un Celta que encaja poco, y con un 19 % de titularidad no parece que vaya a tener sitio en el once."
+   },
+   {
+    "t": "2026-11-28T12:26:41.006Z",
+    "texto": "🚨 Marc Bernal se cae por lesión. Molestias sin determinar. En el Barça va a 3,2 puntos por partido. El partido es mañana a las 16:15.\n\nBaja para la jornada 14 contra el Dépor."
    }
   ],
   "resumen": [
@@ -5704,13 +5711,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "novedades|2784:lesion|2026-11-28": {
-   "n": 2,
-   "t": "2026-11-28T12:16:37.400Z",
-   "ultima": "2026-11-28T12:21:30.744Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -10205,13 +10206,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7304,
+   "ok": 7305,
    "fallos": 0,
-   "ejecuciones": 5980,
+   "ejecuciones": 5981,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:21:11.942Z"
+   "ultima": "2026-11-28T12:26:11.470Z"
   }
  },
  "ptsDirecto": {
@@ -10271,15 +10272,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:21:30.843Z"
+   "ultimaBien": "2026-11-28T12:26:41.065Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:21:30.843Z"
+   "ultimaBien": "2026-11-28T12:26:41.065Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:21:30.843Z"
+   "ultimaBien": "2026-11-28T12:26:41.065Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10287,11 +10288,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:21:30.843Z"
+   "ultimaBien": "2026-11-28T12:26:41.065Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:21:30.843Z"
+   "ultimaBien": "2026-11-28T12:26:41.065Z"
   }
  },
  "avisos": [
