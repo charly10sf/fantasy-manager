@@ -7,7 +7,7 @@ import { LS, diaDe, enParalelo, num, norm, DIA, fijarSitio } from './util.js';
 import { enApp, enWeb, http } from './puente.js';
 import { demo, jugadoresDemo } from './demo.js';
 import * as CD from './caras-demo.js';
-import { historialValor, recortarValores, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
+import { historialValor, recortarValores, puntosFijos, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
 // (tu equipo no se elige: sale de la cuenta con la que entras; lo de miEquipo que quedara guardado no cuenta)
@@ -519,23 +519,32 @@ export async function completar(D, M, alListo = () => {}) {
   }
   // los de los rivales de los que no se sabe con qué cláusula empezaron (para la cuenta de su dinero): con su ficha
   // se sabe lo que valían al empezar la liga
-  (M.sinBase || []).slice(0, 30).forEach(add);
-  const faltan = pids.filter((pid) => !det[pid] || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
+  // (28 nov) el motor pide en `sinBase` solo a quien le falta algo de su ficha para la cuenta: se le vuelve a pedir aunque
+  // la tenga de hoy (una vez: la ficha guarda con qué se pidió, `gd` y `clv`)
+  const forzar = new Set((M.sinBase || []).slice(0, 30));
+  forzar.forEach(add);
+  const faltan = pids.filter((pid) => !det[pid] || forzar.has(pid) || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
   if (!faltan.length) return det;
   // tarda 20-40 s: se guarda con las claves de la liga de ahora (si cambias de liga mientras tanto, no se mezclan)
   const kDet = K('det'), kDatos = K('datos');
   const caras = LS.get('caras', {});
+  const creada = ((M.histMov || {}).completa && (M.histMov || {}).desde) || 0;
+  const clausulaDe = {};
+  for (const fs of Object.values(D.plantillas || {})) for (const f of fs) if (f.clausula) clausulaDe[f.pid] = f.clausula;
   await enParalelo(faltan, 3, async (pid) => {
     try {
       const d = N.detalleJugador(await api.jugador(pid, D.liga.id));
       // el histórico de valor: si no viene en la ficha, de la ruta de valores de la API
-      let valores = d.valores ? recortarValores(d.valores) : null;
-      if (!valores) valores = await historialValor(pid).catch((e) => { if (e.sesion) throw e; return null; });
-      det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores };
+      // (28 nov) del histórico de valor se guardan también el día en que se creó la liga y los días que explican la cláusula
+      // que tiene hoy (`puntosFijos`): con ellos la cuenta del dinero de los rivales sale al euro
+      const fijosDe = (v) => puntosFijos(v, { desde: creada, clausula: clausulaDe[pid] });
+      let valores = d.valores ? recortarValores(d.valores, fijosDe(d.valores)) : null;
+      if (!valores) valores = await historialValor(pid, fijosDe).catch((e) => { if (e.sesion) throw e; return null; });
+      det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores, gd: creada || 0, clv: clausulaDe[pid] || 0 };
       if (d.img) { caras[pid] = d.img; if (D.maestro[pid] && !D.maestro[pid].img) D.maestro[pid].img = d.img; }
     } catch (e) {
       if (e.sesion) throw e;
-      det[pid] = { t: Date.now(), error: e.message, stats: [] };
+      det[pid] = { t: Date.now(), error: e.message, stats: [], gd: creada || 0, clv: clausulaDe[pid] || 0 };
     }
   });
   LS.set('caras', caras);

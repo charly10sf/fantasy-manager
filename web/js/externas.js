@@ -480,8 +480,28 @@ function parseValores(r) {
 /** el histórico de valor: los últimos 90 puntos enteros y lo anterior, uno por semana (y el más alto de cada semana). LaLiga lo da desde el 29 jun
     (un punto por día): guardando solo los 90 últimos, el valor de cuando se creó la liga se perdía y no se sabía con qué
     cláusula empezó un jugador que nadie ha fichado (salía «sin base» en el dinero de los rivales) */
-export function recortarValores(v) {
+/** (28 nov) los puntos del histórico de valor que no se pueden perder al recortarlo, para la cuenta del dinero de los
+ *  rivales: el valor del día en que se creó la liga (la plantilla del principio empieza con la cláusula a 5/3 de ESE valor,
+ *  al euro) y los días en que la cláusula de hoy menos el valor da una cifra redonda (una subida pagada parte de lo que
+ *  valía ese día y va de 100 mil en 100 mil: así se sabe qué día fue y cuánto, también cuando ya tiene más de 90 días) */
+export function puntosFijos(v, { desde, clausula } = {}) {
+  const out = [];
+  if (!v || !v.length) return out;
+  if (desde) { let p = null; for (const x of v) { if (x[0] <= desde) p = x; else break; } if (p && desde - p[0] < 36 * HORA) out.push(p); }
+  if (clausula) for (const x of v) {
+    if (desde && x[0] < desde - DIA) continue;
+    const r = clausula - x[1];
+    if (r > 5e4 && Math.abs(r - Math.round(r / 1e5) * 1e5) <= 3) out.push(x);
+  }
+  return out;
+}
+export function recortarValores(v, fijos) {
   if (!v || v.length <= 90) return v;
+  if (fijos && fijos.length) {
+    const r = recortarValores(v), ya = new Set(r.map((x) => x[0]));
+    const mas = fijos.filter((x) => !ya.has(x[0]));
+    return mas.length ? [...r, ...mas].sort((x, y) => x[0] - y[0]) : r;
+  }
   // (27 nov) de cada semana de lo anterior, su primer punto y también el más alto: la cláusula sube sola hasta lo más que ha
   // valido, y con un punto por semana ese tope se perdía (una cláusula que había subido el valor parecía una subida pagada)
   const viejos = [];
@@ -495,14 +515,14 @@ export function recortarValores(v) {
   return [...viejos, ...v.slice(-90)];
 }
 export const rutaValorFalla = () => { const t = LS.get('ruta-valor-falla', 0); return !!t && Date.now() - t < DIA; };
-export async function historialValor(pid) {
+export async function historialValor(pid, fijosDe) {
   const elegida = LS.get('ruta-valor', null);
   if (elegida == null && rutaValorFalla()) return null;
   const orden = elegida != null ? [elegida] : RUTAS_VALOR.map((_, i) => i);
   for (const i of orden) {
     try {
       const v = parseValores(await api.crudo(RUTAS_VALOR[i](pid)));
-      if (v.length > 2) { if (elegida == null) LS.set('ruta-valor', i); return recortarValores(v); }
+      if (v.length > 2) { if (elegida == null) LS.set('ruta-valor', i); return recortarValores(v, fijosDe ? fijosDe(v) : null); }
     } catch (e) {
       if (e.sesion) throw e;
     }

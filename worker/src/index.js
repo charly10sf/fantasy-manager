@@ -1441,7 +1441,7 @@ async function pushRuta(req, env, c) {
    solo usa los de la versión de ahora (`CUENTA_DINERO` de web/js/motor.js): un apunte dice cuánto fallaba la cuenta de
    entonces, y la 1 contaba como subidas de cláusula pagadas las de la plantilla del principio (fallaba hasta en decenas de
    millones). La app no usa una corrección que no traiga su `cu` */
-export const DINERO_CUENTA = 2;
+export const DINERO_CUENTA = 3;
 export const DINERO_DIAS = 180, DINERO_MAX = 20000, DINERO_CAL_CADA = 6 * 3600e3, DINERO_CUENTA_DIA = 30, DINERO_TODOS_DIA = 5000;
 const diaHace = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 const numEn = (x, lo, hi, ent = false) => { const v = Number(x); if (!Number.isFinite(v) || v < lo || v > hi) return null; return ent ? Math.round(v) : Math.round(v / 1e3) * 1e3; };

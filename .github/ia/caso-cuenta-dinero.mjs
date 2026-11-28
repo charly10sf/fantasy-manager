@@ -20,7 +20,7 @@ const r = await P.page.evaluate(async () => {
   const Mo = await import('./js/motor.js');
   const S = window.S, DIA = 864e5, ahora = Date.now();
   const copia = () => ({ D: JSON.parse(JSON.stringify(S.D)), H: JSON.parse(JSON.stringify(S.H)) });
-  const monta = (retoca, cal) => {
+  const monta = (retoca, cal, dichosDe) => {
     const { D, H } = copia();
     D.demo = false; D.dineros = {};
     const desde = ahora - 100 * DIA;
@@ -34,6 +34,7 @@ const r = await P.page.evaluate(async () => {
     // tu saldo, para que tu cuenta cuadre con 3 M de recompensas cogidas
     D.dinero = 103e6 + M.baseDinero.mov - M.baseDinero.subidas;
     M = Mo.analizar(D, H, S.c, ext);
+    if (dichosDe) { ext.dichos = dichosDe(M); M = Mo.analizar(D, H, S.c, ext); }
     return { M, D };
   };
   const base = monta();
@@ -46,7 +47,7 @@ const r = await P.page.evaluate(async () => {
   const out = { mias: base.M.recompensasMias, activo: { dias: cA.cuenta.dias, rec: cA.cuenta.rec, margen: cA.margen, partes: cA.partes }, quieto: { dias: cQ.cuenta.dias, rec: cQ.cuenta.rec, margen: cQ.margen, partes: cQ.partes } };
   // (a) y (b): cuatro del principio con la cláusula a 5/3 de lo que valían, uno de ellos con 6 M más; y uno comprado
   const sinFichar = (D, M) => (D.plantillas[R] || []).filter((f) => !D.actividad.some((a) => ['compra', 'clausula'].includes(a.clase) && String(a.pid) === String(f.pid) && M.teamDeUsuario(a.quienId, a.quien) === R));
-  let nombres = null;
+  let nombres = null, ido = null;
   const ab = monta(({ D, H, det, desde }) => {
     const ini = sinFichar(D, base.M).slice(0, 6);
     nombres = ini.map((f) => f.pid);
@@ -57,13 +58,20 @@ const r = await P.page.evaluate(async () => {
     const f = ini[4]; const t1 = ahora - 40 * DIA;
     D.actividad.push({ id: 'x1', t: t1, tipo: 1, clase: 'compra', quien: quien.q, quienId: quien.qi, otro: '', otroId: '', pid: f.pid, importe: 14.36e6 });
     det[f.pid] = { t: ahora, stats: [], valores: [[t1 - DIA, 14e6], [t1 + 10 * DIA, 15.54e6], [ahora - DIA, 15.3e6]] }; D.maestro[f.pid].valor = 15.3e6; f.clausula = 18.54e6;
-    // (g) el sexto, comprado a otro mánager por 15 M hace 30 días: valía 21 M al crearse la liga y llega con su cláusula de 35 M
+    // (g) el sexto, comprado a otro mánager por 15.000.123 hace 30 días: la cláusula empieza en lo que pagó (no hereda la
+    // del anterior); la tiene en 35.000.123: son 20 M de subida, 10 M pagados
     const g = ini[5], otro = dias[orden[1]];
-    D.actividad.push({ id: 'x3', t: ahora - 30 * DIA, tipo: 1, clase: 'compra', quien: quien.q, quienId: quien.qi, otro: otro.q, otroId: otro.qi, pid: g.pid, importe: 15e6 });
-    det[g.pid] = { t: ahora, stats: [], valores: [[desde - DIA, 21e6], [desde + 30 * DIA, 19e6], [ahora - DIA, 12e6]] }; D.maestro[g.pid].valor = 12e6; g.clausula = 35e6;
+    D.actividad.push({ id: 'x3', t: ahora - 30 * DIA, tipo: 1, clase: 'compra', quien: quien.q, quienId: quien.qi, otro: otro.q, otroId: otro.qi, pid: g.pid, importe: 15000123 });
+    det[g.pid] = { t: ahora, stats: [], valores: [[desde - DIA, 21e6], [desde + 30 * DIA, 19e6], [ahora - DIA, 12e6]] }; D.maestro[g.pid].valor = 12e6; g.clausula = 35000123;
+    // (h) uno que ya no tiene: lo fichó del mercado por 3.246.497 y el otro se lo clausuló por 6.246.497 (le había subido 3 M)
+    ido = (D.plantillas[orden[1]] || [])[0];
+    if (H.v) delete H.v[ido.pid];
+    D.actividad.push({ id: 'x4', t: ahora - 60 * DIA, tipo: 31, clase: 'compra', quien: quien.q, quienId: quien.qi, otro: '', otroId: '', pid: ido.pid, importe: 3246497 });
+    D.actividad.push({ id: 'x5', t: ahora - 20 * DIA, tipo: 1, clase: 'compra', quien: otro.q, quienId: otro.qi, otro: quien.q, otroId: quien.qi, pid: ido.pid, importe: 6246497 });
+    ido.clausula = 6246497; D.maestro[ido.pid].valor = 2e6;
   });
   const sub = ab.M.subidas[R] || { lista: [] };
-  out.ab = { k: ab.M.clausulaInicial, lista: sub.lista.filter((x) => nombres.includes(x.pid)).map((x) => ({ i: nombres.indexOf(x.pid), pago: x.pago, inicial: x.inicial })) };
+  out.ab = { k: ab.M.clausulaInicial, lista: sub.lista.filter((x) => nombres.includes(x.pid)).map((x) => ({ i: nombres.indexOf(x.pid), pago: x.pago, inicial: x.inicial, exacta: x.exacta, hace: x.t ? Math.round((ahora - x.t) / DIA) : null })), idas: (sub.idas || []).filter((x) => x.pid === ido.pid).map((x) => x.pago) };
   // (c) paga una cláusula de 2 M más de lo que tenía sin recompensas: 2 M como poco de recompensas
   const f0 = base.M.flujos[R] || { v: 0 };
   const cc = monta(({ D }) => { const otro = base.M.rivalesTid.find((t) => t !== R); const pid = (D.plantillas[otro] || [])[0].pid; D.actividad.push({ id: 'x2', t: ahora - 3600e3, tipo: 5, clase: 'clausula', quien: quien.q, quienId: quien.qi, otro: 'x', otroId: (D.clasif.find((e) => e.teamId === otro) || {}).userId || 'u', pid, importe: Math.round(100e6 + f0.v + 2e6) }); });
@@ -73,22 +81,29 @@ const r = await P.page.evaluate(async () => {
   const cal = { n: 60, med: -2e6, p10: -6e6, p25: -4e6, p75: 0, p90: 2e6, porDias: [], t: ahora };
   const sinCu = monta(null, cal), conCu = monta(null, { ...cal, cu: Mo.CUENTA_DINERO });
   out.e = { sin: !!sinCu.M.calDinero, con: !!conCu.M.calDinero, corr: (conCu.M.dineroCuenta(R).correccion || {}).todos || 0 };
+  // (d) lo que te dice un rival: de ahí sale qué parte de las recompensas coge
+  const sinRec = cA.v - cA.cuenta.rec;
+  const dd = monta(null, null, () => ({ [activo]: { v: Math.round(sinRec + 0.9 * cA.cuenta.recTodas), r: 0, min: 0, max: 0, t: ahora - 3600e3, est: cA.v, cu: Mo.CUENTA_DINERO } }));
+  out.d = { ritmo: dd.M.ritmoDicho[activo], v: dd.M.dineroDe(activo).v, dijo: Math.round(sinRec + 0.9 * cA.cuenta.recTodas), otro: dd.M.dineroCuentaBruta(quieto).cuenta.rec, tot: cA.cuenta.recTodas, min: cA.cuenta.recMin, minQ: cQ.cuenta.recMin };
   // (f) el peligro
   out.f = { desde: Mo.MEDIO_DESDE, cuadra: base.M.rivales.every((x) => (x.peligro.n >= Mo.MEDIO_DESDE) === (x.nivel !== 'baja')), n: base.M.rivales.map((x) => `${Math.round(x.peligro.n)} ${x.nivel}`) };
   return out;
 });
 const m = (v) => (v == null ? '?' : (Math.round(v / 1e4) / 100).toFixed(2));
-ok(r.ab.k.n >= 3 && Math.abs(r.ab.k.k - 5 / 3) < 0.02, `(a) el tanto de la cláusula del principio se mide en la liga: ×${r.ab.k.k} con ${r.ab.k.n} jugadores`);
+ok(r.ab.k.n >= 3 && Math.abs(r.ab.k.k - 5 / 3) < 0.001, `(a) la cláusula del principio es 5/3 del valor del día en que se creó la liga: ×${r.ab.k.k}, ${r.ab.k.n} jugadores que lo cumplen al euro`);
 ok(!r.ab.lista.some((x) => x.i < 3), `(a) a los del principio con la cláusula a 5/3 de su valor no se les cuenta ninguna subida (${JSON.stringify(r.ab.lista)})`);
 const x3 = r.ab.lista.find((x) => x.i === 3);
-ok(x3 && x3.inicial && Math.abs(x3.pago - 3e6) < 1e5, `(a) al que tiene 6 M por encima de eso, 3 M pagados (${x3 ? m(x3.pago) : 'no sale'})`);
+ok(x3 && x3.inicial && x3.exacta && Math.abs(x3.pago - 3e6) < 2, `(a) al que tiene 6 M por encima de eso, 3 M pagados (${x3 ? m(x3.pago) : 'no sale'})`);
 const x4 = r.ab.lista.find((x) => x.i === 4);
-ok(x4 && Math.abs(x4.pago - 1.5e6) < 2e4, `(b) comprado a 14,36, llegó a 15,54 y la cláusula en 18,54: 1,50 M pagados, no 2,09 (${x4 ? m(x4.pago) : 'no sale'})`);
-ok(!r.ab.lista.some((x) => x.i === 5), `(g) comprado a otro mánager por 15 M con la cláusula que traía (35 M, los 5/3 de lo que valía al crearse la liga): no es una subida pagada (${JSON.stringify(r.ab.lista.filter((x) => x.i === 5))})`);
+ok(x4 && x4.exacta && Math.abs(x4.pago - 1.5e6) < 2 && x4.hace === 30, `(b) comprado a 14,36, la cláusula en 18,54 y un día valió 15,54: subió 3 M ese día (hace ${x4 && x4.hace} días) y pagó 1,50 M (${x4 ? m(x4.pago) : 'no sale'})`);
+const x5 = r.ab.lista.find((x) => x.i === 5);
+ok(x5 && x5.exacta && Math.abs(x5.pago - 10e6) < 2, `(g) comprado a otro mánager por 15 M y con la cláusula 20 M por encima de lo que pagó: 10 M pagados (${x5 ? m(x5.pago) : 'no sale'})`);
+ok(r.ab.idas.length === 1 && Math.abs(r.ab.idas[0] - 1.5e6) < 2, `(h) el que ya no tiene: lo fichó por 3.246.497 y se lo clausularon por 6.246.497: le había subido 3 M, 1,50 M pagados (${JSON.stringify(r.ab.idas)})`);
 ok(r.c.recMin != null && Math.abs(r.c.recMin - 2e6) < 2e4 && r.c.rec >= r.c.recMin - 1 && r.c.v >= -1e6, `(c) pagó una cláusula que sin recompensas le dejaba en −2 M: 2 M de recompensas como poco (mín ${m(r.c.recMin)}, se le calculan ${m(r.c.rec)}; le quedan ${m(r.c.v)})`);
 ok(r.mias && Math.abs(r.mias.v - 3e6) < 1e4, `(d) tus recompensas se saben exactas: ${m(r.mias && r.mias.v)} M de ${m(r.mias && r.mias.de)}`);
-ok(r.activo.dias > r.quieto.dias && r.activo.rec > r.quieto.rec, `(d) al que más se mueve (${r.activo.dias} días) se le calculan más recompensas que al que menos (${r.quieto.dias} días): ${m(r.activo.rec)} y ${m(r.quieto.rec)} M`);
-ok(r.activo.partes.fija === 5e5 && r.activo.partes.rec <= Math.max(r.activo.rec, 2e5) + 1 && r.quieto.partes.rec <= r.activo.partes.rec, `(d) el ± de las recompensas sale de eso: ${m(r.activo.partes.rec)} M el activo y ${m(r.quieto.partes.rec)} M el quieto (más medio millón fijo)`);
+ok(Math.abs(r.activo.rec - (r.d.min + r.d.tot) / 2) < 2 && Math.abs(r.quieto.rec - (r.d.minQ + r.d.tot) / 2) < 2, `(d) las recompensas de un rival no se ven: va la mitad de las que ha podido coger (${m(r.activo.rec)} y ${m(r.quieto.rec)} M de ${m(r.d.tot)})`);
+ok(r.activo.partes.fija === 5e5 && Math.abs(r.activo.partes.rec - (r.d.tot - r.d.min) / 2) < 2, `(d) y el ± es la otra mitad: ${m(r.activo.partes.rec)} M (más medio millón fijo)`);
+ok(Math.abs(r.d.ritmo - 0.9) < 0.01 && Math.abs(r.d.v - r.d.dijo) < 3e5 && Math.abs(r.d.otro - r.quieto.rec) < 2, `(d) si te dice lo que tiene, se sabe qué parte coge (${r.d.ritmo == null ? '?' : r.d.ritmo.toFixed(2)}), su cifra es la que dijo (${m(r.d.v)} de ${m(r.d.dijo)}) y a los demás no les cambia nada`);
 ok(!r.e.sin && r.e.con && r.e.corr === 60, `(e) lo de todas las ligas: sin «cu» no cuenta, con «cu» sí (${r.e.sin}, ${r.e.con}, ${r.e.corr} apuntes)`);
 ok(r.f.desde === 33 && r.f.cuadra, `(f) el peligro, «medio» desde 33: ${r.f.n.join(', ')}`);
 await cerrar();

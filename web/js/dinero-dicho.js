@@ -9,6 +9,7 @@
    Lo apuntado se sigue mandando para aprender (apunteDinero, con «Ayudar a mejorar la IA»). La app no lo pide sola: solo
    la novedad, una vez. (Carlos, 26 nov, 03:34-03:35: nada de «aprende a calcular mejor», que daba a entender que sus
    cuentas fallan: «ayudas a afinar aún más»; 03:50: «ya lo calcula exactamente a falta de la recompensa diaria».) Prueba: .github/ia/caso-dinero-dicho.mjs */
+import { CUENTA_DINERO } from './motor.js';
 import { LS, esc, icono, cuando } from './util.js';
 import { K } from './datos.js';
 import { bloqueada } from './limite.js';
@@ -44,7 +45,7 @@ export const MARGEN = 5e6;
 /** lo que se guarda, con el mismo formato de siempre (est: lo que daba la cuenta en ese momento, para aprender) */
 export function entradaDicho(v, aprox, est = null, t = Date.now()) {
   const min = aprox ? Math.max(0, v - MARGEN) : v, max = aprox ? v + MARGEN : v;
-  return { v: Math.round((min + max) / 2), r: Math.round((max - min) / 2), min: Math.round(min), max: Math.round(max), t, est: est != null ? Math.round(est) : null };
+  return { v: Math.round((min + max) / 2), r: Math.round((max - min) / 2), min: Math.round(min), max: Math.round(max), t, est: est != null ? Math.round(est) : null, cu: CUENTA_DINERO };
 }
 /** la línea de debajo de la cifra */
 export function notaModo(v, aprox) {

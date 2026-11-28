@@ -1255,7 +1255,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const eD = { VINCULOS: KV, ADMINS: '667015', QR: QRd };
   const almacen = () => objs.get('dinero|todos').m;
   const hx = (i) => i.toString(16).padStart(24, '0');
-  const ap = (i, o = {}) => ({ h: hx(i), e: -2e6, m: 3e6, r: 0, dl: 70, dp: 3, mov: 40, sub: 2, pago: false, val: 150e6, pos: 3, nr: 10, est: 20e6, cu: 2, ...o });
+  const ap = (i, o = {}) => ({ h: hx(i), e: -2e6, m: 3e6, r: 0, dl: 70, dp: 3, mov: 40, sub: 2, pago: false, val: 150e6, pos: 3, nr: 10, est: 20e6, cu: 3, ...o });
   minuto();
   // sin sesión, no; con ella, sí, y no se guarda de quién es
   r = await pide({ ruta: '/dinero', cuerpo: ap(1), tk: 'corto', e: eD });

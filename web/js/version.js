@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.5d';
+export const VERSION = '0.8.5e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,28 @@ export const VERSION = '0.8.5d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, 00:19, Carlos: «que en la actualización salga un pop-up… que se ha perfeccionado y afinado el valor del dinero
+    // de los rivales, teniendo en cuenta las cláusulas… y que la única variable que falta son las recompensas diarias, que no se
+    // pueden saber de ninguna manera, pero que si un rival está muy viciado, tires el rango hacia arriba») SE CUENTA A TODOS
+    // (todos: true) con la tarjeta pequeña (aviso). La cuenta: motor.js, «CÓMO PONE LALIGA LAS CLÁUSULAS»; lo medido, en
+    // claude/nota-cuenta-dinero.md del proyecto. LA HORA Y EL DÍA, AL PUBLICAR. Lo de proteger, el cierre y el blindaje
+    // (27 nov) va en `cosas`
+    v: '0.8.5e', f: '2026-11-28', h: '00:00', t: 'El dinero de tus rivales, más exacto', todos: true,
+    aviso: {
+      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, más exacto',
+      x: 'La cuenta se ha afinado: ahora sabe al euro lo que cada rival ha pagado por subir cláusulas, también las de jugadores que ya no tiene. Lo único que no se puede saber son las recompensas diarias que ha recogido: de ahí sale el ±.',
+      mas: 'Si un rival entra a diario, quédate con la parte alta. Si te dice lo que tiene, apúntalo en su ficha.',
+      ir: { v: 'rivales', txt: 'Ver a mis rivales' },
+    },
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'El dinero de tus rivales, más exacto', x: 'La cuenta sabe ahora al euro cuánto ha pagado cada rival por subir cláusulas y qué día lo hizo, también en jugadores que ya no tiene. Lo único que no se ve son las recompensas diarias que ha recogido: va la mitad de las posibles y el ± cubre desde ninguna hasta todas. Si un rival entra a diario, quédate con la parte alta; si te dice lo que tiene, apúntalo en su ficha y su cifra pasa a ser la suya.' },
+      { tipo: 'mejora', d: 'escudo', t: 'Protege a un jugador antes de que se le abra la cláusula', x: 'Cuando a uno tuyo que sube se le va a abrir la cláusula, el plan te lo dice arriba, en «Antes de nada»: ponlo a la venta para ver ofertas (sin obligación de aceptar) y blíndalo en cuanto se pueda, con su hora.' },
+      { tipo: 'arreglo', d: 'reloj', t: 'Blindar el día de la jornada', x: 'El día de la jornada el plan ya avisa de blindar antes de que empiece, cuando la cláusula se reabre al acabar.' },
+      { tipo: 'arreglo', d: 'peligro', menor: true, t: 'El peligro de cada rival, mejor repartido', x: 'Un rival con poco dinero ya no sale con el mismo peligro que los que más pueden pagar.' },
+      { tipo: 'arreglo', d: 'porteria', menor: true, t: 'Ni vender ni blindar de más', x: 'La ficha ya no manda vender a un jugador que el plan aguanta, y el blindaje gratis solo se propone cuando de verdad te lo pueden quitar.' },
+    ],
+  },
   {
     // (27 nov, Carlos: «quita el aviso de "es el último plan de hoy a las xx.xx, puede que no esté al día"; que solo salga si han
     // pasado 13 h desde el último plan») vistas.js, rama `esIA` de `planHTML`: solo con 13 h o más desde `P.t`.
