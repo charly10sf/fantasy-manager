@@ -3348,14 +3348,7 @@
   "3317": "out_of_league",
   "3318": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2784",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1795868175187
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
@@ -3542,7 +3535,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256539/entrenamiento-barcelona-deportivo-coruna.html": 1795862874000,
    "SPORT|136955243": 1795859539000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/novedades-guido-rodriguez-cara-partido-136955715.html": 1795864359000,
-   "SPORT|136954502": 1795863636000
+   "SPORT|136954502": 1795863636000,
+   "AS|https://as.com/futbol/flick-tunkara-es-un-talento-y-tiene-un-gran-futuro-en-este-club-f202611-n/": 1795868706000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004255594/rueda-prensa-flick-directo-previa-deportivo-barca-laliga-ea-sports.html": 1795865982000
   },
   "hechos": [
    {
@@ -4121,11 +4116,37 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/flick-tunkara-es-un-talento-y-tiene-un-gran-futuro-en-este-club-f202611-n/",
+    "medio": "AS",
+    "t": 1795868706000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri vuelve a estar disponible para los próximos partidos",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     17
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004255594/rueda-prensa-flick-directo-previa-deportivo-barca-laliga-ea-sports.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795865982000,
+    "id": "3208",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Rodri podrá viajar con el equipo esta semana",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -5041,17 +5062,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 12,
    "revisar": 12,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 63749,
-  "salida": 12061,
+  "entrada": 65806,
+  "salida": 13005,
   "cacheLee": 107910,
   "cacheEscribe": 13916,
-  "dolares": 0.204565,
+  "dolares": 0.205243,
   "reservado": 0
  },
  "recientes": {
@@ -10206,13 +10227,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7305,
+   "ok": 7306,
    "fallos": 0,
-   "ejecuciones": 5981,
+   "ejecuciones": 5982,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T12:26:11.470Z"
+   "ultima": "2026-11-28T12:31:16.061Z"
   }
  },
  "ptsDirecto": {
@@ -10272,15 +10293,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:26:41.065Z"
+   "ultimaBien": "2026-11-28T12:31:27.137Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:26:41.065Z"
+   "ultimaBien": "2026-11-28T12:31:27.137Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:26:41.065Z"
+   "ultimaBien": "2026-11-28T12:31:27.137Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10288,11 +10309,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:26:41.065Z"
+   "ultimaBien": "2026-11-28T12:31:27.137Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T12:26:41.065Z"
+   "ultimaBien": "2026-11-28T12:31:27.137Z"
   }
  },
  "avisos": [
