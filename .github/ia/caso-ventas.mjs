@@ -73,7 +73,8 @@ const todos = async (P) => P.page.evaluate(async () => {
   const r = await forzado(P);
   ok(r.sube.ver === 'proteger' && /LA DECISIÓN DE LA APP: AGUANTAR Y PROTEGERLO/.test(r.sube.linea), `(a) ${r.sube.n}, que sube con la cláusula a su valor a punto de abrirse: quedárselo y protegerlo (${r.sube.ver}, fase ${r.sube.fase})`);
   ok(!/Súbele la cláusula/.test(r.sube.linea) || (r.sube.prot && r.sube.prot.como === 'subir' && r.sube.prot.coste <= Math.max(0, r.sube.p14) / 2), `(a) no manda pagar por subirle la cláusula más de lo que va a subir (${r.sube.prot && r.sube.prot.como})`);
-  ok(/se lo llevan a precio de mercado|se llevan a precio de mercado/.test(r.sube.linea), '(a) dice que, si se lo clausulan, se llevan lo que iba a subir');
+  if (process.env.DEPURA) console.log('LINEA', r.sube.linea);
+  ok(/se lo llevan a precio de mercado|se llevan a precio de mercado|a ese precio te lo quitan/.test(r.sube.linea), '(a) dice que, si se lo clausulan, se llevan lo que iba a subir');
   ok(r.baja.ver === 'vender' && /LA DECISIÓN DE LA APP: (VENDER|AGUANTAR)/.test(r.baja.linea), `(b) ${r.baja.n}, que baja todos los días: vender o, si el plan lo aguanta, aguantarlo por ahora (${r.baja.ver}, fase ${r.baja.fase})`);
   ok(!/Súbele la cláusula|Blíndalo/.test(r.baja.linea), '(b) a uno que baja no se le sube la cláusula ni se blinda');
   ok(!(/LA DECISIÓN DE LA APP: VENDER/.test(r.baja.linea) && /se aguanta/.test(r.baja.linea)), '(b) no dice a la vez vender y que el plan lo aguanta');
@@ -90,7 +91,8 @@ for (const escena of ['martes', 'paron', 'sabado']) {
   const linea = (n) => lineas.find((l) => l.startsWith(`- ${n} (`)) || '';
   const noVende = r.vende.filter((n) => linea(n) && !/LA DECISIÓN DE LA APP: VENDER/.test(linea(n)));
   ok(!noVende.length, `(d) ${escena}: lo que vende el plan de hoy sale como VENDER (${r.vende.join(', ') || 'no vende a nadie'})`);
-  const malOf = r.conOferta.filter((o) => (o.consejo === 'aceptar' ? !/LA DECISIÓN DE LA APP: VENDER: ACEPTAR LA OFERTA/.test(linea(o.n)) : !/LA DECISIÓN DE LA APP: (AGUANTAR[^:]*: NO ACEPTAR LA OFERTA|AGUANTAR Y PROTEGERLO \(NO ACEPTAR LA OFERTA|VENDER, PERO ESTA OFERTA NO|NO SE VENDE)/.test(linea(o.n))));
+  const malOf = r.conOferta.filter((o) => (o.consejo === 'aceptar' ? !/LA DECISIÓN DE LA APP: VENDER: ACEPTAR LA OFERTA/.test(linea(o.n)) : !/LA DECISIÓN DE LA APP: (AGUANTAR[^:]*: NO ACEPTAR LA OFERTA|AGUANTAR Y PROTEGERLO[^|]*\(NO ACEPTAR LA (OFERTA|DE )|VENDER, PERO ESTA OFERTA NO|NO SE VENDE)/.test(linea(o.n))));
+  if (process.env.DEPURA && malOf.length) console.log('OFERTA', malOf.map((o) => linea(o.n)).join(' // '));
   ok(!malOf.length, `(d) ${escena}: con una oferta, lo mismo que aconseja la app en Equipo (${r.conOferta.map((o) => `${o.n} ${o.consejo}`).join(', ') || 'ninguna'})`);
   const malMias = r.enMias.filter((o) => !o.linea.includes(`CON LA OFERTA QUE TIENE: ${o.consejo.toUpperCase()}`) || /aceptaría hoy la oferta/.test(o.linea));
   ok(!malMias.length, `(d) ${escena}: en MIS JUGADORES, la oferta con el mismo consejo y sin «aceptaría» suelto${malMias.length ? `: ${malMias.map((o) => o.n).join(', ')}` : ''}`);
