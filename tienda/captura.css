@@ -1,0 +1,9 @@
+/* SOLO PARA CAPTURAS Y VÍDEOS hechos con un Chromium sin tarjeta gráfica: ahí el desenfoque de un cristal bajo sale medio
+   transparente (se ve nítido lo de detrás), cosa que en un móvil no pasa. El cristal se alarga 60 px y se recorta a su forma. */
+html.lq.fm-captura:not(.escritorio) .nav-in::after { inset: -60px -10px; clip-path: inset(59px 9px round var(--barra-r)); }
+html.lq.fm-captura .tabs::before { inset: -54px 0 -52px; clip-path: inset(60px 12px round 26px); }
+html.lq.fm-captura:not(.escritorio) .escribe::before { inset: -60px -10px; clip-path: inset(59px 9px round 29px); }
+html.lq.fm-captura:not(.escritorio) .hoja.hoja-entera .asa::before { inset: -60px 0 -48px; clip-path: inset(60px 0 60px round var(--r-hoja) var(--r-hoja) 0 0); }
+.fm-capsula { position: fixed; z-index: 19; background: var(--cristal); -webkit-backdrop-filter: var(--cristal-desenfoque); backdrop-filter: var(--cristal-desenfoque); pointer-events: none; }
+html.lq.fm-captura:not(.escritorio) .sup-liga::before, html.lq.fm-captura:not(.escritorio) .sup-btns::before { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html.lq.fm-captura.escritorio .fm-capsula { display: none; }

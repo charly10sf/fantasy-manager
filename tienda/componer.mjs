@@ -5,7 +5,7 @@ import fs from 'node:fs';
 const pw = await import(process.env.PW_MODULO || '/opt/npm-tools/node_modules/playwright/index.mjs');
 const [, , ent, sal, Wa, Ha] = process.argv;
 const W = +Wa, H = +Ha;
-const WEB = process.env.WEB || '/home/claude/maqueta/web';
+const WEB = process.env.WEB || '/home/claude/fantasy-manager/web';
 fs.mkdirSync(sal, { recursive: true });
 const b64 = (f) => fs.readFileSync(f).toString('base64');
 const F = { c7: b64(`${WEB}/fonts/barlow-condensed-700.woff2`), r4: b64(`${WEB}/fonts/barlow-400.woff2`), r5: b64(`${WEB}/fonts/barlow-500.woff2`), r6: b64(`${WEB}/fonts/barlow-600.woff2`) };
