@@ -80,7 +80,7 @@ async function pagina({ init = '', ancho = 390, alto = 844, colgar = [], reloj =
   const page = await ctx.newPage();
   const errores = [];
   page.on('pageerror', (e) => errores.push(e.message));
-  await page.addInitScript(`localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); ${init}`);
+  await page.addInitScript(`localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-demo-cerrada', '1'); ${init}`);
   if (reloj) await page.clock.install({ time: reloj });
   return { ctx, page, errores };
 }

@@ -303,12 +303,16 @@ export function intersticialParaMi() {
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
 /** ¿cerrada? Las de los rivales, con «rid», para ese rival (abierto con sus anuncios esta jornada); sin «rid», si
     está cerrada en general (para lo que mezcla a todos los rivales) */
+const demoCerrada = () => { try { return localStorage.getItem('fm-demo-cerrada') === '1'; } catch (e) { return false; } };
 export function bloqueada(clave, rid = null) {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
   if (!lista.includes(clave) && !(NUEVAS.includes(clave) && cfg && g.v !== VERSION)) return false;
   if (topAbierto(clave, rid)) return false;
-  if (demoB || !yoB || !cfg) return true;
+  // en la liga de ejemplo, todo abierto (Carlos, 28 nov: «en la liga de ejemplo salen bloqueadas las funciones top. Deberían
+  // salir todas abiertas»); las pruebas que miran lo cerrado lo piden con `fm-demo-cerrada`
+  if (demoB) return demoCerrada();
+  if (!yoB || !cfg) return true;
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }
 

@@ -32,6 +32,7 @@ export const NOVEDADES = [
     v: '0.9d', f: '2026-11-28', h: '13:27', t: 'El dinero de un rival, más claro',
     cosas: [
       { tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, más claro', x: 'Con su dinero abierto, la gráfica de su saldo sale directamente en su ficha. En el desglose ves sus últimos movimientos y puedes desplegar la lista entera.' },
+      { tipo: 'mejora', d: 'corona', t: 'La liga de ejemplo, abierta entera', x: 'En la liga de ejemplo ya se ve todo, también lo que normalmente se abre con anuncios.' },
     ],
   },
   {

@@ -128,8 +128,13 @@ const v = await P.page.evaluate(async () => {
   const quitaATxt = quitaA.querySelector('.dn-card') ? quitaA.innerHTML.replace(quitaA.querySelector('.dn-card').outerHTML, '') : quitaA.innerHTML;
   S.segRival = null;
   U.LS.del('top-rivales');
-  return { cerr, abr, quitaCerr: /su dinero|dd-ficha|dd-cerr/.test(quitaTxt), quitaAbr: /su dinero|dd-ficha|dd-cerr/.test(quitaATxt), d: { partes: dh.querySelectorAll('.dn-parte').length, movs: dh.querySelectorAll('.dn-mov').length, graf: !!dh.querySelector('svg.g-banda'), total: (dh.querySelector('.dn-total b') || {}).textContent || '', lista: !!dh.querySelector('.dn-movs-b') }, fuera, movsTodos, nMovs, botones };
+  // (28 nov) en la liga de ejemplo todo va abierto sin anuncios; cerrado solo con la marca de las pruebas
+  localStorage.removeItem('fm-demo-cerrada');
+  const demoAbierta = tids.every((tid) => { const c = pinta(tid).querySelector('.dn-card'); return !!c && !c.classList.contains('cerrada'); });
+  localStorage.setItem('fm-demo-cerrada', '1');
+  return { demoAbierta, cerr, abr, quitaCerr: /su dinero|dd-ficha|dd-cerr/.test(quitaTxt), quitaAbr: /su dinero|dd-ficha|dd-cerr/.test(quitaATxt), d: { partes: dh.querySelectorAll('.dn-parte').length, movs: dh.querySelectorAll('.dn-mov').length, graf: !!dh.querySelector('svg.g-banda'), total: (dh.querySelector('.dn-total b') || {}).textContent || '', lista: !!dh.querySelector('.dn-movs-b') }, fuera, movsTodos, nMovs, botones };
 });
+ok(v.demoAbierta, '(f0) en la liga de ejemplo, el dinero de todos los rivales abierto sin anuncios');
 ok(v.cerr.every((x) => x.hay && x.antes && x.cerrada && x.boton && !x.desg && !x.viejaT), `(f) cerrado, la tarjeta sale la primera, antes de las pestañas, con el botón de los anuncios y sin desglose (${JSON.stringify(v.cerr.map((x) => [x.hay, x.antes, x.cerrada, x.boton, x.desg, x.viejaT]))})`);
 ok(v.cerr.every((x) => !/\d+,\d+ ?M|\d{1,3}(\.\d{3}){2}|±/.test(x.txt)), `(f) cerrado, ninguna cifra en la tarjeta (${v.cerr.map((x) => x.txt.replace(/\s+/g, ' ').trim().slice(0, 60)).join(' | ')})`);
 ok(new Set(v.cerr.map((x) => x.html)).size === 1, `(f) cerrado, la tarjeta es igual en todos los rivales salvo su nombre (${new Set(v.cerr.map((x) => x.html)).size} distintas)`);
