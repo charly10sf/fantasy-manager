@@ -40,16 +40,16 @@ export const NOVEDADES = [
     // (28 nov, 03:17-03:5x, Carlos: «la función del dinero debería estar más vistosa… lo primero que te salga» y «un desglose
     // más avanzado… ventas, subidas de cláusulas… todos los gastos que ha ido haciendo»; de dos diseños en vídeo eligió el A,
     // sin las cifras sueltas del final) EL DINERO DE UN RIVAL, LO PRIMERO DE SU FICHA: la tarjeta (hojas.js, `dineroRivalHTML`),
-    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. LA HORA, AL PUBLICAR.
+    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. 
     // (04:39, Carlos: «renovar y borrar [el pop-up] que ha saltado antes… otro pop-up partiendo del anterior… que solo les
     // salga a los usuarios que no han visto el anterior»): la tarjeta de la 0.9a, con lo de la ficha arriba; a quien ya cerró
     // la de la 0.9a no le sale (`noSiVisto`, `novAvisoPedir` en app.js), salvo al dueño, que la quiere ver
-    v: '0.9b', f: '2026-11-28', h: '', todos: true,
+    v: '0.9b', f: '2026-11-28', h: '05:11', todos: true,
     aviso: {
       // (04:46, Carlos: lo de la ficha, «arriba del todo», y el ejemplo con «cifras de mi liga»: un rival de su liga el 28 nov,
       // al euro, sin lo que dijo. (04:54) El título, «notablemente mejorado», y lo amarillo, otra vez lo de la parte alta)
       d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, notablemente mejorado',
-      x: 'Ahora es lo primero de la ficha de cada rival: toca «Ver el desglose» y verás todo lo que ha movido, sus cláusulas y su saldo. Y la cuenta, revisada a fondo. Un rival de una liga real:',
+      x: 'En la ficha de cada rival, toca «Ver el desglose» y verás todo lo que ha movido, sus cláusulas y su saldo. Y la cuenta, revisada a fondo. Un rival de una liga real:',
       pasos: [
         { c: 'De salida', x: 'Todos empiezan con lo mismo', v: '100.000.000' },
         { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9.698.031', cls: 'mas' },

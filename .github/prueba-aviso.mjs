@@ -39,7 +39,7 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos, nov = n
   for (const p of pasos) {
     if (p === 'novs') r.push(await page.evaluate(() => (document.querySelector('.nvt .nvt-eti') || {}).textContent === 'Novedades' && /dinero de (tus rivales|cada rival)/i.test(document.querySelector('.nvt').textContent) && /recompensas diarias/i.test(document.querySelector('.nvt').textContent) ? 'NOVEDADES' : 'otra'));
     // (0.9b) la tarjeta renovada: lo de la 0.9a más el desglose en la ficha
-    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /lo primero de la ficha/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
+    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /notablemente mejorado/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
     if (p === 'mira') r.push(await hay() ? 'TARJETA' : (await page.evaluate(() => !!document.querySelector('.nv'))) ? 'PRESENTACIÓN' : 'nada');
     if (p === 'recarga-app') { await Promise.all([page.waitForNavigation({ timeout: 15000 }).catch(() => r.push('(no recargó)')), page.evaluate(() => window.webBuscada('nueva'))]); await lista(); }
     if (p === 'reabre') { await page.reload(); await lista(); }
@@ -106,7 +106,7 @@ async function casoIphone(nombre, espera, { app = false, ua = null, real = true,
   const mira = () => page.evaluate((L) => { const t = document.querySelector('.nvt-ios'); if (t) { const m = t.querySelector('.ios-mas'); return 'IPHONE:' + (m ? L[m.textContent.trim()] || '¿' + m.textContent + '?' : 'sin línea'); } return document.querySelector('.nvt') ? 'TARJETA' : 'nada'; }, LINEAS);
   for (const p of pasos) {
     // (0.9b) la tarjeta renovada: lo de la 0.9a más el desglose en la ficha
-    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /lo primero de la ficha/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
+    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /notablemente mejorado/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
     if (p === 'mira') r.push(await mira());
     if (p === 'entendido' || p === 'fuera') {
       if (!(await page.$('.nvt-ios'))) { r.push('(sin tarjeta)'); continue; }
