@@ -3389,7 +3389,6 @@
   "vistas": {
    "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
-   "SPORT|136847144": 1795619882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000,
    "SPORT|136846515": 1795622552000,
    "SPORT|136847699": 1795622684000,
@@ -10276,13 +10275,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7363,
+   "ok": 7365,
    "fallos": 0,
-   "ejecuciones": 6015,
+   "ejecuciones": 6016,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:16:12.833Z"
+   "ultima": "2026-11-28T15:21:11.458Z"
   }
  },
  "ptsDirecto": {
@@ -10348,27 +10347,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:16:17.065Z"
+   "ultimaBien": "2026-11-28T15:21:16.880Z"
   }
  },
  "avisos": [
