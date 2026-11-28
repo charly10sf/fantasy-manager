@@ -5,7 +5,7 @@ import fs from 'node:fs';
 const pw = await import(process.env.PW_MODULO || '/opt/npm-tools/node_modules/playwright/index.mjs');
 const [, , ent, sal, Wa, Ha] = process.argv;
 const W = +Wa, H = +Ha;
-const WEB = process.env.WEB || '/home/claude/fantasy-manager/web';
+const WEB = process.env.WEB || '/home/claude/fm/web';
 fs.mkdirSync(sal, { recursive: true });
 const b64 = (f) => fs.readFileSync(f).toString('base64');
 const F = { c7: b64(`${WEB}/fonts/barlow-condensed-700.woff2`), r4: b64(`${WEB}/fonts/barlow-400.woff2`), r5: b64(`${WEB}/fonts/barlow-500.woff2`), r6: b64(`${WEB}/fonts/barlow-600.woff2`) };
@@ -14,7 +14,7 @@ const ICONO = b64(`${WEB}/img/icono-180.png`);
 // [archivo, titular (lo de <em>, en rojo), línea]
 // el orden lo puso Carlos (28 nov, 01:05): primero el dinero de los rivales, «el gamechanger de la app», por delante del plan
 export const TARJETAS = [
-  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Cuánto tiene y quién puede clausularte', 'El dinero de cada <em>rival</em>'],
+  ['rival', 'El dinero de<br>cada <em>rival</em>', 'Cuánto tiene y todos sus movimientos', 'El dinero de cada <em>rival</em>'],
   ['hoy', 'Tu plan<br>de <em>hoy</em>', 'Qué fichar, vender y alinear, paso a paso'],
   ['parte', 'El parte de<br>tus <em>rivales</em>', 'Quién va corto, sin blindajes o en negativo'],
   ['mercado', 'Los que<br>más <em>suben</em>', 'Ficha antes de que se revaloricen', 'Los que más <em>suben</em>'],
@@ -67,6 +67,45 @@ const pag = (img, tit, sub) => `<!doctype html><html><head><meta charset="utf-8"
   <div class="pie">Liga de ejemplo con datos inventados · App no oficial, sin relación con LaLiga</div>
   </body></html>`;
 
+
+// (28 nov, Carlos) la del dinero de cada rival, desde la ficha de uno: dos móviles (arriba de la ficha con la cifra y su ±,
+// y el desglose con su saldo y sus movimientos) y dos etiquetas de cristal
+const pag2 = (imgA, imgB, tit, sub, eA, eB) => pag(imgA, tit, sub).replace(/<div class="tel">[\s\S]*?<\/div>\n/, `<div class="dos">
+    <div class="tel b"><img src="data:image/png;base64,${imgB}"></div>
+    <div class="tel a"><img src="data:image/png;base64,${imgA}"></div>
+    <div class="eti ea">${eA}</div><div class="eti eb">${eB}</div>
+  </div>
+`).replace('</style>', `
+  .dos { position: relative; flex: none; width: 100%; margin-top: calc(var(--u) * ${PLAY ? 4.2 : 5.5}); }
+  .dos .tel { position: absolute; margin: 0; }
+  .dos .a { left: 3%; z-index: 1; }
+  .dos .b { right: 3%; z-index: 2; }
+  .eti { position: absolute; z-index: 3; padding: calc(var(--u) * 1.5) calc(var(--u) * 2.8); border-radius: 999px; white-space: nowrap;
+    font: 600 calc(var(--u) * 3.2) B; color: #fff; letter-spacing: .01em;
+    background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(255,255,255,.07)); backdrop-filter: blur(8px);
+    box-shadow: 0 calc(var(--u) * 1.5) calc(var(--u) * 5) rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.28); }
+  .eti b { color: #ffd166; font-weight: 600; }
+</style>`);
+
+const ajustar2 = () => {
+  // en diagonal: el de la ficha arriba a la izquierda y el del desglose delante, abajo a la derecha (tapa lo de abajo de la ficha)
+  const d = document.querySelector('.dos'), u = innerWidth / 100;
+  const a = d.querySelector('.a'), b = d.querySelector('.b'), ia = a.querySelector('img');
+  const libre = innerHeight - d.getBoundingClientRect().top - 7.5 * u, asp = ia.naturalWidth / ia.naturalHeight, pad = 3.1 * u;
+  const alto = (w) => (w - pad) / asp + pad, BAJA = 0.40, RB = 0.92;
+  let wa = innerWidth * 0.64;
+  const total = (w) => alto(w) * BAJA + alto(w * RB);
+  while (total(wa) > libre) wa -= 2;
+  const wb = wa * RB;
+  a.style.width = `${wa}px`; b.style.width = `${wb}px`;
+  b.style.top = `${alto(wa) * BAJA}px`;
+  d.style.height = `${total(wa)}px`;
+  const ea = d.querySelector('.ea'), eb = d.querySelector('.eb');
+  ea.style.right = `${3 * u}px`; ea.style.top = `${alto(wa) * 0.335}px`;
+  eb.style.left = `${Math.max(3 * u, b.offsetLeft - eb.offsetWidth * 0.62)}px`; eb.style.top = `${alto(wa) * BAJA + alto(wb) * 0.40}px`;
+  return { wa: Math.round(wa), wb: Math.round(wb), libre: Math.round(libre) };
+};
+
 // el móvil, lo más grande que quepa entero entre la línea y el pie (y como mucho el 82 % del ancho)
 const ajustar = () => {
   const t = document.querySelector('.tel'), i = t.querySelector('img');
@@ -86,10 +125,11 @@ for (const [arch, tit0, sub0, titP, subP] of TARJETAS) {
   const f = `${ent}/${arch}.png`;
   if (!fs.existsSync(f)) { console.log('falta', f); continue; }
   n++;
-  await pg.setContent(pag(b64(f), tit, sub));
+  const f2 = `${ent}/${arch}2.png`, dos = fs.existsSync(f2);
+  await pg.setContent(dos ? pag2(b64(f), b64(f2), tit, sub, process.env.ETI_A || '± <b>por la recompensa diaria</b>', process.env.ETI_B || 'Todos sus movimientos') : pag(b64(f), tit, sub));
   await pg.evaluate(() => document.fonts.ready);
-  await pg.waitForFunction(() => document.querySelector('.tel img').complete);
-  const m = await pg.evaluate(ajustar);
+  await pg.waitForFunction(() => [...document.querySelectorAll('.tel img')].every((i) => i.complete));
+  const m = await pg.evaluate(dos ? ajustar2 : ajustar);
   if (process.env.VER) console.log(arch, JSON.stringify(m));
   await pg.waitForTimeout(200);
   await pg.screenshot({ path: `${sal}/${String(n).padStart(2, '0')}-${arch}.png` });

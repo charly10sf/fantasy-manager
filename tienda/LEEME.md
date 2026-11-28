@@ -24,3 +24,5 @@ tarjeta es la lista de Rivales con el dinero de cada uno abierto; orden: dinero,
 VISTO BUENO DE CARLOS (28 nov, 02:38) a las tarjetas y a los textos. EN LA APP STORE VAN CON CARAS: se suben
 tienda/app-store-con-caras-6.9 y tienda/app-store-con-caras-6.3 (si Apple pone pegas por las caras, las de sin caras).
 En Google Play, tienda/google-play. Siguen sin subir: a la vez en las dos tiendas, cuando Apple apruebe la 0.8.5.
+
+(28 nov, 15:0x; Carlos) 01-rival rehecha desde la ficha de un rival (Rayo Vallekano, liga de ejemplo): dos móviles, la tarjeta del dinero con su ± por la recompensa diaria y el desglose con su saldo y todos sus movimientos (0.9d). Las pantallas, con rival.mjs (RIVAL=Rayo; DESGLOSE=1 HASTA="SU SALDO" DY=110 para la segunda) sobre la web de main; componer.mjs junta las dos si hay rival.png y rival2.png.
