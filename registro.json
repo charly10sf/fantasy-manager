@@ -2469,6 +2469,13 @@
    "jornada": 14,
    "id": "2126674074831065545",
    "t": "2026-11-28T13:46:26.302Z"
+  },
+  {
+   "clave": "onces|134",
+   "tipo": "onces",
+   "jornada": 14,
+   "id": "2126685496453832882",
+   "t": "2026-11-28T14:31:49.370Z"
   }
  ],
  "estados": {
@@ -3553,7 +3560,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256612/flick-no-ve-calnedario-excusa-habla-rotaciones.html": 1795872041000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000,
    "MARCA|https://www.marca.com/futbol/rayo/2026/11/28/camello-perdera-encuentro-levante.html": 1795874397000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256629/analizamos-rueda-prensa-flick-claves-partido-depor.html": 1795875411000
   },
   "hechos": [
    {
@@ -4205,7 +4213,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -5064,8 +5072,8 @@
  },
  "pulido": {
   "dia": "2026-11-28",
-  "n": 1,
-  "ok": 0,
+  "n": 2,
+  "ok": 1,
   "mal": 1
  },
  "liga": {
@@ -5120,25 +5128,21 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 17,
-   "redactar": 24,
-   "revisar": 20,
-   "pulir": 1
+   "clasificar": 18,
+   "redactar": 28,
+   "revisar": 23,
+   "pulir": 2
   },
   "fallos": 0,
-  "entrada": 117688,
-  "salida": 21892,
-  "cacheLee": 223599,
+  "entrada": 134451,
+  "salida": 23321,
+  "cacheLee": 265832,
   "cacheEscribe": 16743,
-  "dolares": 0.348134,
+  "dolares": 0.395331,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-22T16:31:24.563Z",
-    "texto": "👀 Sin sorpresas en El Sadar: Budimir, el cisne de los Balcanes, sale de titular en el Osasuna 🐂 y Niño hace lo propio en el Málaga 🐟, así que quien los tenga ya puede relajarse.\n\nEl Osasuna sale con un 4-2-3-1 y el Málaga, con un 3-5-2. Falta una hora o así para el partido."
-   },
    {
     "t": "2026-11-22T19:11:36.749Z",
     "texto": "ℹ️ Onces confirmados del Getafe-Atlético. Ni un cambio raro en los dos onces. El Getafe sale con 4-4-2 y el Atleti con 4-2-3-1. Empieza hoy a las 21:00."
@@ -5154,6 +5158,10 @@
    {
     "t": "2026-11-28T12:01:43.644Z",
     "texto": "Cero sorpresas: el Betis y el Rayo salen con un 4-3-3 cada uno, así que los onces son los esperados.\n\nEn el Betis juega Valles bajo palos, el que más puntos da de los béticos, con una media de 9,1. Y en los franjirrojos, Camello es titular arriba y también el que más puntúa de su equipo."
+   },
+   {
+    "t": "2026-11-28T14:31:49.372Z",
+    "texto": "Onces confirmados del Málaga-Athletic. No hay sorpresas en ninguno de los dos: el Málaga sale con un 4-4-2 y el Athletic con un 4-2-3-1."
    }
   ],
   "final": [
@@ -5790,13 +5798,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "onces|134": {
-   "n": 2,
-   "t": "2026-11-28T14:21:32.127Z",
-   "ultima": "2026-11-28T14:26:35.552Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -10291,13 +10293,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7346,
+   "ok": 7348,
    "fallos": 0,
-   "ejecuciones": 6005,
+   "ejecuciones": 6006,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T14:26:13.534Z"
+   "ultima": "2026-11-28T14:31:18.153Z"
   }
  },
  "ptsDirecto": {
@@ -10357,27 +10359,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:26:36.224Z"
+   "ultimaBien": "2026-11-28T14:31:52.090Z"
   }
  },
  "avisos": [
