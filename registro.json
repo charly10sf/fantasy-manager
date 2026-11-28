@@ -2476,6 +2476,21 @@
    "jornada": 14,
    "id": "2126685496453832882",
    "t": "2026-11-28T14:31:49.370Z"
+  },
+  {
+   "clave": "directo|140|Jorge de Frutos|gol1",
+   "tipo": "directo",
+   "jornada": 14,
+   "id": "2126686633391202463",
+   "t": "2026-11-28T14:36:20.317Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "140",
+    "equipo": "101",
+    "min": 72,
+    "extra": 0,
+    "jugador": "Jorge de Frutos"
+   }
   }
  ],
  "estados": {
@@ -3561,7 +3576,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/28/racing-queda-baza-raul-blanco-tercera-semana-consecutiva/00031795871464780543328.htm": 1795871820000,
    "MARCA|https://www.marca.com/futbol/rayo/2026/11/28/camello-perdera-encuentro-levante.html": 1795874397000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256629/analizamos-rueda-prensa-flick-claves-partido-depor.html": 1795875411000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256629/analizamos-rueda-prensa-flick-claves-partido-depor.html": 1795875411000,
+   "SPORT|136959725": 1795872532000
   },
   "hechos": [
    {
@@ -4213,7 +4229,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -5128,17 +5144,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 18,
-   "redactar": 28,
+   "clasificar": 19,
+   "redactar": 30,
    "revisar": 23,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 134451,
-  "salida": 23321,
-  "cacheLee": 265832,
-  "cacheEscribe": 16743,
-  "dolares": 0.395331,
+  "entrada": 139893,
+  "salida": 23594,
+  "cacheLee": 278849,
+  "cacheEscribe": 18652,
+  "dolares": 0.4131,
   "reservado": 0
  },
  "recientes": {
@@ -5276,10 +5292,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-23T21:51:27.444Z",
-    "texto": "⚽ ¡EN EL 88'! Requena enganchó una volea y el Levante empata con el Elche en el Ciutat de València: 1-1.\n\nEl centrocampista lleva 6 puntos de momento, casi el doble de su media. Olasagasti, que hace el pase, suma 2."
-   },
-   {
     "t": "2026-11-27T20:46:18.959Z",
     "texto": "⚽ Se rompe el partido en el Ciutat de València: el Levante se adelanta en el 42' y es 1-0 al Racing.\n\nIván Romero marca y lleva 4 puntos. Es su cuarto gol entre Liga, Champions y Copa. Rey, que lo asiste, también va por 4."
    },
@@ -5294,6 +5306,10 @@
    {
     "t": "2026-11-27T22:26:22.158Z",
     "texto": "⚽ ¡GOLAZO DE LEJOS! Pablo García la engancha desde unos 22 metros en el 90+5' y hace su doblete: el Racing ya gana 1-3 al Levante en el Ciutat de València.\n\nEl delantero va por 14 puntos, más del triple de su media. Jorge Salinas, que le pone el balón, suma 9."
+   },
+   {
+    "t": "2026-11-28T14:36:20.319Z",
+    "texto": "⚽ Marca De Frutos en el 72' y el Rayo se pone 0-1 en el campo del Betis.\n\nEl delantero lleva 5 puntos de momento y encadena tres jornadas seguidas puntuando fuerte."
    }
   ],
   "novedades": [
@@ -10289,17 +10305,33 @@
    "re": "90'+7'",
    "w": "2026-11-27T21:53:15Z",
    "f": "2026-11-27T22:26:12.389Z"
+  },
+  "fm|140|797901|72": {
+   "j": "Jorge de Frutos",
+   "m": "72'",
+   "f": "2026-11-28T14:36:13.355Z",
+   "rf": "72:40",
+   "casado": true
+  },
+  "directo|140|Jorge de Frutos|gol1": {
+   "j": "Jorge de Frutos",
+   "m": "72'",
+   "e": "2026-11-28T14:36:13.355Z",
+   "re": "73'",
+   "w": "2026-11-28T14:34:30Z",
+   "f": "2026-11-28T14:36:13.355Z",
+   "rf": "72:40"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7348,
+   "ok": 7350,
    "fallos": 0,
-   "ejecuciones": 6006,
+   "ejecuciones": 6007,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T14:31:18.153Z"
+   "ultima": "2026-11-28T14:36:13.355Z"
   }
  },
  "ptsDirecto": {
@@ -10344,6 +10376,12 @@
    "g": 0,
    "a": 1,
    "t": 1795818372389
+  },
+  "14|140|886": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795876573355
   }
  },
  "golesAnulados": {
@@ -10359,27 +10397,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T14:31:52.090Z"
+   "ultimaBien": "2026-11-28T14:36:25.245Z"
   }
  },
  "avisos": [
