@@ -1,6 +1,7 @@
 // (27 nov) De qué sale el ± del dinero de un rival (Carlos, con la ficha de un rival: «≈ 43,30 M · ± 21,70 M por la
 // recompensa diaria»). La recompensa diaria da 7,5 M como mucho: un ± mayor viene de otra cosa y hay que decir cuál.
-//  (a) con la cuenta normal, la casilla de la ficha dice «por la recompensa diaria» y la explicación, lo de siempre
+//  (a) con la cuenta normal, la tarjeta del dinero de la ficha (desde el 28 nov; antes, una casilla) dice «por la recompensa
+//      diaria» y la explicación, lo de siempre (en la tarjeta caben las dos partes que más pesan)
 //  (b) si lo que pesa es que faltan movimientos (tu base no cuadra) o subidas de cláusula que no se miden, lo dicen la
 //      casilla, la explicación (con sus cifras) y lo que lee la IA
 //  (c) con lo que te dijo en un tramo, «por lo que te dijo»
@@ -20,7 +21,7 @@ const r = await page.evaluate(async () => {
   if (!riv) return { sin: true };
   const tid = riv.e.teamId;
   U.LS.set('top-rivales', { j: null, usos: 1, abiertos: { [tid]: Date.now() + 5 * 60e3 }, uno: null });
-  const casilla = () => { S.segRival = { tid, seg: 'juego', sub: 'movs' }; const el = document.createElement('div'); el.innerHTML = Hj.fichaRival(S, tid); const b = [...el.querySelectorAll('.eq2-t')].find((x) => /su dinero/.test(x.textContent)); return b ? b.textContent.replace(/\s+/g, ' ') : ''; };
+  const casilla = () => { S.segRival = { tid, seg: 'juego', sub: 'movs' }; const el = document.createElement('div'); el.innerHTML = Hj.fichaRival(S, tid); const c = el.querySelector('.dn-card'); if (!c) return ''; const pm = c.querySelector('.dn-cifra span'), por = c.querySelector('.dn-por'); return `${pm ? pm.textContent : ''} ${por ? por.textContent.replace(/^El ± es /, '') : ''}`.replace(/\s+/g, ' ').trim(); };
   const ia = () => { const t = I.contexto(S.D, M, I.cfgIA()); const l = t.split('\n').find((x) => x.includes(`| ${riv.e.manager} |`) && /dinero ≈/.test(x)) || ''; return (l.match(/dinero ≈[^|]*/) || [''])[0]; };
   const out = { nombre: riv.e.manager, partes: riv.dinero.partes, margen: riv.dinero.margen };
   out.a = { casilla: casilla(), largo: Co.dineroLargo(riv.dinero), ia: ia() };
@@ -42,7 +43,7 @@ else {
   const top = Object.entries(r.partes).filter(([k]) => k !== 'fija').sort((a, b) => b[1] - a[1])[0];
   ok(top[0] === 'rec' && /± [\d,]+ (M|mil) por la recompensa diaria/.test(r.a.casilla), `(a) ${r.nombre}, con la cuenta normal (pesa «${top[0]}»): «${r.a.casilla}»`);
   ok(/El ± son [\d,]+ (M|mil) de sus recompensas diarias/.test(r.a.largo) && !/el ± es por/.test(r.a.ia), `(a) la explicación, la de siempre, y a la IA no se le repite («${r.a.ia.slice(0, 60)}…»)`);
-  ok(/± 21,70 M por movimientos que faltan ›?/.test(r.b.casilla) && !/recompensa/.test(r.b.casilla), `(b) si lo que pesa es que faltan movimientos: «${r.b.casilla}»`);
+  ok(/^± 21,70 M por movimientos que faltan( y la recompensa diaria)?$/.test(r.b.casilla), `(b) si lo que pesa es que faltan movimientos: «${r.b.casilla}»`);
   ok(/El ± son 13,20 M de movimientos que faltan \(tu cuenta no cuadra[^)]*\), 7,50 M de sus recompensas diarias \(no se sabe cuántas ha cogido\) y 1,00 M de holgura\./.test(r.b.largo), `(b) la explicación, con sus cifras: «…${r.b.largo.slice(r.b.largo.indexOf('El ±'), r.b.largo.indexOf('El ±') + 170)}…»`);
   ok(/el ± es por movimientos que faltan y la recompensa diaria/.test(r.b.ia), `(b) y lo lee la IA: «${r.b.ia.slice(-90)}»`);
   ok(/por subidas de cláusula/.test(r.b2.casilla) && /El ± son 9,20 M de subidas de cláusula que no se pueden medir, 7,50 M de sus recompensas diarias/.test(r.b2.largo) && /el ± es por subidas de cláusula y la recompensa diaria/.test(r.b2.ia), `(b) subidas de cláusula que no se miden: «${r.b2.casilla}»`);

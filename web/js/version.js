@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9a';
+export const VERSION = '0.9b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,18 @@ export const VERSION = '0.9a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, 03:17-03:5x, Carlos: «la función del dinero debería estar más vistosa… lo primero que te salga» y «un desglose
+    // más avanzado… ventas, subidas de cláusulas… todos los gastos que ha ido haciendo»; de dos diseños en vídeo eligió el A,
+    // sin las cifras sueltas del final) EL DINERO DE UN RIVAL, LO PRIMERO DE SU FICHA: la tarjeta (hojas.js, `dineroRivalHTML`),
+    // el desglose (`M.desgloseDinero`), la cabecera de la ficha rehecha y Cláusulas en una sola lista. SIN TARJETA PARA TODOS
+    // mientras Carlos no lo diga. LA HORA, AL PUBLICAR
+    v: '0.9b', f: '2026-11-28', h: '',
+    cosas: [
+      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival, lo primero de su ficha', x: 'Al abrir un rival, arriba del todo: cuánto tiene y, al tocar «Ver el desglose», de dónde sale, todo lo que ha comprado, vendido y cobrado, sus subidas de cláusula con su día y cómo ha ido su saldo.' },
+      { tipo: 'mejora', d: 'peligro', menor: true, t: 'La ficha de cada rival, más clara', x: 'Quién es, su puesto y su peligro en una pieza, y sus cláusulas en una sola lista: las suyas que te llegan y las tuyas que le llegan a él.' },
+    ],
+  },
   {
     // (28 nov, 00:19, Carlos: «que en la actualización salga un pop-up… que se ha perfeccionado y afinado el valor del dinero
     // de los rivales, teniendo en cuenta las cláusulas… y que la única variable que falta son las recompensas diarias, que no se

@@ -18,7 +18,7 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo, K } from './datos.js';
-import { dichoDe, fichaDichoHTML, tileDicho, cifraDicho } from './dinero-dicho.js';
+import { dichoDe, fichaDichoHTML } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
@@ -631,9 +631,11 @@ function perfilHTML(S, tid) {
 
 /* ================= FICHA DE RIVAL ================= */
 /* en pestañas, como la del club (Carlos, 13 nov, punto 50: «más sencillas, más intuitivas, y con subpestañas dentro»;
-   eligió la opción A con retoques). Arriba solo quién es y su valor; lo clausulable baja a Cláusulas, partido en lo que
-   tú le puedes quitar y lo que él te puede quitar a ti. Siempre se abre en Plantilla: S.segRival = { tid, seg, sub }
-   solo vale para el rival que la eligió (app.js lo borra al abrir un rival desde fuera). */
+   eligió la opción A con retoques). Arriba quién es (28 nov: en una pieza, con el peligro y el apodo), SU DINERO (la tarjeta
+   de `dineroRivalHTML`, encima de las pestañas: no es una pestaña) y tres casillas; lo clausulable va en Cláusulas, en una
+   sola lista (28 nov, Carlos: «juntar en una»): las suyas que te llegan, las tuyas a su alcance y las suyas que no te llegan.
+   Siempre se abre en Plantilla: S.segRival = { tid, seg, sub } solo vale para el rival que la eligió (app.js lo borra al
+   abrir un rival desde fuera). */
 const PEST_RIVAL = [['plantilla', 'Plantilla'], ['suben', 'Suben y bajan'], ['clausulas', 'Cláusulas'], ['juego', 'Su juego']];
 const SUB_RIVAL = {
   plantilla: [['todos', 'Todos'], ['puesto', 'Por puesto']],
@@ -711,13 +713,14 @@ function nombreDe(S, tid) {
 }
 function dnCerrada(S, e, tid) {
   // (Carlos, 28 nov, 03:4x: «que la función top no ocupe tanto espacio en el perfil, quizás la mitad») una fila con la corona,
-  // qué hay dentro y la silueta, y debajo el botón; lo que te dijo (tuyo) o «Apuntar», a su lado
+  // qué hay dentro y la silueta, y debajo el botón con «Apuntar» al lado; si te dijo lo que tiene (es tuyo), eso debajo
   const a = anunciosPorVez('dineroRivales'), q = POR_JORNADA.includes('dineroRivales') ? usosQuedan('dineroRivales') : Infinity;
   const btn = topConAnuncio() ? (q === 0 ? 'Ya abriste los de esta jornada' : `Desbloquear · ${a === 1 ? 'un anuncio' : `${a} anuncios`}`) : 'Desbloquear';
   const dd = dichoDe(tid);
   return `<section class="dn-card cerrada dorado" aria-label="Su dinero">
     <div class="dn-fila"><span class="bloq-ic">${icono('corona')}</span><div class="dn-cab-t"><b>Su dinero</b><span>Al euro, con todo lo que ha movido, sus cláusulas y su saldo</span></div><span class="dn-sil-c">${silueta()}</span></div>
-    <div class="dn-acc"><button type="button" class="dn-abrir" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}">${esc(btn)}</button><button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${dd ? `Te dijo ${esc(cifraDicho(dd))}` : `${icono('lapiz')}Apuntar`}</button></div>
+    <div class="dn-acc"><button type="button" class="dn-abrir" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}">${esc(btn)}</button>${dd ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
+    ${dd ? fichaDichoHTML(tid, { cerrado: true }) : ''}
   </section>`;
 }
 function dnAbierta(S, r, tid) {
@@ -728,7 +731,8 @@ function dnAbierta(S, r, tid) {
       <p class="dn-por">${esc(d && d.v == null ? `No se sabe todavía: ${d.motivo || 'faltan datos'}.` : d && d.exacto ? 'Exacto.' : 'Sin sus movimientos desde el principio no hay desglose.')}</p>${d && d.exacto ? '' : fichaDichoHTML(tid, { cerrado: false })}</section>`;
   }
   const R = g.resumen, abierto = !!(S.dnAbierto && S.dnAbierto[tid]);
-  const por = g.exacto ? 'exacto' : margenPor(g.d);
+  // el ± y de qué sale, de la ficha del rival (r.dinero, la misma cuenta del motor que `g.d`)
+  const dm = d && d.v != null ? d : g.d, por = g.exacto ? 'exacto' : margenPor(dm), mg = g.exacto ? 0 : num(dm.margen);
   const tres = [
     [eur(R.movido, { signo: true }), `${R.nMov} movimiento${R.nMov === 1 ? '' : 's'}`],
     [eur(R.subidas, { signo: true }), `${R.nSubidas} subida${R.nSubidas === 1 ? '' : 's'} de cláusula`],
@@ -737,7 +741,7 @@ function dnAbierta(S, r, tid) {
   const dc = d && d.dicho, cu = dc && S.M.dineroCuentaBruta ? S.M.dineroCuentaBruta(tid) : null;
   const antes = dc && dc.est != null ? `<p class="t2 peq dn-antes">Cuando te lo dijo, la cuenta daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })}).${cu && cu.v != null && Math.abs(cu.v - dc.est) >= 1e5 ? ` Ahora daría ${eur(cu.v)}.` : ''}</p>` : '';
   return `<section class="dn-card${abierto ? ' desplegada' : ''}" aria-label="Su dinero">${cab}
-    <div class="dn-cifra-f"><div class="dn-cifra"><b>${g.exacto ? '' : '≈ '}${eur(g.total)}</b>${g.margen ? `<span>± ${eur(g.margen)}</span>` : ''}</div></div>
+    <div class="dn-cifra-f"><div class="dn-cifra"><b>${g.exacto ? '' : '≈ '}${eur(g.total)}</b>${mg ? `<span>± ${eur(mg)}</span>` : ''}</div></div>
     ${por ? `<p class="dn-por">${g.exacto ? 'Exacto' : `El ± es ${esc(por)}`}</p>` : ''}
     <div class="dn-tres">${tres.map(([v, t]) => `<div><b class="${v.startsWith('−') ? 'baja' : v.startsWith('+') ? 'sube' : ''}">${v}</b><span>${t}</span></div>`).join('')}</div>
     <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>

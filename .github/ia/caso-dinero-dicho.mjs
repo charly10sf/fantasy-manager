@@ -39,7 +39,7 @@ ok(info.cerrado && info.quien && info.n > 1, `la liga de ejemplo, con el dinero 
 /** todo lo que se pinta y lo que lee la IA, en texto; sin lo que es de apuntar (la cifra y su botón) */
 const foto = () => page.evaluate(async (tid) => {
   const S = window.S, V = await import('./js/vistas.js'), Hj = await import('./js/hojas.js'), I = await import('./js/ia.js'), Dt = await import('./js/datos.js');
-  const quita = (html) => { const d = document.createElement('div'); d.innerHTML = html; d.querySelectorAll('.dd-ficha, .dd-pie, .dd-tile, .dd-cerr, .pill.dd-p, .pill.dd-ap, .dd-aviso').forEach((e) => e.remove()); return d.innerHTML.replace(/(id="|#)g\d+/g, '$1g').replace(/>\s+</g, '><').replace(/\s+/g, ' '); };
+  const quita = (html) => { const d = document.createElement('div'); d.innerHTML = html; d.querySelectorAll('.dd-ficha, .dd-pie, .dd-tile, .dd-cerr, .pill.dd-p, .pill.dd-ap, .dd-aviso, .dn-apunta').forEach((e) => e.remove()); return d.innerHTML.replace(/(id="|#)g\d+/g, '$1g').replace(/>\s+</g, '><').replace(/\s+/g, ' '); };
   // (los números de lo que calcula el motor, a 10 mil: con el reloj, las recompensas del día cambian unos euros por segundo)
   const js = (x) => JSON.stringify(x, (k, v) => (typeof v === 'number' && Math.abs(v) >= 1e4 ? Math.round(v / 1e4) : v));
   const seg0 = JSON.stringify(S.seg), sr0 = S.segRival;
@@ -49,7 +49,7 @@ const foto = () => page.evaluate(async (tid) => {
   vista('equipo', ['plantilla', 'jornadas', 'venta', 'clausulas', 'dinero'], V.equipo);
   vista('rivales', ['clasif', 'jornadas', 'parte'], V.rivales);
   vista('mercado', ['venta', 'especular', 'tendencias', 'movimientos'], V.mercado);
-  const SUB = { plantilla: ['todos', 'puesto'], suben: ['hoy', '7d'], clausulas: ['quitas', 'quita'], juego: ['perfil', 'venta', 'movs'] };
+  const SUB = { plantilla: ['todos', 'puesto'], suben: ['hoy', '7d'], clausulas: ['todas'], juego: ['perfil', 'venta', 'movs'] };
   for (const r of S.M.rivales) for (const [seg, subs] of Object.entries(SUB)) for (const sub of subs) { S.segRival = { tid: r.e.teamId, seg, sub }; out[`ficha ${r.e.teamId} ${seg}/${sub}`] = quita(Hj.fichaRival(S, r.e.teamId)); }
   const suyo = S.M.rivales.find((r) => String(r.e.teamId) === tid);
   const pids = [...[...S.M.mias].sort((a, b) => b.j.valor - a.j.valor).slice(0, 2).map((x) => x.pid), ...[...suyo.fichas].sort((a, b) => b.j.valor - a.j.valor).slice(0, 2).map((x) => x.pid)];
@@ -100,7 +100,7 @@ ok(tost === 'Apuntado', `(b) la tostada, sin la cuenta: «${tost}»`);
 ok(guard && guard.v === 70e6 && guard.min === 70e6 && guard.max === 70e6 && guard.t > 0 && 'est' in guard, `(b) guardado como siempre: ${JSON.stringify(guard)}`);
 ok(/Te dijo 70 M/.test(fila) && !(await page.$('.dd-aviso')), `(b) en su fila, «Te dijo 70 M», y el aviso ya no sale`);
 const ficha = await page.evaluate(async (tid) => { const S = window.S, Hj = await import('./js/hojas.js'); S.segRival = { tid, seg: 'clausulas', sub: 'quita' }; const d = document.createElement('div'); d.innerHTML = Hj.fichaRival(S, tid); return d.textContent; }, info.tid);
-ok(/70 M\s*lo que te dijo/.test(ficha) && /Te dijo 70 M hoy a las \d/.test(ficha) && /Cambiar la cifra/.test(ficha) && /Olvidar lo que te dijo/.test(ficha) && /Cerrado\s*su dinero en la app/.test(ficha), '(b) la ficha: «70 M · lo que te dijo», «Te dijo 70 M hoy a las…», cambiar y olvidar, y su dinero cerrado');
+ok(/Te dijo 70 M hoy a las \d/.test(ficha) && /Cambiar la cifra/.test(ficha) && /Olvidar lo que te dijo/.test(ficha) && /Su dinero[\s\S]*Desbloquear/.test(ficha), '(b) la ficha, en la tarjeta de su dinero (cerrada): «Te dijo 70 M hoy a las…», cambiar y olvidar');
 ok(!/Cuando te lo dijo|Ahora daría|de diferencia/.test(ficha), '(b) y nada de lo que daba la cuenta');
 
 // (c)
@@ -130,8 +130,6 @@ ok(!dif(B, E).length, `(e) al cerrarse otra vez, como antes de abrirlo${dif(B, E
 // (f) olvidar
 await page.click(`.fila[data-r="${info.tid}"]`);
 await page.clock.runFor(400);
-await page.click('.hoja [data-accion="segRival"][data-s="clausulas"]');
-await page.click('.hoja [data-accion="subRival"][data-p="quita"]');
 await page.click('.hoja [data-accion="borrarDicho"]');
 await page.clock.runFor(200);
 const tostF = await page.textContent('.tostada').catch(() => '');
