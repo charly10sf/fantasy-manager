@@ -20,3 +20,7 @@ Siguen SIN SUBIR a ninguna tienda: falta el visto bueno de Carlos y que Apple ap
 
 Carlos (28 nov, 01:05): lo primero es el dinero de los rivales («es el gamechanger de la app»), por delante del plan. La primera
 tarjeta es la lista de Rivales con el dinero de cada uno abierto; orden: dinero, plan, parte, suben, ficha, once, IA, clubes.
+
+VISTO BUENO DE CARLOS (28 nov, 02:38) a las tarjetas y a los textos. EN LA APP STORE VAN CON CARAS: se suben
+tienda/app-store-con-caras-6.9 y tienda/app-store-con-caras-6.3 (si Apple pone pegas por las caras, las de sin caras).
+En Google Play, tienda/google-play. Siguen sin subir: a la vez en las dos tiendas, cuando Apple apruebe la 0.8.5.
