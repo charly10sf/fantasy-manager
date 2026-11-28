@@ -3785,6 +3785,11 @@ const plegando = new Map();
 function plegarConMovimiento(det) {
   const abrir = !(det.open && !det.classList.contains('cerrando'));
   const cuerpo = det.querySelector('.aj-cuerpo');
+  // otra sección a medias (dos toques seguidos en dos distintas): esa acaba ya, en su sitio, antes de medir nada
+  for (const [d, x] of [...plegando]) {
+    if (d === det) continue;
+    plegando.delete(d); for (const a of x.anims) a.cancel(); d.classList.remove('cerrando'); if (!x.abrir) d.open = false;
+  }
   if (quietoMov() || !det.animate || !cuerpo || !det.parentNode) {
     const antes = plegando.get(det); if (antes) { plegando.delete(det); for (const a of antes.anims) a.cancel(); det.classList.remove('cerrando'); }
     det.open = abrir; return abrir;
