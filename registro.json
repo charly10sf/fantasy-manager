@@ -3573,7 +3573,8 @@
    "MARCA|https://www.marca.com/futbol/rayo/2026/11/28/camello-perdera-encuentro-levante.html": 1795874397000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-espanol-dos-cervezas-no-bebo-asi-20261128_3484243.html": 1795874376000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261128/1004256629/analizamos-rueda-prensa-flick-claves-partido-depor.html": 1795875411000,
-   "SPORT|136959725": 1795872532000
+   "SPORT|136959725": 1795872532000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/28/real-betis-0-1-rayo-vallecano-resumen-resultado-y-goles-del-partido-de-la-jornada-14-de-laliga-ea-sports-cadena-ser/": 1795877915000
   },
   "hechos": [
    {
@@ -4201,7 +4202,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -5116,17 +5117,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 30,
    "revisar": 23,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 139893,
-  "salida": 23594,
+  "entrada": 141828,
+  "salida": 23706,
   "cacheLee": 278849,
   "cacheEscribe": 18652,
-  "dolares": 0.4131,
+  "dolares": 0.41335,
   "reservado": 0
  },
  "recientes": {
@@ -5436,8 +5437,8 @@
    "fin": 1795816572246
   },
   "14|140": {
-   "h": "38166e75889d",
-   "desde": 1795878071844,
+   "h": "1a305b60729c",
+   "desde": 1795878379819,
    "fin": 1795878071844
   }
  },
@@ -10303,13 +10304,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7360,
+   "ok": 7361,
    "fallos": 0,
-   "ejecuciones": 6012,
+   "ejecuciones": 6013,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:01:11.110Z"
+   "ultima": "2026-11-28T15:06:19.303Z"
   }
  },
  "ptsDirecto": {
@@ -10375,27 +10376,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:01:14.605Z"
+   "ultimaBien": "2026-11-28T15:06:23.587Z"
   }
  },
  "avisos": [
