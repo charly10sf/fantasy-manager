@@ -349,7 +349,7 @@ export function fichaJugador(S, pid) {
       const ref = mia.compra || mia.inicial, g = mia.compra ? mia.ganado : mia.ganadoIni;
       return `<div class="dato"><div class="et">${mia.compra ? 'Pagaste' : 'Valía al empezar'}</div><div class="v">${eur(ref)}${Number.isFinite(g) ? `<small class="cl-cuando"><b class="${clase(g)} nw">${eur(g, { signo: true })} (${pct(g / ref * 100)})</b> desde entonces</small>` : ''}</div></div>`;
     })() : ''}
-    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small><small class="cl-cuando">${f.abierta ? `<b class="${!mia || mia.riesgo === 'alto' ? 'rojo' : ''}">Abierta${mia ? (mia.riesgo === 'ninguno' ? ' · sin riesgo' : ` · riesgo ${mia.riesgo}`) : ' ya'}</b>` : f.protegidoHasta ? `<b>${f.veda ? 'A salvo' : 'Se abre'} en ${cuenta(f.protegidoHasta)}</b>` : ''}</small></div></button>` : ''}
+    ${f && !S.M.sinClausulas ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small><small class="cl-cuando">${f.abierta ? `<b class="${!mia || mia.riesgo === 'alto' ? 'rojo' : ''}">Abierta${mia ? (mia.riesgo === 'ninguno' ? ' · sin riesgo' : ` · riesgo ${mia.riesgo}`) : ' ya'}</b>` : f.protegidoHasta ? `<b>${f.veda ? 'A salvo' : 'Se abre'} en ${cuenta(f.protegidoHasta)}</b>` : ''}</small></div></button>` : ''}
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
   // (26 nov, parte B) en una liga premium, si es el capitán o un suplente del banquillo que propone la app para tu once
@@ -645,7 +645,8 @@ const SUB_RIVAL = {
 };
 function segDeRival(S, tid) {
   const x = S.segRival && String(S.segRival.tid) === String(tid) ? S.segRival : {};
-  const seg = SUB_RIVAL[x.seg] ? x.seg : 'plantilla';
+  // (28 nov) en una liga sin cláusulas no hay pestaña de cláusulas
+  const seg = SUB_RIVAL[x.seg] && !(x.seg === 'clausulas' && S.M && S.M.sinClausulas) ? x.seg : 'plantilla';
   const sub = SUB_RIVAL[seg].some(([k]) => k === x.sub) ? x.sub : SUB_RIVAL[seg][0][0];
   return { seg, sub };
 }
@@ -718,7 +719,7 @@ function dnCerrada(S, e, tid) {
   const btn = topConAnuncio() ? (q === 0 ? 'Ya abriste los de esta jornada' : `Desbloquear · ${a === 1 ? 'un anuncio' : `${a} anuncios`}`) : 'Desbloquear';
   const dd = dichoDe(tid);
   return `<section class="dn-card cerrada dorado" aria-label="Su dinero">
-    <div class="dn-fila"><span class="bloq-ic">${icono('corona')}</span><div class="dn-cab-t"><b>Su dinero</b><span>Al euro, con todo lo que ha movido, sus cláusulas y su saldo</span></div><span class="dn-sil-c">${silueta()}</span></div>
+    <div class="dn-fila"><span class="bloq-ic">${icono('corona')}</span><div class="dn-cab-t"><b>Su dinero</b><span>Al euro, con todo lo que ha movido${S.M && S.M.sinClausulas ? '' : ', sus cláusulas'} y su saldo</span></div><span class="dn-sil-c">${silueta()}</span></div>
     <div class="dn-acc"><button type="button" class="dn-abrir" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}">${esc(btn)}</button>${dd ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
     ${dd ? fichaDichoHTML(tid, { cerrado: true }) : ''}
   </section>`;
@@ -815,7 +816,7 @@ export function fichaRival(S, tid) {
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
     `<button class="rv-t" ${ir('juego', 'movs')}><b>${eur(e.valor, { dec: 1 })}</b><span>plantilla</span>${dV}</button>`,
-    `<button class="rv-t" ${ir('clausulas', 'todas')}><b>${r.abiertas}</b><span>abiertas${r.abiertas ? ` · ${teLlegan} te llega${teLlegan === 1 ? '' : 'n'}` : ''}</span></button>`,
+    M.sinClausulas ? '' : `<button class="rv-t" ${ir('clausulas', 'todas')}><b>${r.abiertas}</b><span>abiertas${r.abiertas ? ` · ${teLlegan} te llega${teLlegan === 1 ? '' : 'n'}` : ''}</span></button>`,
     `<button class="rv-t" ${ir('juego', 'movs')}><b>${eur(r.gastado, { dec: 1 })}</b><span>gastado · 7 días</span></button>`,
   ];
   // (28 nov, Carlos: «reworkea un poco esa parte primera del perfil para que quede mejor») quién es en una pieza (la cara, el
@@ -823,8 +824,8 @@ export function fichaRival(S, tid) {
   const aps = apodosDe(String(tid));
   const apodoBtn = `<button type="button" class="rv-apodo" data-accion="apodoEditar" data-tid="${esc(tid)}" aria-label="${aps.length ? 'Cambiar el apodo' : 'Ponle un apodo para la IA y la voz'}">${icono('lapiz')}${aps.length ? `«${esc(aps[0])}»` : 'Apodo'}</button>`;
   let h = `<div class="hoja-cab rival-cab rv-hero">${caraManager(e, 'g')}<div class="rv-hero-t"><h2>${esc(e.nombre)}</h2>
-    <p class="rv-meta"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º · ${e.puntos} pts${premiumRivalTxt(S, tid, e)}</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${apodoBtn}</p></div></div>
-  <p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid), dinero: !bloqueada('dineroRivales', tid) }))}</p>
+    <p class="rv-meta"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º · ${e.puntos} pts${premiumRivalTxt(S, tid, e)}</span>${M.sinClausulas ? '' : `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>`}${apodoBtn}</p></div></div>
+  ${M.sinClausulas ? '' : `<p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid), dinero: !bloqueada('dineroRivales', tid) }))}</p>`}
   ${S.apodoEdita === String(tid) ? apodoRival(S, e) : ''}
   ${dineroRivalHTML(S, r, tid)}
   <div class="rv-tiles">${tiles.join('')}</div>
@@ -837,7 +838,7 @@ export function fichaRival(S, tid) {
     h += `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b>${tot != null ? `<span class="vivo-tot">${tot} pts</span>` : ''}</div>
       ${campo || `<p class="t2 peq" style="margin:6px 0 0">${o ? 'LaLiga no enseña todavía su once de esta jornada.' : 'Cargando su once…'}</p>`}</div>`;
   }
-  h += `<div class="tabs club-tabs rival-tabs"><div class="tabs-in" role="tablist" aria-label="Partes de la ficha del rival">${PEST_RIVAL.map(([k, txt]) => `<button data-accion="segRival" data-tid="${esc(tid)}" data-s="${k}" role="tab" aria-selected="${k === seg}" class="${k === seg ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  h += `<div class="tabs club-tabs rival-tabs"><div class="tabs-in" role="tablist" aria-label="Partes de la ficha del rival">${PEST_RIVAL.filter(([k]) => !(M.sinClausulas && k === 'clausulas')).map(([k, txt]) => `<button data-accion="segRival" data-tid="${esc(tid)}" data-s="${k}" role="tab" aria-selected="${k === seg}" class="${k === seg ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   // la subpestaña, con el selector de Clubes; en Suben y bajan, el total de toda su plantilla a la derecha
   const sb = seg === 'suben' ? subenBajanRival(r, sub) : null;
   if (SUB_RIVAL[seg].length > 1) h += `<div class="sb-cab"><div class="sb-sel" role="tablist" aria-label="${esc(PEST_RIVAL.find(([k]) => k === seg)[1])}">${SUB_RIVAL[seg].map(([k, t]) => `<button data-accion="subRival" data-tid="${esc(tid)}" data-p="${k}" role="tab" aria-selected="${k === sub}" class="${k === sub ? 'activo' : ''}">${t}</button>`).join('')}</div>
@@ -1969,7 +1970,7 @@ export function textoDiagnostico(S) {
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     ocupado(),
     ...(D && D.liga && D.liga.premium === true ? [premiumDiag(D, S.M)] : []),
-    `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.acceso || l.tipo ? ` [${l.acceso || '?'}/${l.tipo || '?'}]` : ''}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
+    `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.acceso || l.tipo ? ` [${l.acceso || '?'}/${l.tipo || '?'}]` : ''}${l.premium ? ' (premium)' : ''}${l.clausulas === false ? ' (sin cláusulas)' : l.clausulas == null ? ' (cláusulas ¿?)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
     // (26 nov) lo que se manda de la liga para lo de todas las ligas (otras-ligas.js) y si se enseña algo
     (() => {
       if (!D || !D.liga || enDemo()) return 'Otras ligas: nada (liga de ejemplo o sin liga)';

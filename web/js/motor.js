@@ -127,6 +127,13 @@ export function analizar(D, H, c, extra = {}) {
       idealPremio: pc.ideal || null, cesionMax: pc.cesionMax || null, cesionMin: pc.cesionMin || null, cesionJornadas: pc.cesionJornadas || null,
     };
   }
+  /* (28 nov, aviso de Neoplatel) LIGA SIN CLÁUSULAS: el administrador las ha quitado (`D.liga.clausulas` === false, de
+     `config.features.buyoutClause`; normalizar.js, `clausulasDe`). Nadie puede clausular a nadie, así que no hay cláusulas
+     de rivales que pagar, ni riesgo de que te quiten a uno, ni nada que blindar o proteger, ni subidas de cláusula en la
+     cuenta del dinero. Se corta AQUÍ, en el motor: `enriquecer` deja cada ficha sin cláusula, `M.clausulas` vacía, las
+     subidas a 0 y quién paga sin nada; todo lo demás (plan, decide.js, Hoy, avisos, IA) lo lee del motor. Sin el campo
+     (null) se sigue como siempre. */
+  M.sinClausulas = (D.liga || {}).clausulas === false;
   /** el tope de la plantilla, 24 (`TOPE_PLANTILLA`; Carlos, 14 y 20 nov: lleno, no se puja ni se clausula). En una liga premium con entrenador,
    *  los entrenadores (2 como mucho) no cuentan en ese tope (ayuda de LaLiga, «Entrenador», ago 2026) */
   M.TOPE = TOPE_PLANTILLA;
@@ -941,7 +948,8 @@ export function analizar(D, H, c, extra = {}) {
     }
     for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) if (f.clausula) (vistas[`${tid}|${f.pid}`] ||= []).push(f.clausula);
     const PROTEGIDO = 336 * HORA;
-    for (const a of AH0.lista) {
+    // (liga sin cláusulas: ningún traspaso es un clausulazo)
+    for (const a of M.sinClausulas ? [] : AH0.lista) {
       if (a.clase !== 'compra' || !(a.otroId || a.otro) || !a.pid || !a.importe || !a.t) continue;
       const vend = tidDe(a.otroId, a.otro);
       if (!vend) continue;
@@ -1010,7 +1018,8 @@ export function analizar(D, H, c, extra = {}) {
 
   // lo que ha gastado cada uno en subir cláusulas
   const subidas = {}, sinBase = [];
-  {
+  // (liga sin cláusulas: nadie ha podido pagar por subir una; la cifra que traiga LaLiga no es una subida)
+  if (!M.sinClausulas) {
     const sb = (tid) => (subidas[tid] ||= { v: 0, n: 0, dudas: 0, sinBase: 0, vistas: 0, lista: [], idas: [] });
     /* (28 nov, Carlos: «quiero que afines los cálculos lo máximo posible, teniendo en cuenta todo, la subida de las cláusulas
        y demás») CÓMO PONE LALIGA LAS CLÁUSULAS, medido al euro en su liga con el histórico de valor día a día (139 jugadores
@@ -1445,7 +1454,7 @@ export function analizar(D, H, c, extra = {}) {
   // cada compra a LaLiga de las últimas semanas frente a lo que valía el jugador ese día
   {
     const clausulasAhora = new Set();
-    for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulasAhora.add(`${f.pid}|${f.clausula}`);
+    if (!M.sinClausulas) for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulasAhora.add(`${f.pid}|${f.clausula}`);
     const pujas = [], sinValor = new Set();
     for (const a of AH.lista) {
       if (a.clase !== 'compra' || a.otroId || a.otro || !a.pid || !a.importe || !a.t || ahora - a.t > 45 * DIA) continue;
@@ -1729,7 +1738,7 @@ export function analizar(D, H, c, extra = {}) {
       const s0 = Math.abs(num(a.importe)) / v - 1;
       if (s0 > -0.1 && s0 < 3) r.push(s0);
     }
-    M.clausulazos = r.length ? { n: r.length, med: q(r, 0.5), p75: q(r, 0.75), p90: q(r, 0.9), max: Math.max(...r) } : null;
+    M.clausulazos = r.length && !M.sinClausulas ? { n: r.length, med: q(r, 0.5), p75: q(r, 0.75), p90: q(r, 0.9), max: Math.max(...r) } : null;
   }
 
   /* (24 nov, Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10»; Carlos, 20 nov: «LaLiga da más o
@@ -1790,6 +1799,13 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- fichas (jugador en un equipo de tu liga) ---------- */
   const enriquecer = (f, tid) => {
     const j = J(f.pid), t = M.tend(f.pid);
+    // liga sin cláusulas: la ficha va sin cláusula ni protección (nadie la puede pagar ni hace falta blindarla)
+    if (M.sinClausulas) {
+      return {
+        ...f, j, teamId: tid, tend: t, clausula: null, abierta: false, soloVeda: false, escudoYa: false, protegidoHasta: null, protLiga: null, veda: null, escudo: null,
+        abreEn: Infinity, ratio: null, sobre: null, sinClausula: true,
+      };
+    }
     // protegida por los 14 días de fichaje o por un blindaje: la que acabe más tarde
     const esc = M.escudoHasta(f.pid);
     const protLiga = Math.max(f.protegidoHasta || 0, esc || 0) || null;
@@ -2642,7 +2658,7 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- cláusulas de los rivales ---------- */
   M.clausulas = [];
-  for (const [tid, fichas] of Object.entries(D.plantillas || {})) {
+  for (const [tid, fichas] of Object.entries(M.sinClausulas ? {} : D.plantillas || {})) {
     if (tid === yoTid) continue;
     for (const f of fichas) {
       if (!f.clausula || (D.maestro[f.pid] || {}).pos === 5) continue;
@@ -3036,6 +3052,7 @@ export function analizar(D, H, c, extra = {}) {
      *  los movimientos desde que acabó la última. `completo`: el historial guardado llega hasta entonces (si no, puede
      *  haber gastado alguno que no se ha visto y no se dice nada) */
     M.escudosDe = (tid) => {
+      if (M.sinClausulas) return null;   // (liga sin cláusulas: no hay blindajes)
       // (los de las 6 h siguientes al final de la jornada no se cuentan: LaLiga cierra la jornada y paga el premio 5-6 h
       // después, y no se sabe si uno puesto en ese rato gasta de la jornada vieja o de la nueva; contarlo de menos calla)
       const n = Math.min(2, (blindaRival[tid] || []).filter((a) => a.t > (desde || 0) + 6 * HORA).length);
@@ -4071,7 +4088,7 @@ export function planAuto(D, M, c) {
   }
   for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
   if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
-  if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
+  if (!M.sinClausulas && inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
   // (lo de revender lleva quién es: rematarAuto quita a los que la app descarte al cuadrar el plan)
   const aRevender = [...especula.map((e) => ({ pid: e.pid, nombre: e.j.nombre })), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => ({ pid: x.pid, nombre: x.j.nombre }))];
   if (aRevender.length && ventana) add(ventana.ponerVenta, 99, '', aRevender);
@@ -4080,7 +4097,7 @@ export function planAuto(D, M, c) {
   return {
     auto: true, t: ahora, dia: diaDe(ahora),
     titular: titularAuto(ops),
-    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.${paron ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy toca sacar dinero (comprar lo que sube para venderlo antes de la jornada y vender en lo alto). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : ''}`,
+    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.${paron ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy toca sacar dinero (comprar lo que sube para venderlo antes de la jornada y vender en lo alto).' + (M.sinClausulas ? '' : ' Las cláusulas para el once, en los dos o tres días antes de la vuelta.') : ''}`,
     operaciones: ops, proximos_dias: proximosAuto(diasAuto), diasAuto,
     alineacion: onceAhora.formacion ? { formacion: onceAhora.nombre, titulares: onceAhora.lineas.flat().map((j) => j.nombre), dudas: onceAhora.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
   };

@@ -309,14 +309,15 @@ function paron(S) {
     ...c.paraOnce.filter((x) => !c.chollos.includes(x)).map((x) => fila(x.j, x.j.nombre, `Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}`, 'abierta', '', `interés ${x.interes}`, ` <span class="pnz-t">de ${esc(x.rival.manager || x.rival.nombre)}</span>${planTag(x.pid)}`)),
     ...c.seAbren.map((x) => fila(x.j, x.j.nombre, `Se abre ${esc(cuando(x.protegidoHasta))} · ${eur(x.clausula)}`, `${x.interes}`, '', `interés · ${x.meLlega ? 'te llega' : 'no te llega'}`, ` <span class="pnz-t">de ${esc(x.rival.manager || x.rival.nombre)}</span>`)),
   ];
-  const s4 = sec('once', nxt(), 'El once de la vuelta', c.lejos ? `Desde el ${esc(cuando(c.once, { hora: false }))}. Antes, solo si es un chollo: a su valor y sin bajar. Las cláusulas se cierran ${esc(cuando(c.cierre))}.` : `Lo que merece la pena y te llega antes de que se cierren las cláusulas (${esc(cuando(c.cierre))}).`, '', '', '<button class="mas" data-ir="equipo">Tu once</button>')
+  // (liga sin cláusulas: el once de la vuelta de esta sección es todo de cláusulas)
+  const s4 = M.sinClausulas ? '' : sec('once', nxt(), 'El once de la vuelta', c.lejos ? `Desde el ${esc(cuando(c.once, { hora: false }))}. Antes, solo si es un chollo: a su valor y sin bajar. Las cláusulas se cierran ${esc(cuando(c.cierre))}.` : `Lo que merece la pena y te llega antes de que se cierren las cláusulas (${esc(cuando(c.cierre))}).`, '', '', '<button class="mas" data-ir="equipo">Tu once</button>')
     + (filasOnce.length ? `<div class="pnz-lista">${filasOnce.join('')}</div>` : vacio('Ninguna cláusula interesante se abre antes de la vuelta. Mira el mercado los últimos días.'));
 
   // que no te los quiten
   const s5 = c.peligro.length ? sec('peligro', '!', 'Que no te los quiten', `Cláusula abierta y algún rival con dinero: en el parón también se clausula.${c.escudos ? ` Te quedan ${c.escudos} blindaje${c.escudos > 1 ? 's' : ''} gratis.` : ''}`, '', '')
     + `<div class="pnz-lista">${c.peligro.map((x) => fila(x.j, x.j.nombre, `Cláusula ${eur(x.clausula)} · vale ${eur(x.j.valor)}`, c.escudos ? 'Blíndalo' : 'Súbela', 'oro', c.escudos ? 'gratis' : (x.blindaje && x.blindaje.coste ? eur(x.blindaje.coste) : ''), planTag(x.pid))).join('')}</div>` : '';
 
-  const nota = `<div class="pnz-nota"><b>Las reglas del parón.</b> Puedes bajar hasta −${eur(M.deuda)} pujando en el mercado; las cláusulas, solo con saldo. Lo único obligatorio es empezar la jornada ${v.n} en positivo: vende lo de revender ${esc(vendeDia)} y acepta las ofertas antes de que empiece (${esc(cuando(v.ini))}). Los que van con su selección pueden volver tocados: mira las noticias antes de pensar en el once.</div>`;
+  const nota = `<div class="pnz-nota"><b>Las reglas del parón.</b> Puedes bajar hasta −${eur(M.deuda)} pujando en el mercado${M.sinClausulas ? '' : '; las cláusulas, solo con saldo'}. Lo único obligatorio es empezar la jornada ${v.n} en positivo: vende lo de revender ${esc(vendeDia)} y acepta las ofertas antes de que empiece (${esc(cuando(v.ini))}). Los que van con su selección pueden volver tocados: mira las noticias antes de pensar en el once.</div>`;
   void num;
   const [b1, b2, b3, b4, b5] = [s1, s2, s3, s4, s5].map((x) => (x ? x + FIN : ''));
   if (ancho()) return `<div class="pnz">${hero}${mer}</div>` + cols(b1 + b2, b3 + b4 + b5 + nota);

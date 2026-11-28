@@ -270,6 +270,16 @@ export function premiumDe(l) {
   return out;
 }
 
+/* (28 nov, aviso de Neoplatel: «en las ligas donde estén desactivadas las cláusulas, que no te notifique blindar ni pagar
+ * cláusulas rivales») el administrador de una liga puede quitar las cláusulas. Lo dice `config.features.buyoutClause`
+ * (visto el 26 nov a true en la liga de Carlos). false: la liga NO tiene cláusulas; true: sí; sin el campo, null (no se
+ * sabe: se sigue como siempre, con cláusulas). */
+export function clausulasDe(l) {
+  const f = l && l.config && l.config.features;
+  const v = f && typeof f === 'object' ? f.buyoutClause : undefined;
+  return { clausulas: v === false ? false : v === true ? true : null };
+}
+
 // «Pepe ha fichado a Pedri por ... a Juan»: el primero es quien lo hace y el segundo, el otro
 function deDescripcion(t, n) {
   const s = String(t || '');

@@ -83,7 +83,7 @@ function marcador(S, { corto = false, tiempos = false } = {}) {
   // pequeño, en vez de en chips sueltos debajo
   if (tiempos) h += tiemposHTML(S, { dentro: true });
   if (M.negativo && M.proxima) h += `<div class="alerta-m">${icono('alerta')}En negativo: si la jornada empieza así, no puntúas.</div>`;
-  if (M.vedaAhora) h += `<div class="alerta-m oro">${icono('candado')}<span>Cláusulas cerradas: nadie puede clausular hasta que empiece la jornada ${M.vedaAhora.n}, ${cuando(M.vedaAhora.fin)}.</span></div>`;
+  if (M.sinClausulas) { /* (liga sin cláusulas: nada que avisar del cierre) */ } else if (M.vedaAhora) h += `<div class="alerta-m oro">${icono('candado')}<span>Cláusulas cerradas: nadie puede clausular hasta que empiece la jornada ${M.vedaAhora.n}, ${cuando(M.vedaAhora.fin)}.</span></div>`;
   else if (M.proxima && M.proxima.ini - M.VEDA_H * HORA - ahora < 12 * HORA) h += `<div class="alerta-m oro">${icono('reloj')}<span>Las cláusulas se cierran ${cuando(M.proxima.ini - M.VEDA_H * HORA)}, 24 h antes de la jornada, y se reabren ${cuando(M.proxima.ini)}.</span></div>`;
   return h + '</div>';
 }
@@ -733,7 +733,8 @@ function fasesHTML(S, P) {
     const tot = ops.reduce((s2, o) => s2 + (o.importe && o.signo ? o.signo * o.importe : 0), 0);
     // el saldo tras la fase: el del último paso con saldo (cuadrarPlan lo cuenta paso a paso); en la última, ya lo dice el cierre
     const ult = [...ops].reverse().find((o) => o.saldo != null);
-    h += caja(f, titulo, sub, ops.map((o) => pasoOp(S, P, o)).join(''), { tot: Math.round(tot) || null, saldo: ult && i < conDinero.length - 1 ? ult.saldo : null, n: ops.length, todoHecho: ops.every((o) => hecho(S, P, o)) });
+    // (liga sin cláusulas: se ficha con pujas y compras y ya)
+    h += caja(f, titulo, S.M && S.M.sinClausulas && f === 'fichar' ? 'pujas y compras' : sub, ops.map((o) => pasoOp(S, P, o)).join(''), { tot: Math.round(tot) || null, saldo: ult && i < conDinero.length - 1 ? ult.saldo : null, n: ops.length, todoHecho: ops.every((o) => hecho(S, P, o)) });
   });
   const luego = vivos.filter((o) => faseDe(o) === 'luego');
   if (luego.length) h += caja('luego', 'Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego', n: luego.length });
@@ -1303,7 +1304,7 @@ function eqEstadoHTML(S) {
     `<button class="eq2-t eq2-bajas ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="bajas" data-v="liga" aria-label="${pueden} de ${xs.length} pueden jugar: ver las bajas"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span><span class="cz-t cz-mini" aria-hidden="true">${icono('cruz')}</span></button>`,
     `<button class="eq2-t" data-accion="ordenEq" data-o="sube" data-ver="1"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy ›</span></button>`,
     vender != null ? (vender ? `<button class="eq2-t duda" data-accion="ver" data-sel="#eq-atencion"><b>${vender}</b><span>para vender ›</span></button>` : '<div class="eq2-t"><b>0</b><span>para vender</span></div>') : '',
-    `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'} ›</span></button>`,
+    M.sinClausulas ? '' : `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'} ›</span></button>`,
   ].filter(Boolean).join('');
   const MAX = 4;
   const fila = (a) => `<div class="eq2-at ${a.n}">
@@ -1311,7 +1312,7 @@ function eqEstadoHTML(S) {
       ${a.cl ? '<button class="eq2-at-x" data-seg="equipo:clausulas">Ver</button>' : a.sust ? `<button class="eq2-at-x" data-accion="sustituto" data-pid="${esc(a.x.pid)}">${icono('buscar')}Sustituto</button>` : ''}
     </div>`;
   const lista = at.length ? `<div class="sec" id="eq-atencion" data-ancla><h2>Pide atención</h2><span class="sub">${at.length === 1 ? '1 cosa' : `${at.length} cosas`}</span></div><div class="eq2-ats">${at.slice(0, MAX).map(fila).join('')}${at.length > MAX ? `<p class="t2 peq">Y ${at.length - MAX} más: los ves en la plantilla, abajo.</p>` : ''}</div>`
-    : `<div class="ahora-ok">${icono('ok')}<span><b>Todo en orden.</b> ${sinI ? 'Nadie de baja ni ninguna cláusula en riesgo. Si toca vender a alguien, sale en el plan de Hoy.' : 'Nadie de baja, ninguna cláusula en riesgo ni nadie que vender ya.'}</span></div>`;
+    : `<div class="ahora-ok">${icono('ok')}<span><b>Todo en orden.</b> ${M.sinClausulas ? (sinI ? 'Nadie de baja. Si toca vender a alguien, sale en el plan de Hoy.' : 'Nadie de baja ni nadie que vender ya.') : sinI ? 'Nadie de baja ni ninguna cláusula en riesgo. Si toca vender a alguien, sale en el plan de Hoy.' : 'Nadie de baja, ninguna cláusula en riesgo ni nadie que vender ya.'}</span></div>`;
   return `<div class="eq2-tiles">${tiles}</div>${lista}`;
 }
 
@@ -1422,11 +1423,12 @@ function eqBeneficioHTML(S, op) {
 
 export function equipo(S) {
   const { M } = S;
-  const seg = S.seg.equipo || 'plantilla';
+  // (28 nov, aviso de Neoplatel) en una liga sin cláusulas no hay sección de cláusulas
+  const seg = M.sinClausulas && S.seg.equipo === 'clausulas' ? 'plantilla' : S.seg.equipo || 'plantilla';
   const op = (pid) => S.opPorPid[pid];
   let h = eqCabHTML(S);
   const abiertasE = M.mias.filter((x) => x.abierta && x.clausula).length, riesgoE = M.mias.filter((x) => x.riesgo === 'alto').length;
-  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['jornadas', 'Jornadas'], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']], { llenas: true });
+  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['jornadas', 'Jornadas'], ['venta', 'En venta', M.misVentas.length], ...(M.sinClausulas ? [] : [['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : '']]), ['dinero', 'Beneficio']], { llenas: true });
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
@@ -1606,7 +1608,7 @@ export function movimientosLiga(S) {
   if (quien === 'yo') xs = xs.filter(mio);
   const n = (k) => (k === 'todos' ? xs : xs.filter((a) => a.clase === k)).length;
   let h = `<div class="filtros mov-quien" role="group" aria-label="De quién">${[['liga', 'Toda la liga'], ['yo', 'Los tuyos']].map(([k, t]) => `<button data-filtro="movq:${k}" class="${quien === k ? 'activo' : ''}" aria-pressed="${quien === k}">${t}</button>`).join('')}</div>`;
-  h += `<div class="filtros">${[['todos', 'Todo'], ['clausula', 'Cláusulas'], ['compra', 'Fichajes'], ['venta', 'Ventas'], ['blindaje', 'Blindajes']].map(([k, t]) => { const c = n(k); return `<button data-filtro="mov:${k}" class="${f === k ? 'activo' : ''}">${t}${c && k !== 'todos' ? ` <small>${c}</small>` : ''}</button>`; }).join('')}</div>`;
+  h += `<div class="filtros">${[['todos', 'Todo'], ['clausula', 'Cláusulas'], ['compra', 'Fichajes'], ['venta', 'Ventas'], ['blindaje', 'Blindajes']].filter(([k]) => !(M.sinClausulas && ['clausula', 'blindaje'].includes(k) && !n(k) && f !== k)).map(([k, t]) => { const c = n(k); return `<button data-filtro="mov:${k}" class="${f === k ? 'activo' : ''}">${t}${c && k !== 'todos' ? ` <small>${c}</small>` : ''}</button>`; }).join('')}</div>`;
   if (f !== 'todos') xs = xs.filter((a) => a.clase === f);
   // las subidas de cláusula que se ven al comparar plantillas (LaLiga no las da en la actividad)
   let cambios = f === 'todos' || f === 'blindaje' ? M.cambios.filter((m) => m.tipo === 'blinda') : [];

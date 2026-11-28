@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9d';
+export const VERSION = '0.9e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,15 @@ export const VERSION = '0.9d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, aviso de Neoplatel: «en las ligas donde estén desactivadas las cláusulas, que no te notifique blindar ni pagar
+    // cláusulas rivales») LIGA SIN CLÁUSULAS: `config.features.buyoutClause` a false (normalizar.js `clausulasDe`) y
+    // `M.sinClausulas` en el motor, que lo corta de raíz; lo demás, en CLAUDE.md («LIGA SIN CLÁUSULAS»). Sin tarjeta.
+    v: '0.9e', f: '2026-11-28', h: '14:45', t: 'Ligas sin cláusulas',
+    cosas: [
+      { tipo: 'arreglo', d: 'escudo', t: 'Ligas sin cláusulas', x: 'Si el administrador de tu liga ha quitado las cláusulas, la app ya no te propone clausular, blindar ni proteger a nadie, ni te avisa de cláusulas que se abren.' },
+    ],
+  },
   {
     // (28 nov, 11:26, Carlos: «la gráfica… que salga directamente abajo… y que de normal no salgan movimientos. Solo ponga
     // movimientos como para desplegar», y 13:26: «que esté dentro del desglose, que salgan 6… y luego desplegar la lista

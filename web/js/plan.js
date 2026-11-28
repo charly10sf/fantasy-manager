@@ -760,7 +760,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   }
   if (!ops.length) {
     ops.push({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', confianza: 'media',
-      motivo: M.vedaAhora ? `Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} y no hay nada en el mercado que mejore tu once sin pagar de más. Hoy, quieto.` : 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas, ni chollos en el mercado, ni nada tuyo que haya que vender. Mejor guardar el dinero.' });
+      motivo: M.vedaAhora && !M.sinClausulas ? `Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} y no hay nada en el mercado que mejore tu once sin pagar de más. Hoy, quieto.` : 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas, ni chollos en el mercado, ni nada tuyo que haya que vender. Mejor guardar el dinero.' });
   }
 
   /* lo que el motor dejó fuera y también vale (para que la IA pueda cambiar algo): cada una cabe añadida al plan */
@@ -871,20 +871,20 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const aTiro = M.mias.filter((y) => !yaHoy.has(y.pid) && !protegidos.has(y.pid) && !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
     if (quedan > 0 && aTiro.length) add(inicio, 98, `antes de las ${hora(inicio)}, blinda gratis a ${aTiro.slice(0, quedan).map((y) => y.j.nombre).join(' y ')}: a esa hora se reabren las cláusulas y la suya está casi en su valor`);
   }
-  if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
+  if (!M.sinClausulas && inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
   const aRevender = [...lista.filter((o) => o.rev).map((o) => ({ pid: o.pid, nombre: o.j.nombre })), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => ({ pid: x.pid, nombre: x.j.nombre }))];
   if (aRevender.length && ventana) add(ventana.ponerVenta, 99, '', aRevender);
   if (M.paron && M.paron.ini > ahora) add(M.paron.ini, 95, 'empieza el parón: los valores se paran, vende a los que estén en lo alto');
   const diasAuto = Object.values(dias).sort((a, b) => a.t - b.t);
 
-  const modo = paron ? 'paron' : M.enJuego ? 'enjuego' : M.vedaAhora ? 'cierre' : num(D.dinero) < 0 ? 'negativo' : 'normal';
+  const modo = paron ? 'paron' : M.enJuego ? 'enjuego' : M.vedaAhora && !M.sinClausulas ? 'cierre' : num(D.dinero) < 0 ? 'negativo' : 'normal';
   // (25 nov, B5) «hoy no se toca a los titulares» encima de «Aceptar oferta Álex Baena», titular, porque hace falta el dinero:
   // se dice quién es la excepción y por qué
   const titVende = modo === 'cierre' ? ops.filter((o) => !o.descartada && o.accion === 'vender' && o.pid && M.perdida(o.pid) >= 0.3) : [];
   const titTxt = titVende.length ? `${titVende.map((o) => (o.j && o.j.nombre) || o.jugador).join(' y ')}${base.jornada < 0 ? ', porque hace falta el dinero para no empezar la jornada en negativo' : ''}` : '';
   const situacion = `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`
     + (llena ? ` Tienes la plantilla llena (${nPl} de ${TOPE_PLANTILLA}): LaLiga no te deja pujar por nadie más hasta que vendas a uno.` : nPl >= TOPE_PLANTILLA - 2 ? ` Tienes ${nPl} de ${TOPE_PLANTILLA} jugadores: te ${TOPE_PLANTILLA - nPl === 1 ? 'queda 1 sitio' : `quedan ${TOPE_PLANTILLA - nPl} sitios`}${X.nPujas && nPl + X.nPujas >= TOPE_PLANTILLA ? `, y ${X.nPujas === 1 ? 'la puja que tienes puesta lo ocupa si la ganas' : `las ${X.nPujas} pujas que tienes puestas los ocupan si las ganas`}: no se ficha a nadie más` : ''}.` : '')
-    + (modo === 'paron' ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero (comprar lo que sube para venderlo antes de la jornada y vender lo que ha girado). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : '')
+    + (modo === 'paron' ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero (comprar lo que sube para venderlo antes de la jornada y vender lo que ha girado). ' + (M.sinClausulas ? '' : 'Las cláusulas para el once, en los dos o tres días antes de la vuelta.') : '')
     + (modo === 'cierre' ? ` Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} (${cuando(M.vedaAhora.fin)}): hoy no se toca a los titulares, que no habría con qué reponerlos${titTxt ? `, salvo ${titTxt}` : ''}.` : '')
     + (modo === 'enjuego' ? ` La jornada ${M.enJuego.n} está en juego y tu once está cerrado: el plan ya mira a la siguiente.` : '')
     + (base.jornada < 0 ? ` Contando lo que tienes pujado, sin vender empezarías la jornada con ${eur(base.jornada)}: en negativo no se puntúa, así que el plan dice qué vender y cuándo.` : '');

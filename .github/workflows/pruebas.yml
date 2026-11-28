@@ -145,6 +145,9 @@ jobs:
       # (27 nov) en el cierre de la jornada sí se blinda, y antes de que se reabran las cláusulas (El Hilali)
       - name: Blindar en el cierre de la jornada
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-blindar-cierre.mjs
+      # (28 nov, aviso de Neoplatel) una liga con las cláusulas quitadas: ni clausular, ni blindar, ni proteger, en ningún sitio
+      - name: Liga sin cláusulas
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-sin-clausulas.mjs
       # (27 nov) proteger a uno ANTES de que se le abra la cláusula: a la venta para ver ofertas y el blindaje en cuanto se pueda
       - name: Proteger antes de que se abra la cláusula
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-proteger-antes.mjs
