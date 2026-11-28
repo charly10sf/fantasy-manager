@@ -18,52 +18,57 @@ Todo lo que pide Play Console para publicar, listo para copiar y pegar. Las imá
 
 ## Descripción breve (máx. 80)
 
-Tu director deportivo: qué fichar, vender y clausular cada día en tu liga.
+El dinero de cada rival de tu liga de LaLiga Fantasy y qué fichar cada día.
 
 ## Descripción completa (máx. 4000)
 
-Fantasy Manager lee tu liga de LaLiga Fantasy con tu propia cuenta y te dice qué hacer cada día: a quién vender, a quién clausular, cuánto pujar y qué once poner. Paso a paso y con el saldo que te queda después de cada operación.
+Fantasy Manager lee tu liga de LaLiga Fantasy con tu propia cuenta, calcula cuánto dinero tiene cada rival y cada día te dice qué hacer en ella: a quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
 
-QUÉ HACER HOY
-• Un plan diario con las operaciones exactas para tu liga, ordenadas por urgencia.
-• Se rehace solo cuando cambia el mercado.
-• Cada paso dice por qué: forma, minutos, calendario, si sube o baja y lo que cuesta sobre su valor.
+EL DINERO DE CADA RIVAL
+• En LaLiga Fantasy no se ve el dinero de los demás: Fantasy Manager lo calcula con todos los movimientos de tu liga y te dice con cuánto margen.
+• Quién puede pagar tu cláusula y quién empieza la jornada en negativo.
+• Si un rival te dice lo que tiene, lo apuntas y la cuenta se afina.
 
-CLÁUSULAS Y RIVALES
-• Las cláusulas de tus rivales que te llegan con tu dinero, y cuándo se abren las que aún están protegidas.
-• Qué jugadores tuyos están en riesgo de que te los clausulen.
-• Los blindajes, en cuenta: no te propone clausular a uno que acaban de blindar.
-• Lo que hace cada rival: fichajes y clausulazos al momento.
+TU PLAN DE HOY
+• Las operaciones del día en tu liga, de la más urgente a la que menos, con el motivo de cada una y el saldo que te queda después.
+• La IA lo repasa con las noticias, las lesiones y las alineaciones: 2 planes gratis al día y más viendo un anuncio corto.
+• Te avisa cuando está listo, también con la app cerrada.
 
-MERCADO
-• Cuánto pujar por cada libre según lo que se paga de verdad en tu liga.
-• Qué ofrecer a otro mánager para que te venda, por encima de lo que le daría LaLiga.
-• Quién sube y quién baja, con la tendencia de cada jugador día a día.
-• Especular entre semana: comprar lo que sube y venderlo antes de la jornada.
+LA PUJA QUE GANA
+• Por cada libre, una sola cifra: la que se lo lleva unas 7-8 de cada 10 veces con lo que se paga en tu liga.
+• Si para ganarlo hay que pagar demasiado, te lo dice.
+• Qué ofrecer a otro mánager por un jugador suyo.
 
-JORNADA EN DIRECTO
-• Los partidos con su marcador y tus jugadores con los puntos que llevan.
-• Cómo va la jornada en tu liga y cuántos jugadores le quedan a cada rival.
+TUS RIVALES, POR DENTRO
+• El parte, antes de cada jornada: quién está en negativo, a quién le falta un puesto y quién se ha quedado sin blindajes.
+• Las cláusulas que te llegan y hasta cuándo, y cuáles de las tuyas corren peligro.
+• Cómo juega cada rival: qué ficha, qué vende y a quién clausula.
 
-TU EQUIPO
-• Tu mejor once con las formaciones gratuitas.
-• El calendario de cada jugador: partidos fáciles y difíciles de las próximas jornadas.
-• Las ofertas que te hacen por lo que tienes en venta, comparadas con lo normal en tu liga.
+MERCADO Y EQUIPO
+• Quién sube y quién baja de valor, día a día, jugador a jugador y club a club.
+• Cada jugador, a fondo: su valor, su calendario y si le toca jugar.
+• Tu mejor once. En las ligas premium, también capitán, banquillo y entrenador.
+• Las ofertas que te llegan, comparadas con lo normal en tu liga.
 
-INTELIGENCIA ARTIFICIAL
-• Cada día, la IA repasa tu plan con las noticias, las lesiones y las alineaciones, sin hacer nada tú: 2 planes al día gratis y más viendo un anuncio corto.
-• Con una clave gratuita de Google, pregúntale lo que quieras sobre tu liga, también mandándole capturas.
+LA JORNADA, EN DIRECTO
+• Los partidos con su marcador y los puntos de tus jugadores.
+• Cómo va cada mánager de tu liga y cuántos jugadores le quedan.
+
+PREGUNTA A LA IA
+• Lo que quieras de tu liga, con tus palabras o con una captura: 3 preguntas gratis al día y más viendo un anuncio corto.
 
 AVISOS
-• Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando tienes listo el plan del día.
+• El cierre del mercado, las cláusulas que se abren y el clausulazo que te toca.
 
 TU LIGA
 • Invita a los de tu liga con un enlace: al entrar con su cuenta se les abre esa liga.
 • Tarjetas del plan para mandar al grupo.
 
-Funciona en Android y también en el navegador del ordenador. Tu sesión y tu clave de la IA se quedan en tu móvil, los nombres de tus rivales se cambian antes de mandar los datos de tu liga a la IA y puedes borrar lo que guarda el servidor desde Ajustes.
+Gratis, con anuncios y sin compras. Funciona en Android y también en el iPhone y en el navegador del ordenador. Tu sesión se queda en tu móvil, los nombres de tus rivales se cambian antes de mandar los datos de tu liga a la IA y lo que guarda el servidor lo borras desde Ajustes.
 
 Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relación con LaLiga ni con LaLiga Fantasy. Para usarla necesitas tu propia cuenta de LaLiga Fantasy: entras en la página oficial de LaLiga y la app nunca ve tu contraseña.
+
+(Textos de la 0.9, 28 nov 2026. VISTO BUENO DE CARLOS: 28 nov, 02:38, a los textos y a las tarjetas de las dos tiendas. Subidos a Play Console el 28 nov a las 15:1x (ficha predeterminada y las 8 tarjetas nuevas, en revisión de Google); en la App Store van con la 0.9, cuando Apple apruebe la 0.8.5. Los de antes, en el historial de este archivo.)
 
 ## Imágenes
 
@@ -72,6 +77,7 @@ Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relaci
 | Icono | icono-512.png | 512 × 512 |
 | Gráfico destacado | grafico-destacado-1024x500.png | 1024 × 500 |
 | Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-clubes, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-dinero y 9-paron (.png), en ese orden | 1080 × 1920 |
+| Capturas de teléfono NUEVAS (0.9, con el rediseño; subidas el 28 nov a las 15:1x) | rama `tarjetas-tienda`, carpeta tienda/google-play: 01-rival (el dinero de cada rival, lo primero: Carlos, 28 nov) … 08-clubes, en ese orden | 1080 × 1920 |
 
 Las capturas usan la liga de ejemplo (datos inventados) y llevan las caras de los jugadores y los escudos de LaLiga, como se ve la app (Carlos, 10 nov: sin ellos no valen). Rehechas el 10 nov con la app de la 0.7.1e. Nuevas frente a las del 4 nov: la 2, la ficha de un club en «Suben y bajan» (antes, el plan, que desde la 0.7.1 ya sale en la primera pantalla de Hoy); la 8, la ficha de un rival de verdad, C.A.D Domyngas (Domy), hecha con dos capturas de Carlos en una sola pantalla (dinero arriba, «Cómo juega» debajo): solo cambia su dinero (≈ 96,60 M en vez del real) y fuera el aviso de «te dijo que tenía…»; Carlos dijo el 10 nov que Domy y los de la liga lo saben y les parece bien, y que la foto de Mbappé de dictador se queda (antes, Movimientos; las capturas de Carlos no van al repo: .github/captura-domy.py); y la 9, la pestaña Parón con la demo en el parón (antes, Directo, que sin jornada en juego solo enseñaba el calendario; pedida por Carlos). La 7 (ficha de Raphinha: arriba, y su gráfica con «Cada día» y quién lo puede pagar) y la 9 (la pestaña Parón y una fila abierta con su gráfica) van con dos móviles; la 7 y la 9 salen con las funciones de anuncio abiertas (sin candado). La 6, el chat, lleva una respuesta escrita a mano con las cifras de la demo y la cabecera dice «IA»: ninguna captura nombra modelos. La 5 (Equipo, tu once) queda de repuesto. Se rehacen con `.github/capturas-play.py` (instrucciones arriba del archivo; si cambia la demo, revisar las cifras de la respuesta del chat).
 

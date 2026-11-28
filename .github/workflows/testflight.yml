@@ -5,7 +5,7 @@
 # y el envío a la revisión de la beta. No toca la App Store: enviar la app a revisión de la tienda es otra cosa (iOS 6).
 # Con «[sin-subir]» en el mensaje del commit no compila: solo configura TestFlight con la última compilación.
 # (iOS 6) Con «[ficha]»: no compila; rellena la ficha de la App Store (.github/ios/ficha.mjs: textos, categoría, precio,
-# países, edad, datos para la revisión y las capturas del último «App Store» de ios.yml) y dice qué falta para enviar.
+# países, edad, datos para la revisión y las tarjetas de la rama `tarjetas-tienda`) y dice qué falta para enviar.
 # Con «[app-store]»: compila con los anuncios de verdad, NO la mete en TestFlight y la deja elegida en la ficha de la App
 # Store. Ninguno de los dos envía nada a revisión.
 # (27 nov) Con «[enviar]»: no compila; publicación manual y la versión de la ficha a la revisión de la App Store
@@ -247,35 +247,53 @@ jobs:
         run: |
           if [ -n "$APP_STORE" ]; then node .github/ios/ficha.mjs version "$BUILD"; else node .github/ios/testflight.mjs configurar; fi
 
-  # (iOS 6) la ficha de la App Store, con «[ficha]» en el mensaje del commit. Las capturas salen del artefacto
-  # «ios-tienda» de la última «App iOS» que salió bien en la rama `ios`
+  # (iOS 6) la ficha de la App Store, con «[ficha]» en el mensaje del commit. (28 nov) Las capturas ya no son las del
+  # simulador (artefacto «ios-tienda»): son las tarjetas de la rama `tarjetas-tienda`, las que aprobó Carlos (28 nov, 02:38,
+  # CON CARAS: tienda/app-store-con-caras-6.9 y -6.3, 01-rival … 08-clubes). Con «[sin-caras]» en el mensaje, las de
+  # tienda/app-store-6.9 y -6.3 (por si Apple pone pegas por las caras o los escudos). Si faltan o no miden lo que pide
+  # Apple, no se tocan las capturas que haya en la ficha (nunca se vuelve a las del simulador).
   ficha:
     if: ${{ contains(github.event.head_commit.message, '[ficha]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
       contents: read
-      actions: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - name: Las capturas del simulador
+      - name: Las tarjetas de la tienda
         env:
-          GH_TOKEN: ${{ github.token }}
+          SIN_CARAS: ${{ contains(github.event.head_commit.message, '[sin-caras]') && 'si' || '' }}
         run: |
-          # la más reciente que trae las cinco buenas de los dos tamaños (una con una prueba fallida trae «fallo.png»)
-          ID=""
-          for r in $(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 15 --json databaseId -q '.[].databaseId'); do
-            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda || continue
-            rm -rf "$RUNNER_TEMP/capturas"; gh run download "$r" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas" || continue
-            if [ "$(ls "$RUNNER_TEMP/capturas/61" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ] && [ "$(ls "$RUNNER_TEMP/capturas/67" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ]; then ID=$r; break; fi
-            echo "la ejecución $r no trae las cinco de cada tamaño: la siguiente"
-          done
-          if [ -n "$ID" ]; then
-            echo "CAPTURAS=$RUNNER_TEMP/capturas" >> "$GITHUB_ENV"
-            echo "capturas de la ejecución $ID:"; find "$RUNNER_TEMP/capturas" -name '*.png' | sort
-          else
-            echo "::warning::No hay capturas para la tienda (artefacto ios-tienda): la ficha se rellena sin ellas"
-          fi
+          if [ -n "$SIN_CARAS" ]; then PRE=tienda/app-store; else PRE=tienda/app-store-con-caras; fi
+          git fetch -q --depth=1 origin refs/heads/tarjetas-tienda
+          echo "tarjetas de tarjetas-tienda $(git rev-parse --short FETCH_HEAD), $PRE-6.9 y $PRE-6.3"
+          T="$RUNNER_TEMP/tarjetas"; rm -rf "$T"; mkdir -p "$T"
+          git archive FETCH_HEAD "$PRE-6.9" "$PRE-6.3" | tar -x -C "$T"
+          # 61 = la mediana (6,3": 1206 × 2622) y 67 = la grande (6,9": 1320 × 2868), como las lee ficha.mjs
+          if python3 - "$T" "$PRE" <<'PY'
+          import os, shutil, struct, sys
+          t, pre = sys.argv[1], sys.argv[2]
+          mal = []
+          for sub, tam, medida in (('61', '6.3', (1206, 2622)), ('67', '6.9', (1320, 2868))):
+              src = os.path.join(t, f'{pre}-{tam}')
+              dst = os.path.join(t, 'capturas', sub)
+              os.makedirs(dst)
+              archivos = sorted(f for f in os.listdir(src) if f.endswith('.png')) if os.path.isdir(src) else []
+              for f in archivos:
+                  with open(os.path.join(src, f), 'rb') as fh:
+                      cab = fh.read(24)
+                  wh = struct.unpack('>II', cab[16:24]) if cab[:8] == b'\x89PNG\r\n\x1a\n' else None
+                  if wh != medida:
+                      mal.append(f'{pre}-{tam}/{f}: {wh} y no {medida}')
+                  shutil.copy(os.path.join(src, f), dst)
+              print(f'{sub}/ ({tam}"): {len(archivos)} tarjetas: {", ".join(archivos)}')
+              if len(archivos) != 8:
+                  mal.append(f'{pre}-{tam}: {len(archivos)} tarjetas y no 8')
+          if mal:
+              print('::warning::Tarjetas que no valen (la ficha se rellena sin tocar las capturas): ' + '; '.join(mal))
+              sys.exit(1)
+          PY
+          then echo "CAPTURAS=$T/capturas" >> "$GITHUB_ENV"; fi
       - name: La ficha
         env:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
