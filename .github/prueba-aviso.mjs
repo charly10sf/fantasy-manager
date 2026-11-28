@@ -25,19 +25,21 @@ const nav = await pw.chromium.launch({ executablePath: process.env.CHROME || und
 const APP = `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '7261', canal: () => 'play', hayQR: () => false, programarAvisos: () => {}, hayAnuncios: () => true, aLaVista: () => true,
   guardar: (k, v) => { localStorage.setItem('fm-n-' + k, v); }, borrar: (k) => { localStorage.removeItem('fm-n-' + k); }, leer: (k) => localStorage.getItem('fm-n-' + k) }, { get: (o, k) => (k in o ? o[k] : () => null) });`;
 const BASE_LS = `if (!sessionStorage.getItem('puesto')) { sessionStorage.setItem('puesto', '1'); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1'); __EXTRA__ }`;
-async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
+async function caso(nombre, espera, { app = true, vista = '0.8f', pasos, nov = null }) {
   const ctx = await nav.newContext({ viewport: { width: 396, height: 859 }, timezoneId: 'Europe/Madrid', locale: 'es-ES' });
   await ctx.route('**/*', (r) => (new URL(r.request().url()).hostname === '127.0.0.1' ? r.continue() : r.abort('blockedbyclient')));
   const page = await ctx.newPage();
   const errores = []; page.on('pageerror', (e) => errores.push(String(e)));
-  await page.addInitScript((app ? APP : '') + BASE_LS.replace('__EXTRA__', vista ? `localStorage.setItem('fm-version-vista2', JSON.stringify('${vista === 'ACTUAL' ? VERSION : vista}'));` : ''));
+  await page.addInitScript((app ? APP : '') + BASE_LS.replace('__EXTRA__', (vista ? `localStorage.setItem('fm-version-vista2', JSON.stringify('${vista === 'ACTUAL' ? VERSION : vista}'));` : '') + (nov ? `localStorage.setItem('fm-avisos-nov', ${JSON.stringify(JSON.stringify(nov))});` : '')));
   await page.goto(`${BASE}/index.html`);
   const lista = async () => { await page.waitForFunction(() => window.S && window.S.D && window.S.M && document.querySelector('.nav'), null, { timeout: 30000 }); await page.waitForTimeout(2600); };
   await lista();
   const hay = () => page.evaluate(() => !!document.querySelector('.nvt'));
   const r = [];
   for (const p of pasos) {
-    if (p === 'novs') r.push(await page.evaluate(() => (document.querySelector('.nvt .nvt-eti') || {}).textContent === 'Novedades' && /dinero de tus rivales/i.test(document.querySelector('.nvt').textContent) && /recompensas diarias/i.test(document.querySelector('.nvt').textContent) ? 'NOVEDADES' : 'otra'));
+    if (p === 'novs') r.push(await page.evaluate(() => (document.querySelector('.nvt .nvt-eti') || {}).textContent === 'Novedades' && /dinero de (tus rivales|cada rival)/i.test(document.querySelector('.nvt').textContent) && /recompensas diarias/i.test(document.querySelector('.nvt').textContent) ? 'NOVEDADES' : 'otra'));
+    // (0.9b) la tarjeta renovada: lo de la 0.9a más el desglose en la ficha
+    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /lo primero de su ficha/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
     if (p === 'mira') r.push(await hay() ? 'TARJETA' : (await page.evaluate(() => !!document.querySelector('.nv'))) ? 'PRESENTACIÓN' : 'nada');
     if (p === 'recarga-app') { await Promise.all([page.waitForNavigation({ timeout: 15000 }).catch(() => r.push('(no recargó)')), page.evaluate(() => window.webBuscada('nueva'))]); await lista(); }
     if (p === 'reabre') { await page.reload(); await lista(); }
@@ -65,6 +67,10 @@ await caso('instalación nueva en la app: nada', 'nada → nada', { vista: '', p
 await caso('en la web, al venir de la 0.8f: sale la de novedades (la más nueva), el botón lleva a Rivales y no vuelve', 'TARJETA → vista:rivales: → nada', { app: false, pasos: ['mira', 'ver', 'reabre', 'mira'] });
 // (0.9a) la tarjeta que sale es la del dinero de los rivales, con lo de las recompensas diarias
 await caso('la tarjeta de la versión nueva es la del dinero de los rivales', 'NOVEDADES', { app: false, pasos: ['novs'] });
+// (0.9b, Carlos, 28 nov: «otro pop-up partiendo del anterior… que solo les salga a los usuarios que no han visto el anterior»)
+await caso('0.9b: quien viene de la 0.9 (no vio la del dinero): sale la renovada, con el desglose', 'TARJETA → RENOVADA', { app: false, vista: '0.9', nov: { visto: ['0.9', '0.8.4s', '0.8h'], pend: null }, pasos: ['mira', 'desg'] });
+await caso('0.9b: quien ya cerró la del dinero de la 0.9a: nada, tampoco al reabrir', 'nada → nada', { app: false, vista: '0.9a', nov: { visto: ['0.9a', '0.9', '0.8.4s', '0.8h'], pend: null }, pasos: ['mira', 'reabre', 'mira'] });
+await caso('0.9b: quien tenía la de la 0.9a sin cerrar: le sale la renovada en su lugar', 'TARJETA → RENOVADA', { vista: '0.9a', nov: { visto: ['0.9', '0.8.4s', '0.8h'], pend: '0.9a' }, pasos: ['mira', 'desg'] });
 // (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo lo estipule; ahora, solo la de invitar»)
 await caso('quien viene de antes de la 0.8 (no es el dueño): solo la tarjeta, sin la presentación de todo lo de después', 'TARJETA → nada', { app: false, vista: '0.7.13za', pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 // (20 nov, Carlos) el recordatorio: cada 5 días a quien no tiene ningún amigo dentro; con un amigo, nunca más
@@ -99,6 +105,8 @@ async function casoIphone(nombre, espera, { app = false, ua = null, real = true,
   const r = [];
   const mira = () => page.evaluate((L) => { const t = document.querySelector('.nvt-ios'); if (t) { const m = t.querySelector('.ios-mas'); return 'IPHONE:' + (m ? L[m.textContent.trim()] || '¿' + m.textContent + '?' : 'sin línea'); } return document.querySelector('.nvt') ? 'TARJETA' : 'nada'; }, LINEAS);
   for (const p of pasos) {
+    // (0.9b) la tarjeta renovada: lo de la 0.9a más el desglose en la ficha
+    if (p === 'desg') r.push(await page.evaluate(() => { const t = document.querySelector('.nvt'); return t && /recompensas diarias/i.test(t.textContent) && /Ver el desglose/.test(t.textContent) && /lo primero de su ficha/.test(t.textContent) ? 'RENOVADA' : 'otra'; }));
     if (p === 'mira') r.push(await mira());
     if (p === 'entendido' || p === 'fuera') {
       if (!(await page.$('.nvt-ios'))) { r.push('(sin tarjeta)'); continue; }
