@@ -4521,8 +4521,8 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 .dn-ver .ic { width: 16px; height: 16px; }
 .dn-ver:active { transform: scale(.98); }
 .dn-desg { margin-top: 6px; }
-/* la gráfica de su saldo, siempre a la vista; sus movimientos, dentro del desglose (28 nov, 11:26 y 13:26) */
-.dn-graf { margin-top: 14px; }
+/* la gráfica de su saldo y sus movimientos, dentro del desglose (28 nov, 13:26 y 14:10) */
+.dn-graf { margin-top: 6px; }
 .dn-movs { margin-top: 6px; }
 .dn-movs-b { margin-top: 10px; }
 .dn-movs-b[aria-expanded="true"] .ic { transform: rotate(180deg); }
