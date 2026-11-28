@@ -2441,6 +2441,13 @@
     "clase": "mercado",
     "chollo": "581"
    }
+  },
+  {
+   "clave": "onces|140",
+   "tipo": "onces",
+   "jornada": 14,
+   "id": "2126647723516449056",
+   "t": "2026-11-28T12:01:43.634Z"
   }
  ],
  "estados": {
@@ -3341,7 +3348,6 @@
    "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html": 1795609078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/cesar-tarrega-habla-cambio-valencia-136836831.html": 1795611342000,
-   "SPORT|136823649": 1795608059000,
    "AS|https://as.com/futbol/primera/la-defensa-en-cuadro-f202611-n/": 1795611437000,
    "SPORT|136817073": 1795611667000,
    "SPORT|136837025": 1795614287000,
@@ -5047,24 +5053,20 @@
   "dia": "2026-11-28",
   "llamadas": {
    "clasificar": 9,
-   "redactar": 1,
-   "revisar": 1,
+   "redactar": 3,
+   "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 25431,
-  "salida": 7375,
-  "cacheLee": 8457,
-  "cacheEscribe": 1125,
-  "dolares": 0.024874,
+  "entrada": 31490,
+  "salida": 7664,
+  "cacheLee": 16838,
+  "cacheEscribe": 12409,
+  "dolares": 0.085856,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-22T14:26:42.406Z",
-    "texto": "👀 El Racing ⚓ juega en El Sardinero con un 4-2-3-1 y Yassir Zabiri, el que más puntos da de su equipo, va de delantero.\n\nLa Real Sociedad responde con un 4-4-2 y Carlos Soler arranca en el medio. Ninguno ha dado un giro raro al once, así que quien tenga a gente de este partido ya sabe a qué atenerse."
-   },
    {
     "t": "2026-11-22T16:31:24.563Z",
     "texto": "👀 Sin sorpresas en El Sadar: Budimir, el cisne de los Balcanes, sale de titular en el Osasuna 🐂 y Niño hace lo propio en el Málaga 🐟, así que quien los tenga ya puede relajarse.\n\nEl Osasuna sale con un 4-2-3-1 y el Málaga, con un 3-5-2. Falta una hora o así para el partido."
@@ -5080,6 +5082,10 @@
    {
     "t": "2026-11-27T19:01:39.951Z",
     "texto": "Quien tenga jugadores del Levante o del Racing puede respirar: los dos onces son los esperados y no hay ningún susto.\n\nLos granotas salen con un 4-3-3 y los racinguistas con un 4-2-3-1. Ryan, con 6,5 de media, está bajo palos en el Levante, y Zabiri, de lo que más puntúa del Racing, juega arriba. En una hora o así arranca en el Ciutat de València."
+   },
+   {
+    "t": "2026-11-28T12:01:43.644Z",
+    "texto": "Cero sorpresas: el Betis y el Rayo salen con un 4-3-3 cada uno, así que los onces son los esperados.\n\nEn el Betis juega Valles bajo palos, el que más puntos da de los béticos, con una media de 9,1. Y en los franjirrojos, Camello es titular arriba y también el que más puntúa de su equipo."
    }
   ],
   "final": [
@@ -10211,13 +10217,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7299,
+   "ok": 7300,
    "fallos": 0,
-   "ejecuciones": 5975,
+   "ejecuciones": 5976,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T11:56:11.099Z"
+   "ultima": "2026-11-28T12:01:17.118Z"
   }
  },
  "ptsDirecto": {
@@ -10277,15 +10283,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:56:14.732Z"
+   "ultimaBien": "2026-11-28T12:01:44.301Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:56:14.732Z"
+   "ultimaBien": "2026-11-28T12:01:44.301Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:56:14.732Z"
+   "ultimaBien": "2026-11-28T12:01:44.301Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10293,11 +10299,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:56:14.732Z"
+   "ultimaBien": "2026-11-28T12:01:44.301Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T11:56:14.732Z"
+   "ultimaBien": "2026-11-28T12:01:44.301Z"
   }
  },
  "avisos": [
