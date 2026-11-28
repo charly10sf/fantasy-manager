@@ -319,4 +319,4 @@ jobs:
         run: |
           if [ -n "$RETIRAR" ]; then node .github/ios/ficha.mjs retirar
           elif [ -n "$PUBLICAR" ]; then node .github/ios/ficha.mjs publicar
-          else node .github/ios/ficha.mjs situacion; fi
+          else node .github/ios/ficha.mjs situacion; node .github/ios/testflight.mjs beta || true; fi

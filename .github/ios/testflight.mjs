@@ -327,10 +327,32 @@ async function perfil(ruta, serie) {
 }
 
 const [modo, a1, a2] = process.argv.slice(2);
+/* (28 nov, Carlos: «en Quién usa la app van subiendo los de la app de iOS pero solo entra uno») SOLO LEE: cuántos probadores
+   tiene el grupo externo y cómo llegaron (invitados o por el enlace público), si el enlace está abierto y cuántos lleva, y en
+   qué está la revisión de la beta de las últimas compilaciones. Solo cifras: ni correos ni nombres (el registro de las
+   Actions de un repo público lo puede leer cualquiera). Va con «[estado]». */
+async function situacionBeta() {
+  const j = await api('GET', `/v1/apps/${APP}/betaGroups?limit=50`);
+  for (const g of j.data) {
+    const a = g.attributes;
+    const t = await api('GET', `/v1/betaGroups/${g.id}/betaTesters?limit=200&fields[betaTesters]=inviteType,state`);
+    const cuenta = {};
+    for (const x of t.data) { const k = `${x.attributes.inviteType || '?'}/${x.attributes.state || '?'}`; cuenta[k] = (cuenta[k] || 0) + 1; }
+    console.log(`grupo «${a.name}»${a.isInternalGroup ? ' (interno)' : ''}: ${t.data.length} probadores (${Object.entries(cuenta).map(([k, n]) => `${k} ${n}`).join(', ') || 'ninguno'}) · enlace público ${a.publicLinkEnabled ? `ABIERTO (tope ${a.publicLinkLimitEnabled ? a.publicLinkLimit : 'sin tope'})` : 'cerrado'}`);
+  }
+  const b = await api('GET', `/v1/builds?filter[app]=${APP}&sort=-uploadedDate&limit=6&fields[builds]=version,uploadedDate,processingState,expired`);
+  for (const x of b.data) {
+    let ext = '?', int = '?';
+    try { const d = await api('GET', `/v1/builds/${x.id}/buildBetaDetail`); ext = d.data.attributes.externalBuildState; int = d.data.attributes.internalBuildState; } catch (e) { ext = `error (${e.message})`; }
+    console.log(`compilación ${x.attributes.version} (${String(x.attributes.uploadedDate || '').slice(0, 16)}${x.attributes.expired ? ', caducada' : ''}): beta externa ${ext} · interna ${int}`);
+  }
+}
+
 if (modo === 'p8') { fs.writeFileSync(a1, normaP8(process.env.ASC_KEY_P8), { mode: 0o600 }); claveP8(); console.log('la clave de la API, en su archivo'); }
 else if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
 else if (modo === 'cifrar') { fs.writeFileSync(ENC, JSON.stringify(cifrar(a1, JSON.parse(fs.readFileSync(a2, 'utf8')))) + '\n'); console.log('escrito', ENC); }
 else if (modo === 'comprobar') { const d = descifrar(JSON.parse(fs.readFileSync(ENC, 'utf8'))); console.log('contacto.enc se lee bien:', Object.keys(d.contacto || {}).join(', '), '·', (d.probadores || []).length, 'probadores'); }
+else if (modo === 'beta') await situacionBeta();
 else if (modo === 'certificado') await certificado();
 else if (modo === 'p12') p12(a1);
 else if (modo === 'perfil') await perfil(a1, a2);
