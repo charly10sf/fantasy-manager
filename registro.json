@@ -3337,7 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000,
@@ -10199,13 +10198,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7281,
+   "ok": 7282,
    "fallos": 0,
-   "ejecuciones": 5957,
+   "ejecuciones": 5958,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T10:26:10.499Z"
+   "ultima": "2026-11-28T10:31:20.389Z"
   }
  },
  "ptsDirecto": {
@@ -10265,15 +10264,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:26:13.404Z"
+   "ultimaBien": "2026-11-28T10:31:24.956Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:26:13.404Z"
+   "ultimaBien": "2026-11-28T10:31:24.956Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:26:13.404Z"
+   "ultimaBien": "2026-11-28T10:31:24.956Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10281,11 +10280,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:26:13.404Z"
+   "ultimaBien": "2026-11-28T10:31:24.956Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:26:13.404Z"
+   "ultimaBien": "2026-11-28T10:31:24.956Z"
   }
  },
  "avisos": [
