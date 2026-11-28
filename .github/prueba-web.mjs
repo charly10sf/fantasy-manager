@@ -1358,7 +1358,10 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   const nw = NOVEDADES.find((n) => n.todos && n.aviso) || NOVEDADES.find((n) => n.todos === 'web');
   if (!nw) bien('novedades solo para la web: ninguna versión con todos: \'web\' ahora mismo');
   else {
-    const i = NOVEDADES.indexOf(nw), antes = (NOVEDADES[i + 1] || {}).v;
+    // (0.9b) una tarjeta que renueva otra (`noSiVisto`) sale a quien viene de antes de aquella: quien ya estaba en ella la
+    // da por vista (novAvisoAlArrancar apunta como vistas las de su versión)
+    const ref = nw.aviso && nw.aviso.noSiVisto ? NOVEDADES.findIndex((n) => n.v === nw.aviso.noSiVisto) : -1;
+    const i = ref >= 0 ? ref : NOVEDADES.indexOf(nw), antes = (NOVEDADES[i + 1] || {}).v;
     for (const app of [false, true]) {
       const fa = app ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
       const { ctx, page, errores } = await pagina({ init: `${fa} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-version-vista2', JSON.stringify('${antes}'));` });
