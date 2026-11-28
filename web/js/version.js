@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.9b';
+export const VERSION = '0.9c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,20 @@ export const VERSION = '0.9b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (28 nov, Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia la derecha, hacia la
+    // izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas») EL MOVIMIENTO: `entra` de liquid.js (la vista
+    // nueva entra desde el lado al que vas, en un elemento, solo transform y opacity), las hojas en abrirHoja/cerrarHoja de
+    // app.js (se quitan al acabar de irse; una encima de otra, desde la derecha; Ajustes, desde arriba) y las secciones de
+    // Ajustes (`plegarConMovimiento`). La sección «0.9c» del final de app.css. Sin tarjeta para nadie (no lleva `todos`).
+    // LA HORA, AL PUBLICAR
+    v: '0.9c', f: '2026-11-28', h: '06:49', t: 'La app se mueve mejor',
+    cosas: [
+      { tipo: 'mejora', d: 'deslizar', t: 'La app se mueve mejor', x: 'Cada pantalla entra desde el lado al que vas, al cambiar de pestaña y de sección; Pregunta, desde arriba. Si abres una ficha desde otra, la nueva entra de lado y «Volver» te lleva hacia atrás, y al cerrarlas se van del todo.' },
+      { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, más limpio', x: 'Las secciones de Ajustes se abren hacia abajo y se cierran hacia arriba, y la que tienes abierta se distingue de un vistazo.' },
+      { tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, más a mano', x: 'Con su dinero abierto, en su ficha ves sus 6 últimos movimientos sin abrir el desglose, y el desglose se oculta también desde abajo. Al apuntar lo que te ha dicho, escribe la cifra tal cual: en millones o entera.' },
+    ],
+  },
   {
     // (28 nov, 03:17-03:5x, Carlos: «la función del dinero debería estar más vistosa… lo primero que te salga» y «un desglose
     // más avanzado… ventas, subidas de cláusulas… todos los gastos que ha ido haciendo»; de dos diseños en vídeo eligió el A,

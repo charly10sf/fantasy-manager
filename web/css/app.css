@@ -3062,11 +3062,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .filtros.rk-jsel > button { flex: none; }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
 
-/* al deslizar de lado a la pestaña de abajo de al lado, la nueva entra desde ese lado (Carlos, 9 nov 15:24) */
-@keyframes entra-d { from { transform: translateX(28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
-@keyframes entra-i { from { transform: translateX(-28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
-#vista.entra-d { animation: entra-d 0.18s ease-out; } #vista.entra-i { animation: entra-i 0.18s ease-out; }
-@media (prefers-reduced-motion: reduce) { #vista.entra-d, #vista.entra-i { animation: none; } }
+/* (al deslizar de lado a la pestaña de al lado, la nueva entra desde ese lado: desde la 0.9c lo hace `entra` de liquid.js
+   con cualquier cambio de pestaña, no solo al deslizar) */
 /* (sesión 8, M9) el error del código de entrada, debajo del campo */
 .codigo-err { margin: 8px 0 0; color: var(--rojo-l); font-size: var(--t-sec2); font-weight: 600; }
 
@@ -3994,19 +3991,18 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .dd-tit { margin: 0; font: 700 26px/1.02 var(--cond); text-transform: uppercase; }
 .dd-sub { margin: 6px 0 14px; font: 400 14.5px/1.4 'Barlow'; color: var(--texto-2); }
 .dd-cifra { display: flex; align-items: center; gap: 8px; }
-.dd-pm { display: grid; place-items: center; flex: none; width: 48px; height: 56px; border: 0; border-radius: var(--r-ctl); background: var(--s3); color: var(--texto); font: 600 24px 'Barlow'; cursor: pointer; }
-.dd-cifra.grande .dd-pm { width: 52px; height: 64px; font-size: 26px; }
 .dd-caja { flex: 1; min-width: 0; display: flex; align-items: baseline; justify-content: center; gap: 4px; height: 56px; box-sizing: border-box; padding: 6px 10px; border-radius: var(--r-ctl); background: var(--s2); border: 1px solid var(--linea); }
 .dd-cifra.grande .dd-caja { height: 64px; }
-.dd-in { width: 92px; min-width: 0; background: none; border: 0; color: #fff; text-align: right; font: 700 38px/1.1 var(--cond); }
-.dd-cifra.grande .dd-in { width: 110px; font-size: 44px; }
+/* la cifra ocupa la caja entera y su letra se achica con lo larga que sea (.medio, .largo: tamCifra de dinero-dicho.js) */
+.dd-in { flex: 0 1 auto; width: 100%; max-width: 100%; min-width: 0; background: none; border: 0; color: #fff; text-align: right; font: 700 38px/1.1 var(--cond); }
+@supports (field-sizing: content) { .dd-in { field-sizing: content; width: auto; min-width: 2ch; } }
+.dd-cifra.grande .dd-in { font-size: 44px; }
+.dd-in.medio { font-size: 32px; } .dd-cifra.grande .dd-in.medio { font-size: 36px; }
+.dd-in.largo { font-size: 26px; } .dd-cifra.grande .dd-in.largo { font-size: 30px; }
 .dd-in:focus { outline: none; }
 .dd-caja:focus-within { border-color: var(--rojo); }
 .dd-m { font: 700 22px var(--cond); color: var(--texto-3); }
 .dd-cifra.grande .dd-m { font-size: 24px; }
-.dd-atajos { display: flex; gap: 6px; margin: 10px 0 0; }
-.dd-atajos button { text-align: center; flex: 1; min-width: 0; height: 40px; border-radius: var(--r-red); background: var(--s2); color: var(--texto-2); border: 1px solid var(--linea); font: 600 14px 'Barlow'; cursor: pointer; white-space: nowrap; }
-.dd-atajos button[aria-pressed="true"] { background: var(--rojo-s); color: var(--rojo-texto); border-color: rgba(238, 28, 60, 0.5); }
 .dd-eti { margin: 16px 0 6px; font: 600 12.5px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--texto-3); }
 .dd-modo { display: flex; gap: 4px; padding: 4px; border-radius: var(--r-red); background: var(--s2); margin-top: 10px; }
 .dd-eti + .dd-modo { margin-top: 0; }
@@ -4525,6 +4521,12 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 .dn-ver .ic { width: 16px; height: 16px; }
 .dn-ver:active { transform: scale(.98); }
 .dn-desg { margin-top: 6px; }
+/* lo último que ha hecho, en la tarjeta antes de abrir el desglose (28 nov) */
+.dn-ult { margin-top: 12px; }
+.dn-ult-t { margin: 0 0 2px; font: 600 12.5px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--texto-3); }
+.dn-ult .dn-mov:last-child { border-bottom: 0; }
+.dn-ocultar { margin-top: 14px; }
+.dn-ocultar .ic { transform: rotate(180deg); }
 .dn-sec { margin-top: 16px; }
 .dn-partes { display: grid; gap: 2px; }
 .dn-parte { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 2px; border-bottom: 1px solid var(--linea); }
@@ -4584,3 +4586,56 @@ html.lq .tabs :where(button:not(.activo):not(.tab-oro)) { color: rgba(244, 242, 
 .dn-card { margin: 8px 0 10px; }
 .dn-acc .dn-ver { flex: 1; margin: 0; }
 .dn-card > .dd-ficha { margin: 10px 0 0; }
+
+/* ==== 0.9c · EL MOVIMIENTO (28 nov; Carlos: «mejores animaciones entre cambios de ventanas y de pestañas… como de hacia
+   la derecha, hacia la izquierda, o arriba, abajo», y Ajustes «más liquid entre las subpestañas»). Lo de cambiar de
+   pantalla lo hace liquid.js (`entra`): la vista nueva entra desde el lado al que vas, con la API de animaciones, en un
+   solo elemento y solo transform y opacity. Aquí, las hojas y las secciones de Ajustes ==== */
+
+/* ---- lo que entra de lado se sale 36 px por el borde mientras se mueve: sin recortarlo, el móvil cree que la página es
+   más ancha, reajusta la vista y la barra de abajo (fija) se va hacia abajo y se corta (Carlos, 28 nov, 05:10: «cuando
+   cambio entre pestañas se quita la barra de abajo»). `clip`, no `hidden`: no crea un contenedor de scroll, así que el
+   selector pegado (sticky) y la caja del chat (fixed) siguen igual ---- */
+html.lq main { overflow-x: clip; }
+html.lq .hoja { overflow-x: hidden; }
+
+/* ---- las hojas: suben frenando (como en la 0.9) y se van acelerando, más rápido que al entrar; se quitan cuando han
+   acabado de irse (antes, a los 250 ms, con la hoja aún a la vista). El velo va con la hoja ---- */
+html.lq .velo { transition: opacity var(--hoja-ms) var(--hoja-curva); }
+html.lq .velo.sale { transition: opacity 260ms cubic-bezier(0.32, 0, 0.67, 0); }
+html.lq .hoja.sale, html.lq:not(.escritorio) .hoja.sale { transition: transform 280ms cubic-bezier(0.32, 0, 0.67, 0); }
+/* la que se va ya no recibe toques: lo de detrás se puede tocar desde el primer fotograma */
+.velo.sale, .hoja.sale { pointer-events: none; }
+/* Ajustes, de alto fijo en el móvil (al plegar una sección, la hoja no cambia de alto ni salta al acabar) */
+html.lq:not(.escritorio) .hoja.hoja-alta { height: 92vh; }
+/* lo que entra al cambiar de pestaña lleva dentro el selector: mientras se mueve, su cristal sin desenfoque (arriba del todo
+   solo tiene detrás la luz de fondo, que es un degradado: se ve igual) */
+html.lq .entrando .tabs::before { -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* Ajustes, con su botón en la cápsula de arriba, entra bajando un poco desde arriba con un fundido y se va por donde vino
+   (`ajustes-entra` = abajo en LS: como las demás hojas). Si se cierra arrastrando, se va hacia abajo (gestoHoja le quita
+   la clase) */
+html.lq:not(.escritorio) .hoja.hoja-arriba { transition: transform 360ms var(--hoja-curva), opacity 220ms ease-out; }
+html.lq:not(.escritorio) .hoja.hoja-arriba:not(.on), html.lq:not(.escritorio) .hoja.hoja-arriba.hoja-media:not(.on) { transform: translateY(-40px); opacity: 0; }
+html.lq:not(.escritorio) .hoja.hoja-arriba.sale { transition: transform 240ms cubic-bezier(0.32, 0, 0.67, 0), opacity 200ms ease-in; }
+
+/* ---- Ajustes: las secciones, tarjetas de cristal sin desenfoque (están dentro de una hoja opaca); la abierta, con la lente
+   de las pestañas elegidas y el icono en su gota; la flecha gira. El abrir y cerrar lo mueve app.js (`plegarConMovimiento`):
+   lo de dentro baja con un fundido y las secciones de debajo se desplazan con transform, sin animar alturas ---- */
+html.lq .aj-sec { margin: 0 0 10px; border: 0; border-radius: var(--r-tarj); background: #232026; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+/* (opacas: al plegar, las de debajo pasan por encima de lo de dentro y no se tiene que transparentar) */
+html.lq .aj-sec > summary { padding: 14px 14px 14px 12px; border-radius: var(--r-tarj); }
+html.lq .aj-sec > summary > .ic:first-child { box-sizing: content-box; width: 20px; height: 20px; padding: 9px; border-radius: 50%; background: rgba(238, 28, 60, 0.12); color: var(--rojo-texto, #ff5269); }
+html.lq .aj-sec .av-fl { transition: transform 300ms var(--hoja-curva); }
+html.lq .aj-sec[open] { background: linear-gradient(180deg, #312d33, #252228 76px, #232026); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 0 rgba(255, 255, 255, 0.06); }
+html.lq .aj-sec[open] > summary > .ic:first-child { background: linear-gradient(180deg, rgba(238, 28, 60, 0.42), rgba(238, 28, 60, 0.2)); box-shadow: inset 1px 1px 0 rgba(255, 160, 175, 0.45), inset 0 0 0 1px rgba(255, 82, 105, 0.35); color: #fff; }
+html.lq .aj-sec[open] > summary .aj-tx b { color: #fff; }
+html.lq .aj-sec[open] > summary .av-fl { color: var(--texto); }
+html.lq .aj-sec > summary:active { background: rgba(255, 255, 255, 0.04); }
+html.lq .aj-sec .aj-cuerpo { padding: 0 14px 6px; }
+html.lq .aj-sec .aj-cuerpo .ajuste { border-bottom-color: rgba(255, 255, 255, 0.07); }
+html.lq .aj-sec.resalta { animation: none; box-shadow: inset 0 0 0 1.5px var(--rojo-l), inset 1px 1px 0 rgba(255, 255, 255, 0.22); }
+html.lq .aj-busca input { border-radius: 18px; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.08); }
+html.lq .aj-atajo { border-radius: var(--r-tarj); }
+@media (prefers-reduced-motion: reduce) { html.lq .aj-sec .av-fl, html.lq .velo, html.lq .hoja.hoja-arriba { transition-duration: 1ms !important; } }
+html.lq .aj-sec.cerrando > summary .av-fl { transform: none; }
+html.lq .aj-sec .aj-cuerpo { border-top-color: rgba(255, 255, 255, 0.07); }

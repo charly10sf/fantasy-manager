@@ -49,21 +49,29 @@ export function entradaDicho(v, aprox, est = null, t = Date.now()) {
 }
 /** la línea de debajo de la cifra */
 export function notaModo(v, aprox) {
-  if (v == null) return 'Toca una cifra o escríbela, en millones.';
+  if (v == null) return 'En millones (48,5) o entera (48.500.000).';
   return aprox ? `Lo contamos entre ${mill(Math.max(0, v - MARGEN))} y ${mill(v + MARGEN)} M.` : 'Lo contamos tal cual.';
 }
 
-const ATAJOS = [40, 60, 80, 100, 150];
-/** la cifra con − y +, los atajos (en la hoja) y «Esa cifra» / «Más o menos». Lo mueve app.js sin repintar (ddPaso…) */
-function formCifra({ v = null, aprox = false, atajos = true, modos = ['Esa cifra', 'Más o menos'], id = 'ddCant', grande = true } = {}) {
-  const val = v != null ? mill(v) : '';
+/** la caja de la cifra (en millones, o entera en euros) y «Esa cifra» / «Más o menos». Sin atajos ni − y + (Carlos, 28 nov:
+    «quita las opciones de 20, 40, 60… y que el valor quepa»): la cifra ocupa todo el ancho y su letra se achica con lo largo
+    que sea (`tamCifra`, que lo vuelve a poner app.js al escribir) */
+export function tamCifra(txt) {
+  const n = String(txt || '').length;
+  return n <= 6 ? '' : n <= 9 ? 'medio' : 'largo';
+}
+/** «M» si va en millones; «€» si va entera (de 10.000 para arriba, como `leerCifra`) */
+export function unidadCifra(txt) {
+  const x = parseFloat(String(txt || '').replace(/\s/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.'));
+  return Number.isFinite(x) && x >= 10000 ? '€' : 'M';
+}
+function formCifra({ v = null, aprox = false, modos = ['Esa cifra', 'Más o menos'], id = 'ddCant', grande = true } = {}) {
+  // una cifra al euro (la que te dijo exacta) se enseña entera, para no redondearla al volver a guardarla
+  const val = v == null ? '' : Math.round(v) % 1e5 ? Math.round(v).toLocaleString('es-ES') : mill(v), tam = tamCifra(val);
   return `<div class="dd-cifra${grande ? ' grande' : ''}">
-      <button type="button" class="dd-pm" data-accion="ddPaso" data-n="-1" aria-label="Un millón menos">−</button>
-      <label class="dd-caja"><span class="solo-lector">Millones que te dijo</span><input id="${id}" class="dd-in" type="text" inputmode="decimal" autocomplete="off" value="${esc(val)}" placeholder="${grande ? '0' : '50'}"><span class="dd-m">M</span></label>
-      <button type="button" class="dd-pm" data-accion="ddPaso" data-n="1" aria-label="Un millón más">+</button>
+      <label class="dd-caja"><span class="solo-lector">Millones que te dijo</span><input id="${id}" class="dd-in${tam ? ` ${tam}` : ''}" type="text" inputmode="decimal" autocomplete="off" value="${esc(val)}" placeholder="${grande ? '0' : '50'}"><span class="dd-m">${unidadCifra(val)}</span></label>
     </div>
-    ${atajos ? `<div class="dd-atajos">${ATAJOS.map((n) => `<button type="button" data-accion="ddAtajo" data-v="${n}" aria-pressed="${v === n * 1e6}">${n} M</button>`).join('')}</div>` : ''}
-    ${atajos ? '<div class="dd-eti">Cómo te lo dijo</div>' : ''}
+    ${grande ? '<div class="dd-eti">Cómo te lo dijo</div>' : ''}
     <div class="dd-modo" role="group" aria-label="Cómo te lo dijo"><button type="button" data-accion="ddModo" data-m="exacto" aria-pressed="${!aprox}">${esc(modos[0])}</button><button type="button" data-accion="ddModo" data-m="aprox" aria-pressed="${aprox}">${esc(modos[1])}</button></div>
     <p class="dd-nota" aria-live="polite">${esc(notaModo(v, aprox))}</p>`;
 }
@@ -127,7 +135,7 @@ export function ventanaDineroHTML(S, st) {
       <div class="dd-lista" id="ddLista" role="listbox" aria-labelledby="ddRivalEti" hidden>${[...ri].sort((a, b) => String(a.manager || a.nombre).localeCompare(String(b.manager || b.nombre), 'es')).map((e) => opcionRival(e, String(st.sel) === String(e.teamId))).join('')}</div>
     </div>
     <div class="dd-eti">Cuánto</div>
-    ${formCifra({ v: st.v, aprox: st.aprox, atajos: false, modos: ['Me dijo esa cifra', 'Más o menos'], id: 'ddCantV', grande: false })}
+    ${formCifra({ v: st.v, aprox: st.aprox, modos: ['Me dijo esa cifra', 'Más o menos'], id: 'ddCantV', grande: false })}
     ${st.err ? `<p class="dd-err" role="alert">${esc(st.err)}</p>` : ''}
     <button type="button" class="dd-v-pri" data-accion="ddApuntar">Apuntar</button>
     <button type="button" class="dd-v-no" data-accion="ddCerrar">Nadie me ha dicho nada</button>

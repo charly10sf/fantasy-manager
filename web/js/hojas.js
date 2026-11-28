@@ -744,11 +744,14 @@ function dnAbierta(S, r, tid) {
     <div class="dn-cifra-f"><div class="dn-cifra"><b>${g.exacto ? '' : '≈ '}${eur(g.total)}</b>${mg ? `<span>± ${eur(mg)}</span>` : ''}</div></div>
     ${por ? `<p class="dn-por">${g.exacto ? 'Exacto' : `El ± es ${esc(por)}`}</p>` : ''}
     <div class="dn-tres">${tres.map(([v, t]) => `<div><b class="${v.startsWith('−') ? 'baja' : v.startsWith('+') ? 'sube' : ''}">${v}</b><span>${t}</span></div>`).join('')}</div>
-    <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
-    ${abierto ? `<div class="dn-desg">${desgloseCuerpo(S, tid, g)}</div>` : ''}
+    ${!abierto && g.movs.length ? `<div class="dn-ult"><div class="dn-ult-t">Lo último que ha hecho</div>${g.movs.slice(0, ULTIMOS_DN).map((m) => movDinero(S, m)).join('')}</div>` : ''}
+    <div class="dn-acc"><button type="button" class="dn-ver" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="${!!abierto}">${abierto ? 'Ocultar el desglose' : 'Ver el desglose completo'}${icono(abierto ? 'abajo' : 'flecha')}</button>${g.exacto || dc ? '' : `<button type="button" class="dn-apunta" data-accion="abrirDicho" data-tid="${esc(tid)}">${icono('lapiz')}Apuntar</button>`}</div>
+    ${abierto ? `<div class="dn-desg">${desgloseCuerpo(S, tid, g)}<button type="button" class="dn-ver dn-ocultar" data-accion="dnDesglose" data-tid="${esc(tid)}" aria-expanded="true">Ocultar el desglose${icono('abajo')}</button></div>` : ''}
     ${dc ? fichaDichoHTML(tid, { cerrado: false }) : ''}${antes}
   </section>`;
 }
+/** cuántos movimientos salen en la tarjeta antes de abrir el desglose (Carlos, 28 nov: «las últimas 6 operaciones») */
+const ULTIMOS_DN = 6;
 /** la tarjeta del dinero, cerrada o abierta (lo decide su dinero, rival a rival) */
 function dineroRivalHTML(S, r, tid) {
   return bloqueada('dineroRivales', tid) ? dnCerrada(S, r.e, tid) : dnAbierta(S, r, tid);
@@ -1139,7 +1142,7 @@ export function filtrarAjustes(raiz, q) {
     hay += n;
   });
   const v = raiz.querySelector('#aj-nada');
-  if (v) { v.hidden = !b || hay > 0; v.textContent = b && !hay ? `Nada con «${String(q).trim()}». Prueba con otra palabra (avisos, clave, versión, borrar…).` : ''; }
+  if (v) { v.hidden = !b || hay > 0; v.textContent = b && !hay ? `Nada con «${String(q).trim()}». Prueba con otra palabra (avisos, ${enDemo() ? '' : 'clave, '}versión, borrar…).` : ''; }
 }
 export function plegarAjuste(S, k, abierto) { S.ajAbiertas ||= {}; if (abierto) S.ajAbiertas[k] = 1; else delete S.ajAbiertas[k]; }
 
@@ -1277,7 +1280,8 @@ export function ajustes(S) {
   // (iOS 3) en la app de iOS no hay clave de Google; en su lugar, el permiso para mandar tu liga a la IA
   const permIA = enAppIos() ? permisoIA() : null;
   if (permIA !== null) c3 += fila('Mandar tu liga a la IA', permIA === 'si' ? 'Sí: para el plan con la IA y tus preguntas (los rivales, con otro nombre)' : permIA === 'no' ? 'No: no se manda nada y el plan sale sin la IA' : 'Se te pregunta antes del primer plan o pregunta', permIA === 'si' ? btnA('quitarPermisoIA', 'Apagar') : btnA('permisoIA', 'Activar', { sec: false }), 'permiso privacidad datos ia');
-  else c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  // (0.9c) en la liga de ejemplo, ni rastro de la clave (salvo para quitar una que ya estuviera puesta)
+  else if (!enDemo() || k) c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
@@ -1329,7 +1333,7 @@ export function ajustes(S) {
   h += sec('datos', 'escudo', 'Datos y privacidad', 'Borrar datos, privacidad y condiciones', c5, 'legal');
 
   h += `<p id="aj-nada" class="t2 aj-nada" hidden></p>`;
-  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
+  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Tu sesión${enDemo() ? '' : ' y tu clave'} se ${enDemo() ? 'queda' : 'quedan'} en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
   return h;
 }
 

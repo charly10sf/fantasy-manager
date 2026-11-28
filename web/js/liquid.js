@@ -259,3 +259,59 @@ export function iniciarLiquid() {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(otraVez).catch(() => {});
   pedir();
 }
+
+/* ---- 8. (0.9c, 28 nov) el movimiento al cambiar de pantalla: cada cosa entra desde el lado al que vas (Carlos: «como de
+ *         hacia la derecha, hacia la izquierda… o arriba, abajo»). La app repinta la vista entera con innerHTML, así que no
+ *         hay «pantalla de antes» que sacar: se anima la ENTRADA de lo recién pintado, un desplazamiento corto con fundido,
+ *         en UN elemento (la vista entera, o lo de debajo del selector) y solo transform y opacity. Lo nuevo se puede tocar
+ *         desde el primer fotograma y un toque a mitad cancela lo que está en marcha. Con «reducir movimiento», nada.
+ *         (Las View Transitions, que sí sacan la de antes, se descartaron: medido en claude/sesion-28nov-animaciones.md.)
+ *         `fm-anim` = largo: más recorrido, para comparar en los vídeos ---- */
+let vivas = [];
+const largo = () => { try { return localStorage.getItem('fm-anim') === 'largo'; } catch (e) { return false; } };
+/** desde: de dónde llega lo nuevo: 'der', 'izq', 'arriba' o 'abajo' */
+export function entra(el, desde) {
+  if (!el || !el.animate || quieto() || !desde) return null;
+  parar();
+  const lado = desde === 'der' || desde === 'izq', s = desde === 'izq' || desde === 'arriba' ? -1 : 1;
+  const d = largo() ? (lado ? Math.round(Math.min(window.innerWidth, 520) * 0.32) : 80) : lado ? 36 : 28;
+  const t = lado ? `translate3d(${s * d}px, 0, 0)` : `translate3d(0, ${s * d}px, 0)`;
+  try {
+    const a = el.animate([{ transform: t, opacity: 0 }, { opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }],
+      { duration: largo() ? 340 : 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+    vivas.push(a);
+    // (mientras entra, el cristal del selector que va dentro, sin desenfoque: nada de desenfoque en lo que se mueve)
+    el.classList.add('entrando');
+    a.onfinish = a.oncancel = () => { vivas = vivas.filter((x) => x !== a); if (!vivas.some((x) => x.effect && x.effect.target === el)) el.classList.remove('entrando'); };
+    return a;
+  } catch (e) { return null; }
+}
+/** un toque a mitad: lo que se estaba moviendo acaba ya (en su sitio) */
+export function parar() { const l = vivas; vivas = []; for (const a of l) { try { a.cancel(); } catch (e) { /* nada */ } } }
+/** mete en una caja lo que va detrás de `desde` dentro de `padre` (o todo, sin `desde`), salvo lo que case con `fuera`
+ *  (la caja del chat, que es fixed: con un antepasado movido dejaría de estarlo). Se hace justo después del innerHTML,
+ *  antes de que el navegador lo coloque: no cuesta nada */
+export function envolver(padre, desde = null, fuera = '') {
+  if (!padre) return null;
+  const caja = document.createElement('div'); caja.className = 'mueve';
+  let ir = !desde;
+  const mover = [];
+  for (const n of [...padre.childNodes]) {
+    if (n === desde) { ir = true; continue; }
+    if (!ir) continue;
+    if (fuera && n.nodeType === 1 && n.matches(fuera)) continue;
+    mover.push(n);
+  }
+  if (!mover.length) return null;
+  padre.insertBefore(caja, mover[0]);
+  caja.append(...mover);
+  return caja;
+}
+/** en un selector de sección, hacia dónde queda la pestaña `b` respecto a la activa */
+export function ladoTabs(b) {
+  const t = b && b.closest && b.closest('.tabs-in');
+  if (!t) return null;
+  const bs = [...t.children], de = bs.findIndex((x) => x.classList.contains('activo')), a = bs.indexOf(b);
+  if (de < 0 || a < 0 || a === de) return null;
+  return a > de ? 'der' : 'izq';
+}

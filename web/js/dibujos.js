@@ -86,6 +86,10 @@ export const DIBUJOS = {
     <rect class="d-a" x="78" y="44" width="16" height="16" rx="5"/><rect class="d-s" x="55" y="68" width="16" height="16" rx="5"/><rect class="d-s" x="78" y="68" width="16" height="16" rx="5"/><path class="d-l" d="M68 102h24"/>
     <circle class="d-a" cx="122" cy="28" r="15"/><path class="d-w" d="M122 20v16M114 28h16"/>`,
   // (0.9) el diseño nuevo: un móvil con las dos cápsulas de arriba, tarjetas y la barra de abajo en cápsula con su gota
+  // (0.9c) la pantalla nueva entra desde el lado al que vas
+  deslizar: `<rect class="d-s" x="24" y="18" width="46" height="84" rx="10"/><rect class="d-l" x="58" y="6" width="72" height="108" rx="14"/>
+    <rect class="d-s" x="68" y="20" width="52" height="20" rx="6"/><rect class="d-a" x="68" y="46" width="52" height="14" rx="6"/><rect class="d-s" x="68" y="66" width="52" height="14" rx="6"/>
+    <rect class="d-l" x="70" y="92" width="48" height="12" rx="6"/><path class="d-al" d="M150 60h-26M132 52l-8 8 8 8"/>`,
   cristal: `<rect class="d-l" x="42" y="6" width="76" height="108" rx="16"/><rect class="d-s" x="50" y="15" width="34" height="11" rx="5.5"/><rect class="d-s" x="88" y="15" width="22" height="11" rx="5.5"/>
     <rect class="d-s" x="50" y="33" width="60" height="22" rx="7"/><path class="d-l" d="M56 41h22M56 48h34"/><rect class="d-s" x="50" y="60" width="60" height="14" rx="6"/>
     <rect class="d-l" x="48" y="88" width="64" height="18" rx="9"/><rect class="d-a" x="51" y="91" width="18" height="12" rx="6"/><circle class="d-s" cx="79" cy="97" r="3"/><circle class="d-s" cx="90" cy="97" r="3"/><circle class="d-s" cx="101" cy="97" r="3"/>
