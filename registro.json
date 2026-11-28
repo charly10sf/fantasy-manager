@@ -3522,7 +3522,8 @@
    "SPORT|136948240": 1795812820000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-levante-racing-20261127_3484136.html": 1795818156000,
    "SPORT|136791714": 1795855349000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/tarrega-copete-reformulan-mercado-valencia-delantero-136953674.html": 1795859495000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/28/tarrega-copete-reformulan-mercado-valencia-delantero-136953674.html": 1795859495000,
+   "AS|https://as.com/futbol/videos/lamine-se-bate-en-duelo-con-pedri-y-fabrica-una-maravilla-al-alcance-de-muy-pocos-el-traje-que-le-hace-es-tremendo-f202611-v/": 1795860153000
   },
   "hechos": [
    {
@@ -4117,7 +4118,7 @@
   ],
   "gemini": {
    "dia": "2026-11-28",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -5034,17 +5035,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 15247,
-  "salida": 5169,
+  "entrada": 17177,
+  "salida": 5292,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.022752,
+  "dolares": 0.023007,
   "reservado": 0
  },
  "recientes": {
@@ -10199,13 +10200,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7278,
+   "ok": 7279,
    "fallos": 0,
-   "ejecuciones": 5954,
+   "ejecuciones": 5955,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T10:11:20.234Z"
+   "ultima": "2026-11-28T10:16:13.704Z"
   }
  },
  "ptsDirecto": {
@@ -10265,15 +10266,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:11:25.235Z"
+   "ultimaBien": "2026-11-28T10:16:19.006Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:11:25.235Z"
+   "ultimaBien": "2026-11-28T10:16:19.006Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:11:25.235Z"
+   "ultimaBien": "2026-11-28T10:16:19.006Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10281,11 +10282,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:11:25.235Z"
+   "ultimaBien": "2026-11-28T10:16:19.006Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T10:11:25.235Z"
+   "ultimaBien": "2026-11-28T10:16:19.006Z"
   }
  },
  "avisos": [
