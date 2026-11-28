@@ -33,29 +33,46 @@ const ENC = path.join(AQUI, 'contacto.enc');
 
 // ---------- los textos ----------
 const SUBTITULO = 'Qué fichar, vender y clausular';
-const PALABRAS = 'mercado,pujas,fichajes,cláusulas,alineación,once,jornada,puntos,plantilla,fútbol,chollos,blindaje';
-const DESCRIPCION = `Fantasy Manager es una app para LaLiga Fantasy: lee tu liga privada con tu propia cuenta y cada día te dice qué hacer en ella. A quién pujar y cuánto, qué vender, a quién clausular antes de que se cierre su cláusula y qué once poner.
+const PALABRAS = 'fichajes,mercado,pujas,cláusulas,alineación,once,jornada,puntos,liga,rivales,míster,chollos,fútbol';
+const DESCRIPCION = `Fantasy Manager es una app para LaLiga Fantasy: lee tu liga privada con tu propia cuenta y cada día te dice qué hacer en ella. A quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
 
-QUÉ HACE
-• Plan del día: las operaciones de hoy en tu liga, de la más urgente a la que menos, con el motivo de cada una y el saldo que te queda después.
-• Cláusulas: las de tus rivales que tienes a tu alcance y hasta cuándo, y cuáles de las tuyas corren peligro.
-• Dinero de los rivales: cuánto tiene cada mánager, calculado con los movimientos de la liga, para saber quién puede pagar tu cláusula.
-• Mercado: qué jugadores suben y bajan de valor, y la puja que suele ganar en tu liga.
-• Tu equipo: el mejor once, el calendario de cada jugador y las ofertas que te llegan.
-• Jornada en directo: los puntos de tus jugadores y los de cada mánager de tu liga.
-• Preguntas a la IA: pregunta lo que quieras de tu liga con tus palabras. La respuesta sale de tus datos de ese momento.
-• Avisos: el cierre del mercado, las cláusulas que se abren y el clausulazo que te toca, un minuto antes.
+TU PLAN DE HOY
+Las operaciones del día en tu liga, de la más urgente a la que menos, con el motivo de cada una y el saldo que te queda después. 2 planes con IA gratis al día.
+
+LA PUJA QUE GANA
+Por cada libre, una sola cifra: la que se lo lleva unas 7-8 de cada 10 veces con lo que se paga en tu liga. Y si para ganarlo hay que pagar demasiado, te lo dice.
+
+TUS RIVALES, POR DENTRO
+• El parte, antes de cada jornada: quién está en negativo, a quién le falta un puesto y quién se ha quedado sin blindajes.
+• El dinero de cada mánager, calculado con los movimientos de la liga.
+• Las cláusulas que te llegan y hasta cuándo, y cuáles de las tuyas corren peligro.
+
+MERCADO Y EQUIPO
+• Quién sube y quién baja de valor, día a día.
+• Cada jugador, a fondo: su valor, su calendario y si le toca jugar.
+• Tu mejor once. En las ligas premium, también capitán, banquillo y entrenador.
+
+LA JORNADA, EN DIRECTO
+Los puntos de tus jugadores y los de cada mánager de tu liga, partido a partido.
+
+PREGUNTA A LA IA
+Lo que quieras de tu liga, con tus palabras o con una captura. La respuesta sale de tus datos de ese momento. 3 preguntas gratis al día.
+
+AVISOS
+El cierre del mercado, las cláusulas que se abren y el clausulazo que te toca, un minuto antes.
 
 CÓMO SE ENTRA
-Entras en la página de inicio de sesión de LaLiga sin salir de la app. Fantasy Manager no ve ni guarda tu contraseña, y no tienes que crear otra cuenta. Si antes quieres echar un vistazo, puedes abrir una liga de ejemplo sin entrar.
+Entras en la página de inicio de sesión de LaLiga sin salir de la app. Fantasy Manager no ve ni guarda tu contraseña, y no tienes que crear otra cuenta. Si antes quieres echar un vistazo, hay una liga de ejemplo.
 
 GRATIS, CON ANUNCIOS
-Cada día tienes planes y preguntas gratis. Si quieres más, ves un anuncio corto y se desbloquean. No hay compras dentro de la app.
+No hay compras dentro de la app. Si quieres más planes o preguntas, o abrir el parte, el dinero de un rival o quién puja por un libre, ves un anuncio corto.
 
 TUS DATOS
-Los nombres de tus rivales se cambian antes de mandar los datos de tu liga a la IA. Lo que guarda nuestro servidor lo borras desde Ajustes cuando quieras. El detalle está en la política de privacidad.
+Nada de tu liga se manda a la IA sin tu permiso, y los nombres de tus rivales se cambian antes de mandarlo. Lo que guarda nuestro servidor lo borras desde Ajustes cuando quieras. El detalle está en la política de privacidad.
 
 Fantasy Manager es una app independiente: no está afiliada a LaLiga ni cuenta con su respaldo.`;
+// el texto promocional (170 como mucho): se puede cambiar sin pasar revisión
+const PROMO = 'Nuevo diseño, más limpio. Tu plan de hoy, la puja que gana en tu liga y el parte de tus rivales antes de cada jornada: quién va en negativo y a quién le falta un puesto.';
 const SOPORTE = 'https://fantasymanagerapp.com/contacto.html';
 const PRIVACIDAD = 'https://fantasymanagerapp.com/privacidad.html';
 const MARKETING = 'https://fantasymanagerapp.com'; // ya puesta el 25 nov (AdMob la usa para encontrar app-ads.txt)
@@ -127,9 +144,10 @@ async function textos(v, info) {
   const vl = await localizacion(await todo(`/v1/appStoreVersions/${v.id}/appStoreVersionLocalizations`), () =>
     api('POST', '/v1/appStoreVersionLocalizations', { data: { type: 'appStoreVersionLocalizations', attributes: { locale: LOCALE }, relationships: { appStoreVersion: { data: { type: 'appStoreVersions', id: v.id } } } } }));
   await api('PATCH', `/v1/appStoreVersionLocalizations/${vl.id}`, { data: { type: 'appStoreVersionLocalizations', id: vl.id, attributes: {
-    description: DESCRIPCION, keywords: PALABRAS, supportUrl: SOPORTE, marketingUrl: MARKETING,
+    description: DESCRIPCION, keywords: PALABRAS, promotionalText: PROMO, supportUrl: SOPORTE, marketingUrl: MARKETING,
   } } });
-  console.log(`descripción (${DESCRIPCION.length}), palabras clave (${Buffer.byteLength(PALABRAS)} bytes), soporte y marketing: puestos`);
+  if (DESCRIPCION.length > 4000 || PALABRAS.length > 100 || PROMO.length > 170) throw new Error('un texto de la ficha se pasa de largo');
+  console.log(`descripción (${DESCRIPCION.length}), palabras clave (${Buffer.byteLength(PALABRAS)} bytes), texto promocional (${PROMO.length}), soporte y marketing: puestos`);
 
   const il = await localizacion(await todo(`/v1/appInfos/${info.id}/appInfoLocalizations`), () =>
     api('POST', '/v1/appInfoLocalizations', { data: { type: 'appInfoLocalizations', attributes: { locale: LOCALE }, relationships: { appInfo: { data: { type: 'appInfos', id: info.id } } } } }));
