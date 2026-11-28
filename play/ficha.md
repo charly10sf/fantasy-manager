@@ -68,7 +68,7 @@ Gratis, con anuncios y sin compras. Funciona en Android y también en el iPhone 
 
 Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relación con LaLiga ni con LaLiga Fantasy. Para usarla necesitas tu propia cuenta de LaLiga Fantasy: entras en la página oficial de LaLiga y la app nunca ve tu contraseña.
 
-(Textos de la 0.9, 28 nov 2026: PENDIENTES DEL VISTO BUENO DE CARLOS y sin subir a Play Console. Los de antes, en el historial de este archivo.)
+(Textos de la 0.9, 28 nov 2026. VISTO BUENO DE CARLOS: 28 nov, 02:38, a los textos y a las tarjetas de las dos tiendas. SIN SUBIR todavía a Play Console: se suben a la vez que la 0.9 a la App Store, cuando Apple apruebe la 0.8.5. Los de antes, en el historial de este archivo.)
 
 ## Imágenes
 

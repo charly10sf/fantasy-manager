@@ -33,6 +33,8 @@ const ENC = path.join(AQUI, 'contacto.enc');
 
 // ---------- los textos ----------
 // (Carlos, 28 nov: lo primero, el dinero de los rivales, «el gamechanger de la app»)
+// VISTO BUENO DE CARLOS a estos textos y a las tarjetas: 28 nov, 02:38. En la App Store, las tarjetas CON CARAS
+// (rama `tarjetas-tienda`: tienda/app-store-con-caras-6.9 y -6.3). Si Apple pone pegas por las caras, las de sin caras.
 const SUBTITULO = 'Cuánto dinero tiene cada rival';
 const PALABRAS = 'fichajes,mercado,pujas,cláusulas,alineación,once,jornada,puntos,liga,saldo,míster,chollos,fútbol';
 const DESCRIPCION = `Fantasy Manager es una app para LaLiga Fantasy: lee tu liga privada con tu propia cuenta, calcula cuánto dinero tiene cada rival y cada día te dice qué hacer en ella. A quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
