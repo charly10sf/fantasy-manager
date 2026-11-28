@@ -32,9 +32,13 @@ const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const ENC = path.join(AQUI, 'contacto.enc');
 
 // ---------- los textos ----------
-const SUBTITULO = 'Qué fichar, vender y clausular';
-const PALABRAS = 'fichajes,mercado,pujas,cláusulas,alineación,once,jornada,puntos,liga,rivales,míster,chollos,fútbol';
-const DESCRIPCION = `Fantasy Manager es una app para LaLiga Fantasy: lee tu liga privada con tu propia cuenta y cada día te dice qué hacer en ella. A quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
+// (Carlos, 28 nov: lo primero, el dinero de los rivales, «el gamechanger de la app»)
+const SUBTITULO = 'Cuánto dinero tiene cada rival';
+const PALABRAS = 'fichajes,mercado,pujas,cláusulas,alineación,once,jornada,puntos,liga,saldo,míster,chollos,fútbol';
+const DESCRIPCION = `Fantasy Manager es una app para LaLiga Fantasy: lee tu liga privada con tu propia cuenta, calcula cuánto dinero tiene cada rival y cada día te dice qué hacer en ella. A quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
+
+EL DINERO DE CADA RIVAL
+En LaLiga Fantasy no se ve el dinero de los demás. Fantasy Manager lo calcula con todos los movimientos de tu liga y te dice con cuánto margen: cuánto tiene cada mánager, quién puede pagar tu cláusula y quién empieza la jornada en negativo.
 
 TU PLAN DE HOY
 Las operaciones del día en tu liga, de la más urgente a la que menos, con el motivo de cada una y el saldo que te queda después. 2 planes con IA gratis al día.
@@ -44,8 +48,8 @@ Por cada libre, una sola cifra: la que se lo lleva unas 7-8 de cada 10 veces con
 
 TUS RIVALES, POR DENTRO
 • El parte, antes de cada jornada: quién está en negativo, a quién le falta un puesto y quién se ha quedado sin blindajes.
-• El dinero de cada mánager, calculado con los movimientos de la liga.
 • Las cláusulas que te llegan y hasta cuándo, y cuáles de las tuyas corren peligro.
+• Cómo juega cada rival: qué ficha, qué vende y a quién clausula.
 
 MERCADO Y EQUIPO
 • Quién sube y quién baja de valor, día a día.
@@ -72,7 +76,7 @@ Nada de tu liga se manda a la IA sin tu permiso, y los nombres de tus rivales se
 
 Fantasy Manager es una app independiente: no está afiliada a LaLiga ni cuenta con su respaldo.`;
 // el texto promocional (170 como mucho): se puede cambiar sin pasar revisión
-const PROMO = 'Nuevo diseño, más limpio. Tu plan de hoy, la puja que gana en tu liga y el parte de tus rivales antes de cada jornada: quién va en negativo y a quién le falta un puesto.';
+const PROMO = 'Mira cuánto dinero tiene cada rival de tu liga y quién puede pagar tu cláusula. Y cada día, tu plan: qué fichar, vender y clausular. Con diseño nuevo.';
 const SOPORTE = 'https://fantasymanagerapp.com/contacto.html';
 const PRIVACIDAD = 'https://fantasymanagerapp.com/privacidad.html';
 const MARKETING = 'https://fantasymanagerapp.com'; // ya puesta el 25 nov (AdMob la usa para encontrar app-ads.txt)

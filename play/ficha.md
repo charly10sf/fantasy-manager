@@ -18,11 +18,16 @@ Todo lo que pide Play Console para publicar, listo para copiar y pegar. Las imá
 
 ## Descripción breve (máx. 80)
 
-Qué fichar, cuánto pujar y a quién clausular hoy en tu liga de LaLiga Fantasy.
+El dinero de cada rival de tu liga de LaLiga Fantasy y qué fichar cada día.
 
 ## Descripción completa (máx. 4000)
 
-Fantasy Manager lee tu liga de LaLiga Fantasy con tu propia cuenta y cada día te dice qué hacer en ella: a quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
+Fantasy Manager lee tu liga de LaLiga Fantasy con tu propia cuenta, calcula cuánto dinero tiene cada rival y cada día te dice qué hacer en ella: a quién pujar y cuánto, qué vender, a quién clausular y qué once poner.
+
+EL DINERO DE CADA RIVAL
+• En LaLiga Fantasy no se ve el dinero de los demás: Fantasy Manager lo calcula con todos los movimientos de tu liga y te dice con cuánto margen.
+• Quién puede pagar tu cláusula y quién empieza la jornada en negativo.
+• Si un rival te dice lo que tiene, lo apuntas y la cuenta se afina.
 
 TU PLAN DE HOY
 • Las operaciones del día en tu liga, de la más urgente a la que menos, con el motivo de cada una y el saldo que te queda después.
@@ -36,7 +41,6 @@ LA PUJA QUE GANA
 
 TUS RIVALES, POR DENTRO
 • El parte, antes de cada jornada: quién está en negativo, a quién le falta un puesto y quién se ha quedado sin blindajes.
-• El dinero de cada mánager, calculado con los movimientos de la liga.
 • Las cláusulas que te llegan y hasta cuándo, y cuáles de las tuyas corren peligro.
 • Cómo juega cada rival: qué ficha, qué vende y a quién clausula.
 
@@ -73,7 +77,7 @@ Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relaci
 | Icono | icono-512.png | 512 × 512 |
 | Gráfico destacado | grafico-destacado-1024x500.png | 1024 × 500 |
 | Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-clubes, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-dinero y 9-paron (.png), en ese orden | 1080 × 1920 |
-| Capturas de teléfono NUEVAS (0.9, con el rediseño; sin subir) | rama `tarjetas-tienda`, carpeta tienda/google-play: 01-hoy … 08-clubes, en ese orden | 1080 × 1920 |
+| Capturas de teléfono NUEVAS (0.9, con el rediseño; sin subir) | rama `tarjetas-tienda`, carpeta tienda/google-play: 01-rival (el dinero de cada rival, lo primero: Carlos, 28 nov) … 08-clubes, en ese orden | 1080 × 1920 |
 
 Las capturas usan la liga de ejemplo (datos inventados) y llevan las caras de los jugadores y los escudos de LaLiga, como se ve la app (Carlos, 10 nov: sin ellos no valen). Rehechas el 10 nov con la app de la 0.7.1e. Nuevas frente a las del 4 nov: la 2, la ficha de un club en «Suben y bajan» (antes, el plan, que desde la 0.7.1 ya sale en la primera pantalla de Hoy); la 8, la ficha de un rival de verdad, C.A.D Domyngas (Domy), hecha con dos capturas de Carlos en una sola pantalla (dinero arriba, «Cómo juega» debajo): solo cambia su dinero (≈ 96,60 M en vez del real) y fuera el aviso de «te dijo que tenía…»; Carlos dijo el 10 nov que Domy y los de la liga lo saben y les parece bien, y que la foto de Mbappé de dictador se queda (antes, Movimientos; las capturas de Carlos no van al repo: .github/captura-domy.py); y la 9, la pestaña Parón con la demo en el parón (antes, Directo, que sin jornada en juego solo enseñaba el calendario; pedida por Carlos). La 7 (ficha de Raphinha: arriba, y su gráfica con «Cada día» y quién lo puede pagar) y la 9 (la pestaña Parón y una fila abierta con su gráfica) van con dos móviles; la 7 y la 9 salen con las funciones de anuncio abiertas (sin candado). La 6, el chat, lleva una respuesta escrita a mano con las cifras de la demo y la cabecera dice «IA»: ninguna captura nombra modelos. La 5 (Equipo, tu once) queda de repuesto. Se rehacen con `.github/capturas-play.py` (instrucciones arriba del archivo; si cambia la demo, revisar las cifras de la respuesta del chat).
 
