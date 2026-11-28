@@ -34,9 +34,9 @@ export const NOVEDADES = [
     v: '0.9b', f: '2026-11-28', h: '', todos: true,
     aviso: {
       // (04:46, Carlos: lo de la ficha, «arriba del todo», y el ejemplo con «cifras de mi liga»: un rival de su liga el 28 nov,
-      // al euro, sin lo que dijo; y lo que dijo él después, 104.698.038, para que se vea que cae dentro del margen)
-      d: 'dinero', eti: 'Novedades', t: 'El dinero de cada rival, lo primero de su ficha',
-      x: 'Abre a un rival y toca «Ver el desglose»: todo lo que ha movido, sus cláusulas y su saldo. Y la cuenta del dinero de tus rivales, más exacta. Un rival de una liga real:',
+      // al euro, sin lo que dijo. (04:54) El título, «notablemente mejorado», y lo amarillo, otra vez lo de la parte alta)
+      d: 'dinero', eti: 'Novedades', t: 'El dinero de tus rivales, notablemente mejorado',
+      x: 'Ahora es lo primero de la ficha de cada rival: toca «Ver el desglose» y verás todo lo que ha movido, sus cláusulas y su saldo. Y la cuenta, revisada a fondo. Un rival de una liga real:',
       pasos: [
         { c: 'De salida', x: 'Todos empiezan con lo mismo', v: '100.000.000' },
         { c: 'Fichajes y ventas', x: 'Todo lo que compra, vende y cobra, uno a uno', v: '+9.698.031', cls: 'mas' },
@@ -44,12 +44,12 @@ export const NOVEDADES = [
         { c: 'Recompensas diarias', x: 'Lo único que nadie puede ver: va la mitad', v: '+6.318.868', cls: 'duda' },
       ],
       rango: { eti: 'Lo que calcula la app', desde: 100000000, hasta: 98516899, entero: true, margen: '± 6.800.000', de: 'No recoge ninguna', a: 'Entra a diario' },
-      mas: 'Él dijo que tenía 104.698.038: dentro, en la parte alta',
+      mas: 'Si entra a diario, tira hacia la parte alta',
       ir: { v: 'rivales', txt: 'Ver a mis rivales' },
       noSiVisto: '0.9a',
     },
     cosas: [
-      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival, lo primero de su ficha', x: 'Al abrir un rival, arriba del todo: cuánto tiene y, al tocar «Ver el desglose», de dónde sale, todo lo que ha comprado, vendido y cobrado, sus subidas de cláusula con su día y cómo ha ido su saldo.' },
+      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de tus rivales, notablemente mejorado', x: 'Al abrir un rival, arriba del todo: cuánto tiene y, al tocar «Ver el desglose», de dónde sale, todo lo que ha comprado, vendido y cobrado, sus subidas de cláusula con su día y cómo ha ido su saldo.' },
       { tipo: 'mejora', d: 'peligro', menor: true, t: 'La ficha de cada rival, más clara', x: 'Quién es, su puesto y su peligro en una pieza, y sus cláusulas en una sola lista: las suyas que te llegan y las tuyas que le llegan a él.' },
     ],
   },
