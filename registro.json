@@ -3337,28 +3337,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/24/mourinho-vestuario-vegas-pasa-vegas-queda-vegas.html": 1795559768000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255140/posible-once-barca-baku-flick-estrenara-tridente-dia-rotaciones.html": 1795586400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255201/portada-md-bizkaia-araba-hoy-miercoles.html": 1795562595000,
-   "SPORT|136811567": 1795581071000,
-   "SPORT|136820003": 1795579703000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/24/cucho-hernandez-queremos-pasar-ocho-primeros.html": 1795558554000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/24/mbappe-empenado-en-recuperar-al-mejor-vinicius-detalle-de-grandeza-del-frances-con-el-trofeo-de-mejor-jugador-cadena-ser/": 1795562856000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-rinde-bellingham-jugador-forma-mundo-20261124_3481452.html": 1795560376000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/jude-bellingham-senala-dudar-clave-espectacular-rendimiento-mourinho-20261124_3481451.html": 1795560319000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-slovan-bratislava-betis-champions-league-5a-jornada-24-20261124_3481403.html": 1795557615000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/24/6b05fc64fc6c83a13b8b4583.html": 1795558081000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000,
-   "SPORT|136805992": 1795586435000,
-   "SPORT|136796550": 1795586435000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000,
-   "SPORT|136822022": 1795589209000,
-   "SPORT|136822228": 1795589185000,
-   "SPORT|135681299": 1795590000000,
-   "SPORT|136822855": 1795590021000,
-   "SPORT|136822696": 1795591895000,
-   "SPORT|136823365": 1795593138000,
    "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000,
    "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
@@ -3535,21 +3513,17 @@
    "SPORT|136943137": 1795804483000,
    "SPORT|136943358": 1795804802000,
    "SPORT|136941303": 1795806344000,
-   "SPORT|136947063": 1795808508000
+   "SPORT|136947063": 1795808508000,
+   "AS|https://as.com/futbol/alineacion-posible-del-athletic-ante-el-malaga-en-laliga-ea-sports-f202611-n/": 1795819929000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-rayo-en-laliga-ea-sports-f202611-n/": 1795819844000,
+   "AS|https://as.com/futbol/aprobados-y-suspensos-del-levante-sin-oriol-el-levante-se-quedo-en-nada-f202611-n/": 1795818590000,
+   "AS|https://as.com/futbol/primera/una-puerta-se-abre-para-jonathan-david-f202611-n/": 1795850551000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261128/1004256412/pone-marcha-jornada-13-segunda-federacion.html": 1795845600000,
+   "SPORT|136948525": 1795813880000,
+   "SPORT|136948240": 1795812820000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-levante-racing-20261127_3484136.html": 1795818156000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255201/portada-md-bizkaia-araba-hoy-miercoles.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795562595000,
-    "id": "927",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html",
     "medio": "Mundo Deportivo",
@@ -4090,11 +4064,47 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/alineacion-posible-del-athletic-ante-el-malaga-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795819929000,
+    "id": "2314",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Vivian seguirá fuera ante el Málaga",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-rayo-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795819844000,
+    "id": "121",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Bartra regresa a la convocatoria del Betis para el Rayo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-rayo-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795819844000,
+    "id": "2418",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Marc Roca vuelve a la convocatoria del Betis",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-27",
-   "n": 49
+   "dia": "2026-11-28",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -5011,17 +5021,17 @@
  "ia": {
   "dia": "2026-11-28",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 6004,
-  "salida": 199,
+  "entrada": 9424,
+  "salida": 4139,
   "cacheLee": 8457,
   "cacheEscribe": 1125,
-  "dolares": 0.019343,
+  "dolares": 0.021655,
   "reservado": 0
  },
  "recientes": {
@@ -10176,13 +10186,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7250,
+   "ok": 7251,
    "fallos": 0,
-   "ejecuciones": 5926,
+   "ejecuciones": 5927,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T07:56:10.339Z"
+   "ultima": "2026-11-28T08:01:12.382Z"
   }
  },
  "ptsDirecto": {
@@ -10242,15 +10252,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T07:56:15.352Z"
+   "ultimaBien": "2026-11-28T08:01:37.319Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T07:56:15.352Z"
+   "ultimaBien": "2026-11-28T08:01:37.319Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T07:56:15.352Z"
+   "ultimaBien": "2026-11-28T08:01:37.319Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -10258,11 +10268,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T07:56:15.352Z"
+   "ultimaBien": "2026-11-28T08:01:37.319Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-27T21:56:15.380Z"
+   "ultimaBien": "2026-11-28T08:01:37.319Z"
   }
  },
  "avisos": [
