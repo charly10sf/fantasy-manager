@@ -3387,7 +3387,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000,
    "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
    "SPORT|136847144": 1795619882000,
@@ -3576,18 +3575,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/28/real-betis-0-1-rayo-vallecano-resumen-resultado-y-goles-del-partido-de-la-jornada-14-de-laliga-ea-sports-cadena-ser/": 1795877915000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html",
-    "medio": "COPE",
-    "t": 1795619503000,
-    "id": "1715",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Fermín se pierde dos partidos de Liga por sanción",
-    "motivo": "expulsión por protestar desde el banquillo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html",
     "medio": "Mundo Deportivo",
@@ -5422,8 +5409,8 @@
    "fin": 1795816572246
   },
   "14|140": {
-   "h": "bca3e86c5513",
-   "desde": 1795878675514,
+   "h": "d1852f5694c0",
+   "desde": 1795878973748,
    "fin": 1795878071844
   }
  },
@@ -10289,13 +10276,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 7362,
+   "ok": 7363,
    "fallos": 0,
-   "ejecuciones": 6014,
+   "ejecuciones": 6015,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-28T15:11:14.493Z"
+   "ultima": "2026-11-28T15:16:12.833Z"
   }
  },
  "ptsDirecto": {
@@ -10361,27 +10348,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-28T15:11:20.658Z"
+   "ultimaBien": "2026-11-28T15:16:17.065Z"
   }
  },
  "avisos": [
